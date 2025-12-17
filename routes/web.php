@@ -98,7 +98,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     // Course Materials
     Route::get('/course-materials', function () {
         return Inertia::render('Admin/CourseMaterials');
-    })->name('course-materials');
+    })->name('admin.course-materials');
     
     // ==================== ACADEMIC RECORDS ====================
     
@@ -206,7 +206,7 @@ Route::middleware(['auth', 'verified'])->prefix('teacher')->name('teacher.')->gr
     // Course Materials
     Route::get('/course-materials', function () {
         return Inertia::render('Teacher/CourseMaterials');
-    })->name('course-materials');
+    })->name('teacher.course-materials');
     
     // Issue Certificates
     Route::get('/certificates', function () {
@@ -260,7 +260,7 @@ Route::middleware(['auth', 'verified'])->prefix('student')->name('student.')->gr
     // Course Materials
     Route::get('/course-materials', function () {
         return Inertia::render('Student/CourseMaterials');
-    })->name('course-materials');
+    })->name('student.course-materials');
     
     // My Certificates
     Route::get('/certificates', function () {
