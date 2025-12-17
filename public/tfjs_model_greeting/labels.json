@@ -1,0 +1,30 @@
+{
+  "labels": {
+    "0": "I Love You",
+    "1": "Love",
+    "2": "Yes",
+    "3": "No",
+    "4": "Thank You",
+    "5": "Friends",
+    "6": "Please",
+    "7": "Sorry",
+    "8": "School",
+    "9": "You're Welcome",
+    "10": "Your Welcome"
+  },
+  "num_hands": 2,
+  "features": 126,
+  "num_classes": 11,
+  "description": "Two-hand gesture recognition model (Enhanced Fast Trainer - Flipped Data)",
+  "layer_names": [
+    "dense1",
+    "dense2",
+    "dense3",
+    "output"
+  ],
+  "includes_batch_norm": true,
+  "training_method": "fast_burst_mode_with_augmentation_flipped",
+  "data_orientation": "right_hand_captured_as_left",
+  "compatible": "TensorFlow.js LayersModel",
+  "note": "Training data captured with RIGHT hand, saved as LEFT hand orientation"
+}

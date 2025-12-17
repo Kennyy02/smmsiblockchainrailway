@@ -1,0 +1,156 @@
+{
+  "format": "layers-model",
+  "generatedBy": "TensorFlow.js Converter v4.11.0",
+  "convertedBy": "TensorFlow.js Converter v4.11.0",
+  "modelTopology": {
+    "class_name": "Sequential",
+    "config": {
+      "name": "sequential",
+      "layers": [
+        {
+          "class_name": "Dense",
+          "config": {
+            "units": 256,
+            "activation": "relu",
+            "use_bias": true,
+            "name": "dense1",
+            "trainable": true,
+            "dtype": "float32",
+            "batch_input_shape": [
+              null,
+              126
+            ]
+          }
+        },
+        {
+          "class_name": "Dropout",
+          "config": {
+            "rate": 0.4,
+            "name": "dropout1",
+            "trainable": true
+          }
+        },
+        {
+          "class_name": "Dense",
+          "config": {
+            "units": 128,
+            "activation": "relu",
+            "use_bias": true,
+            "name": "dense2",
+            "trainable": true,
+            "dtype": "float32"
+          }
+        },
+        {
+          "class_name": "Dropout",
+          "config": {
+            "rate": 0.3,
+            "name": "dropout2",
+            "trainable": true
+          }
+        },
+        {
+          "class_name": "Dense",
+          "config": {
+            "units": 64,
+            "activation": "relu",
+            "use_bias": true,
+            "name": "dense3",
+            "trainable": true,
+            "dtype": "float32"
+          }
+        },
+        {
+          "class_name": "Dropout",
+          "config": {
+            "rate": 0.2,
+            "name": "dropout3",
+            "trainable": true
+          }
+        },
+        {
+          "class_name": "Dense",
+          "config": {
+            "units": 10,
+            "activation": "softmax",
+            "use_bias": true,
+            "name": "output",
+            "trainable": true,
+            "dtype": "float32"
+          }
+        }
+      ]
+    },
+    "keras_version": "2.12.0",
+    "backend": "tensorflow"
+  },
+  "weightsManifest": [
+    {
+      "paths": [
+        "group1-shard1of1.bin"
+      ],
+      "weights": [
+        {
+          "name": "dense1/kernel",
+          "shape": [
+            126,
+            256
+          ],
+          "dtype": "float32"
+        },
+        {
+          "name": "dense1/bias",
+          "shape": [
+            256
+          ],
+          "dtype": "float32"
+        },
+        {
+          "name": "dense2/kernel",
+          "shape": [
+            256,
+            128
+          ],
+          "dtype": "float32"
+        },
+        {
+          "name": "dense2/bias",
+          "shape": [
+            128
+          ],
+          "dtype": "float32"
+        },
+        {
+          "name": "dense3/kernel",
+          "shape": [
+            128,
+            64
+          ],
+          "dtype": "float32"
+        },
+        {
+          "name": "dense3/bias",
+          "shape": [
+            64
+          ],
+          "dtype": "float32"
+        },
+        {
+          "name": "output/kernel",
+          "shape": [
+            64,
+            10
+          ],
+          "dtype": "float32"
+        },
+        {
+          "name": "output/bias",
+          "shape": [
+            10
+          ],
+          "dtype": "float32"
+        }
+      ]
+    }
+  ]
+}

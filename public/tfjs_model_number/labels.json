@@ -1,0 +1,24 @@
+{
+  "labels": {
+    "0": "1",
+    "1": "2",
+    "2": "3",
+    "3": "4",
+    "4": "5",
+    "5": "6",
+    "6": "7",
+    "7": "8",
+    "8": "9",
+    "9": "10"
+  },
+  "num_hands": 2,
+  "features": 126,
+  "input_shape": [
+    126
+  ],
+  "num_classes": 10,
+  "description": "Hand gesture recognition model for numbers 1-10",
+  "tensorflow_version": "2.19.0",
+  "conversion_method": "tfjs_auto_converter",
+  "weight_names_fixed": true
+}
