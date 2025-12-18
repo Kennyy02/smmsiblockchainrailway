@@ -104,11 +104,16 @@ const TeacherModal: React.FC<{
 
     // Helper to format error messages for better UX
     const formatErrorMessage = (message: string): string => {
+        // Remove "field_name: " prefix if it exists
+        message = message.replace(/^[a-z_]+:\s*/i, '');
+        
         return message
             .replace(/The password field confirmation does not match\./i, 'Passwords do not match')
             .replace(/The (.+?) field confirmation does not match\./i, '$1 confirmation does not match')
+            .replace(/The (.+?) field must be at least (\d+) characters\./i, '$1 must be at least $2 characters')
             .replace(/The (.+?) has already been taken\./i, '$1 is already in use')
-            .replace(/The (.+?) field is required\./i, '$1 is required');
+            .replace(/The (.+?) field is required\./i, '$1 is required')
+            .replace(/The (.+?) must be at least (\d+) characters\./i, '$1 must be at least $2 characters');
     };
 
     return (
