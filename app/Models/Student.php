@@ -32,6 +32,7 @@ class Student extends Model
     // CRITICAL: Add full_name and section to appends so they're included in JSON responses
     protected $appends = [
         'full_name',
+        'section',
     ];
 
     protected function casts(): array
