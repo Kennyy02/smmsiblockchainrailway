@@ -9,7 +9,7 @@ import {
     AcademicYearsResponse, 
     ApiResponse 
 } from '../../../services/AdminAcademicYearService';
-import DeleteConfirmationModal from '../../../components/DeleteConfirmationModal';
+import DeleteConfirmationModal from '../../components/DeleteConfirmationModal';
 
 // --- THEME COLORS ---
 const PRIMARY_COLOR_CLASS = 'bg-[#003366]';
