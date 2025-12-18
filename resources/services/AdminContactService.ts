@@ -192,6 +192,13 @@ class AdminContactService {
     }
 
     /**
+     * Unarchive a message (set back to unread)
+     */
+    async unarchiveMessage(id: number): Promise<SingleResponse<ContactMessage>> {
+        return this.updateMessage(id, { status: 'unread' });
+    }
+
+    /**
      * Add admin notes to a message
      */
     async addNotes(id: number, notes: string): Promise<SingleResponse<ContactMessage>> {

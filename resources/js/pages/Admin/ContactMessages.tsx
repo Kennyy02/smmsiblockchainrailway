@@ -73,7 +73,7 @@ const Notification: React.FC<NotificationProps> = ({ type, message, onClose }) =
 interface MessageDetailModalProps {
     message: ContactMessage;
     onClose: () => void;
-    onStatusChange: (id: number, status: 'read' | 'replied' | 'archived') => void;
+    onStatusChange: (id: number, status: 'read' | 'replied' | 'archived' | 'unread') => void;
     onDelete: (id: number) => void;
 }
 
@@ -214,7 +214,7 @@ const MessageDetailModal: React.FC<MessageDetailModalProps> = ({ message, onClos
                     <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 px-6 py-4 rounded-b-2xl">
                         <div className="flex flex-wrap gap-3 justify-between">
                             <div className="flex flex-wrap gap-2">
-                                {message.status !== 'replied' && (
+                                {message.status !== 'replied' && message.status !== 'archived' && (
                                     <button
                                         onClick={() => onStatusChange(message.id, 'replied')}
                                         className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
@@ -223,7 +223,15 @@ const MessageDetailModal: React.FC<MessageDetailModalProps> = ({ message, onClos
                                         <span>Mark as Replied</span>
                                     </button>
                                 )}
-                                {message.status !== 'archived' && (
+                                {message.status === 'archived' ? (
+                                    <button
+                                        onClick={() => onStatusChange(message.id, 'unread')}
+                                        className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                                    >
+                                        <Inbox className="w-4 h-4" />
+                                        <span>Unarchive</span>
+                                    </button>
+                                ) : (
                                     <button
                                         onClick={() => onStatusChange(message.id, 'archived')}
                                         className="flex items-center space-x-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
@@ -266,12 +274,13 @@ const ContactMessages: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [selectedMessage, setSelectedMessage] = useState<ContactMessage | null>(null);
     const [notification, setNotification] = useState<{ type: 'success' | 'error' | 'info'; message: string } | null>(null);
+    const [viewMode, setViewMode] = useState<'messages' | 'archived'>('messages'); // New state for view toggle
     
     // Filters
     const [filters, setFilters] = useState<ContactMessageFilters>({
         page: 1,
         per_page: 15,
-        status: '',
+        status: viewMode === 'archived' ? 'archived' : '',
         search: '',
         sort_by: 'created_at',
         sort_order: 'desc',
@@ -283,19 +292,45 @@ const ContactMessages: React.FC = () => {
         total: 0,
     });
 
+    // Update filters when view mode changes
+    useEffect(() => {
+        if (viewMode === 'archived') {
+            setFilters(prev => ({ ...prev, status: 'archived', page: 1 }));
+        } else {
+            // In messages view, show all except archived
+            setFilters(prev => ({ ...prev, status: '', page: 1 }));
+        }
+    }, [viewMode]);
+
     // Load messages
     const loadMessages = useCallback(async () => {
         setLoading(true);
         try {
-            const response = await adminContactService.getMessages(filters);
-            setMessages(response.data);
-            setPagination(response.pagination);
+            // Create filters copy
+            const loadFilters = { ...filters };
+            
+            // In messages view, we need to exclude archived messages
+            if (viewMode === 'messages' && !loadFilters.status) {
+                // We'll filter out archived on the frontend since backend doesn't have "not archived" filter
+                const response = await adminContactService.getMessages(loadFilters);
+                const filteredMessages = response.data.filter(msg => msg.status !== 'archived');
+                setMessages(filteredMessages);
+                // Adjust pagination total
+                setPagination({
+                    ...response.pagination,
+                    total: filteredMessages.length
+                });
+            } else {
+                const response = await adminContactService.getMessages(loadFilters);
+                setMessages(response.data);
+                setPagination(response.pagination);
+            }
         } catch (error: any) {
             setNotification({ type: 'error', message: error.message || 'Failed to load messages' });
         } finally {
             setLoading(false);
         }
-    }, [filters]);
+    }, [filters, viewMode]);
 
     // Load stats
     const loadStats = useCallback(async () => {
@@ -329,10 +364,11 @@ const ContactMessages: React.FC = () => {
     };
 
     // Handle status change
-    const handleStatusChange = async (id: number, status: 'read' | 'replied' | 'archived') => {
+    const handleStatusChange = async (id: number, status: 'read' | 'replied' | 'archived' | 'unread') => {
         try {
             await adminContactService.updateMessage(id, { status });
-            setNotification({ type: 'success', message: `Message marked as ${status}` });
+            const actionText = status === 'unread' ? 'unarchived' : `marked as ${status}`;
+            setNotification({ type: 'success', message: `Message ${actionText}` });
             setSelectedMessage(null);
             loadMessages();
             loadStats();
@@ -484,6 +520,37 @@ const ContactMessages: React.FC = () => {
                     </div>
                 )}
 
+                {/* View Toggle Buttons */}
+                <div className="flex gap-3">
+                    <button
+                        onClick={() => setViewMode('messages')}
+                        className={`flex items-center px-6 py-3 rounded-xl font-semibold transition-all ${
+                            viewMode === 'messages'
+                                ? 'bg-blue-600 text-white shadow-md'
+                                : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
+                        }`}
+                    >
+                        <MessageSquare className="w-5 h-5 mr-2" />
+                        Messages
+                    </button>
+                    <button
+                        onClick={() => setViewMode('archived')}
+                        className={`flex items-center px-6 py-3 rounded-xl font-semibold transition-all ${
+                            viewMode === 'archived'
+                                ? 'bg-gray-600 text-white shadow-md'
+                                : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
+                        }`}
+                    >
+                        <Archive className="w-5 h-5 mr-2" />
+                        Archived
+                        {stats && stats.archived > 0 && (
+                            <span className="ml-2 px-2 py-0.5 bg-white/20 rounded-full text-xs">
+                                {stats.archived}
+                            </span>
+                        )}
+                    </button>
+                </div>
+
                 {/* Filters */}
                 <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
                     <div className="flex flex-col sm:flex-row gap-4">
@@ -501,18 +568,27 @@ const ContactMessages: React.FC = () => {
                         
                         {/* Status Filter */}
                         <div className="relative">
-                            <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                            <select
-                                value={filters.status}
-                                onChange={(e) => setFilters({ ...filters, status: e.target.value, page: 1 })}
-                                className="pl-10 pr-8 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none bg-white"
-                            >
-                                <option value="">All Status</option>
-                                <option value="unread">Unread</option>
-                                <option value="read">Read</option>
-                                <option value="replied">Replied</option>
-                                <option value="archived">Archived</option>
-                            </select>
+                            {/* Status Filter - Only show if not in archived view */}
+                            {viewMode === 'messages' ? (
+                                <>
+                                    <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                    <select
+                                        value={filters.status}
+                                        onChange={(e) => setFilters({ ...filters, status: e.target.value, page: 1 })}
+                                        className="pl-10 pr-8 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none bg-white"
+                                    >
+                                        <option value="">All Status</option>
+                                        <option value="unread">Unread</option>
+                                        <option value="read">Read</option>
+                                        <option value="replied">Replied</option>
+                                    </select>
+                                </>
+                            ) : (
+                                <div className="px-4 py-2 border border-gray-200 rounded-xl bg-gray-50 text-gray-700 font-medium">
+                                    <Archive className="inline w-4 h-4 mr-2" />
+                                    Archived Messages
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
