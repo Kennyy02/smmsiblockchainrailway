@@ -5,35 +5,10 @@
 // ============================================
 import React from 'react';
 import { Mail, Phone, MapPin, Globe, Facebook, ShieldCheck, Database } from 'lucide-react';
-
-// ============================================
-// CONFIGURATION - Easy to update for client
-// ============================================
-const CONTACT_INFO = {
-    // School Information
-    schoolName: 'Southern Mindoro Maritime School, Inc.',
-    schoolShortName: 'Southern Mindoro',
-    schoolSubtitle: 'Maritime School, Inc.',
-    
-    // Contact Details
-    address: {
-        city: 'Bagumbayan, Roxas',
-        province: 'Oriental Mindoro',
-        country: 'Philippines'
-    },
-    phone: '+63 XXX XXX XXXX',
-    email: 'info@smms.edu.ph',
-    
-    // Social Media & Website
-    facebookUrl: 'https://www.facebook.com/smmsi.shs',
-    websiteUrl: 'https://smmsblockchain.up.railway.app/', // Update with actual website when available
-    
-    // Copyright
-    copyrightYear: '2025',
-    systemName: 'Blockchain Grading System'
-};
+import { useContactInfo } from '../../config/contactInfo';
 
 const Footer = () => {
+    const contactInfo = useContactInfo();
     const scrollToSection = (sectionId: string) => {
         const element = document.getElementById(sectionId);
         if (element) {
@@ -64,15 +39,15 @@ const Footer = () => {
                             />
                             <div>
                                 <div className="text-lg font-bold text-white">
-                                    {CONTACT_INFO.schoolShortName}
+                                    {contactInfo.schoolShortName}
                                 </div>
                                 <div className="text-xs text-amber-400">
-                                    {CONTACT_INFO.schoolSubtitle}
+                                    {contactInfo.schoolSubtitle}
                                 </div>
                             </div>
                         </div>
                         <p className="text-gray-400 leading-relaxed mb-4 text-sm">
-                            The official **{CONTACT_INFO.systemName}** for SMMSI. Ensuring immutable, secure, and globally verifiable academic records.
+                            The official **{contactInfo.systemName}** for SMMSI. Ensuring immutable, secure, and globally verifiable academic records.
                         </p>
                         <p className="text-xs text-gray-500 italic">
                             A new era of certified trust.
@@ -158,8 +133,7 @@ const Footer = () => {
                             </li>
                             <li>
                                 <a 
-                                    href="#contact"
-                                    onClick={(e) => { e.preventDefault(); scrollToSection('contact'); }}
+                                    href="/user-guide"
                                     className="text-gray-400 hover:text-amber-400 transition-colors duration-300 text-sm"
                                 >
                                     User Guide
@@ -167,8 +141,7 @@ const Footer = () => {
                             </li>
                             <li>
                                 <a 
-                                    href="#contact"
-                                    onClick={(e) => { e.preventDefault(); scrollToSection('contact'); }}
+                                    href="/support-center"
                                     className="text-gray-400 hover:text-amber-400 transition-colors duration-300 text-sm"
                                 >
                                     Support Center
@@ -176,8 +149,7 @@ const Footer = () => {
                             </li>
                             <li>
                                 <a 
-                                    href="#contact"
-                                    onClick={(e) => { e.preventDefault(); scrollToSection('contact'); }}
+                                    href="/privacy-policy"
                                     className="text-gray-400 hover:text-amber-400 transition-colors duration-300 text-sm"
                                 >
                                     Privacy Policy
@@ -193,21 +165,21 @@ const Footer = () => {
                             <div className="flex items-start space-x-2 text-gray-400 text-sm">
                                 <MapPin className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
                                 <span>
-                                    {CONTACT_INFO.address.city}<br/>
-                                    {CONTACT_INFO.address.province}<br/>
-                                    {CONTACT_INFO.address.country}
+                                    {contactInfo.addressCity}<br/>
+                                    {contactInfo.addressProvince}<br/>
+                                    {contactInfo.addressCountry}
                                 </span>
                             </div>
                             <div className="flex items-center space-x-2 text-gray-400 text-sm">
                                 <Phone className="w-5 h-5 text-amber-400" />
-                                <a href={`tel:${CONTACT_INFO.phone}`} className="hover:text-amber-400 transition-colors">
-                                    {CONTACT_INFO.phone}
+                                <a href={`tel:${contactInfo.phone}`} className="hover:text-amber-400 transition-colors">
+                                    {contactInfo.phone}
                                 </a>
                             </div>
                             <div className="flex items-center space-x-2 text-gray-400 text-sm">
                                 <Mail className="w-5 h-5 text-amber-400" />
-                                <a href={`mailto:${CONTACT_INFO.email}`} className="hover:text-amber-400 transition-colors">
-                                    {CONTACT_INFO.email}
+                                <a href={`mailto:${contactInfo.email}`} className="hover:text-amber-400 transition-colors">
+                                    {contactInfo.email}
                                 </a>
                             </div>
                         </div>
@@ -216,7 +188,7 @@ const Footer = () => {
                             <h4 className="text-white font-semibold mb-3 text-sm">Official Channels</h4>
                             <div className="flex space-x-3">
                                 <a 
-                                    href={CONTACT_INFO.facebookUrl}
+                                    href={contactInfo.facebookUrl}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="w-9 h-9 bg-gray-800 hover:bg-amber-500 rounded-lg flex items-center justify-center transition-all duration-300 hover:scale-110"
@@ -226,7 +198,7 @@ const Footer = () => {
                                     <Facebook className="w-4 h-4 text-white" />
                                 </a>
                                 <a 
-                                    href={CONTACT_INFO.websiteUrl}
+                                    href={contactInfo.websiteUrl}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="w-9 h-9 bg-gray-800 hover:bg-amber-500 rounded-lg flex items-center justify-center transition-all duration-300 hover:scale-110"
@@ -243,19 +215,17 @@ const Footer = () => {
                 <div className="border-t border-gray-800 pt-8">
                     <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
                         <p className="text-gray-400 text-sm text-center md:text-left">
-                            © {CONTACT_INFO.copyrightYear} <span className="text-white font-semibold">{CONTACT_INFO.schoolName}</span> | **{CONTACT_INFO.systemName}**
+                            © {contactInfo.copyrightYear} <span className="text-white font-semibold">{contactInfo.schoolName}</span> | **{contactInfo.systemName}**
                         </p>
                         <div className="flex space-x-6 text-sm">
                             <a 
-                                href="#contact" 
-                                onClick={(e) => { e.preventDefault(); scrollToSection('contact'); }}
+                                href="/terms-of-service"
                                 className="text-gray-400 hover:text-amber-400 transition-colors"
                             >
                                 Terms of Service
                             </a>
                             <a 
-                                href="#contact" 
-                                onClick={(e) => { e.preventDefault(); scrollToSection('contact'); }}
+                                href="/privacy-policy"
                                 className="text-gray-400 hover:text-amber-400 transition-colors"
                             >
                                 Privacy Policy

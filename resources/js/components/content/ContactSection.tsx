@@ -6,8 +6,10 @@
 import React, { useState } from 'react';
 import { Mail, Phone, MapPin, Send, Clock, Facebook, Globe, LoaderCircle, ShieldCheck, AlertCircle } from 'lucide-react';
 import { adminContactService } from '../../../services/AdminContactService';
+import { useContactInfo } from '../../config/contactInfo';
 
 const ContactSection = () => {
+    const contactInfo = useContactInfo();
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -49,29 +51,29 @@ const ContactSection = () => {
         }
     };
 
-    const contactInfo = [
+    const contactInfoList = [
         {
             icon: MapPin,
             title: 'Main Campus',
-            details: ['San Jose', 'Occidental Mindoro', 'Philippines'],
+            details: [contactInfo.addressCity, contactInfo.addressProvince, contactInfo.addressCountry],
             link: 'https://maps.app.goo.gl/YourMapLinkHere' // Placeholder for actual map link
         },
         {
             icon: Phone,
             title: 'Phone / Support Line',
-            details: ['+63 XXX XXX XXXX'],
-            link: 'tel:+63XXXXXXXXXX'
+            details: [contactInfo.phone],
+            link: `tel:${contactInfo.phone.replace(/\s/g, '')}`
         },
         {
             icon: Mail,
             title: 'Email',
-            details: ['info@smms.edu.ph', 'support@smms.edu.ph'],
-            link: 'mailto:info@smms.edu.ph'
+            details: [contactInfo.email, contactInfo.emailSupport],
+            link: `mailto:${contactInfo.email}`
         },
         {
             icon: Clock,
             title: 'Office Hours',
-            details: ['Monday - Friday', '8:00 AM - 5:00 PM'],
+            details: contactInfo.officeHours.split(', '),
             link: null
         }
     ];
@@ -112,7 +114,7 @@ const ContactSection = () => {
                             </p>
 
                             <div className="space-y-6">
-                                {contactInfo.map((info, index) => {
+                                {contactInfoList.map((info, index) => {
                                     const Icon = info.icon;
                                     return (
                                         <div key={index} className="flex items-start space-x-4">
@@ -157,18 +159,20 @@ const ContactSection = () => {
                                 <h4 className="text-white font-semibold mb-4">Official Channels</h4>
                                 <div className="flex space-x-4">
                                     <a 
-                                        href="#" // Placeholder link
+                                        href={contactInfo.facebookUrl}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="w-10 h-10 bg-blue-700 hover:bg-amber-500 rounded-lg flex items-center justify-center transition-colors"
+                                        title="Visit our Facebook page"
                                     >
                                         <Facebook className="text-white" size={20} />
                                     </a>
                                     <a 
-                                        href="#" // Placeholder link
+                                        href={contactInfo.websiteUrl}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="w-10 h-10 bg-blue-700 hover:bg-amber-500 rounded-lg flex items-center justify-center transition-colors"
+                                        title="Visit our website"
                                     >
                                         <Globe className="text-white" size={20} />
                                     </a>

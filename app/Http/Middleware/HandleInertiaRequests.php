@@ -58,6 +58,22 @@ class HandleInertiaRequests extends Middleware
                 'location' => $request->url(),
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'contactInfo' => [
+                'schoolName' => env('SCHOOL_NAME', 'Southern Mindoro Maritime School, Inc.'),
+                'schoolShortName' => env('SCHOOL_SHORT_NAME', 'Southern Mindoro'),
+                'schoolSubtitle' => env('SCHOOL_SUBTITLE', 'Maritime School, Inc.'),
+                'addressCity' => env('SCHOOL_ADDRESS_CITY', 'Bagumbayan, Roxas'),
+                'addressProvince' => env('SCHOOL_ADDRESS_PROVINCE', 'Oriental Mindoro'),
+                'addressCountry' => env('SCHOOL_ADDRESS_COUNTRY', 'Philippines'),
+                'phone' => env('SCHOOL_PHONE', '+63 XXX XXX XXXX'),
+                'email' => env('SCHOOL_EMAIL', 'info@smms.edu.ph'),
+                'emailSupport' => env('SCHOOL_EMAIL_SUPPORT', 'support@smms.edu.ph'),
+                'facebookUrl' => env('SCHOOL_FACEBOOK_URL', 'https://www.facebook.com/smmsi.shs'),
+                'websiteUrl' => env('SCHOOL_WEBSITE_URL', 'https://smmsblockchain.up.railway.app/'),
+                'officeHours' => env('SCHOOL_OFFICE_HOURS', 'Monday - Friday, 8:00 AM - 5:00 PM'),
+                'copyrightYear' => env('SCHOOL_COPYRIGHT_YEAR', date('Y')),
+                'systemName' => env('SYSTEM_NAME', 'Blockchain Grading System'),
+            ],
         ];
     }
 }

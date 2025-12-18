@@ -13,6 +13,28 @@ Route::get('/verify-certificate', function () {
     return Inertia::render('Public/CertificateVerification');
 })->name('verify-certificate.show');
 
+// Public Information Pages
+Route::get('/privacy-policy', function () {
+    return Inertia::render('PrivacyPolicy');
+})->name('privacy-policy');
+
+Route::get('/terms-of-service', function () {
+    return Inertia::render('TermsOfService');
+})->name('terms-of-service');
+
+Route::get('/support-center', function () {
+    return Inertia::render('SupportCenter');
+})->name('support-center');
+
+Route::get('/user-guide', function () {
+    return Inertia::render('UserGuide');
+})->name('user-guide');
+
+// Alias for verify route
+Route::get('/verify', function () {
+    return Inertia::render('Public/CertificateVerification');
+})->name('verify');
+
 // ==================== ADMIN ROUTES ====================
 Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
     
