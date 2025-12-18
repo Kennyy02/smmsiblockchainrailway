@@ -7,10 +7,12 @@ use App\Models\Student;
 use App\Models\Enrollment;
 use App\Models\AcademicYear;
 use App\Models\Semester;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Hash;
 
 class EnrollmentController extends Controller
 {
@@ -207,8 +209,13 @@ class EnrollmentController extends Controller
                 'status' => 'enrolled',
             ]);
 
-            // Update student's current class
-            Student::where('id', $studentId)->update(['current_class_id' => $classId]);
+            // Update student's current class and enrollment date (if not set)
+            $student = Student::find($studentId);
+            $updateData = ['current_class_id' => $classId];
+            if (!$student->enrollment_date) {
+                $updateData['enrollment_date'] = now();
+            }
+            $student->update($updateData);
 
             return response()->json([
                 'success' => true,
@@ -272,6 +279,31 @@ class EnrollmentController extends Controller
                         ->where('semester_id', $class->semester_id)
                         ->forceDelete();
 
+                    // Get student record
+                    $student = Student::find($studentId);
+                    
+                    // CRITICAL: Ensure student has a user account for login
+                    if (!$student->user_id) {
+                        // Create user account with default password
+                        $defaultPassword = 'password123'; // Student should change this on first login
+                        $user = User::create([
+                            'name' => trim($student->first_name . ' ' . $student->last_name),
+                            'email' => $student->email,
+                            'password' => Hash::make($defaultPassword),
+                            'role' => 'student',
+                            'status' => 'active',
+                        ]);
+                        
+                        // Link user to student
+                        $student->update(['user_id' => $user->id]);
+                        
+                        Log::info('Created user account for enrolled student', [
+                            'student_id' => $student->id,
+                            'user_id' => $user->id,
+                            'email' => $student->email
+                        ]);
+                    }
+                    
                     // Create enrollment
                     Enrollment::create([
                         'student_id' => $studentId,
@@ -283,8 +315,12 @@ class EnrollmentController extends Controller
                         'status' => 'enrolled',
                     ]);
 
-                    // Update student's current class
-                    Student::where('id', $studentId)->update(['current_class_id' => $classId]);
+                    // Update student's current class and enrollment date (if not set)
+                    $updateData = ['current_class_id' => $classId];
+                    if (!$student->enrollment_date) {
+                        $updateData['enrollment_date'] = now();
+                    }
+                    $student->update($updateData);
 
                     $enrolled++;
                 } catch (\Exception $e) {
