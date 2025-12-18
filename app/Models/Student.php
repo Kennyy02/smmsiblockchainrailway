@@ -21,11 +21,8 @@ class Student extends Model
         'date_of_birth',
         'gender',
         'address',
-        'enrollment_date',
         'program',
-        'course_id',
         'year_level',
-        'status',
         'current_class_id',
     ];
 
