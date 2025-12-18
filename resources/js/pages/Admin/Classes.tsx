@@ -243,17 +243,18 @@ const ClassModal: React.FC<{
 
     // Auto-generate class_code and class_name when course, year_level, or section changes
     useEffect(() => {
-        // Only auto-generate for new classes, not when editing
-        if (!classItem) {
-            const selectedCourse = allCourses.find(c => c.id === formData.course_id);
-            const courseCode = selectedCourse?.course_code || '';
+        // Auto-generate for both new and editing classes
+        const selectedCourse = allCourses.find(c => c.id === formData.course_id);
+        const courseCode = selectedCourse?.course_code || '';
+        
+        // For K-12 (non-college), generate without course code
+        // For college, require course to be selected
+        if (formData.year_level < 13 || (formData.year_level >= 13 && courseCode)) {
+            const newClassCode = generateClassCode(formData.year_level, courseCode, formData.section);
+            const newClassName = generateClassName(formData.year_level, courseCode, formData.section);
             
-            // For K-12 (non-college), generate without course code
-            // For college, require course to be selected
-            if (formData.year_level < 13 || (formData.year_level >= 13 && courseCode)) {
-                const newClassCode = generateClassCode(formData.year_level, courseCode, formData.section);
-                const newClassName = generateClassName(formData.year_level, courseCode, formData.section);
-                
+            // Only update if values actually changed to prevent infinite loops
+            if (newClassCode !== formData.class_code || newClassName !== formData.class_name) {
                 setFormData(prev => ({
                     ...prev,
                     class_code: newClassCode,
@@ -261,7 +262,7 @@ const ClassModal: React.FC<{
                 }));
             }
         }
-    }, [formData.year_level, formData.course_id, formData.section, allCourses, classItem]);
+    }, [formData.year_level, formData.course_id, formData.section, allCourses]);
 
     const loadDropdownOptions = async () => {
         setLoadingOptions(true);
@@ -307,6 +308,15 @@ const ClassModal: React.FC<{
                 // Initial filtering based on current year_level
                 const gradeCategory = getGradeLevelCategory(formData.year_level);
                 const filtered = coursesRes.data.filter((course: Course) => course.level === gradeCategory);
+                
+                // When editing, ensure the current course is in the filtered list
+                if (classItem && formData.course_id) {
+                    const currentCourse = coursesRes.data.find((c: Course) => c.id === formData.course_id);
+                    if (currentCourse && !filtered.some((c: Course) => c.id === formData.course_id)) {
+                        filtered.push(currentCourse);
+                    }
+                }
+                
                 setCourses(filtered);
             }
         } catch (error) {
@@ -468,16 +478,16 @@ const ClassModal: React.FC<{
                                 <div>
                                     <label className="block text-sm font-semibold text-gray-700 mb-2">
                                         Class Code <span className="text-red-500">*</span>
-                                        {!classItem && <span className="text-xs font-normal text-gray-500 ml-2">(Auto-generated)</span>}
+                                        <span className="text-xs font-normal text-gray-500 ml-2">(Auto-generated)</span>
                                     </label>
                                     <input
                                         type="text"
                                         name="class_code"
                                         value={formData.class_code}
                                         onChange={handleChange}
-                                        className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all ${!classItem ? 'bg-gray-50' : ''}`}
+                                        className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-gray-50`}
                                         placeholder={formData.year_level >= 13 ? "e.g., BSIT-1A" : "e.g., Grade7-A"}
-                                        readOnly={!classItem}
+                                        readOnly
                                         required
                                     />
                                     {errors.class_code && (<p className="text-red-500 text-xs mt-1">{errors.class_code[0]}</p>)}
@@ -485,16 +495,16 @@ const ClassModal: React.FC<{
                                 <div>
                                     <label className="block text-sm font-semibold text-gray-700 mb-2">
                                         Class Name <span className="text-red-500">*</span>
-                                        {!classItem && <span className="text-xs font-normal text-gray-500 ml-2">(Auto-generated)</span>}
+                                        <span className="text-xs font-normal text-gray-500 ml-2">(Auto-generated)</span>
                                     </label>
                                     <input
                                         type="text"
                                         name="class_name"
                                         value={formData.class_name}
                                         onChange={handleChange}
-                                        className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all ${!classItem ? 'bg-gray-50' : ''}`}
+                                        className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-gray-50`}
                                         placeholder={formData.year_level >= 13 ? "e.g., BSIT-1A" : "e.g., Grade 7 - Section A"}
-                                        readOnly={!classItem}
+                                        readOnly
                                         required
                                     />
                                     {errors.class_name && (<p className="text-red-500 text-xs mt-1">{errors.class_name[0]}</p>)}
