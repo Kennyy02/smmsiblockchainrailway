@@ -81,7 +81,7 @@ class TeacherController extends Controller
             'email' => 'required|email|max:255|unique:teachers,email',
             'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:500',
-            'department' => 'required|string|max:255',
+            'department' => 'nullable|string|max:255',
             'password' => 'required|string|min:8|confirmed',
         ]);
 
@@ -197,7 +197,7 @@ class TeacherController extends Controller
                 'email' => 'required|email|max:255|unique:teachers,email,' . $id,
                 'phone' => 'nullable|string|max:20',
                 'address' => 'nullable|string|max:500',
-                'department' => 'required|string|max:255',
+                'department' => 'nullable|string|max:255',
             ]);
 
             if ($validator->fails()) {

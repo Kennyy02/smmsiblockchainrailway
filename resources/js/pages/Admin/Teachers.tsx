@@ -18,7 +18,6 @@ interface NotificationData {
 
 interface Filters {
     search: string;
-    department: string;
     page: number;
     per_page: number;
 }
@@ -71,7 +70,6 @@ const TeacherModal: React.FC<{
         email: teacher?.email || '',
         phone: teacher?.phone || '',
         address: teacher?.address || '',
-        department: teacher?.department || '',
         password: '',
         password_confirmation: '',
     });
@@ -239,22 +237,6 @@ const TeacherModal: React.FC<{
                                 />
                                 {errors.address && (
                                     <p className="text-red-500 text-xs mt-1">{errors.address[0]}</p>
-                                )}
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">Department</label>
-                                <input
-                                    type="text"
-                                    name="department"
-                                    value={formData.department}
-                                    onChange={handleChange}
-                                    placeholder="e.g., Computer Science, Mathematics"
-                                    className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
-                                    required
-                                />
-                                {errors.department && (
-                                    <p className="text-red-500 text-xs mt-1">{errors.department[0]}</p>
                                 )}
                             </div>
 
@@ -532,7 +514,6 @@ const Teachers: React.FC = () => {
     
     const [filters, setFilters] = useState<Filters>({
         search: '',
-        department: '',
         page: 1,
         per_page: 10,
     });
@@ -559,7 +540,7 @@ const Teachers: React.FC = () => {
         }, 500);
         
         return () => clearTimeout(delayDebounceFn);
-    }, [filters.search, filters.department, filters.page, filters.per_page]);
+    }, [filters.search, filters.page, filters.per_page]);
 
     const loadTeachers = async () => {
         setLoading(true);
@@ -726,12 +707,12 @@ const Teachers: React.FC = () => {
                             <div class="value">${teachers.length}</div>
                         </div>
                         <div class="summary-item">
-                            <div class="label">Departments</div>
-                            <div class="value">${stats.by_department.length}</div>
-                        </div>
-                        <div class="summary-item">
                             <div class="label">Total Classes</div>
                             <div class="value">${teachers.reduce((sum, t) => sum + (t.classes_count || 0), 0)}</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="label">Advisory Classes</div>
+                            <div class="value">${teachers.filter(t => t.advisory_class).length}</div>
                         </div>
                     </div>
                     
@@ -741,10 +722,9 @@ const Teachers: React.FC = () => {
                                 <tr>
                                     <th style="width: 5%;">#</th>
                                     <th style="width: 15%;">Teacher ID</th>
-                                    <th style="width: 25%;">Name</th>
-                                    <th style="width: 20%;">Email</th>
-                                    <th style="width: 20%;">Department</th>
-                                    <th style="width: 15%;">Classes</th>
+                                    <th style="width: 30%;">Name</th>
+                                    <th style="width: 30%;">Email</th>
+                                    <th style="width: 20%;">Classes</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -754,7 +734,6 @@ const Teachers: React.FC = () => {
                                         <td><strong>${teacher.teacher_id}</strong></td>
                                         <td>${teacher.full_name || `${teacher.first_name} ${teacher.last_name}`}</td>
                                         <td>${teacher.email}</td>
-                                        <td>${teacher.department}</td>
                                         <td style="text-align: center;">${teacher.classes_count || 0}</td>
                                     </tr>
                                 `).join('')}
@@ -763,7 +742,7 @@ const Teachers: React.FC = () => {
                     ` : `
                         <div style="text-align: center; padding: 40px; color: #666;">
                             <p class="text-lg font-medium">No teachers found</p>
-                            <p class="text-sm">Current filters: Search="${filters.search}", Department="${filters.department}"</p>
+                            <p class="text-sm">Current filters: Search="${filters.search}"</p>
                         </div>
                     `}
                     

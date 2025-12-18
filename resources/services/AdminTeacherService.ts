@@ -17,7 +17,7 @@ export interface Teacher {
     email: string;
     phone?: string;
     address?: string;
-    department: string;
+    department?: string;
     full_name?: string;
     classes_count?: number;
     subjects_count?: number;
@@ -38,7 +38,6 @@ export interface TeacherFormData {
     email: string;
     phone?: string;
     address?: string;
-    department: string;
     password?: string;
     password_confirmation?: string;
 }
@@ -574,7 +573,6 @@ class AdminTeacherService {
             'Email',
             'Phone',
             'Address',
-            'Department',
             'Advisory Class',
             'Subjects Assigned',
             'Status'
@@ -590,7 +588,6 @@ class AdminTeacherService {
             teacher.email,
             teacher.phone || '',
             teacher.address || '',
-            teacher.department || '',
             teacher.advisory_class?.class_code || teacher.advisory_class_name || '',
             teacher.subjects_count || teacher.classes_count || 0,
             'Active'
