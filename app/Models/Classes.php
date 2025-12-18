@@ -23,9 +23,10 @@ class Classes extends Model
     ];
 
     // ADDED: Append computed attributes to JSON
+    // Temporarily disabled to debug 500 errors
     protected $appends = [
-        'student_count',
-        'adviser_name'
+        // 'student_count',
+        // 'adviser_name'
     ];
 
     protected function casts(): array

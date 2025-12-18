@@ -23,9 +23,10 @@ class Teacher extends Model
     ];
 
     // FIX: Add 'full_name' to the appends array
+    // Temporarily disabled to debug 500 errors
     protected $appends = [
-        'full_name', 
-        'name_with_title'
+        // 'full_name', 
+        // 'name_with_title'
     ];
 
     protected function casts(): array
