@@ -56,7 +56,7 @@ const CTASection = () => {
                 {/* CTA Button */}
                 <div className="flex justify-center items-center mb-8">
                     <Link
-                        href={route('login')}
+                        href="/verify"
                         className="group px-8 py-4 bg-amber-500 hover:bg-amber-600 text-blue-950 font-bold text-lg rounded-full transition-all duration-300 hover:scale-105 shadow-xl hover:shadow-2xl flex items-center space-x-2 min-w-[200px] justify-center"
                     >
                         <span>Verify a Certificate</span>
