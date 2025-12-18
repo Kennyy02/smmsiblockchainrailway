@@ -92,6 +92,7 @@ class TeacherController extends Controller
             'last_name' => 'required|string|max:100',
             'middle_name' => 'nullable|string|max:100',
             'email' => 'required|email|max:255|unique:teachers,email',
+            'gender' => 'nullable|in:Male,Female',
             'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:500',
             'department' => 'nullable|string|max:255',
@@ -134,6 +135,7 @@ class TeacherController extends Controller
                 'last_name' => $request->last_name,
                 'middle_name' => $request->middle_name,
                 'email' => $request->email,
+                'gender' => $request->gender,
                 'phone' => $request->phone,
                 'address' => $request->address,
                 'department' => $request->department,
@@ -216,9 +218,11 @@ class TeacherController extends Controller
                 'last_name' => 'required|string|max:100',
                 'middle_name' => 'nullable|string|max:100',
                 'email' => 'required|email|max:255|unique:teachers,email,' . $id,
+                'gender' => 'nullable|in:Male,Female',
                 'phone' => 'nullable|string|max:20',
                 'address' => 'nullable|string|max:500',
                 'department' => 'nullable|string|max:255',
+                'password' => 'nullable|string|min:8|confirmed',
             ]);
 
             if ($validator->fails()) {
@@ -238,10 +242,18 @@ class TeacherController extends Controller
                 'last_name',
                 'middle_name',
                 'email',
+                'gender',
                 'phone',
                 'address',
                 'department',
             ]));
+
+            // Update user password if provided
+            if (!empty($request->password) && $teacher->user) {
+                $teacher->user->update([
+                    'password' => Hash::make($request->password),
+                ]);
+            }
 
             // Update user record if exists
             if ($teacher->user) {

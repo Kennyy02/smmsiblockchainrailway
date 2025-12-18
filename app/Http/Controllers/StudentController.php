@@ -358,6 +358,8 @@ class StudentController extends Controller
                 'program' => 'nullable|string|max:255',
                 'year_level' => 'required|integer|min:1|max:16',
                 'current_class_id' => 'nullable|exists:classes,id',
+                // Password update (optional)
+                'password' => 'nullable|string|min:8|confirmed',
                 // Parent/Guardian validation
                 'parent_guardian' => 'nullable|array',
                 'parent_guardian.first_name' => 'nullable|string|max:255',
@@ -381,12 +383,29 @@ class StudentController extends Controller
             
             $studentData = $validator->validated();
             unset($studentData['parent_guardian']); // Remove parent data from student update
+            unset($studentData['password']); // Remove password from student data
+            unset($studentData['password_confirmation']); // Remove password confirmation
             
             // CRITICAL: Never update user_id through this endpoint
             // It's managed internally (during enrollment or account creation)
             unset($studentData['user_id']);
             
             $student->update($studentData);
+            
+            // Update user password if provided
+            if (!empty($request->password) && $student->user) {
+                $student->user->update([
+                    'password' => Hash::make($request->password),
+                ]);
+            }
+            
+            // Update user email if student email changed
+            if (isset($studentData['email']) && $student->user) {
+                $student->user->update([
+                    'email' => $studentData['email'],
+                    'name' => $studentData['first_name'] . ' ' . $studentData['last_name'],
+                ]);
+            }
             
             // Handle parent/guardian creation/update if provided
             $parentData = $request->input('parent_guardian');
