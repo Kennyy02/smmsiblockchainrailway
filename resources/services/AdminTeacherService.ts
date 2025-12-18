@@ -133,7 +133,7 @@ export interface TeachersResponse extends ApiResponse<Teacher[]> {
 // ========================================================================
 
 class AdminTeacherService {
-    private baseURL = '';
+    private baseURL = '/api';
 
     private async request<T>(url: string, options: RequestInit = {}): Promise<ApiResponse<T>> {
         const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');

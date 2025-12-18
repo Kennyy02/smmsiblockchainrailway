@@ -939,8 +939,8 @@ const Teachers: React.FC = () => {
                                         </tr>
                                     ) : teachers.length === 0 ? (
                                         <tr>
-                                            <td colSpan={4} className="px-6 py-12 text-center text-gray-500">
-                                                <div className="flex flex-col items-center">
+                                            <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
+                                                <div className="flex flex-col items-center justify-center">
                                                     <UserCheck className="h-12 w-12 text-gray-300 mb-4" />
                                                     <p className="text-lg font-medium">No teachers found</p>
                                                     <p className="text-sm">Try adjusting your search or filters</p>
