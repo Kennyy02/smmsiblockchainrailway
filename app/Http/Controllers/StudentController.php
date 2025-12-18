@@ -169,13 +169,19 @@ class StudentController extends Controller
             
             $student = Student::create($studentData);
             
-            // Handle parent/guardian creation if provided
-            $parentData = $request->input('parent_guardian');
-            if ($parentData && !empty($parentData['first_name']) && !empty($parentData['last_name'])) {
-                $parent = $this->createOrUpdateParent($parentData, $student);
-            }
-            
             DB::commit();
+            
+            // Handle parent/guardian creation AFTER commit to avoid transaction rollback
+            try {
+                $parentData = $request->input('parent_guardian');
+                if ($parentData && !empty($parentData['first_name']) && !empty($parentData['last_name'])) {
+                    $parent = $this->createOrUpdateParent($parentData, $student);
+                    Log::info('Parent created successfully for student: ' . $student->id);
+                }
+            } catch (\Exception $e) {
+                // Log parent creation error but don't fail student creation
+                Log::error('Error creating parent (student still created): ' . $e->getMessage());
+            }
             
             $student->load(['user', 'currentClass', 'parents']);
             
@@ -212,52 +218,60 @@ class StudentController extends Controller
      */
     private function createOrUpdateParent(array $parentData, Student $student)
     {
-        // Check if parent already exists by email
-        $existingParent = null;
-        if (!empty($parentData['email'])) {
-            $existingParent = ParentModel::where('email', $parentData['email'])->first();
-        }
-        
-        if ($existingParent) {
-            // Update existing parent info
-            $existingParent->update([
-                'first_name' => $parentData['first_name'],
-                'middle_name' => $parentData['middle_name'] ?? null,
-                'last_name' => $parentData['last_name'],
-                'phone' => $parentData['phone'] ?? null,
-                'address' => $parentData['address'] ?? null,
-            ]);
-            $parent = $existingParent;
-        } else {
-            // Create user account for parent
-            $user = User::create([
-                'name' => trim($parentData['first_name'] . ' ' . ($parentData['last_name'] ?? '')),
-                'email' => $parentData['email'] ?? 'parent_' . uniqid() . '@temp.local',
-                'password' => Hash::make($parentData['password'] ?? 'password123'),
-                'role' => 'parent',
-                'status' => 'active',
-            ]);
+        DB::beginTransaction();
+        try {
+            // Check if parent already exists by email
+            $existingParent = null;
+            if (!empty($parentData['email'])) {
+                $existingParent = ParentModel::where('email', $parentData['email'])->first();
+            }
             
-            // Create parent record
-            $parent = ParentModel::create([
-                'user_id' => $user->id,
-                'first_name' => $parentData['first_name'],
-                'middle_name' => $parentData['middle_name'] ?? null,
-                'last_name' => $parentData['last_name'],
-                'email' => $parentData['email'] ?? $user->email,
-                'phone' => $parentData['phone'] ?? null,
-                'address' => $parentData['address'] ?? null,
-            ]);
+            if ($existingParent) {
+                // Update existing parent info
+                $existingParent->update([
+                    'first_name' => $parentData['first_name'],
+                    'middle_name' => $parentData['middle_name'] ?? null,
+                    'last_name' => $parentData['last_name'],
+                    'phone' => $parentData['phone'] ?? null,
+                    'address' => $parentData['address'] ?? null,
+                ]);
+                $parent = $existingParent;
+            } else {
+                // Create user account for parent
+                $user = User::create([
+                    'name' => trim($parentData['first_name'] . ' ' . ($parentData['last_name'] ?? '')),
+                    'email' => $parentData['email'] ?? 'parent_' . uniqid() . '@temp.local',
+                    'password' => Hash::make($parentData['password'] ?? 'password123'),
+                    'role' => 'parent',
+                    'status' => 'active',
+                ]);
+                
+                // Create parent record
+                $parent = ParentModel::create([
+                    'user_id' => $user->id,
+                    'first_name' => $parentData['first_name'],
+                    'middle_name' => $parentData['middle_name'] ?? null,
+                    'last_name' => $parentData['last_name'],
+                    'email' => $parentData['email'] ?? $user->email,
+                    'phone' => $parentData['phone'] ?? null,
+                    'address' => $parentData['address'] ?? null,
+                ]);
+            }
+            
+            // Link parent to student (many-to-many relationship)
+            if (!$student->parents()->where('parent_id', $parent->id)->exists()) {
+                $student->parents()->attach($parent->id, [
+                    'relationship' => $parentData['relationship'] ?? 'Parent'
+                ]);
+            }
+            
+            DB::commit();
+            return $parent;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Parent creation failed: ' . $e->getMessage());
+            throw $e;
         }
-        
-        // Link parent to student (many-to-many relationship)
-        if (!$student->parents()->where('parent_id', $parent->id)->exists()) {
-            $student->parents()->attach($parent->id, [
-                'relationship' => $parentData['relationship'] ?? 'Parent'
-            ]);
-        }
-        
-        return $parent;
     }
 
     /**
