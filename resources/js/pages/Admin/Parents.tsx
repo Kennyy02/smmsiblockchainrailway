@@ -119,6 +119,7 @@ const ParentModal: React.FC<{
         last_name: parent?.last_name || '',
         middle_name: parent?.middle_name || '',
         email: parent?.email || '',
+        gender: parent?.gender || '',
         phone: parent?.phone || '',
         address: parent?.address || '',
         password: '',
@@ -302,10 +303,25 @@ const ParentModal: React.FC<{
                                     {errors.email && (<p className="text-red-500 text-xs mt-1">{errors.email[0]}</p>)}
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Phone</label>
-                                    <input type="text" name="phone" value={formData.phone} onChange={handleChange} className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`} placeholder="+63 XXX XXX XXXX"/>
-                                    {errors.phone && (<p className="text-red-500 text-xs mt-1">{errors.phone[0]}</p>)}
+                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Gender</label>
+                                    <select
+                                        name="gender"
+                                        value={formData.gender || ''}
+                                        onChange={handleChange}
+                                        className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white`}
+                                    >
+                                        <option value="">Select Gender</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                    </select>
+                                    {errors.gender && (<p className="text-red-500 text-xs mt-1">{errors.gender[0]}</p>)}
                                 </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-semibold text-gray-700 mb-2">Phone</label>
+                                <input type="text" name="phone" value={formData.phone} onChange={handleChange} className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`} placeholder="+63 XXX XXX XXXX"/>
+                                {errors.phone && (<p className="text-red-500 text-xs mt-1">{errors.phone[0]}</p>)}
                             </div>
 
                             <div>
@@ -567,6 +583,10 @@ const ViewParentModal: React.FC<{
                                     <Mail className="h-4 w-4 text-gray-400 mr-2" />
                                     {parent.email}
                                 </p>
+                            </div>
+                            <div>
+                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Gender</label>
+                                <p className="text-gray-900 font-medium mt-1">{parent.gender || '—'}</p>
                             </div>
                             <div>
                                 <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Phone Number</label>
@@ -1285,3 +1305,4 @@ const Parents: React.FC = () => {
 };
 
 export default Parents;
+

@@ -184,6 +184,7 @@ const StudentModal: React.FC<{
         last_name: student?.last_name || '',
         middle_name: student?.middle_name || '',
         email: student?.email || '',
+        gender: student?.gender || '',
         phone: student?.phone || '',
         address: student?.address || '',
         program: student?.program || '',
@@ -196,6 +197,7 @@ const StudentModal: React.FC<{
             middle_name: existingParent?.middle_name || '',
             last_name: existingParent?.last_name || '',
             email: existingParent?.email || '',
+            gender: existingParent?.gender || '',
             phone: existingParent?.phone || '',
             address: existingParent?.address || '',
             relationship: existingParent?.relationship || 'Parent',
@@ -328,6 +330,23 @@ const StudentModal: React.FC<{
                                         required
                                     />
                                     {errors.email && (<p className="text-red-500 text-xs mt-1">{errors.email[0]}</p>)}
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 gap-4">
+                                <div>
+                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Gender</label>
+                                    <select
+                                        name="gender"
+                                        value={formData.gender || ''}
+                                        onChange={handleChange}
+                                        className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white`}
+                                    >
+                                        <option value="">Select Gender</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                    </select>
+                                    {errors.gender && (<p className="text-red-500 text-xs mt-1">{errors.gender[0]}</p>)}
                                 </div>
                             </div>
 
@@ -585,6 +604,23 @@ const StudentModal: React.FC<{
                                         {errors['parent_guardian.email'] && (<p className="text-red-500 text-xs mt-1">{errors['parent_guardian.email'][0]}</p>)}
                                     </div>
                                     <div>
+                                        <label className="block text-sm font-semibold text-gray-700 mb-2">Gender</label>
+                                        <select
+                                            name="gender"
+                                            value={formData.parent_guardian?.gender || ''}
+                                            onChange={handleParentChange}
+                                            className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white`}
+                                        >
+                                            <option value="">Select Gender</option>
+                                            <option value="Male">Male</option>
+                                            <option value="Female">Female</option>
+                                        </select>
+                                        {errors['parent_guardian.gender'] && (<p className="text-red-500 text-xs mt-1">{errors['parent_guardian.gender'][0]}</p>)}
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-1 gap-4 mb-4">
+                                    <div>
                                         <label className="block text-sm font-semibold text-gray-700 mb-2">Phone</label>
                                         <input 
                                             type="text" 
@@ -768,6 +804,10 @@ const ViewStudentModal: React.FC<{
                                     <Mail className="h-4 w-4 text-gray-400 mr-2" />
                                     {student.email}
                                 </p>
+                            </div>
+                            <div>
+                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Gender</label>
+                                <p className="text-gray-900 font-medium mt-1">{student.gender || '—'}</p>
                             </div>
                             <div>
                                 <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Program/Course</label>

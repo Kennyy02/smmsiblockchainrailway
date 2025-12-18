@@ -64,6 +64,7 @@ export interface ParentGuardianFormData {
     middle_name?: string;
     last_name: string;
     email?: string;
+    gender?: string;
     phone?: string;
     address?: string;
     relationship: string; // e.g., 'Father', 'Mother', 'Guardian'
