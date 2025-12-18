@@ -107,15 +107,28 @@ class CourseMaterialController extends Controller
             ], 201);
             
         } catch (\Illuminate\Database\QueryException $e) {
+            \Log::error('Course Material Upload - Database Error', [
+                'error' => $e->getMessage(),
+                'sql' => $e->getSql() ?? 'N/A',
+                'bindings' => $e->getBindings() ?? [],
+                'data' => $data ?? []
+            ]);
+            
             return response()->json([
                 'success' => false, 
-                'message' => 'Database error occurred',
+                'message' => 'Database error occurred: ' . $e->getMessage(),
+                'error_code' => $e->getCode()
             ], 500);
             
         } catch (\Exception $e) {
+            \Log::error('Course Material Upload - General Error', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
             return response()->json([
                 'success' => false, 
-                'message' => 'Failed to upload material',
+                'message' => 'Failed to upload material: ' . $e->getMessage(),
             ], 500);
         }
     }
