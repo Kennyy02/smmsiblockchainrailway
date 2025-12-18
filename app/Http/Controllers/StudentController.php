@@ -94,6 +94,12 @@ class StudentController extends Controller
     public function store(Request $request)
     {
         try {
+            // Log incoming request for debugging
+            Log::info('Creating student with data', [
+                'has_parent' => !empty($request->input('parent_guardian')),
+                'student_email' => $request->input('email'),
+            ]);
+            
             $validator = Validator::make($request->all(), [
                 'user_id' => [
                     'nullable',
@@ -179,9 +185,25 @@ class StudentController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error creating student: ' . $e->getMessage());
+            Log::error('Stack trace: ' . $e->getTraceAsString());
+            
+            // Return detailed error for debugging
+            $errorDetails = [
+                'success' => false,
+                'message' => 'Failed to create student',
+                'error' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => basename($e->getFile()),
+            ];
+            
+            // In production, add more details
+            if (config('app.debug') || request()->expectsJson()) {
+                $errorDetails['trace'] = $e->getTraceAsString();
+            }
+            
             return $request->expectsJson()
-                ? response()->json(['success' => false, 'message' => 'Failed to create student', 'error' => $e->getMessage()], 500)
-                : back()->with('error', 'Failed to create student')->withInput();
+                ? response()->json($errorDetails, 500)
+                : back()->with('error', 'Failed to create student: ' . $e->getMessage())->withInput();
         }
     }
     
