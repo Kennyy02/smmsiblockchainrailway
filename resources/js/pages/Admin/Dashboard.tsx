@@ -317,9 +317,9 @@ const Dashboard: React.FC = () => {
                         />
                     </div>
 
-                    {/* Announcements Section */}
+                    {/* Announcements Section - At Bottom */}
                     <div className="mb-8">
-                        <AnnouncementCard userRole="admin" />
+                        <AnnouncementCard role="admin" />
                     </div>
 
                     {/* Notification */}

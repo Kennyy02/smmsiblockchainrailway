@@ -230,11 +230,6 @@ const Dashboard: React.FC = () => {
                     />
                 </div>
 
-                {/* Announcements Section */}
-                <div className="mt-6">
-                    <AnnouncementCard userRole="teacher" />
-                </div>
-
                 {/* To-Do List & Alerts */}
                 <div className="grid grid-cols-1 lg:grid-cols- gap-6 mt-6">
                   
@@ -251,6 +246,11 @@ const Dashboard: React.FC = () => {
                             <QuickNavLink title="Attendance Recording" href="/teacher/attendance" icon={ClipboardCheck} />
                         </div>
                     </div>
+                </div>
+
+                {/* Announcements Section - Moved to Bottom */}
+                <div className="mt-6">
+                    <AnnouncementCard role="teacher" />
                 </div>
 
             </div>

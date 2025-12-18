@@ -245,11 +245,6 @@ const StudentDashboard: React.FC = () => {
                         </div>
                     </div>
                 )}
-                
-                {/* Announcements Section */}
-                <div>
-                    <AnnouncementCard userRole="student" />
-                </div>
 
                 {/* Notification */}
                 {notification && (
@@ -320,6 +315,11 @@ const StudentDashboard: React.FC = () => {
                                     <QuickNavLink title="My Attendance" href="/student/attendance" icon={ClipboardCheck} />
                                 </div>
                             </div>
+                        </div>
+                        
+                        {/* Announcements Section - Moved to Bottom */}
+                        <div>
+                            <AnnouncementCard role="student" />
                         </div>
                     </>
                 )}

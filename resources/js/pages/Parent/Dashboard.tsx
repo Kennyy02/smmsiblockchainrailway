@@ -428,11 +428,6 @@ const ParentDashboard: React.FC = () => {
                         </div>
                     </div>
                 )}
-                
-                {/* Announcements Section */}
-                <div>
-                    <AnnouncementCard userRole="parent" />
-                </div>
 
                 {/* Notification */}
                 {notification && (
@@ -488,6 +483,11 @@ const ParentDashboard: React.FC = () => {
                                 onViewChild={handleViewChild}
                             />
                         ))}
+                        
+                        {/* Announcements Section - Moved to Bottom */}
+                        <div className="mt-6">
+                            <AnnouncementCard role="parent" />
+                        </div>
                     </>
                 ) : (
                     <div className="py-20 text-center text-gray-500">

@@ -36,6 +36,16 @@ class ClassSubjectController extends Controller
             if ($teacherId = $request->input('teacher_id')) {
                 $query->where('teacher_id', $teacherId);
             }
+            if ($studentId = $request->input('student_id')) {
+                // Filter by student's current class
+                $student = \App\Models\Student::find($studentId);
+                if ($student && $student->current_class_id) {
+                    $query->where('class_id', $student->current_class_id);
+                } else {
+                    // If student has no current class, return empty result
+                    $query->whereRaw('1 = 0');
+                }
+            }
             if ($search = $request->input('search')) {
                $query->whereHas('subject', function($q) use ($search) {
                    $q->where('subject_name', 'like', "%{$search}%")

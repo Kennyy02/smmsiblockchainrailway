@@ -540,28 +540,29 @@ class CourseYearSubjectController extends Controller
                 'class_id' => $class->id
             ]);
 
-            $subjects = CourseYearSubject::with(['subject', 'course'])
-                ->where('course_id', $courseId)
-                ->where('year_level', $yearLevel)
-                ->where('semester', $semester)
-                ->orderBy('is_required', 'desc')
+            // Get subjects directly from class_subjects table (actual linked subjects)
+            $subjects = \App\Models\ClassSubject::with(['subject', 'teacher', 'class', 'academicYear', 'semester'])
+                ->where('class_id', $class->id)
                 ->orderBy('subject_id')
                 ->get()
-                ->map(function ($link) use ($class) {
+                ->map(function ($classSubject) use ($class) {
                     return [
-                        'id' => $link->id,
-                        'subject_id' => $link->subject_id,
-                        'subject_code' => $link->subject->subject_code ?? '',
-                        'subject_name' => $link->subject->subject_name ?? '',
-                        'units' => $link->units,
-                        'is_required' => $link->is_required,
-                        'course_code' => $link->course->course_code ?? '',
-                        'course_name' => $link->course->course_name ?? '',
-                        'course_level' => $link->course->level ?? 'College',
+                        'id' => $classSubject->id,
+                        'class_subject_id' => $classSubject->id,
+                        'subject_id' => $classSubject->subject_id,
+                        'subject_code' => $classSubject->subject->subject_code ?? '',
+                        'subject_name' => $classSubject->subject->subject_name ?? '',
+                        'subject_description' => $classSubject->subject->description ?? '',
+                        'units' => $classSubject->subject->units ?? 3,
+                        'teacher_id' => $classSubject->teacher_id,
+                        'teacher_name' => $classSubject->teacher ? $classSubject->teacher->user->name : 'Not Assigned',
                         'class_code' => $class->class_code ?? '',
+                        'class_name' => $class->class_name ?? '',
                         'section' => $class->section ?? '',
-                        'year_level' => $link->year_level,
-                        'semester' => $link->semester,
+                        'year_level' => $class->year_level,
+                        'semester' => $semester ?? '1st',
+                        'academic_year' => $classSubject->academicYear->year ?? '',
+                        'semester_name' => $classSubject->semester->semester_name ?? '',
                     ];
                 });
 
