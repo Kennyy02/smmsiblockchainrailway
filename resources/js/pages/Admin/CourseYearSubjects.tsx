@@ -295,8 +295,9 @@ const LinkModal: React.FC<{
     subjects: Subject[];
     onClose: () => void;
     onSave: (data: CourseYearSubjectFormData) => Promise<void>;
+    onBulkSave: (data: { course_id: number; year_level: number; semester: '1st' | '2nd' | 'summer'; subject_ids: number[] }) => Promise<void>;
     errors: Record<string, string[]>;
-}> = ({ link, preSelectedCourseId, courses, subjects, onClose, onSave, errors }) => {
+}> = ({ link, preSelectedCourseId, courses, subjects, onClose, onSave, onBulkSave, errors }) => {
     const [formData, setFormData] = useState<CourseYearSubjectFormData>({
         course_id: link?.course_id || preSelectedCourseId || 0,
         year_level: link?.year_level || 13,
@@ -306,16 +307,72 @@ const LinkModal: React.FC<{
         units: link?.units || 3,
         description: link?.description || '',
     });
+    const [selectedSubjectIds, setSelectedSubjectIds] = useState<number[]>([]);
+    const [availableSubjects, setAvailableSubjects] = useState<Subject[]>([]);
+    const [loadingSubjects, setLoadingSubjects] = useState(false);
     const [loading, setLoading] = useState(false);
+
+    // Load available subjects when course, year, or semester changes
+    useEffect(() => {
+        const loadAvailableSubjects = async () => {
+            if (!formData.course_id || !formData.year_level || !formData.semester) {
+                setAvailableSubjects([]);
+                return;
+            }
+
+            setLoadingSubjects(true);
+            try {
+                const response = await adminCourseYearSubjectService.getAvailableSubjects({
+                    course_id: formData.course_id,
+                    year_level: formData.year_level,
+                    semester: formData.semester,
+                });
+                if (response.success) {
+                    setAvailableSubjects(response.data);
+                }
+            } catch (error) {
+                console.error('Error loading available subjects:', error);
+            } finally {
+                setLoadingSubjects(false);
+            }
+        };
+
+        // Only load available subjects if creating new links (not editing)
+        if (!link) {
+            loadAvailableSubjects();
+        }
+    }, [formData.course_id, formData.year_level, formData.semester, link]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
         try {
-            await onSave(formData);
+            if (link) {
+                // Editing existing link - use single save
+                await onSave(formData);
+            } else {
+                // Creating new links - use bulk save
+                if (selectedSubjectIds.length === 0) {
+                    throw new Error('Please select at least one subject');
+                }
+                await onBulkSave({
+                    course_id: formData.course_id,
+                    year_level: formData.year_level,
+                    semester: formData.semester,
+                    subject_ids: selectedSubjectIds,
+                });
+            }
         } finally {
             setLoading(false);
         }
+    };
+
+    const toggleSubjectSelection = (subjectId: number) => {
+        setSelectedSubjectIds(prev => 
+            prev.includes(subjectId) 
+                ? prev.filter(id => id !== subjectId)
+                : [...prev, subjectId]
+        );
     };
 
     return (
@@ -397,52 +454,107 @@ const LinkModal: React.FC<{
                         </div>
                     </div>
 
-                    {/* Subject */}
+                    {/* Subject Selection */}
                     <div>
                         <label className="block text-sm font-semibold text-gray-700 mb-2">
-                            Subject <span className="text-red-500">*</span>
+                            {link ? 'Subject' : 'Select Subjects'} <span className="text-red-500">*</span>
                         </label>
-                        <select
-                            value={formData.subject_id}
-                            onChange={(e) => setFormData({...formData, subject_id: parseInt(e.target.value)})}
-                            className={`w-full px-4 py-3 border rounded-xl focus:ring-2 ${RING_COLOR_CLASS} ${errors.subject_id ? 'border-red-500' : 'border-gray-200'}`}
-                            required
-                        >
-                            <option value={0}>Select Subject</option>
-                            {subjects.map(subject => (
-                                <option key={subject.id} value={subject.id}>
-                                    {subject.subject_code} - {subject.subject_name}
+                        
+                        {link ? (
+                            // Editing: Show single dropdown (can't change subject)
+                            <select
+                                value={formData.subject_id}
+                                disabled
+                                className={`w-full px-4 py-3 border rounded-xl bg-gray-100 border-gray-200`}
+                            >
+                                <option value={link.subject_id}>
+                                    {link.subject?.subject_code} - {link.subject?.subject_name}
                                 </option>
-                            ))}
-                        </select>
+                            </select>
+                        ) : (
+                            // Creating: Show checkbox list
+                            <div className="border border-gray-200 rounded-xl max-h-64 overflow-y-auto">
+                                {loadingSubjects ? (
+                                    <div className="flex items-center justify-center py-8">
+                                        <RefreshCw className="h-5 w-5 animate-spin text-gray-400 mr-2" />
+                                        <span className="text-gray-500">Loading available subjects...</span>
+                                    </div>
+                                ) : availableSubjects.length === 0 ? (
+                                    <div className="text-center py-8 text-gray-500">
+                                        <BookOpen className="h-12 w-12 text-gray-300 mx-auto mb-2" />
+                                        <p>No available subjects</p>
+                                        <p className="text-xs text-gray-400 mt-1">
+                                            All subjects are already linked to this course/year/semester
+                                        </p>
+                                    </div>
+                                ) : (
+                                    <div className="divide-y divide-gray-100">
+                                        {availableSubjects.map(subject => (
+                                            <label
+                                                key={subject.id}
+                                                className="flex items-center p-4 hover:bg-gray-50 cursor-pointer transition-colors"
+                                            >
+                                                <input
+                                                    type="checkbox"
+                                                    checked={selectedSubjectIds.includes(subject.id)}
+                                                    onChange={() => toggleSubjectSelection(subject.id)}
+                                                    className="w-5 h-5 rounded border-gray-300 text-[#003366] focus:ring-[#003366] mr-3"
+                                                />
+                                                <div className="flex-1">
+                                                    <div className="font-medium text-gray-900">
+                                                        {subject.subject_code}
+                                                    </div>
+                                                    <div className="text-sm text-gray-500">
+                                                        {subject.subject_name}
+                                                    </div>
+                                                </div>
+                                                {subject.units && (
+                                                    <div className="text-sm font-semibold text-gray-700">
+                                                        {subject.units} units
+                                                    </div>
+                                                )}
+                                            </label>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                        
+                        {!link && selectedSubjectIds.length > 0 && (
+                            <p className="text-sm text-gray-600 mt-2">
+                                {selectedSubjectIds.length} subject{selectedSubjectIds.length !== 1 ? 's' : ''} selected
+                            </p>
+                        )}
                         {errors.subject_id && <p className="text-red-500 text-sm mt-1">{errors.subject_id[0]}</p>}
                     </div>
 
-                    {/* Units & Required Row */}
-                    <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">Units</label>
-                            <input
-                                type="number"
-                                min={1}
-                                max={9}
-                                value={formData.units}
-                                onChange={(e) => setFormData({...formData, units: parseInt(e.target.value) || 3})}
-                                className={`w-full px-4 py-3 border rounded-xl focus:ring-2 ${RING_COLOR_CLASS} border-gray-200`}
-                            />
-                        </div>
-                        <div className="flex items-end pb-3">
-                            <label className="flex items-center gap-3 cursor-pointer">
+                    {/* Units & Required Row - Only show when editing */}
+                    {link && (
+                        <div className="grid grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-semibold text-gray-700 mb-2">Units</label>
                                 <input
-                                    type="checkbox"
-                                    checked={formData.is_required}
-                                    onChange={(e) => setFormData({...formData, is_required: e.target.checked})}
-                                    className="w-5 h-5 rounded border-gray-300 text-[#003366] focus:ring-[#003366]"
+                                    type="number"
+                                    min={1}
+                                    max={9}
+                                    value={formData.units}
+                                    onChange={(e) => setFormData({...formData, units: parseInt(e.target.value) || 3})}
+                                    className={`w-full px-4 py-3 border rounded-xl focus:ring-2 ${RING_COLOR_CLASS} border-gray-200`}
                                 />
-                                <span className="text-sm font-medium text-gray-700">Required Subject</span>
-                            </label>
+                            </div>
+                            <div className="flex items-end pb-3">
+                                <label className="flex items-center gap-3 cursor-pointer">
+                                    <input
+                                        type="checkbox"
+                                        checked={formData.is_required}
+                                        onChange={(e) => setFormData({...formData, is_required: e.target.checked})}
+                                        className="w-5 h-5 rounded border-gray-300 text-[#003366] focus:ring-[#003366]"
+                                    />
+                                    <span className="text-sm font-medium text-gray-700">Required Subject</span>
+                                </label>
+                            </div>
                         </div>
-                    </div>
+                    )}
 
                     {/* Buttons */}
                     <div className="flex gap-3 pt-4">
@@ -684,6 +796,33 @@ const CourseYearSubjects: React.FC = () => {
         }
     };
 
+    const handleBulkSave = async (data: { course_id: number; year_level: number; semester: '1st' | '2nd' | 'summer'; subject_ids: number[] }) => {
+        try {
+            const response = await adminCourseYearSubjectService.bulkCreateLinks(data);
+            if (response.success) {
+                const { created_count, skipped_count } = response.data;
+                let message = `${created_count} subject${created_count !== 1 ? 's' : ''} added to curriculum`;
+                if (skipped_count > 0) {
+                    message += ` (${skipped_count} already linked)`;
+                }
+                showNotificationMsg('success', message);
+                setShowModal(false);
+                loadData();
+                loadStats();
+            }
+        } catch (error: any) {
+            if (error.message.includes(':')) {
+                const errors: Record<string, string[]> = {};
+                error.message.split('; ').forEach((err: string) => {
+                    const [field, msg] = err.split(': ');
+                    errors[field] = [msg];
+                });
+                setValidationErrors(errors);
+            }
+            showNotificationMsg('error', error.message || 'Failed to add subjects');
+        }
+    };
+
     const handleConfirmDelete = async () => {
         if (!selectedLink) return;
         try {
@@ -907,6 +1046,7 @@ const CourseYearSubjects: React.FC = () => {
                             setPreSelectedCourseId(undefined);
                         }}
                         onSave={handleSave}
+                        onBulkSave={handleBulkSave}
                         errors={validationErrors}
                     />
                 )}
