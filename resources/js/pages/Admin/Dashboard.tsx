@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
     Award, BarChart, Hash, Zap, BookOpen, Clock, TrendingDown, 
-    Sunrise, Sun, Moon, RefreshCw 
+    Sunrise, Sun, Moon, RefreshCw, Users, GraduationCap, UserCheck 
 } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
 import { 
@@ -11,6 +11,9 @@ import {
     AcademicYearOption,
     SemesterOption,
 } from '../../../services/AdminGradeService';
+import { adminStudentService } from '../../../services/AdminStudentService';
+import { adminTeacherService } from '../../../services/AdminTeacherService';
+import { adminParentService } from '../../../services/AdminParentService';
 import AnnouncementCard from '@/components/AnnouncementCard'; 
 
 // --- THEME COLORS ---
@@ -133,13 +136,19 @@ const Greeting: React.FC = () => {
 // 🏠 MAIN DASHBOARD PAGE
 // ========================================================================
 
+interface DashboardStats {
+    total_students: number;
+    total_teachers: number;
+    total_parents: number;
+    failed_students: number;
+}
+
 const Dashboard: React.FC = () => {
-    const [stats, setStats] = useState<GradeStats>({
-        total_grades: 0,
-        average_final_rating: 0,
-        passing_rate: 0,
-        failed_count: 0,
-        by_class_subject: [],
+    const [stats, setStats] = useState<DashboardStats>({
+        total_students: 0,
+        total_teachers: 0,
+        total_parents: 0,
+        failed_students: 0,
     });
     const [academicYears, setAcademicYears] = useState<AcademicYearOption[]>([]);
     const [semesters, setSemesters] = useState<SemesterOption[]>([]);
@@ -170,13 +179,28 @@ const Dashboard: React.FC = () => {
     const loadStats = async (ayId: number | 'all', semId: number | 'all') => {
         setLoading(true);
         try {
-            const response: ApiResponse<GradeStats> = await adminGradeService.getGradeStats(ayId, semId);
-            if (response.success && response.data) {
-                setStats(response.data);
-            }
+            // Fetch all stats in parallel
+            const [studentStatsRes, teacherStatsRes, parentStatsRes, gradeStatsRes] = await Promise.all([
+                adminStudentService.getStudentStats(),
+                adminTeacherService.getTeacherStats(),
+                adminParentService.getParentStats(),
+                adminGradeService.getGradeStats(ayId, semId)
+            ]);
+
+            // Count unique failed students from grade stats
+            const failedStudents = gradeStatsRes.success && gradeStatsRes.data?.failed_count
+                ? gradeStatsRes.data.failed_count
+                : 0;
+
+            setStats({
+                total_students: studentStatsRes.success ? studentStatsRes.data.total_students : 0,
+                total_teachers: teacherStatsRes.success ? teacherStatsRes.data.total_teachers : 0,
+                total_parents: parentStatsRes.success ? parentStatsRes.data.total_parents : 0,
+                failed_students: failedStudents
+            });
         } catch (error) {
-            console.error('Error loading grade stats:', error);
-            setNotification({ type: 'error', message: 'Failed to load grade statistics.' });
+            console.error('Error loading dashboard stats:', error);
+            setNotification({ type: 'error', message: 'Failed to load dashboard statistics.' });
         } finally {
             setLoading(false);
         }
@@ -200,18 +224,18 @@ const Dashboard: React.FC = () => {
     const loadingSpinner = <RefreshCw className="h-6 w-6 animate-spin text-gray-400" />;
 
     const displayStats = loading ? {
-        total_grades: loadingSpinner,
-        average_final_rating: loadingSpinner,
-        passing_rate: loadingSpinner,
-        failed_count: loadingSpinner,
+        total_students: loadingSpinner,
+        total_teachers: loadingSpinner,
+        total_parents: loadingSpinner,
+        failed_students: loadingSpinner,
     } : {
-        total_grades: stats.total_grades,
-        average_final_rating: `${Number(stats.average_final_rating ?? 0).toFixed(1)}%`,
-        passing_rate: `${Number(stats.passing_rate ?? 0).toFixed(1)}%`,
-        failed_count: stats.failed_count,
+        total_students: stats.total_students,
+        total_teachers: stats.total_teachers,
+        total_parents: stats.total_parents,
+        failed_students: stats.failed_students,
     };
     
-    const dashboardSubtitle = `Data for: ${currentAYName} - ${currentSemName}`;
+    const dashboardSubtitle = `Overview of School Population`;
 
     return (
         <AppLayout>
@@ -236,82 +260,39 @@ const Dashboard: React.FC = () => {
                     <div className="mb-8 border-b pb-4">
                         <div className="flex items-center justify-between">
                             <div>
-                                <h1 className="text-3xl font-bold text-gray-900 mb-2">Academic Grade Overview</h1>
+                                <h1 className="text-3xl font-bold text-gray-900 mb-2">School Overview</h1>
                                 <p className="text-gray-600">{dashboardSubtitle}</p>
                             </div>
-                        </div>
-                    </div>
-
-                    {/* Filter Dropdowns */}
-                    <div className="bg-white rounded-2xl shadow-lg p-6 mb-6 border border-gray-100">
-                        <h3 className="text-lg font-bold text-gray-700 mb-3 border-b pb-2">Filter Data</h3>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            {/* Academic Year Filter */}
-                            <div className="flex items-center">
-                                <Clock className="h-5 w-5 text-gray-400 mr-3 shrink-0" />
-                                <select
-                                    value={selectedAY}
-                                    onChange={(e) => setSelectedAY(e.target.value === 'all' ? 'all' : parseInt(e.target.value))}
-                                    className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${PRIMARY_COLOR_CLASS.replace('bg-', 'focus:ring-')} focus:border-transparent transition-all appearance-none bg-white`}
-                                >
-                                    <option value="all">Filter by Academic Year (Overall)</option>
-                                    {academicYears.map(ay => (
-                                        <option key={ay.id} value={ay.id}>
-                                            {ay.year_name} {ay.is_current && '(Current)'}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-
-                            {/* Semester Filter */}
-                            <div className="flex items-center">
-                                <BookOpen className="h-5 w-5 text-gray-400 mr-3 shrink-0" />
-                                <select
-                                    value={selectedSemester}
-                                    onChange={(e) => setSelectedSemester(e.target.value === 'all' ? 'all' : parseInt(e.target.value))}
-                                    className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${PRIMARY_COLOR_CLASS.replace('bg-', 'focus:ring-')} focus:border-transparent transition-all appearance-none bg-white`}
-                                >
-                                    <option value="all">Filter by Semester (All)</option>
-                                    {semesters.map(sem => (
-                                        <option key={sem.id} value={sem.id}>
-                                            {sem.semester_name} {sem.is_current && '(Current)'}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-                            
-                            {/* Empty space */}
-                            <div />
                         </div>
                     </div>
 
                     {/* Stats Summary - Main KPIs */}
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
                         <StatCard 
-                            title="Total Grade Entries"
-                            value={displayStats.total_grades}
-                            icon={Hash}
-                            iconBgClass={LIGHT_BG_CLASS}
-                            iconColorClass={TEXT_COLOR_CLASS}
+                            title="Total Students"
+                            value={displayStats.total_students}
+                            icon={GraduationCap}
+                            iconBgClass="bg-blue-50"
+                            iconColorClass="text-blue-600"
                         />
                         <StatCard 
-                            title="Average Rating"
-                            value={displayStats.average_final_rating}
-                            icon={BarChart}
-                            iconBgClass={LIGHT_BG_CLASS}
-                            iconColorClass={TEXT_COLOR_CLASS}
+                            title="Total Teachers"
+                            value={displayStats.total_teachers}
+                            icon={UserCheck}
+                            iconBgClass="bg-purple-50"
+                            iconColorClass="text-purple-600"
                         />
                         <StatCard 
-                            title="Passing Rate"
-                            value={displayStats.passing_rate}
-                            icon={Award}
+                            title="Total Parents"
+                            value={displayStats.total_parents}
+                            icon={Users}
                             iconBgClass="bg-green-50"
                             iconColorClass="text-green-600"
                         />
                         <StatCard 
                             title="Failed Students"
-                            value={displayStats.failed_count}
-                            icon={Zap}
+                            value={displayStats.failed_students}
+                            icon={TrendingDown}
                             iconBgClass="bg-red-50"
                             iconColorClass="text-red-600"
                         />

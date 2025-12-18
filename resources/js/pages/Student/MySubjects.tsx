@@ -27,6 +27,7 @@ interface StudentSubject {
     subject_id: number;
     subject_code: string;
     subject_name: string;
+    subject_description?: string;
     units: number;
     is_required: boolean;
     course_code: string;
@@ -95,9 +96,9 @@ const SubjectDetailsModal: React.FC<SubjectDetailsModalProps> = ({ subject, clas
     const infoItems = [
         { icon: BookOpen, label: 'Subject Code', value: subject.subject_code },
         { icon: Layers, label: 'Subject Name', value: subject.subject_name },
+        { icon: FileText, label: 'Description', value: subject.subject_description || 'No description available' },
         { icon: GraduationCap, label: 'Units', value: `${subject.units} units` },
         { icon: Calendar, label: 'Semester', value: `${subject.semester} Semester` },
-        { icon: Award, label: 'Type', value: subject.is_required ? 'Required' : 'Elective' },
         { icon: Layers, label: 'Section', value: classInfo?.section || subject.section || 'N/A' },
     ];
 
@@ -120,17 +121,54 @@ const SubjectDetailsModal: React.FC<SubjectDetailsModalProps> = ({ subject, clas
                 
                 {/* Modal Content */}
                 <div className="p-6 space-y-6">
-                    <div className="grid grid-cols-2 gap-4 border-b pb-4">
-                        <h3 className="col-span-2 text-lg font-bold text-gray-800 border-b pb-2">Subject Information</h3>
-                        {infoItems.map((item, index) => (
-                            <div key={index} className="flex flex-col">
+                    <div className="border-b pb-4">
+                        <h3 className="text-lg font-bold text-gray-800 border-b pb-2 mb-4">Subject Information</h3>
+                        <div className="grid grid-cols-2 gap-4 mb-4">
+                            <div className="flex flex-col">
                                 <span className="text-sm font-medium text-gray-500 flex items-center">
-                                    <item.icon className="h-4 w-4 mr-2" />
-                                    {item.label}
+                                    <BookOpen className="h-4 w-4 mr-2" />
+                                    Subject Code
                                 </span>
-                                <span className="text-lg font-semibold text-gray-800">{item.value}</span>
+                                <span className="text-lg font-semibold text-gray-800">{subject.subject_code}</span>
                             </div>
-                        ))}
+                            <div className="flex flex-col">
+                                <span className="text-sm font-medium text-gray-500 flex items-center">
+                                    <Layers className="h-4 w-4 mr-2" />
+                                    Subject Name
+                                </span>
+                                <span className="text-lg font-semibold text-gray-800">{subject.subject_name}</span>
+                            </div>
+                            <div className="flex flex-col">
+                                <span className="text-sm font-medium text-gray-500 flex items-center">
+                                    <GraduationCap className="h-4 w-4 mr-2" />
+                                    Units
+                                </span>
+                                <span className="text-lg font-semibold text-gray-800">{subject.units} units</span>
+                            </div>
+                            <div className="flex flex-col">
+                                <span className="text-sm font-medium text-gray-500 flex items-center">
+                                    <Calendar className="h-4 w-4 mr-2" />
+                                    Semester
+                                </span>
+                                <span className="text-lg font-semibold text-gray-800">{subject.semester} Semester</span>
+                            </div>
+                            <div className="flex flex-col">
+                                <span className="text-sm font-medium text-gray-500 flex items-center">
+                                    <Layers className="h-4 w-4 mr-2" />
+                                    Section
+                                </span>
+                                <span className="text-lg font-semibold text-gray-800">{classInfo?.section || subject.section || 'N/A'}</span>
+                            </div>
+                        </div>
+                        <div className="col-span-2">
+                            <span className="text-sm font-medium text-gray-500 flex items-center mb-2">
+                                <FileText className="h-4 w-4 mr-2" />
+                                Description
+                            </span>
+                            <p className="text-sm text-gray-700 bg-gray-50 p-3 rounded-lg">
+                                {subject.subject_description || 'No description available'}
+                            </p>
+                        </div>
                     </div>
 
                     {/* Course Info */}
@@ -296,7 +334,7 @@ const MySubjects: React.FC = () => {
                                     <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Subject</th>
                                     <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Class/Section</th>
                                     <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Units</th>
-                                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Type</th>
+                                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Description</th>
                                     <th className="px-6 py-4 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">Details</th>
                                 </tr>
                             </thead>
@@ -355,15 +393,11 @@ const MySubjects: React.FC = () => {
                                                     {subject.units} units
                                                 </span>
                                             </td>
-                                            {/* Type */}
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <span className={`inline-flex px-3 py-1 text-xs font-medium rounded-full ${
-                                                    subject.is_required 
-                                                        ? 'bg-green-100 text-green-800' 
-                                                        : 'bg-yellow-100 text-yellow-800'
-                                                }`}>
-                                                    {subject.is_required ? 'Required' : 'Elective'}
-                                                </span>
+                                            {/* Description */}
+                                            <td className="px-6 py-4">
+                                                <div className="text-sm text-gray-700 max-w-xs truncate">
+                                                    {subject.subject_description || 'No description available'}
+                                                </div>
                                             </td>
                                             {/* Action */}
                                             <td className="px-6 py-4 whitespace-nowrap text-right">
