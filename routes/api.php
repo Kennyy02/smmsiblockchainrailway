@@ -48,6 +48,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 // ========================================================================
+// 🔐 PROTECTED API ROUTES - REQUIRE AUTHENTICATION
+// ========================================================================
+
+Route::middleware('auth:sanctum')->group(function () {
+
+// ========================================================================
 // 📚 ACADEMIC STRUCTURE
 // ========================================================================
 
@@ -516,3 +522,5 @@ Route::prefix('search')->group(function () {
         ]);
     });
 });
+
+}); // End of auth:sanctum middleware group
