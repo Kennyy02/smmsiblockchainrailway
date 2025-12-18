@@ -9,6 +9,7 @@ import {
     AcademicYearsResponse, 
     ApiResponse 
 } from '../../../services/AdminAcademicYearService';
+import DeleteConfirmationModal from '../../../components/DeleteConfirmationModal';
 
 // --- THEME COLORS ---
 const PRIMARY_COLOR_CLASS = 'bg-[#003366]';
@@ -216,6 +217,8 @@ const AcademicYears: React.FC = () => {
     const [selectedYear, setSelectedYear] = useState<AcademicYear | null>(null);
     const [notification, setNotification] = useState<Notification | null>(null);
     const [validationErrors, setValidationErrors] = useState<Record<string, string[]>>({});
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [yearToDelete, setYearToDelete] = useState<AcademicYear | null>(null);
     
     const [filters, setFilters] = useState<Filters>({
         search: '',
@@ -325,14 +328,31 @@ const AcademicYears: React.FC = () => {
         }
     };
     
-    // Placeholder for Delete Modal/Logic
     const handleDelete = (yearItem: AcademicYear) => {
-        const canDelete = yearItem.semesters_count === 0 && yearItem.classes_count === 0;
-        const confirmMessage = canDelete 
-            ? `Are you sure you want to delete ${yearItem.year_name}?`
-            : `Cannot delete ${yearItem.year_name}. It has ${yearItem.semesters_count} semesters and ${yearItem.classes_count} classes. Force delete is not implemented yet.`;
-        
-        alert(confirmMessage);
+        setYearToDelete({
+            id: yearItem.id,
+            full_name: yearItem.year_name,
+            classes_count: yearItem.classes_count,
+            grades_count: yearItem.semesters_count
+        } as any);
+        setShowDeleteModal(true);
+    };
+
+    const handleConfirmDelete = async (force: boolean) => {
+        if (!yearToDelete) return;
+
+        try {
+            const response = await adminAcademicYearService.deleteAcademicYear(yearToDelete.id, force);
+            if (response.success) {
+                setNotification({ type: 'success', message: `Academic Year '${yearToDelete.full_name}' deleted successfully!` });
+                setShowDeleteModal(false);
+                setYearToDelete(null);
+                loadYears();
+                loadStats();
+            }
+        } catch (error: any) {
+            setNotification({ type: 'error', message: error.message || 'Failed to delete academic year' });
+        }
     };
 
     const renderStatusTag = (status: string | undefined | null) => {
@@ -538,6 +558,17 @@ const AcademicYears: React.FC = () => {
                             onClose={() => setShowModal(false)}
                             onSave={handleSave}
                             errors={validationErrors}
+                        />
+                    )}
+
+                    {showDeleteModal && (
+                        <DeleteConfirmationModal
+                            item={yearToDelete}
+                            onClose={() => {
+                                setShowDeleteModal(false);
+                                setYearToDelete(null);
+                            }}
+                            onConfirm={handleConfirmDelete}
                         />
                     )}
 

@@ -23,8 +23,8 @@ class StudentController extends Controller
     public function index(Request $request)
     {
         try {
-            // SIMPLIFIED FOR DEBUGGING - removed eager loading and counts
-            $query = Student::query();
+            // Load relationships needed for display
+            $query = Student::with(['parents', 'currentClass', 'course']);
             
             if ($search = $request->input('search')) {
                 $query->search($search);

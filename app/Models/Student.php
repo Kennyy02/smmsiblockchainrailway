@@ -30,10 +30,8 @@ class Student extends Model
     ];
 
     // CRITICAL: Add full_name and section to appends so they're included in JSON responses
-    // Temporarily disabled to debug 500 errors
     protected $appends = [
-        // 'full_name',
-        // 'section',
+        'full_name',
     ];
 
     protected function casts(): array

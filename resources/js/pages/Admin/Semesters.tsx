@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Layers, Plus, Search, Filter, Edit, Trash2, X, RefreshCw, Calendar, Users, BarChart } from 'lucide-react';
+import { Layers, Plus, Search, Filter, Edit, Trash2, X, RefreshCw, Calendar } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
 import { 
     adminSemesterService, 
@@ -9,7 +9,8 @@ import {
     SemestersResponse, 
     ApiResponse 
 } from '../../../services/AdminSemesterService'; 
-import { AcademicYear } from '../../../services/AdminAcademicYearService'; // Assuming AcademicYear interface is available
+import { AcademicYear } from '../../../services/AdminAcademicYearService';
+import DeleteConfirmationModal from '../../../components/DeleteConfirmationModal';
 
 // --- THEME COLORS ---
 const PRIMARY_COLOR_CLASS = 'bg-[#003366]';
@@ -224,6 +225,8 @@ const Semesters: React.FC = () => {
     const [selectedSemester, setSelectedSemester] = useState<Semester | null>(null);
     const [notification, setNotification] = useState<Notification | null>(null);
     const [validationErrors, setValidationErrors] = useState<Record<string, string[]>>({});
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [semesterToDelete, setSemesterToDelete] = useState<Semester | null>(null);
     
     const [filters, setFilters] = useState<Filters>({
         search: '',
@@ -342,14 +345,26 @@ const Semesters: React.FC = () => {
         }
     };
     
-    // Placeholder for Delete Modal/Logic
     const handleDelete = (semesterItem: Semester) => {
-        const canDelete = semesterItem.classes_count === 0 && semesterItem.grades_count === 0;
-        const confirmMessage = canDelete 
-            ? `Are you sure you want to delete ${semesterItem.full_name}?`
-            : `Cannot delete ${semesterItem.full_name}. It has ${semesterItem.classes_count} classes and ${semesterItem.grades_count} grades. Force delete is not implemented yet.`;
-        
-        alert(confirmMessage);
+        setSemesterToDelete(semesterItem);
+        setShowDeleteModal(true);
+    };
+
+    const handleConfirmDelete = async (force: boolean) => {
+        if (!semesterToDelete) return;
+
+        try {
+            const response = await adminSemesterService.deleteSemester(semesterToDelete.id, force);
+            if (response.success) {
+                setNotification({ type: 'success', message: `Semester '${semesterToDelete.full_name}' deleted successfully!` });
+                setShowDeleteModal(false);
+                setSemesterToDelete(null);
+                loadSemesters();
+                loadStats();
+            }
+        } catch (error: any) {
+            setNotification({ type: 'error', message: error.message || 'Failed to delete semester' });
+        }
     };
 
     const renderStatusTag = (status: string | undefined | null) => {
@@ -417,7 +432,7 @@ const Semesters: React.FC = () => {
                     </div>
 
                     {/* Stats Cards */}
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                         <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 col-span-2">
                             <div className="flex items-center justify-between">
                                 <div>
@@ -444,18 +459,6 @@ const Semesters: React.FC = () => {
                                 </div>
                                 <div className={`${LIGHT_BG_CLASS} p-3 rounded-xl`}>
                                     <Layers className={`h-8 w-8 ${TEXT_COLOR_CLASS}`} />
-                                </div>
-                            </div>
-                        </div>
-                         <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-sm font-medium text-gray-600 mb-1">Active Classes</p>
-                                    {/* NOTE: Total active classes count is not directly available in stats interface, placeholder for future API stat */}
-                                    <p className={`text-3xl font-bold ${TEXT_COLOR_CLASS}`}>N/A</p> 
-                                </div>
-                                <div className={`${LIGHT_BG_CLASS} p-3 rounded-xl`}>
-                                    <Users className={`h-8 w-8 ${TEXT_COLOR_CLASS}`} />
                                 </div>
                             </div>
                         </div>
@@ -571,6 +574,17 @@ const Semesters: React.FC = () => {
                             onSave={handleSave}
                             errors={validationErrors}
                             academicYears={academicYears}
+                        />
+                    )}
+
+                    {showDeleteModal && (
+                        <DeleteConfirmationModal
+                            item={semesterToDelete}
+                            onClose={() => {
+                                setShowDeleteModal(false);
+                                setSemesterToDelete(null);
+                            }}
+                            onConfirm={handleConfirmDelete}
                         />
                     )}
 
