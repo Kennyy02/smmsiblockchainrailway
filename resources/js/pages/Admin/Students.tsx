@@ -146,6 +146,16 @@ const StudentModal: React.FC<{
         return date.toISOString().split('T')[0]; 
     };
 
+    // Helper to format error messages for better UX
+    const formatErrorMessage = (message: string): string => {
+        return message
+            .replace(/The password field confirmation does not match\./i, 'Passwords do not match')
+            .replace(/The parent guardian\.password field confirmation does not match\./i, 'Parent passwords do not match')
+            .replace(/The (.+?) field confirmation does not match\./i, '$1 confirmation does not match')
+            .replace(/The (.+?) has already been taken\./i, '$1 is already in use')
+            .replace(/The (.+?) field is required\./i, '$1 is required');
+    };
+
     const existingParent = student?.parents?.[0];
     
     const [formData, setFormData] = useState<StudentFormData>({
@@ -425,7 +435,11 @@ const StudentModal: React.FC<{
                                             {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                                         </button>
                                     </div>
-                                    {errors.password && (<p className="text-red-500 text-xs mt-1">{errors.password[0]}</p>)}
+                                    {errors.password && (
+                                        <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded-lg">
+                                            <p className="text-red-600 text-sm font-medium">{formatErrorMessage(errors.password[0])}</p>
+                                        </div>
+                                    )}
                                 </div>
                                 <div>
                                     <label className="block text-sm font-semibold text-gray-700 mb-2">Confirm Password</label>
@@ -446,7 +460,11 @@ const StudentModal: React.FC<{
                                             {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                                         </button>
                                     </div>
-                                    {errors.password_confirmation && (<p className="text-red-500 text-xs mt-1">{errors.password_confirmation[0]}</p>)}
+                                    {errors.password_confirmation && (
+                                        <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded-lg">
+                                            <p className="text-red-600 text-sm font-medium">{formatErrorMessage(errors.password_confirmation[0])}</p>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                             
@@ -567,7 +585,11 @@ const StudentModal: React.FC<{
                                                 {showParentPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                                             </button>
                                         </div>
-                                        {errors['parent_guardian.password'] && (<p className="text-red-500 text-xs mt-1">{errors['parent_guardian.password'][0]}</p>)}
+                                        {errors['parent_guardian.password'] && (
+                                            <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded-lg">
+                                                <p className="text-red-600 text-sm font-medium">{formatErrorMessage(errors['parent_guardian.password'][0])}</p>
+                                            </div>
+                                        )}
                                     </div>
                                     <div>
                                         <label className="block text-sm font-semibold text-gray-700 mb-2">Confirm Password</label>
@@ -588,7 +610,11 @@ const StudentModal: React.FC<{
                                                 {showParentPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                                             </button>
                                         </div>
-                                        {errors['parent_guardian.password_confirmation'] && (<p className="text-red-500 text-xs mt-1">{errors['parent_guardian.password_confirmation'][0]}</p>)}
+                                        {errors['parent_guardian.password_confirmation'] && (
+                                            <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded-lg">
+                                                <p className="text-red-600 text-sm font-medium">{formatErrorMessage(errors['parent_guardian.password_confirmation'][0])}</p>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                                 <p className="text-xs text-gray-500 mt-2">Optional: Fill in parent/guardian details to link them to this student. Password is required if creating a parent account.</p>

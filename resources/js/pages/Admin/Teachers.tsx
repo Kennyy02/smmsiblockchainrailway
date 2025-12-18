@@ -96,6 +96,15 @@ const TeacherModal: React.FC<{
         setShowPassword(prev => !prev);
     };
 
+    // Helper to format error messages for better UX
+    const formatErrorMessage = (message: string): string => {
+        return message
+            .replace(/The password field confirmation does not match\./i, 'Passwords do not match')
+            .replace(/The (.+?) field confirmation does not match\./i, '$1 confirmation does not match')
+            .replace(/The (.+?) has already been taken\./i, '$1 is already in use')
+            .replace(/The (.+?) field is required\./i, '$1 is required');
+    };
+
     return (
         <div className="fixed inset-0 z-50 overflow-y-auto">
             <div className="flex min-h-full items-center justify-center p-4">
@@ -260,7 +269,9 @@ const TeacherModal: React.FC<{
                                         </button>
                                     </div>
                                     {errors.password && (
-                                        <p className="text-red-500 text-xs mt-1">{errors.password[0]}</p>
+                                        <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded-lg">
+                                            <p className="text-red-600 text-sm font-medium">{formatErrorMessage(errors.password[0])}</p>
+                                        </div>
                                     )}
                                 </div>
                                 <div>
@@ -283,7 +294,9 @@ const TeacherModal: React.FC<{
                                         </button>
                                     </div>
                                     {errors.password_confirmation && (
-                                        <p className="text-red-500 text-xs mt-1">{errors.password_confirmation[0]}</p>
+                                        <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded-lg">
+                                            <p className="text-red-600 text-sm font-medium">{formatErrorMessage(errors.password_confirmation[0])}</p>
+                                        </div>
                                     )}
                                 </div>
                             </div>
