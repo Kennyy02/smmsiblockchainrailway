@@ -51,30 +51,37 @@ const ContactSection = () => {
         }
     };
 
+    const fullAddress = `${contactInfo.addressCity}, ${contactInfo.addressProvince}, ${contactInfo.addressCountry}`;
+    const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(fullAddress)}`;
+
     const contactInfoList = [
         {
             icon: MapPin,
             title: 'Main Campus',
             details: [contactInfo.addressCity, contactInfo.addressProvince, contactInfo.addressCountry],
-            link: 'https://maps.app.goo.gl/YourMapLinkHere' // Placeholder for actual map link
+            link: googleMapsUrl,
+            isClickable: true
         },
         {
             icon: Phone,
             title: 'Phone / Support Line',
             details: [contactInfo.phone],
-            link: `tel:${contactInfo.phone.replace(/\s/g, '')}`
+            link: null,
+            isClickable: false
         },
         {
             icon: Mail,
             title: 'Email',
             details: [contactInfo.email, contactInfo.emailSupport],
-            link: `mailto:${contactInfo.email}`
+            link: null,
+            isClickable: false
         },
         {
             icon: Clock,
             title: 'Office Hours',
             details: contactInfo.officeHours.split(', '),
-            link: null
+            link: null,
+            isClickable: false
         }
     ];
 
@@ -128,12 +135,12 @@ const ContactSection = () => {
                                                 <h4 className="text-white font-semibold mb-1">
                                                     {info.title}
                                                 </h4>
-                                                {info.link ? (
+                                                {info.isClickable && info.link ? (
                                                     <a 
                                                         href={info.link}
-                                                        target={info.title === 'Email' ? '_self' : '_blank'}
+                                                        target="_blank"
                                                         rel="noopener noreferrer"
-                                                        className="text-blue-200 hover:text-amber-400 transition-colors"
+                                                        className="text-blue-200 hover:text-amber-400 transition-colors cursor-pointer"
                                                     >
                                                         {info.details.map((detail, i) => (
                                                             <div key={i} className="text-sm">

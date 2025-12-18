@@ -115,20 +115,13 @@ const Footer = () => {
                         <ul className="space-y-3">
                             <li>
                                 <a 
-                                    href="/admin/blockchain-transactions"
+                                    href="https://www.blockchain.com/explorer"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                     className="text-gray-400 hover:text-amber-400 transition-colors duration-300 text-sm flex items-center space-x-2"
                                 >
                                     <Database className='h-4 w-4 text-blue-400' />
                                     <span>Blockchain Ledger (Explorer)</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a 
-                                    href="/verify"
-                                    className="text-gray-400 hover:text-amber-400 transition-colors duration-300 text-sm flex items-center space-x-2"
-                                >
-                                    <ShieldCheck className='h-4 w-4 text-blue-400' />
-                                    <span>System Security Audit</span>
                                 </a>
                             </li>
                             <li>
@@ -164,23 +157,24 @@ const Footer = () => {
                         <div className="space-y-3 mb-6">
                             <div className="flex items-start space-x-2 text-gray-400 text-sm">
                                 <MapPin className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
-                                <span>
+                                <a 
+                                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${contactInfo.addressCity}, ${contactInfo.addressProvince}, ${contactInfo.addressCountry}`)}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="hover:text-amber-400 transition-colors cursor-pointer"
+                                >
                                     {contactInfo.addressCity}<br/>
                                     {contactInfo.addressProvince}<br/>
                                     {contactInfo.addressCountry}
-                                </span>
+                                </a>
                             </div>
                             <div className="flex items-center space-x-2 text-gray-400 text-sm">
                                 <Phone className="w-5 h-5 text-amber-400" />
-                                <a href={`tel:${contactInfo.phone}`} className="hover:text-amber-400 transition-colors">
-                                    {contactInfo.phone}
-                                </a>
+                                <span>{contactInfo.phone}</span>
                             </div>
                             <div className="flex items-center space-x-2 text-gray-400 text-sm">
                                 <Mail className="w-5 h-5 text-amber-400" />
-                                <a href={`mailto:${contactInfo.email}`} className="hover:text-amber-400 transition-colors">
-                                    {contactInfo.email}
-                                </a>
+                                <span>{contactInfo.email}</span>
                             </div>
                         </div>
 
