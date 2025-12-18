@@ -73,6 +73,19 @@ class TeacherController extends Controller
      */
     public function store(Request $request)
     {
+        // Check if user or teacher already exists with this email
+        $existingUser = User::where('email', $request->email)->first();
+        $existingTeacher = Teacher::where('email', $request->email)->first();
+        
+        // If teacher exists, it's a duplicate
+        if ($existingTeacher) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed',
+                'errors' => ['email' => ['A teacher with this email already exists.']]
+            ], 422);
+        }
+        
         $validator = Validator::make($request->all(), [
             'teacher_id' => 'required|string|max:50|unique:teachers,teacher_id',
             'first_name' => 'required|string|max:100',
@@ -96,14 +109,22 @@ class TeacherController extends Controller
         try {
             DB::beginTransaction();
 
-            // Create user account
-            $user = User::create([
-                'name' => $request->first_name . ' ' . $request->last_name,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-                'role' => 'teacher',
-                'status' => 'active',
-            ]);
+            // Create or reuse user account
+            if ($existingUser) {
+                // Reuse existing user account
+                $user = $existingUser;
+                Log::info('Reusing existing user account for teacher', ['user_id' => $user->id, 'email' => $user->email]);
+            } else {
+                // Create new user account
+                $user = User::create([
+                    'name' => $request->first_name . ' ' . $request->last_name,
+                    'email' => $request->email,
+                    'password' => Hash::make($request->password),
+                    'role' => 'teacher',
+                    'status' => 'active',
+                ]);
+                Log::info('Created new user account for teacher', ['user_id' => $user->id, 'email' => $user->email]);
+            }
 
             // Create teacher record
             $teacher = Teacher::create([

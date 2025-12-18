@@ -100,11 +100,26 @@ class StudentController extends Controller
                 'student_email' => $request->input('email'),
             ]);
             
+            // Check if user already exists with this email
+            $existingUser = User::where('email', $request->email)->first();
+            $existingStudent = Student::where('email', $request->email)->whereNull('deleted_at')->first();
+            
+            // If user exists but student doesn't, we can reuse the user account
+            // If both exist, it's a duplicate
+            if ($existingStudent) {
+                return $request->expectsJson()
+                    ? response()->json([
+                        'success' => false, 
+                        'message' => 'Validation failed', 
+                        'errors' => ['email' => ['A student with this email already exists.']]
+                    ], 422)
+                    : back()->withErrors(['email' => 'A student with this email already exists.'])->withInput();
+            }
+            
             $validator = Validator::make($request->all(), [
                 'user_id' => [
                     'nullable',
                     'exists:users,id',
-                    Rule::unique('students', 'user_id')->whereNull('deleted_at')
                 ],
                 'student_id' => [
                     'required',
@@ -118,6 +133,7 @@ class StudentController extends Controller
                 'email' => [
                     'required',
                     'email',
+                    // Only check students table, users table checked above
                     Rule::unique('students', 'email')->whereNull('deleted_at')
                 ],
                 'phone' => 'nullable|string|max:20',
@@ -152,16 +168,25 @@ class StudentController extends Controller
             $studentData = $validator->validated();
             unset($studentData['parent_guardian']); // Remove parent data from student creation
             
-            // Create user account if user_id not provided
+            // Create or reuse user account if user_id not provided
             if (!isset($studentData['user_id']) && isset($studentData['password'])) {
-                $user = User::create([
-                    'name' => trim($studentData['first_name'] . ' ' . $studentData['last_name']),
-                    'email' => $studentData['email'],
-                    'password' => Hash::make($studentData['password']),
-                    'role' => 'student',
-                    'status' => 'active',
-                ]);
-                $studentData['user_id'] = $user->id;
+                // Check if user exists (from earlier check)
+                if ($existingUser) {
+                    // Reuse existing user account
+                    $studentData['user_id'] = $existingUser->id;
+                    Log::info('Reusing existing user account for student', ['user_id' => $existingUser->id, 'email' => $existingUser->email]);
+                } else {
+                    // Create new user account
+                    $user = User::create([
+                        'name' => trim($studentData['first_name'] . ' ' . $studentData['last_name']),
+                        'email' => $studentData['email'],
+                        'password' => Hash::make($studentData['password']),
+                        'role' => 'student',
+                        'status' => 'active',
+                    ]);
+                    $studentData['user_id'] = $user->id;
+                    Log::info('Created new user account for student', ['user_id' => $user->id, 'email' => $user->email]);
+                }
             }
             // Remove password fields from student data (not student table columns)
             unset($studentData['password']);
