@@ -18,8 +18,12 @@ return new class extends Migration
             // Add subject_id column
             $table->foreignId('subject_id')->nullable()->after('id');
             
+            // Add file metadata columns
+            $table->string('file_mime_type')->nullable()->after('file_path');
+            $table->unsignedBigInteger('file_size')->nullable()->after('file_mime_type');
+            
             // Add uploaded_by to track who uploaded
-            $table->foreignId('uploaded_by')->nullable()->after('description');
+            $table->foreignId('uploaded_by')->nullable()->after('file_size');
         });
 
         // Migrate existing data: get subject_id from class_subjects
@@ -60,7 +64,7 @@ return new class extends Migration
             // Drop new columns
             $table->dropForeign(['subject_id']);
             $table->dropForeign(['uploaded_by']);
-            $table->dropColumn(['subject_id', 'uploaded_by']);
+            $table->dropColumn(['subject_id', 'file_mime_type', 'file_size', 'uploaded_by']);
         });
     }
 };
