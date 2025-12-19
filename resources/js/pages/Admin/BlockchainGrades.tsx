@@ -1,16 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { RefreshCw, Search, Eye, X } from 'lucide-react';
+import { RefreshCw, Eye, X, Users, ChevronRight, ChevronDown } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
-import { 
-    adminBlockchainService,
-    BlockchainTransaction,
-    TransactionStatus,
-    PaginationData,
-} from '../../../services/AdminBlockchainService';
+import { adminClassesService, Class, Student } from '../../../services/AdminClassesService';
+import { adminGradeService, Grade } from '../../../services/AdminGradeService';
 
 const PRIMARY_COLOR_CLASS = 'bg-gradient-to-r from-purple-600 to-indigo-600';
 const TEXT_COLOR_CLASS = 'text-purple-600';
-const RING_COLOR_CLASS = 'focus:ring-purple-500';
 
 interface Notification {
     type: 'success' | 'error' | 'info';
@@ -43,21 +38,76 @@ const Notification: React.FC<{ notification: Notification; onClose: () => void }
     );
 };
 
-const TransactionDetailsModal: React.FC<{
-    transaction: BlockchainTransaction;
-    onClose: () => void;
-}> = ({ transaction, onClose }) => {
-    const formatDate = (dateString: string | null) => {
-        if (!dateString) return 'N/A';
-        return new Date(dateString).toLocaleString();
+interface StudentGrades {
+    subject: {
+        id: number;
+        subject_code: string;
+        subject_name: string;
+        units?: number;
     };
+    prelim_grade: number | null;
+    midterm_grade: number | null;
+    final_grade: number | null;
+    final_rating: number | null;
+    remarks: string | null;
+    units: number;
+}
 
-    const statusColor = (status: TransactionStatus) => {
-        switch (status) {
-            case 'confirmed': return 'bg-green-100 text-green-800 border-green-200';
-            case 'pending': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-            case 'failed': return 'bg-red-100 text-red-800 border-red-200';
-            default: return 'bg-gray-100 text-gray-800 border-gray-200';
+const StudentGradesModal: React.FC<{
+    student: Student;
+    classInfo: Class;
+    onClose: () => void;
+}> = ({ student, classInfo, onClose }) => {
+    const [loading, setLoading] = useState(true);
+    const [grades, setGrades] = useState<StudentGrades[]>([]);
+    const [notification, setNotification] = useState<Notification | null>(null);
+
+    useEffect(() => {
+        loadStudentGrades();
+    }, []);
+
+    const loadStudentGrades = async () => {
+        setLoading(true);
+        try {
+            // Get all grades for this student
+            const response = await adminGradeService.getGrades({
+                student_id: student.id,
+                academic_year_id: classInfo.academic_year_id,
+                semester_id: classInfo.semester_id,
+                per_page: 9999,
+            });
+
+            if (response.success && response.data) {
+                // Get all subjects for this class
+                const classSubjectsRes = await fetch(`/api/class-subjects?class_id=${classInfo.id}&per_page=9999`);
+                const classSubjectsData = await classSubjectsRes.json();
+
+                // Map grades to subjects
+                const gradesMap = new Map<number, Grade>();
+                response.data.forEach((grade: Grade) => {
+                    gradesMap.set(grade.class_subject.subject.id, grade);
+                });
+
+                // Create the grades table structure
+                const gradesTable: StudentGrades[] = (classSubjectsData.data?.data || []).map((cs: any) => {
+                    const grade = gradesMap.get(cs.subject.id);
+                    return {
+                        subject: cs.subject,
+                        prelim_grade: grade?.prelim_grade || null,
+                        midterm_grade: grade?.midterm_grade || null,
+                        final_grade: grade?.final_grade || null,
+                        final_rating: grade?.final_rating || null,
+                        remarks: grade?.remarks || null,
+                        units: cs.subject.units || 0,
+                    };
+                });
+
+                setGrades(gradesTable);
+            }
+        } catch (error: any) {
+            setNotification({ type: 'error', message: error.message || 'Failed to load grades' });
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -66,12 +116,12 @@ const TransactionDetailsModal: React.FC<{
             <div className="flex min-h-full items-center justify-center p-4">
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" onClick={onClose}></div>
                 
-                <div className="relative w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white shadow-2xl transition-all">
+                <div className="relative w-full max-w-6xl transform overflow-hidden rounded-2xl bg-white shadow-2xl transition-all">
                     <div className={`${PRIMARY_COLOR_CLASS} px-6 py-4`}>
                         <div className="flex items-center justify-between">
-                            <div className="flex items-center space-x-3">
-                                <Eye className="w-6 h-6 text-white" />
-                                <h2 className="text-xl font-bold text-white">Transaction Details</h2>
+                            <div>
+                                <h2 className="text-xl font-bold text-white">Student Grades</h2>
+                                <p className="text-sm text-white/90 mt-1">{student.full_name} - {classInfo.class_code}</p>
                             </div>
                             <button onClick={onClose} className="rounded-full p-2 text-white/80 hover:bg-white/20 transition-colors">
                                 <X className="h-5 w-5" />
@@ -79,85 +129,84 @@ const TransactionDetailsModal: React.FC<{
                         </div>
                     </div>
 
-                    <div className="p-6 space-y-6 max-h-[calc(100vh-200px)] overflow-y-auto">
-                        <div className="bg-gray-50 rounded-xl p-6 space-y-4">
-                            <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Transaction ID</label>
-                                    <p className="text-sm font-mono bg-white px-3 py-2 rounded-lg border">#{transaction.id}</p>
-                                </div>
-                                <div>
-                                    <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Status</label>
-                                    <span className={`inline-flex items-center px-4 py-2 rounded-lg text-sm font-semibold border ${statusColor(transaction.status)}`}>
-                                        {transaction.status.charAt(0).toUpperCase() + transaction.status.slice(1)}
-                                    </span>
-                                </div>
+                    <div className="p-6 max-h-[calc(100vh-200px)] overflow-y-auto">
+                        {loading ? (
+                            <div className="flex items-center justify-center py-12">
+                                <RefreshCw className={`h-8 w-8 ${TEXT_COLOR_CLASS} animate-spin`} />
                             </div>
-                            
-                            <div>
-                                <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Blockchain Hash</label>
-                                <p className="text-sm font-mono break-all bg-white px-3 py-2 rounded-lg border">{transaction.transaction_hash || 'Not yet generated'}</p>
+                        ) : (
+                            <div className="overflow-x-auto">
+                                <table className="min-w-full border-collapse border border-gray-300">
+                                    <thead>
+                                        <tr className="bg-gray-100">
+                                            <th className="border border-gray-300 px-4 py-3 text-left text-sm font-semibold text-gray-700">Subject</th>
+                                            <th className="border border-gray-300 px-4 py-3 text-center text-sm font-semibold text-gray-700">Prelim</th>
+                                            <th className="border border-gray-300 px-4 py-3 text-center text-sm font-semibold text-gray-700">Midterm</th>
+                                            <th className="border border-gray-300 px-4 py-3 text-center text-sm font-semibold text-gray-700">Final</th>
+                                            <th className="border border-gray-300 px-4 py-3 text-center text-sm font-semibold text-gray-700">Final Rating</th>
+                                            <th className="border border-gray-300 px-4 py-3 text-center text-sm font-semibold text-gray-700">Units</th>
+                                            <th className="border border-gray-300 px-4 py-3 text-center text-sm font-semibold text-gray-700">Remarks</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {grades.length === 0 ? (
+                                            <tr>
+                                                <td colSpan={7} className="border border-gray-300 px-4 py-8 text-center text-gray-500">
+                                                    No subjects found for this class
+                                                </td>
+                                            </tr>
+                                        ) : (
+                                            grades.map((grade, index) => (
+                                                <tr key={index} className="hover:bg-gray-50">
+                                                    <td className="border border-gray-300 px-4 py-3 text-sm">
+                                                        <div>
+                                                            <div className="font-medium">{grade.subject.subject_code}</div>
+                                                            <div className="text-xs text-gray-600">{grade.subject.subject_name}</div>
+                                                        </div>
+                                                    </td>
+                                                    <td className="border border-gray-300 px-4 py-3 text-center text-sm">
+                                                        {grade.prelim_grade !== null && grade.prelim_grade !== undefined ? grade.prelim_grade : ''}
+                                                    </td>
+                                                    <td className="border border-gray-300 px-4 py-3 text-center text-sm">
+                                                        {grade.midterm_grade !== null && grade.midterm_grade !== undefined ? grade.midterm_grade : ''}
+                                                    </td>
+                                                    <td className="border border-gray-300 px-4 py-3 text-center text-sm">
+                                                        {grade.final_grade !== null && grade.final_grade !== undefined ? grade.final_grade : ''}
+                                                    </td>
+                                                    <td className="border border-gray-300 px-4 py-3 text-center text-sm font-semibold">
+                                                        {grade.final_rating !== null && grade.final_rating !== undefined ? grade.final_rating : ''}
+                                                    </td>
+                                                    <td className="border border-gray-300 px-4 py-3 text-center text-sm">
+                                                        {grade.units || ''}
+                                                    </td>
+                                                    <td className="border border-gray-300 px-4 py-3 text-center text-sm">
+                                                        {grade.remarks ? (
+                                                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                                                                grade.remarks === 'Passed' ? 'bg-green-100 text-green-800' :
+                                                                grade.remarks === 'Failed' ? 'bg-red-100 text-red-800' :
+                                                                'bg-yellow-100 text-yellow-800'
+                                                            }`}>
+                                                                {grade.remarks}
+                                                            </span>
+                                                        ) : ''}
+                                                    </td>
+                                                </tr>
+                                            ))
+                                        )}
+                                    </tbody>
+                                </table>
                             </div>
-
-                            <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Type</label>
-                                    <p className="text-sm capitalize bg-white px-3 py-2 rounded-lg border">{transaction.transaction_type.replace('_', ' ')}</p>
-                                </div>
-                                <div>
-                                    <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Initiated By</label>
-                                    <p className="text-sm bg-white px-3 py-2 rounded-lg border">{transaction.initiator?.name || `User #${transaction.initiated_by}`}</p>
-                                </div>
-                            </div>
-
-                            <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Submitted At</label>
-                                    <p className="text-sm bg-white px-3 py-2 rounded-lg border">{formatDate(transaction.submitted_at)}</p>
-                                </div>
-                                <div>
-                                    <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Processing Time</label>
-                                    <p className="text-sm bg-white px-3 py-2 rounded-lg border font-semibold">{transaction.processing_time_human || 'N/A'}</p>
-                                </div>
-                            </div>
-
-                            {transaction.grade && (
-                                <div className="border-t pt-4 mt-4">
-                                    <label className="block text-xs font-semibold text-gray-500 uppercase mb-2">Grade Details</label>
-                                    <div className="bg-white rounded-lg border p-4 space-y-2">
-                                        <p><strong>Student:</strong> {transaction.grade.student?.full_name || `${transaction.grade.student?.first_name} ${transaction.grade.student?.last_name}`}</p>
-                                        <p><strong>Subject:</strong> {transaction.grade.class_subject?.subject?.subject_name || 'N/A'}</p>
-                                        {transaction.grade.prelim_grade !== null && transaction.grade.prelim_grade !== undefined && (
-                                            <p><strong>Prelim Grade:</strong> {transaction.grade.prelim_grade}</p>
-                                        )}
-                                        {transaction.grade.midterm_grade !== null && transaction.grade.midterm_grade !== undefined && (
-                                            <p><strong>Midterm Grade:</strong> {transaction.grade.midterm_grade}</p>
-                                        )}
-                                        {transaction.grade.final_grade !== null && transaction.grade.final_grade !== undefined && (
-                                            <p><strong>Final Grade:</strong> {transaction.grade.final_grade}</p>
-                                        )}
-                                        {transaction.grade.final_rating !== null && transaction.grade.final_rating !== undefined && (
-                                            <p><strong>Final Rating:</strong> {transaction.grade.final_rating}</p>
-                                        )}
-                                        {transaction.grade.remarks && (
-                                            <p>
-                                                <strong>Remarks:</strong>{' '}
-                                                <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${
-                                                    transaction.grade.remarks === 'Passed' ? 'bg-green-100 text-green-800 border-green-200' :
-                                                    transaction.grade.remarks === 'Failed' ? 'bg-red-100 text-red-800 border-red-200' :
-                                                    'bg-gray-100 text-gray-800 border-gray-200'
-                                                } border`}>
-                                                    {transaction.grade.remarks}
-                                                </span>
-                                            </p>
-                                        )}
-                                    </div>
-                                </div>
-                            )}
-                        </div>
+                        )}
                     </div>
                 </div>
             </div>
+
+            {notification && (
+                <Notification
+                    notification={notification}
+                    onClose={() => setNotification(null)}
+                />
+            )}
         </div>
     );
 };
@@ -165,96 +214,56 @@ const TransactionDetailsModal: React.FC<{
 const BlockchainGrades: React.FC = () => {
     const [notification, setNotification] = useState<Notification | null>(null);
     const [loading, setLoading] = useState(false);
-    const [transactions, setTransactions] = useState<BlockchainTransaction[]>([]);
-    const [filters, setFilters] = useState({
-        search: '',
-        page: 1,
-        per_page: 10,
-    });
-    const [pagination, setPagination] = useState<PaginationData>({
-        current_page: 1,
-        last_page: 1,
-        per_page: 10,
-        total: 0,
-    });
-    const [selectedTransaction, setSelectedTransaction] = useState<BlockchainTransaction | null>(null);
-    const [showModal, setShowModal] = useState(false);
+    const [classes, setClasses] = useState<Class[]>([]);
+    const [expandedClassId, setExpandedClassId] = useState<number | null>(null);
+    const [students, setStudents] = useState<Map<number, Student[]>>(new Map());
+    const [loadingStudents, setLoadingStudents] = useState<Set<number>>(new Set());
+    const [selectedStudent, setSelectedStudent] = useState<{ student: Student; classInfo: Class } | null>(null);
 
-    const loadTransactions = async () => {
+    const loadClasses = async () => {
         setLoading(true);
         try {
-            // Get all transactions without type filter, then filter client-side
-            const response = await adminBlockchainService.getTransactions({
-                ...filters,
-                type: '', // No type filter - we'll filter client-side
-            });
-            
-            // Filter for grade-related transactions only
-            const gradeTransactions = (response.data || []).filter(tx => 
-                tx.transaction_type === 'grade_creation' || tx.transaction_type === 'grade_update'
-            );
-            
-            setTransactions(gradeTransactions);
-            if (response.pagination) {
-                // Update pagination to reflect filtered results
-                setPagination({
-                    ...response.pagination,
-                    total: gradeTransactions.length,
-                });
+            const response = await adminClassesService.getClasses({ per_page: 9999 });
+            if (response.success) {
+                setClasses(response.data || []);
+            } else {
+                setNotification({ type: 'error', message: response.message || 'Failed to load classes' });
             }
         } catch (error: any) {
-            setNotification({ type: 'error', message: error.message || 'Failed to load transactions' });
+            setNotification({ type: 'error', message: error.message || 'Failed to load classes' });
         } finally {
             setLoading(false);
         }
     };
 
+    const loadStudentsForClass = async (classId: number) => {
+        if (students.has(classId)) {
+            // Already loaded, just toggle
+            setExpandedClassId(expandedClassId === classId ? null : classId);
+            return;
+        }
+
+        setLoadingStudents(new Set([...loadingStudents, classId]));
+        try {
+            const response = await adminClassesService.getClassStudents(classId);
+            if (response.success) {
+                setStudents(new Map(students.set(classId, response.data || [])));
+                setExpandedClassId(classId);
+            } else {
+                setNotification({ type: 'error', message: response.message || 'Failed to load students' });
+            }
+        } catch (error: any) {
+            setNotification({ type: 'error', message: error.message || 'Failed to load students' });
+        } finally {
+            const newSet = new Set(loadingStudents);
+            newSet.delete(classId);
+            setLoadingStudents(newSet);
+        }
+    };
+
     useEffect(() => {
-        loadTransactions();
-    }, [filters.page]);
-
-    const renderStatusBadge = (status: TransactionStatus) => {
-        const colors = {
-            confirmed: 'bg-green-100 text-green-800 border-green-200',
-            pending: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-            failed: 'bg-red-100 text-red-800 border-red-200',
-        };
-        return (
-            <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${colors[status]}`}>
-                {status.charAt(0).toUpperCase() + status.slice(1)}
-            </span>
-        );
-    };
-
-    const Pagination: React.FC<{ pagination: PaginationData; onPageChange: (page: number) => void }> = ({ pagination, onPageChange }) => {
-        if (pagination.last_page <= 1) return null;
-
-        return (
-            <div className="bg-gray-50 px-6 py-4 border-t border-gray-200 flex items-center justify-between">
-                <div className="text-sm text-gray-700">
-                    Showing <span className="font-semibold">{((pagination.current_page - 1) * pagination.per_page) + 1}</span> to{' '}
-                    <span className="font-semibold">{Math.min(pagination.current_page * pagination.per_page, pagination.total)}</span> of{' '}
-                    <span className="font-semibold">{pagination.total}</span> results
-                </div>
-                <div className="flex space-x-2">
-                    <button
-                        onClick={() => onPageChange(pagination.current_page - 1)}
-                        disabled={pagination.current_page === 1}
-                        className="px-4 py-2 border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
-                    >
-                        Previous
-                    </button>
-                    <button
-                        onClick={() => onPageChange(pagination.current_page + 1)}
-                        disabled={pagination.current_page === pagination.last_page}
-                        className="px-4 py-2 border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
-                    >
-                        Next
-                    </button>
-                </div>
-            </div>
-        );
-    };
+        loadClasses();
+    }, []);
 
     return (
         <AppLayout>
@@ -266,10 +275,10 @@ const BlockchainGrades: React.FC = () => {
                                 <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent mb-2">
                                     Blockchain Grades
                                 </h1>
-                                <p className="text-gray-600">View all grade-related blockchain transactions</p>
+                                <p className="text-gray-600">View student grades by class</p>
                             </div>
                             <button
-                                onClick={loadTransactions}
+                                onClick={loadClasses}
                                 className="flex items-center px-4 py-2 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition-all"
                             >
                                 <RefreshCw className="w-4 h-4 mr-2" />
@@ -278,87 +287,96 @@ const BlockchainGrades: React.FC = () => {
                         </div>
                     </div>
 
-                    <div className="bg-white rounded-2xl shadow-lg p-6 mb-6 border border-gray-100">
-                        <div className="flex items-center">
-                            <Search className="absolute ml-4 h-5 w-5 text-gray-400" />
-                            <input
-                                type="text"
-                                value={filters.search}
-                                onChange={(e) => setFilters({...filters, search: e.target.value, page: 1})}
-                                className={`pl-12 w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS}`}
-                                placeholder="Search transactions..."
-                            />
-                        </div>
-                    </div>
-
                     <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
-                        <div className="overflow-x-auto">
-                            <table className="min-w-full divide-y divide-gray-200">
-                                <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
-                                    <tr>
-                                        <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase">ID</th>
-                                        <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase">Hash</th>
-                                        <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase">Student</th>
-                                        <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase">Grade</th>
-                                        <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase">Status</th>
-                                        <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase">Submitted</th>
-                                        <th className="px-6 py-4 text-right text-xs font-bold text-gray-700 uppercase">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="bg-white divide-y divide-gray-200">
-                                    {loading ? (
-                                        <tr><td colSpan={7} className="px-6 py-12 text-center"><RefreshCw className={`h-8 w-8 ${TEXT_COLOR_CLASS} animate-spin mx-auto`} /></td></tr>
-                                    ) : transactions.length === 0 ? (
-                                        <tr><td colSpan={7} className="px-6 py-12 text-center text-gray-500">No grade transactions found</td></tr>
-                                    ) : (
-                                        transactions.map((tx) => (
-                                            <tr key={tx.id} className="hover:bg-gray-50 transition-colors">
-                                                <td className="px-6 py-4 whitespace-nowrap font-mono text-sm">#{tx.id}</td>
-                                                <td className="px-6 py-4 font-mono text-xs max-w-xs truncate">
-                                                    {tx.transaction_hash ? `${tx.transaction_hash.substring(0, 12)}...` : 'Pending'}
-                                                </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm">
-                                                    {tx.grade?.student?.full_name || `${tx.grade?.student?.first_name} ${tx.grade?.student?.last_name}` || 'N/A'}
-                                                </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm">
-                                                    {tx.grade?.final_rating !== null && tx.grade?.final_rating !== undefined 
-                                                        ? tx.grade.final_rating 
-                                                        : tx.grade?.final_grade !== null && tx.grade?.final_grade !== undefined
-                                                        ? tx.grade.final_grade
-                                                        : 'N/A'}
-                                                </td>
-                                                <td className="px-6 py-4 whitespace-nowrap">{renderStatusBadge(tx.status)}</td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm">
-                                                    {new Date(tx.submitted_at).toLocaleDateString()}
-                                                </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-right">
-                                                    <button
-                                                        onClick={() => {
-                                                            setSelectedTransaction(tx);
-                                                            setShowModal(true);
-                                                        }}
-                                                        className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"
-                                                        title="View Details"
-                                                    >
-                                                        <Eye className="h-5 w-5" />
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        ))
-                                    )}
-                                </tbody>
-                            </table>
-                        </div>
-                        <Pagination 
-                            pagination={pagination} 
-                            onPageChange={(page) => setFilters({...filters, page})} 
-                        />
+                        {loading ? (
+                            <div className="flex items-center justify-center py-12">
+                                <RefreshCw className={`h-8 w-8 ${TEXT_COLOR_CLASS} animate-spin`} />
+                            </div>
+                        ) : classes.length === 0 ? (
+                            <div className="px-6 py-12 text-center text-gray-500">
+                                No classes found
+                            </div>
+                        ) : (
+                            <div className="divide-y divide-gray-200">
+                                {classes.map((classItem) => {
+                                    const isExpanded = expandedClassId === classItem.id;
+                                    const classStudents = students.get(classItem.id) || [];
+                                    const isLoading = loadingStudents.has(classItem.id);
+
+                                    return (
+                                        <div key={classItem.id} className="p-6 hover:bg-gray-50 transition-colors">
+                                            <div className="flex items-center justify-between">
+                                                <div className="flex-1">
+                                                    <h3 className="text-lg font-semibold text-gray-900">{classItem.class_code}</h3>
+                                                    <p className="text-sm text-gray-600 mt-1">{classItem.class_name}</p>
+                                                    <p className="text-xs text-gray-500 mt-1">
+                                                        {classItem.student_count || 0} students
+                                                    </p>
+                                                </div>
+                                                <button
+                                                    onClick={() => loadStudentsForClass(classItem.id)}
+                                                    className="flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+                                                >
+                                                    {isLoading ? (
+                                                        <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                                                    ) : (
+                                                        <>
+                                                            <Users className="w-4 h-4 mr-2" />
+                                                            View Students
+                                                        </>
+                                                    )}
+                                                    {isExpanded ? (
+                                                        <ChevronDown className="w-4 h-4 ml-2" />
+                                                    ) : (
+                                                        <ChevronRight className="w-4 h-4 ml-2" />
+                                                    )}
+                                                </button>
+                                            </div>
+
+                                            {isExpanded && (
+                                                <div className="mt-4 pt-4 border-t border-gray-200">
+                                                    {isLoading ? (
+                                                        <div className="flex items-center justify-center py-8">
+                                                            <RefreshCw className={`h-6 w-6 ${TEXT_COLOR_CLASS} animate-spin`} />
+                                                        </div>
+                                                    ) : classStudents.length === 0 ? (
+                                                        <p className="text-center text-gray-500 py-8">No students found in this class</p>
+                                                    ) : (
+                                                        <div className="space-y-2">
+                                                            {classStudents.map((student) => (
+                                                                <div
+                                                                    key={student.id}
+                                                                    className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                                                                >
+                                                                    <div>
+                                                                        <p className="font-medium text-gray-900">{student.full_name}</p>
+                                                                        <p className="text-sm text-gray-600">{student.student_id}</p>
+                                                                    </div>
+                                                                    <button
+                                                                        onClick={() => setSelectedStudent({ student, classInfo: classItem })}
+                                                                        className="flex items-center px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
+                                                                    >
+                                                                        <Eye className="w-4 h-4 mr-1.5" />
+                                                                        View Grades
+                                                                    </button>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            )}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        )}
                     </div>
 
-                    {showModal && selectedTransaction && (
-                        <TransactionDetailsModal
-                            transaction={selectedTransaction}
-                            onClose={() => setShowModal(false)}
+                    {selectedStudent && (
+                        <StudentGradesModal
+                            student={selectedStudent.student}
+                            classInfo={selectedStudent.classInfo}
+                            onClose={() => setSelectedStudent(null)}
                         />
                     )}
 
@@ -375,4 +393,3 @@ const BlockchainGrades: React.FC = () => {
 };
 
 export default BlockchainGrades;
-

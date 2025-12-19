@@ -260,7 +260,7 @@ function AppHeader() {
             icon: Database,
             submenu: [
                 { 
-                    title: 'All Transactions', 
+                    title: 'Transactions & Certificates', 
                     href: '/admin/blockchain-transactions', 
                     icon: Database 
                 },
