@@ -4,24 +4,53 @@ If you're unable to log in as an admin due to password hashing issues (Bcrypt er
 
 ## Method 1: Using the Artisan Command (Recommended)
 
-### Step 1: Run the command
+### ⚠️ Important: Run on Railway, Not Locally
 
-You can run the command in two ways:
+Since your application is deployed on Railway, you need to run this command on the Railway server, not on your local machine.
 
-**Option A: Interactive mode (recommended for security)**
-```bash
-php artisan admin:reset-password --email=admin@smms.edu.ph
-```
+### Step 1: Run the command on Railway
 
-The command will:
-1. Ask you to enter the new password (hidden input)
-2. Ask you to confirm the new password
-3. Show a confirmation prompt before resetting
+**Option A: Using Railway CLI (Recommended)**
 
-**Option B: With password as option (faster, less secure)**
-```bash
-php artisan admin:reset-password --email=admin@smms.edu.ph --password=YourNewPassword123
-```
+1. **Install Railway CLI** (if not already installed):
+   ```bash
+   npm install -g @railway/cli
+   ```
+
+2. **Login to Railway**:
+   ```bash
+   railway login
+   ```
+
+3. **Link to your project**:
+   ```bash
+   railway link
+   ```
+   (Select your project when prompted)
+
+4. **Run the command**:
+   
+   **Interactive mode (recommended for security):**
+   ```bash
+   railway run php artisan admin:reset-password --email=admin@smms.edu.ph
+   ```
+   
+   **Or with password as option:**
+   ```bash
+   railway run php artisan admin:reset-password --email=admin@smms.edu.ph --password=YourNewPassword123
+   ```
+
+**Option B: Using Railway Web Interface**
+
+1. Go to your Railway project dashboard
+2. Click on your service
+3. Go to the "Deployments" tab
+4. Click on the latest deployment
+5. Click "View Logs" or use the "Shell" option
+6. Run the command:
+   ```bash
+   php artisan admin:reset-password --email=admin@smms.edu.ph
+   ```
 
 ### Step 2: Log in with the new password
 
@@ -47,25 +76,41 @@ exit
 
 ## Troubleshooting
 
-### If the command doesn't work:
+### Error: "No connection could be made because the target machine actively refused it"
+
+**This means you're trying to run the command locally, but your database is on Railway.**
+
+**Solution:** Run the command on Railway using one of the methods above, not on your local machine.
+
+### If the command doesn't work on Railway:
 
 1. **Check if the user exists:**
    ```bash
-   php artisan tinker
+   railway run php artisan tinker
    ```
    Then:
    ```php
    \App\Models\User::where('email', 'admin@smms.edu.ph')->first();
+   exit
    ```
 
-2. **Check database connection:**
-   Make sure your `.env` file has the correct database credentials.
+2. **Check database connection on Railway:**
+   - Go to Railway dashboard → Your project → Variables
+   - Ensure `DB_CONNECTION`, `DB_HOST`, `DB_DATABASE`, `DB_USERNAME`, and `DB_PASSWORD` are set correctly
+   - Railway should auto-populate these when you add a MySQL database
 
-3. **Clear cache:**
+3. **Clear cache on Railway:**
    ```bash
-   php artisan config:clear
-   php artisan cache:clear
+   railway run php artisan config:clear
+   railway run php artisan cache:clear
    ```
+
+### Running Locally (for Development Only)
+
+If you want to run this locally for development, you need to:
+1. Start your local MySQL server
+2. Ensure your `.env` file has the correct local database credentials
+3. Then run: `php artisan admin:reset-password --email=admin@smms.edu.ph`
 
 ## Security Note
 
