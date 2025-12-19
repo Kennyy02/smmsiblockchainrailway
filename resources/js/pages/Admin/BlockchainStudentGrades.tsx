@@ -71,45 +71,86 @@ const BlockchainStudentGrades: React.FC = () => {
                     per_page: 9999,
                 });
 
-                if (response.success && response.data) {
-                    // Get all subjects for this class
-                    const classSubjectsRes = await adminClassSubjectService.getClassSubjects({
-                        class_id: classId,
-                        per_page: 9999,
+                // Get all subjects for this class
+                const classSubjectsRes = await adminClassSubjectService.getClassSubjects({
+                    class_id: classId,
+                    per_page: 9999,
+                });
+
+                // Debug logging
+                console.log('=== DEBUG INFO ===');
+                console.log('Class ID:', classId);
+                console.log('Student ID:', studentId);
+                console.log('Class Subjects Response:', classSubjectsRes);
+                console.log('Grades Response:', response);
+                console.log('Class Data:', classData);
+
+                if (!classSubjectsRes.success) {
+                    setNotification({ 
+                        type: 'error', 
+                        message: classSubjectsRes.message || 'Failed to load class subjects' 
                     });
-
-                    if (classSubjectsRes.success && classSubjectsRes.data) {
-                        // Map grades to subjects
-                        const gradesMap = new Map<number, Grade>();
-                        response.data.forEach((grade: Grade) => {
-                            if (grade.class_subject?.subject?.id) {
-                                gradesMap.set(grade.class_subject.subject.id, grade);
-                            }
-                        });
-
-                        // Create the grades table structure
-                        const gradesTable: StudentGrades[] = classSubjectsRes.data.map((cs: any) => {
-                            const subjectId = cs.subject?.id || cs.subject_id;
-                            const grade = gradesMap.get(subjectId);
-                            return {
-                                subject: cs.subject || {
-                                    id: cs.subject_id,
-                                    subject_code: cs.subject_code || '',
-                                    subject_name: cs.subject_name || '',
-                                    units: cs.subject?.units || 0,
-                                },
-                                prelim_grade: grade?.prelim_grade || null,
-                                midterm_grade: grade?.midterm_grade || null,
-                                final_grade: grade?.final_grade || null,
-                                final_rating: grade?.final_rating || null,
-                                remarks: grade?.remarks || null,
-                                units: cs.subject?.units || 0,
-                            };
-                        });
-
-                        setGrades(gradesTable);
-                    }
+                    setGrades([]);
+                    return;
                 }
+
+                const classSubjects = classSubjectsRes.data || [];
+                
+                if (classSubjects.length === 0) {
+                    setNotification({ 
+                        type: 'info', 
+                        message: 'No subjects found for this class. Please link subjects to this class first.' 
+                    });
+                    setGrades([]);
+                    return;
+                }
+
+                // Map grades to subjects by subject_id
+                const gradesMap = new Map<number, Grade>();
+                if (response.success && response.data && response.data.length > 0) {
+                    response.data.forEach((grade: Grade) => {
+                        // Try multiple ways to get the subject_id
+                        const subjectId = grade.class_subject?.subject?.id || 
+                                        (grade.class_subject as any)?.subject_id ||
+                                        null;
+                        if (subjectId) {
+                            gradesMap.set(subjectId, grade);
+                            console.log(`Mapped grade for subject ${subjectId}:`, grade);
+                        } else {
+                            console.warn('Grade without subject_id:', grade);
+                        }
+                    });
+                } else {
+                    console.log('No grades found for this student');
+                }
+
+                console.log('Grades Map:', Array.from(gradesMap.entries()));
+
+                // Create the grades table structure
+                const gradesTable: StudentGrades[] = classSubjects.map((cs: any) => {
+                    const subjectId = cs.subject?.id || cs.subject_id;
+                    const grade = gradesMap.get(subjectId);
+                    
+                    console.log(`Processing subject ${subjectId}, found grade:`, grade ? 'Yes' : 'No');
+                    
+                    return {
+                        subject: cs.subject || {
+                            id: cs.subject_id,
+                            subject_code: cs.subject_code || '',
+                            subject_name: cs.subject_name || '',
+                            units: cs.subject?.units || 0,
+                        },
+                        prelim_grade: grade?.prelim_grade || null,
+                        midterm_grade: grade?.midterm_grade || null,
+                        final_grade: grade?.final_grade || null,
+                        final_rating: grade?.final_rating || null,
+                        remarks: grade?.remarks || null,
+                        units: cs.subject?.units || 0,
+                    };
+                });
+
+                console.log('Final grades table:', gradesTable);
+                setGrades(gradesTable);
             }
         } catch (error: any) {
             setNotification({ type: 'error', message: error.message || 'Failed to load grades' });
