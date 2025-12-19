@@ -401,6 +401,10 @@ const AttendancePage: React.FC = () => {
         per_page: 10,
     });
     
+    // Class selection state
+    const [selectedClassId, setSelectedClassId] = useState<number | null>(null);
+    const [classes, setClasses] = useState<Array<{ id: number; class_code: string; class_name: string; subjectCount: number }>>([]);
+    
     const [pagination, setPagination] = useState<Pagination>({
         current_page: 1,
         last_page: 1,
