@@ -6,7 +6,10 @@ import {
     ChevronLeft, 
     ChevronRight,
     AlertCircle,
-    Users
+    Users,
+    TrendingUp,
+    CheckCircle,
+    XCircle
 } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
 import { usePage } from '@inertiajs/react';
@@ -116,6 +119,26 @@ const getDaysInMonth = (year: number, month: number): number => {
 const getDayAbbr = (dayIndex: number): string => {
     const days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
     return days[dayIndex];
+};
+
+// StatCard Component
+const StatCard: React.FC<{ title: string; value: string | number; icon: React.ElementType; color: string }> = ({ title, value, icon: Icon, color }) => {
+    const displayValue = (typeof value === 'number' && isNaN(value)) ? 'N/A' : value;
+    const bgColor = color.replace('text-', 'bg-').replace('-600', '-100');
+    
+    return (
+        <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+            <div className="flex items-center justify-between">
+                <div>
+                    <p className="text-sm font-medium text-gray-600 mb-1">{title}</p>
+                    <p className={`text-3xl font-bold ${color}`}>{displayValue}</p>
+                </div>
+                <div className={`${bgColor} p-3 rounded-xl`}>
+                    <Icon className={`h-8 w-8 ${color}`} />
+                </div>
+            </div>
+        </div>
+    );
 };
 
 const ParentAttendance: React.FC = () => {
@@ -251,6 +274,21 @@ const ParentAttendance: React.FC = () => {
             setLoading(false);
         }
     };
+
+    // Calculate attendance statistics
+    const attendanceStats = useMemo(() => {
+        const totalRecords = attendanceRecords.length;
+        const presentCount = attendanceRecords.filter(att => att.status === 'Present').length;
+        const absentCount = attendanceRecords.filter(att => att.status === 'Absent').length;
+        const attendanceRate = totalRecords > 0 ? ((presentCount / totalRecords) * 100) : 0;
+        
+        return {
+            totalRecords,
+            presentCount,
+            absentCount,
+            attendanceRate: Math.round(attendanceRate * 10) / 10, // Round to 1 decimal place
+        };
+    }, [attendanceRecords]);
 
     // Create a map of attendance by subject and date
     const attendanceMap = useMemo(() => {
@@ -394,6 +432,30 @@ const ParentAttendance: React.FC = () => {
                                     ))}
                                 </select>
                             </div>
+                        </div>
+                    )}
+
+                    {/* Analytics Cards */}
+                    {!loading && (
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                            <StatCard 
+                                title="Attendance Rate" 
+                                value={`${attendanceStats.attendanceRate}%`} 
+                                icon={TrendingUp} 
+                                color="text-purple-600" 
+                            />
+                            <StatCard 
+                                title="Present" 
+                                value={attendanceStats.presentCount} 
+                                icon={CheckCircle} 
+                                color="text-green-600" 
+                            />
+                            <StatCard 
+                                title="Absent" 
+                                value={attendanceStats.absentCount} 
+                                icon={XCircle} 
+                                color="text-red-600" 
+                            />
                         </div>
                     )}
 
