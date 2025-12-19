@@ -290,14 +290,16 @@ class AcademicYearController extends Controller
             }
             
             if ($totalRelated > 0 && $forceDelete) {
-                $academicYear->semesters()->delete();
-                $academicYear->classes()->delete();
-                $academicYear->grades()->delete();
+                // Force delete related records permanently
+                $academicYear->semesters()->forceDelete();
+                $academicYear->classes()->forceDelete();
+                $academicYear->grades()->forceDelete();
                 Log::warning("Force deleted academic year '{$academicYear->year_name}' with related records.");
             }
             
             $yearName = $academicYear->year_name;
-            $academicYear->delete();
+            // Permanently delete from database
+            $academicYear->forceDelete();
             
             if ($request->expectsJson()) {
                 return response()->json([

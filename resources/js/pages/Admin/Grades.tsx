@@ -327,7 +327,7 @@ const GradeModal: React.FC<{
                                 </option>
                                 {classSubjects.map(cs => (
                                     <option key={cs.id} value={cs.id}>
-                                        {cs.class?.class_code} - {cs.subject?.subject_name}
+                                        {cs.class?.class_code || cs.class?.class_name || 'Unknown'} - {cs.subject?.subject_name || cs.subject?.subject_code || 'Unknown'}
                                     </option>
                                 ))}
                             </select>

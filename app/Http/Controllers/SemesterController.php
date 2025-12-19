@@ -303,13 +303,15 @@ class SemesterController extends Controller
             }
             
             if ($totalRelated > 0 && $forceDelete) {
-                $semester->classes()->delete();
-                $semester->grades()->delete();
+                // Force delete related records permanently
+                $semester->classes()->forceDelete();
+                $semester->grades()->forceDelete();
                 Log::warning("Force deleted semester '{$semester->full_name}' with related records.");
             }
             
             $semesterName = $semester->full_name;
-            $semester->delete();
+            // Permanently delete from database
+            $semester->forceDelete();
             
             if ($request->expectsJson()) {
                 return response()->json([
