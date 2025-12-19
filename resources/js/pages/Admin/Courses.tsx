@@ -120,24 +120,24 @@ const CourseModal: React.FC<{
 
     return (
         <div className="fixed inset-0 z-50 overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4">
+            <div className="flex min-h-full items-center justify-center p-2 sm:p-4">
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" onClick={onClose}></div>
                 
                 <div className="relative w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white shadow-2xl transition-all">
-                    <div className={`${PRIMARY_COLOR_CLASS} px-6 py-4`}>
-                        <div className="flex items-center justify-between">
-                            <h2 className="text-xl font-bold text-white">
+                    <div className={`${PRIMARY_COLOR_CLASS} px-4 sm:px-6 py-3 sm:py-4`}>
+                        <div className="flex items-center justify-between gap-2">
+                            <h2 className="text-lg sm:text-xl font-bold text-white">
                                 {course ? 'Edit Course/Program' : 'Create New Course/Program'}
                             </h2>
-                            <button onClick={onClose} className="rounded-full p-2 text-white/80 hover:bg-white/20 hover:text-white transition-colors">
+                            <button onClick={onClose} className="rounded-full p-2 text-white/80 hover:bg-white/20 hover:text-white transition-colors cursor-pointer flex-shrink-0">
                                 <X className="h-5 w-5" />
                             </button>
                         </div>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="p-6 space-y-6">
+                    <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4 sm:space-y-6">
                         {/* Row 1: Course Code & Course Name */}
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-sm font-semibold text-gray-700 mb-2">
                                     Course Code <span className="text-red-500">*</span>
@@ -171,7 +171,7 @@ const CourseModal: React.FC<{
                         </div>
                         
                         {/* Row 2: Level, Duration, Status */}
-                        <div className="grid grid-cols-3 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                             <div>
                                 <label className="block text-sm font-semibold text-gray-700 mb-2">
                                     Level <span className="text-red-500">*</span>
@@ -206,7 +206,7 @@ const CourseModal: React.FC<{
                                 </select>
                                 {errors.duration_years && (<p className="text-red-500 text-xs mt-1">{errors.duration_years[0]}</p>)}
                             </div>
-                            <div>
+                            <div className="sm:col-span-2 md:col-span-1">
                                 <label className="block text-sm font-semibold text-gray-700 mb-2">
                                     Status
                                 </label>
@@ -245,22 +245,22 @@ const CourseModal: React.FC<{
                         </div>
 
                         {/* Action Buttons */}
-                        <div className="flex justify-end space-x-3 pt-4 border-t">
+                        <div className="flex flex-col sm:flex-row justify-end gap-3 sm:space-x-3 pt-4 border-t">
                             <button 
                                 type="button" 
                                 onClick={onClose} 
-                                className="px-6 py-3 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors font-medium" 
+                                className="w-full sm:w-auto px-6 py-3 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors font-medium cursor-pointer" 
                                 disabled={loading}
                             >
                                 Cancel
                             </button>
                             <button 
                                 type="submit" 
-                                className={`px-6 py-3 ${PRIMARY_COLOR_CLASS} text-white rounded-xl ${HOVER_COLOR_CLASS} transition-all font-medium shadow-lg disabled:opacity-50 disabled:cursor-not-allowed`} 
+                                className={`w-full sm:w-auto px-6 py-3 ${PRIMARY_COLOR_CLASS} text-white rounded-xl ${HOVER_COLOR_CLASS} transition-all font-medium shadow-lg disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer`} 
                                 disabled={loading}
                             >
                                 {loading ? (
-                                    <span className="flex items-center">
+                                    <span className="flex items-center justify-center">
                                         <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
                                         Saving...
                                     </span>
