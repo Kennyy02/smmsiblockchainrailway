@@ -63,17 +63,21 @@ const BlockchainStudentGrades: React.FC = () => {
                     setStudentName(studentData.data.full_name || `${studentData.data.first_name} ${studentData.data.last_name}`);
                 }
 
-                // Get all grades for this student
+                // Get all subjects for this class FIRST
+                const classSubjectsRes = await adminClassSubjectService.getClassSubjects({
+                    class_id: classId,
+                    per_page: 9999,
+                });
+
+                // Get all grades for this student, filtered by the class_subject_ids of this class
+                const classSubjectIds = classSubjectsRes.success && classSubjectsRes.data 
+                    ? classSubjectsRes.data.map((cs: any) => cs.id)
+                    : [];
+                
                 const response = await adminGradeService.getGrades({
                     student_id: studentId,
                     academic_year_id: classData.data.academic_year_id,
                     semester_id: classData.data.semester_id,
-                    per_page: 9999,
-                });
-
-                // Get all subjects for this class
-                const classSubjectsRes = await adminClassSubjectService.getClassSubjects({
-                    class_id: classId,
                     per_page: 9999,
                 });
 
@@ -106,9 +110,17 @@ const BlockchainStudentGrades: React.FC = () => {
                 }
 
                 // Map grades to subjects by subject_id
+                // Only include grades that belong to this class's class_subjects
                 const gradesMap = new Map<number, Grade>();
                 if (response.success && response.data && response.data.length > 0) {
                     response.data.forEach((grade: Grade) => {
+                        // Only process grades that belong to this class
+                        const gradeClassSubjectId = grade.class_subject_id || (grade.class_subject as any)?.id;
+                        if (classSubjectIds.length > 0 && !classSubjectIds.includes(gradeClassSubjectId)) {
+                            console.log(`Skipping grade with class_subject_id ${gradeClassSubjectId} (not in this class)`);
+                            return;
+                        }
+                        
                         // Try multiple ways to get the subject_id
                         const subjectId = grade.class_subject?.subject?.id || 
                                         (grade.class_subject as any)?.subject_id ||
