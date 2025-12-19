@@ -1128,21 +1128,21 @@ const AttendancePage: React.FC = () => {
                             {/* Attendance Marking Calendar Grid */}
                             {filters.class_subject_id && (
                                 <div className="mt-6 pt-6 border-t border-gray-200">
-                            <div className="flex items-center justify-between mb-4">
-                                <h3 className="text-lg font-semibold text-gray-900">Mark Attendance</h3>
-                            </div>
-                            
-                            {loadingClassStudents ? (
-                                <div className="text-center py-8">
-                                    <RefreshCw className={`h-8 w-8 ${TEXT_COLOR_CLASS} animate-spin mx-auto`} />
-                                    <p className="mt-2 text-sm text-gray-600">Loading students...</p>
-                                </div>
-                            ) : classStudents.length === 0 ? (
-                                <div className="text-center py-8 text-gray-500">
-                                    No students enrolled in this class.
-                                </div>
-                            ) : (
-                                <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
+                                    <div className="flex items-center justify-between mb-4">
+                                        <h3 className="text-lg font-semibold text-gray-900">Mark Attendance</h3>
+                                    </div>
+                                    
+                                    {loadingClassStudents ? (
+                                        <div className="text-center py-8">
+                                            <RefreshCw className={`h-8 w-8 ${TEXT_COLOR_CLASS} animate-spin mx-auto`} />
+                                            <p className="mt-2 text-sm text-gray-600">Loading students...</p>
+                                        </div>
+                                    ) : classStudents.length === 0 ? (
+                                        <div className="text-center py-8 text-gray-500">
+                                            No students enrolled in this class.
+                                        </div>
+                                    ) : (
+                                        <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
                                     {/* Month/Year Navigation */}
                                     <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200">
                                         <div className="flex items-center justify-between">
@@ -1380,6 +1380,8 @@ const AttendancePage: React.FC = () => {
                                             </table>
                                         </div>
                                     </div>
+                                </div>
+                                    )}
                                 </div>
                             )}
                         </div>
