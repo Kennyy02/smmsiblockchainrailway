@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { 
     ClipboardCheck, 
     Plus, 
@@ -13,7 +13,9 @@ import {
     CheckCircle, 
     XCircle,
     Clock,
-    AlertCircle
+    AlertCircle,
+    ChevronLeft,
+    ChevronRight
 } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
 import { useTeacherAuth } from '../../../services/useTeacherAuth';
@@ -358,6 +360,35 @@ const AttendancePage: React.FC = () => {
     const [studentAttendanceMap, setStudentAttendanceMap] = useState<Record<number, AttendanceStatus>>({});
     const [studentAttendanceRecordIds, setStudentAttendanceRecordIds] = useState<Record<number, number>>({});
     
+    // Month/Year pagination for calendar
+    const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
+    const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+    
+    // Store attendance data for the entire month: studentId_day -> { status, id }
+    const [monthAttendanceData, setMonthAttendanceData] = useState<Record<string, { status: AttendanceStatus; id: number }>>({});
+    
+    // Track which cell's dropdown is open
+    const [openDropdown, setOpenDropdown] = useState<{ studentId: number; day: number } | null>(null);
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (openDropdown) {
+                const target = event.target as HTMLElement;
+                if (!target.closest('.attendance-cell-dropdown')) {
+                    setOpenDropdown(null);
+                }
+            }
+        };
+
+        if (openDropdown) {
+            document.addEventListener('mousedown', handleClickOutside);
+            return () => {
+                document.removeEventListener('mousedown', handleClickOutside);
+            };
+        }
+    }, [openDropdown]);
+    
     const [filters, setFilters] = useState<Filters>({
         search: '',
         class_subject_id: '',
@@ -427,39 +458,62 @@ const AttendancePage: React.FC = () => {
         }
     };
 
-    // Load attendance for selected date and class to determine button states
-    const fetchAttendanceForDate = async () => {
-        if (!filters.class_subject_id || !selectedDate) {
+    // Load attendance for entire month
+    const fetchAttendanceForMonth = async () => {
+        if (!filters.class_subject_id) {
             setStudentAttendanceMap({});
             setStudentAttendanceRecordIds({});
             return;
         }
 
         try {
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            const startDate = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-01`;
+            const endDate = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(daysInMonth).padStart(2, '0')}`;
+
             const response = await adminAttendanceService.getAttendanceRecords({
                 class_subject_id: parseInt(filters.class_subject_id),
-                start_date: selectedDate,
-                end_date: selectedDate,
+                start_date: startDate,
+                end_date: endDate,
                 per_page: 9999,
             });
 
             if (response.success && Array.isArray(response.data)) {
-                const attendanceMap: Record<number, AttendanceStatus> = {};
-                const recordIdsMap: Record<number, number> = {};
+                // Create a map: studentId_day -> { status, id }
+                const attendanceMap: Record<string, { status: AttendanceStatus; id: number }> = {};
                 response.data.forEach((record) => {
-                    attendanceMap[record.student_id] = record.status;
-                    recordIdsMap[record.student_id] = record.id;
+                    const day = new Date(record.attendance_date).getDate();
+                    const key = `${record.student_id}_${day}`;
+                    attendanceMap[key] = { status: record.status, id: record.id };
                 });
-                setStudentAttendanceMap(attendanceMap);
+                
+                // Convert to the format we need for the calendar
+                const studentMap: Record<number, AttendanceStatus> = {};
+                const recordIdsMap: Record<number, number> = {};
+                
+                // For backward compatibility, also keep the old format for selectedDate
+                const selectedDay = new Date(selectedDate).getDate();
+                response.data.forEach((record) => {
+                    const recordDay = new Date(record.attendance_date).getDate();
+                    if (recordDay === selectedDay) {
+                        studentMap[record.student_id] = record.status;
+                        recordIdsMap[record.student_id] = record.id;
+                    }
+                });
+                
+                setStudentAttendanceMap(studentMap);
                 setStudentAttendanceRecordIds(recordIdsMap);
+                setMonthAttendanceData(attendanceMap);
             } else {
                 setStudentAttendanceMap({});
                 setStudentAttendanceRecordIds({});
+                setMonthAttendanceData({});
             }
         } catch (error) {
-            console.error('Error fetching attendance for date:', error);
+            console.error('Error fetching attendance for month:', error);
             setStudentAttendanceMap({});
             setStudentAttendanceRecordIds({});
+            setMonthAttendanceData({});
         }
     };
 
@@ -610,10 +664,10 @@ const AttendancePage: React.FC = () => {
         };
     }, []);
 
-    // Fetch attendance for selected date when date or class changes
+    // Fetch attendance for month when month/year or class changes
     useEffect(() => {
-        if (filters.class_subject_id && selectedDate) {
-            fetchAttendanceForDate();
+        if (filters.class_subject_id) {
+            fetchAttendanceForMonth();
             fetchStats(); // Refresh stats when class changes
         } else {
             setStudentAttendanceMap({});
@@ -629,7 +683,7 @@ const AttendancePage: React.FC = () => {
                 });
             }
         }
-    }, [filters.class_subject_id, selectedDate]);
+    }, [filters.class_subject_id, currentMonth, currentYear]);
 
     // Load students for selected class
     useEffect(() => {
@@ -718,24 +772,27 @@ const AttendancePage: React.FC = () => {
         }
     };
 
-    const handleQuickMark = async (studentId: number, status: AttendanceStatus) => {
+    const handleQuickMark = async (studentId: number, status: AttendanceStatus, day: number) => {
         if (!filters.class_subject_id) {
             setNotification({ type: 'error', message: 'Please select a class first.' });
             return;
         }
 
-        try {
-            const existingStatus = studentAttendanceMap[studentId];
-            const existingRecordId = studentAttendanceRecordIds[studentId];
+        const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+        const attendanceDate = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        
+        const key = `${studentId}_${day}`;
+        const existing = monthAttendanceData[key];
 
+        try {
             // If clicking the same status, delete/unmark the attendance
-            if (existingStatus === status && existingRecordId) {
-                await adminAttendanceService.deleteAttendance(existingRecordId);
+            if (existing && existing.status === status) {
+                await adminAttendanceService.deleteAttendance(existing.id);
                 setNotification({ type: 'success', message: `Attendance unmarked successfully!` });
             } 
             // If a different status exists, update it
-            else if (existingStatus && existingRecordId) {
-                await adminAttendanceService.updateAttendance(existingRecordId, { status });
+            else if (existing) {
+                await adminAttendanceService.updateAttendance(existing.id, { status });
                 setNotification({ type: 'success', message: `Attendance updated to ${status} successfully!` });
             }
             // If no attendance exists, create a new one
@@ -743,7 +800,7 @@ const AttendancePage: React.FC = () => {
                 const data: AttendanceFormData = {
                     class_subject_id: parseInt(filters.class_subject_id),
                     student_id: studentId,
-                    attendance_date: selectedDate,
+                    attendance_date: attendanceDate,
                     status: status,
                 };
 
@@ -754,12 +811,79 @@ const AttendancePage: React.FC = () => {
             // Refresh all data
             fetchAttendance();
             fetchStats();
-            fetchAttendanceForDate(); // Refresh button states
+            fetchAttendanceForMonth(); // Refresh calendar data
+            setOpenDropdown(null); // Close dropdown
         } catch (error: any) {
             console.error('Error marking attendance:', error);
             setNotification({ type: 'error', message: error.message || 'Failed to mark attendance.' });
         }
     };
+
+    // Helper functions for calendar
+    const getDaysInMonth = (year: number, month: number): number => {
+        return new Date(year, month + 1, 0).getDate();
+    };
+
+    const getDayAbbr = (dayIndex: number): string => {
+        const days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+        return days[dayIndex];
+    };
+
+    const getStatusCode = (status: string): string => {
+        switch (status) {
+            case 'Present': return 'P';
+            case 'Absent': return 'A';
+            case 'Late': return 'L';
+            case 'Excused': return 'E';
+            default: return '';
+        }
+    };
+
+    const getStatusColor = (status: string): string => {
+        switch (status) {
+            case 'Present': return 'bg-green-100 text-green-800';
+            case 'Absent': return 'bg-red-100 text-red-800';
+            case 'Late': return 'bg-yellow-100 text-yellow-800';
+            case 'Excused': return 'bg-blue-100 text-blue-800';
+            default: return 'bg-gray-100 text-gray-800';
+        }
+    };
+
+    // Get calendar days (1 to daysInMonth)
+    const calendarDays = useMemo(() => {
+        const daysInMonth = getDaysInMonth(currentYear, currentMonth);
+        return Array.from({ length: daysInMonth }, (_, i) => i + 1);
+    }, [currentYear, currentMonth]);
+
+    // Navigation functions
+    const goToPreviousMonth = () => {
+        if (currentMonth === 0) {
+            setCurrentMonth(11);
+            setCurrentYear(currentYear - 1);
+        } else {
+            setCurrentMonth(currentMonth - 1);
+        }
+    };
+
+    const goToNextMonth = () => {
+        if (currentMonth === 11) {
+            setCurrentMonth(0);
+            setCurrentYear(currentYear + 1);
+        } else {
+            setCurrentMonth(currentMonth + 1);
+        }
+    };
+
+    const goToCurrentMonth = () => {
+        const now = new Date();
+        setCurrentMonth(now.getMonth());
+        setCurrentYear(now.getFullYear());
+    };
+
+    const monthNames = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+    ];
 
     const handleDelete = async (id: number) => {
         if (!confirm('Are you sure you want to delete this attendance record?')) return;
@@ -939,20 +1063,11 @@ const AttendancePage: React.FC = () => {
                         </select>
                     </div>
                     
-                    {/* Attendance Marking Grid */}
+                    {/* Attendance Marking Calendar Grid */}
                     {filters.class_subject_id && (
                         <div className="mt-6 pt-6 border-t border-gray-200">
                             <div className="flex items-center justify-between mb-4">
                                 <h3 className="text-lg font-semibold text-gray-900">Mark Attendance</h3>
-                                <div className="flex items-center gap-3">
-                                    <label className="text-sm font-medium text-gray-700">Date:</label>
-                                    <input
-                                        type="date"
-                                        value={selectedDate}
-                                        onChange={(e) => setSelectedDate(e.target.value)}
-                                        className={`px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
-                                    />
-                                </div>
                             </div>
                             
                             {loadingClassStudents ? (
@@ -965,74 +1080,227 @@ const AttendancePage: React.FC = () => {
                                     No students enrolled in this class.
                                 </div>
                             ) : (
-                                <div className="overflow-x-auto">
-                                    <table className="min-w-full divide-y divide-gray-200 border border-gray-300">
-                                        <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
-                                            <tr>
-                                                <th className="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider border-r border-gray-300">#</th>
-                                                <th className="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider border-r border-gray-300">Student ID</th>
-                                                <th className="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider border-r border-gray-300">Student Name</th>
-                                                <th className="px-4 py-3 text-center text-xs font-bold text-gray-700 uppercase tracking-wider">Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody className="bg-white divide-y divide-gray-200">
-                                            {classStudents.map((student, index) => (
-                                                <tr key={student.id} className="hover:bg-gray-50 transition-colors">
-                                                    <td className="px-4 py-3 text-sm text-gray-700 border-r border-gray-300">{index + 1}</td>
-                                                    <td className="px-4 py-3 text-sm font-medium text-gray-900 border-r border-gray-300">{student.student_id}</td>
-                                                    <td className="px-4 py-3 text-sm text-gray-900 border-r border-gray-300">{student.full_name}</td>
-                                                    <td className="px-4 py-3 text-center">
-                                                        <div className="flex items-center justify-center gap-2">
-                                                            <button
-                                                                onClick={() => handleQuickMark(student.id, 'Present')}
-                                                                className={`px-4 py-2 rounded-lg transition-colors font-semibold text-sm shadow-sm ${
-                                                                    studentAttendanceMap[student.id] === 'Present'
-                                                                        ? 'bg-green-500 text-white hover:bg-green-600'
-                                                                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                                                                }`}
-                                                                title="Present"
+                                <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
+                                    {/* Month/Year Navigation */}
+                                    <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200">
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center gap-4">
+                                                <button
+                                                    onClick={goToPreviousMonth}
+                                                    className="p-2 hover:bg-white rounded-lg transition-colors cursor-pointer"
+                                                >
+                                                    <ChevronLeft className="w-5 h-5 text-gray-700" />
+                                                </button>
+                                                <div className="text-lg font-semibold text-gray-900">
+                                                    {monthNames[currentMonth]} / {currentYear}
+                                                </div>
+                                                <button
+                                                    onClick={goToNextMonth}
+                                                    className="p-2 hover:bg-white rounded-lg transition-colors cursor-pointer"
+                                                >
+                                                    <ChevronRight className="w-5 h-5 text-gray-700" />
+                                                </button>
+                                            </div>
+                                            <button
+                                                onClick={goToCurrentMonth}
+                                                className="px-4 py-2 bg-[#003366] text-white rounded-lg hover:bg-[#002244] transition-colors text-sm cursor-pointer"
+                                            >
+                                                Today
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    {/* Calendar Grid */}
+                                    <div className="p-6 overflow-x-auto">
+                                        <div className="min-w-full">
+                                            <table className="w-full border-collapse border border-gray-300 text-sm">
+                                                <thead>
+                                                    <tr className="bg-gray-100">
+                                                        <th className="border border-gray-300 px-4 py-2 text-left font-semibold text-gray-700 sticky left-0 bg-gray-100 z-10">
+                                                            Name
+                                                        </th>
+                                                        {/* Date headers */}
+                                                        {calendarDays.map((day) => (
+                                                            <th
+                                                                key={day}
+                                                                className="border border-gray-300 px-2 py-2 text-center font-semibold text-gray-700 min-w-[40px]"
                                                             >
-                                                                P
-                                                            </button>
-                                                            <button
-                                                                onClick={() => handleQuickMark(student.id, 'Absent')}
-                                                                className={`px-4 py-2 rounded-lg transition-colors font-semibold text-sm shadow-sm ${
-                                                                    studentAttendanceMap[student.id] === 'Absent'
-                                                                        ? 'bg-red-500 text-white hover:bg-red-600'
-                                                                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                                                                }`}
-                                                                title="Absent"
+                                                                {day}
+                                                            </th>
+                                                        ))}
+                                                    </tr>
+                                                    <tr className="bg-gray-50">
+                                                        <th className="border border-gray-300 px-4 py-1 text-left text-xs text-gray-600 sticky left-0 bg-gray-50 z-10">
+                                                            Student
+                                                        </th>
+                                                        {/* Day of week headers */}
+                                                        {calendarDays.map((day) => (
+                                                            <th
+                                                                key={day}
+                                                                className="border border-gray-300 px-2 py-1 text-center text-xs text-gray-600 min-w-[40px]"
                                                             >
-                                                                A
-                                                            </button>
-                                                            <button
-                                                                onClick={() => handleQuickMark(student.id, 'Late')}
-                                                                className={`px-4 py-2 rounded-lg transition-colors font-semibold text-sm shadow-sm ${
-                                                                    studentAttendanceMap[student.id] === 'Late'
-                                                                        ? 'bg-yellow-500 text-white hover:bg-yellow-600'
-                                                                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                                                                }`}
-                                                                title="Late"
-                                                            >
-                                                                L
-                                                            </button>
-                                                            <button
-                                                                onClick={() => handleQuickMark(student.id, 'Excused')}
-                                                                className={`px-4 py-2 rounded-lg transition-colors font-semibold text-sm shadow-sm ${
-                                                                    studentAttendanceMap[student.id] === 'Excused'
-                                                                        ? 'bg-blue-500 text-white hover:bg-blue-600'
-                                                                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                                                                }`}
-                                                                title="Excused"
-                                                            >
-                                                                E
-                                                            </button>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
+                                                                {getDayAbbr(new Date(currentYear, currentMonth, day).getDay())}
+                                                            </th>
+                                                        ))}
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {classStudents.map((student) => {
+                                                        return (
+                                                            <tr key={student.id} className="hover:bg-gray-50">
+                                                                <td className="border border-gray-300 px-4 py-3 sticky left-0 bg-white z-10">
+                                                                    <div className="font-semibold text-gray-900">{student.student_id}</div>
+                                                                    <div className="text-xs text-gray-600">{student.full_name}</div>
+                                                                </td>
+                                                                {/* Attendance cells for each day */}
+                                                                {calendarDays.map((day) => {
+                                                                    const key = `${student.id}_${day}`;
+                                                                    const attendance = monthAttendanceData[key];
+                                                                    const isOpen = openDropdown?.studentId === student.id && openDropdown?.day === day;
+                                                                    
+                                                                    return (
+                                                                        <td
+                                                                            key={day}
+                                                                            className="border border-gray-300 px-2 py-2 text-center min-w-[40px] relative attendance-cell-dropdown"
+                                                                        >
+                                                                            {attendance ? (
+                                                                                <div className="relative">
+                                                                                    <button
+                                                                                        onClick={(e) => {
+                                                                                            e.stopPropagation();
+                                                                                            setOpenDropdown(isOpen ? null : { studentId: student.id, day });
+                                                                                        }}
+                                                                                        className={`inline-block px-1.5 py-0.5 rounded text-xs font-medium ${getStatusColor(attendance.status)} cursor-pointer hover:opacity-80`}
+                                                                                        title={attendance.status}
+                                                                                    >
+                                                                                        {getStatusCode(attendance.status)}
+                                                                                    </button>
+                                                                                    {isOpen && (
+                                                                                        <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-20 min-w-[120px]">
+                                                                                            <button
+                                                                                                onClick={(e) => {
+                                                                                                    e.stopPropagation();
+                                                                                                    handleQuickMark(student.id, 'Present', day);
+                                                                                                }}
+                                                                                                className="w-full px-3 py-2 text-left text-sm hover:bg-green-50 text-green-800 cursor-pointer"
+                                                                                            >
+                                                                                                Present
+                                                                                            </button>
+                                                                                            <button
+                                                                                                onClick={(e) => {
+                                                                                                    e.stopPropagation();
+                                                                                                    handleQuickMark(student.id, 'Absent', day);
+                                                                                                }}
+                                                                                                className="w-full px-3 py-2 text-left text-sm hover:bg-red-50 text-red-800 cursor-pointer"
+                                                                                            >
+                                                                                                Absent
+                                                                                            </button>
+                                                                                            <button
+                                                                                                onClick={(e) => {
+                                                                                                    e.stopPropagation();
+                                                                                                    handleQuickMark(student.id, 'Late', day);
+                                                                                                }}
+                                                                                                className="w-full px-3 py-2 text-left text-sm hover:bg-yellow-50 text-yellow-800 cursor-pointer"
+                                                                                            >
+                                                                                                Late
+                                                                                            </button>
+                                                                                            <button
+                                                                                                onClick={(e) => {
+                                                                                                    e.stopPropagation();
+                                                                                                    handleQuickMark(student.id, 'Excused', day);
+                                                                                                }}
+                                                                                                className="w-full px-3 py-2 text-left text-sm hover:bg-blue-50 text-blue-800 cursor-pointer"
+                                                                                            >
+                                                                                                Excused
+                                                                                            </button>
+                                                                                        </div>
+                                                                                    )}
+                                                                                </div>
+                                                                            ) : (
+                                                                                <div className="relative">
+                                                                                    <button
+                                                                                        onClick={(e) => {
+                                                                                            e.stopPropagation();
+                                                                                            setOpenDropdown(isOpen ? null : { studentId: student.id, day });
+                                                                                        }}
+                                                                                        className="w-full h-8 hover:bg-gray-100 rounded cursor-pointer"
+                                                                                        title="Click to mark attendance"
+                                                                                    />
+                                                                                    {isOpen && (
+                                                                                        <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-20 min-w-[120px]">
+                                                                                            <button
+                                                                                                onClick={(e) => {
+                                                                                                    e.stopPropagation();
+                                                                                                    handleQuickMark(student.id, 'Present', day);
+                                                                                                }}
+                                                                                                className="w-full px-3 py-2 text-left text-sm hover:bg-green-50 text-green-800 cursor-pointer"
+                                                                                            >
+                                                                                                Present
+                                                                                            </button>
+                                                                                            <button
+                                                                                                onClick={(e) => {
+                                                                                                    e.stopPropagation();
+                                                                                                    handleQuickMark(student.id, 'Absent', day);
+                                                                                                }}
+                                                                                                className="w-full px-3 py-2 text-left text-sm hover:bg-red-50 text-red-800 cursor-pointer"
+                                                                                            >
+                                                                                                Absent
+                                                                                            </button>
+                                                                                            <button
+                                                                                                onClick={(e) => {
+                                                                                                    e.stopPropagation();
+                                                                                                    handleQuickMark(student.id, 'Late', day);
+                                                                                                }}
+                                                                                                className="w-full px-3 py-2 text-left text-sm hover:bg-yellow-50 text-yellow-800 cursor-pointer"
+                                                                                            >
+                                                                                                Late
+                                                                                            </button>
+                                                                                            <button
+                                                                                                onClick={(e) => {
+                                                                                                    e.stopPropagation();
+                                                                                                    handleQuickMark(student.id, 'Excused', day);
+                                                                                                }}
+                                                                                                className="w-full px-3 py-2 text-left text-sm hover:bg-blue-50 text-blue-800 cursor-pointer"
+                                                                                            >
+                                                                                                Excused
+                                                                                            </button>
+                                                                                        </div>
+                                                                                    )}
+                                                                                </div>
+                                                                            )}
+                                                                        </td>
+                                                                    );
+                                                                })}
+                                                            </tr>
+                                                        );
+                                                    })}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    {/* Legend */}
+                                    <div className="bg-gray-50 px-6 py-4 border-t border-gray-200">
+                                        <div className="flex flex-wrap items-center gap-4 text-sm">
+                                            <span className="font-semibold text-gray-700">Legend:</span>
+                                            <span className="flex items-center gap-2">
+                                                <span className="inline-block px-2 py-1 rounded bg-green-100 text-green-800 text-xs font-medium">P</span>
+                                                <span className="text-gray-600">Present</span>
+                                            </span>
+                                            <span className="flex items-center gap-2">
+                                                <span className="inline-block px-2 py-1 rounded bg-red-100 text-red-800 text-xs font-medium">A</span>
+                                                <span className="text-gray-600">Absent</span>
+                                            </span>
+                                            <span className="flex items-center gap-2">
+                                                <span className="inline-block px-2 py-1 rounded bg-yellow-100 text-yellow-800 text-xs font-medium">L</span>
+                                                <span className="text-gray-600">Late</span>
+                                            </span>
+                                            <span className="flex items-center gap-2">
+                                                <span className="inline-block px-2 py-1 rounded bg-blue-100 text-blue-800 text-xs font-medium">E</span>
+                                                <span className="text-gray-600">Excused</span>
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
                             )}
                         </div>
