@@ -135,27 +135,30 @@ const ViewCurriculumModal: React.FC<{
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-2xl shadow-2xl w-full max-w-6xl max-h-[90vh] overflow-hidden flex flex-col">
                 {/* Header */}
-                <div className={`${PRIMARY_COLOR_CLASS} text-white p-6`}>
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <h2 className="text-2xl font-bold flex items-center gap-3">
-                                <GraduationCap className="h-8 w-8" />
-                                {course.course_code} Curriculum
+                <div className={`${PRIMARY_COLOR_CLASS} text-white p-4 sm:p-6`}>
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
+                        <div className="flex-1 min-w-0">
+                            <h2 className="text-lg sm:text-xl md:text-2xl font-bold flex items-center gap-2 sm:gap-3">
+                                <GraduationCap className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 flex-shrink-0" />
+                                <span className="truncate">{course.course_code} Curriculum</span>
                             </h2>
-                            <p className="text-blue-100 mt-1">
-                                {course.course_name} • {course.total_subjects} Subjects • {course.total_units} Total Units
+                            <p className="text-blue-100 mt-1 text-xs sm:text-sm md:text-base break-words">
+                                <span className="block sm:inline">{course.course_name}</span>
+                                <span className="hidden sm:inline"> • </span>
+                                <span className="block sm:inline">• {course.total_subjects} Subjects • {course.total_units} Total Units</span>
                             </p>
                         </div>
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
                             <button 
                                 onClick={() => onAdd(course.id)}
-                                className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-medium transition-colors cursor-pointer"
+                                className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-white/20 hover:bg-white/30 rounded-lg text-xs sm:text-sm font-medium transition-colors cursor-pointer whitespace-nowrap"
                             >
-                                <Plus className="h-4 w-4" />
-                                Add Subject
+                                <Plus className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                                <span className="hidden min-[375px]:inline">Add Subject</span>
+                                <span className="min-[375px]:hidden">Add</span>
                             </button>
-                            <button onClick={onClose} className="rounded-full p-2 hover:bg-white/20 cursor-pointer">
-                                <X className="h-6 w-6" />
+                            <button onClick={onClose} className="rounded-full p-1.5 sm:p-2 hover:bg-white/20 cursor-pointer flex-shrink-0">
+                                <X className="h-5 w-5 sm:h-6 sm:w-6" />
                             </button>
                         </div>
                     </div>
