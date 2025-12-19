@@ -29,7 +29,7 @@ const Notification: React.FC<{ notification: Notification; onClose: () => void }
             <div className={`${bgColor} text-white px-6 py-4 rounded-xl shadow-2xl backdrop-blur-sm`}>
                 <div className="flex items-center justify-between">
                     <div className="font-medium">{notification.message}</div>
-                    <button onClick={onClose} className="ml-4 rounded-full p-1 hover:bg-white/20 transition-colors">
+                    <button onClick={onClose} className="ml-4 rounded-full p-1 hover:bg-white/20 transition-colors cursor-pointer">
                         <X className="w-4 h-4" />
                     </button>
                 </div>
@@ -77,7 +77,7 @@ const BlockchainGrades: React.FC = () => {
                             </div>
                             <button
                                 onClick={loadClasses}
-                                className="flex items-center px-4 py-2 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition-all"
+                                className="flex items-center px-4 py-2 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition-all cursor-pointer"
                             >
                                 <RefreshCw className="w-4 h-4 mr-2" />
                                 Refresh
@@ -108,7 +108,7 @@ const BlockchainGrades: React.FC = () => {
                                             </div>
                                             <button
                                                 onClick={() => router.visit(`/admin/blockchain-transactions/grades/class/${classItem.id}/students`)}
-                                                className="flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+                                                className="flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors cursor-pointer"
                                             >
                                                 <Users className="w-4 h-4 mr-2" />
                                                 View Students

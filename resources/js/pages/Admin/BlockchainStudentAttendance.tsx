@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { RefreshCw, ArrowLeft, X, CalendarCheck } from 'lucide-react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { RefreshCw, ArrowLeft, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
 import { Link, usePage, router } from '@inertiajs/react';
 import { adminAttendanceService, Attendance } from '../../../services/AdminAttendanceService';
@@ -45,7 +45,7 @@ const NotificationDisplay: React.FC<{ notification: Notification; onClose: () =>
             <div className={`${bgColor} text-white px-6 py-4 rounded-xl shadow-2xl backdrop-blur-sm`}>
                 <div className="flex items-center justify-between">
                     <div className="font-medium">{notification.message}</div>
-                    <button onClick={onClose} className="ml-4 rounded-full p-1 hover:bg-white/20 transition-colors">
+                    <button onClick={onClose} className="ml-4 rounded-full p-1 hover:bg-white/20 transition-colors cursor-pointer">
                         <X className="w-4 h-4" />
                     </button>
                 </div>
@@ -54,26 +54,43 @@ const NotificationDisplay: React.FC<{ notification: Notification; onClose: () =>
     );
 };
 
-interface StudentAttendance {
-    subject: {
-        id: number;
-        subject_code: string;
-        subject_name: string;
-    };
-    attendance_records: Array<{
-        id: number;
-        attendance_date: string;
-        status: 'Present' | 'Absent' | 'Late' | 'Excused';
-    }>;
-}
+// Helper function to get status code
+const getStatusCode = (status: string): string => {
+    switch (status) {
+        case 'Present': return 'P';
+        case 'Absent': return 'A';
+        case 'Late': return 'L';
+        case 'Excused': return 'E';
+        default: return '';
+    }
+};
 
-interface GroupedAttendance {
-    academic_year_id: number;
-    semester_id: number;
-    academic_year_name: string;
-    semester_name: string;
-    attendance: StudentAttendance[];
-}
+// Helper function to get status color
+const getStatusColor = (status: string): string => {
+    switch (status) {
+        case 'Present': return 'bg-green-100 text-green-800';
+        case 'Absent': return 'bg-red-100 text-red-800';
+        case 'Late': return 'bg-yellow-100 text-yellow-800';
+        case 'Excused': return 'bg-blue-100 text-blue-800';
+        default: return 'bg-gray-100 text-gray-800';
+    }
+};
+
+// Helper function to get days in month
+const getDaysInMonth = (year: number, month: number): number => {
+    return new Date(year, month + 1, 0).getDate();
+};
+
+// Helper function to get day of week for first day of month
+const getFirstDayOfWeek = (year: number, month: number): number => {
+    return new Date(year, month, 1).getDay();
+};
+
+// Helper function to get day abbreviation
+const getDayAbbr = (dayIndex: number): string => {
+    const days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+    return days[dayIndex];
+};
 
 const BlockchainStudentAttendance: React.FC = () => {
     const { props } = usePage();
@@ -81,17 +98,22 @@ const BlockchainStudentAttendance: React.FC = () => {
     const classId = (props as any).classId;
     
     const [loading, setLoading] = useState(true);
-    const [groupedAttendance, setGroupedAttendance] = useState<GroupedAttendance[]>([]);
+    const [attendanceRecords, setAttendanceRecords] = useState<Attendance[]>([]);
+    const [classSubjects, setClassSubjects] = useState<any[]>([]);
     const [studentName, setStudentName] = useState('');
     const [className, setClassName] = useState('');
     const [yearLevel, setYearLevel] = useState<number | null>(null);
     const [notification, setNotification] = useState<Notification | null>(null);
+    
+    // Month/Year pagination
+    const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
+    const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
 
     useEffect(() => {
         if (studentId && classId) {
             loadStudentAttendance();
         }
-    }, [studentId, classId]);
+    }, [studentId, classId, currentMonth, currentYear]);
 
     const loadStudentAttendance = async () => {
         setLoading(true);
@@ -140,19 +162,9 @@ const BlockchainStudentAttendance: React.FC = () => {
                     console.warn('Failed to load student information:', studentRes.status);
                 }
 
-                // Get all subjects for this class FIRST
+                // Get all subjects for this class
                 const classSubjectsRes = await adminClassSubjectService.getClassSubjects({
                     class_id: classId,
-                    per_page: 9999,
-                });
-
-                // Get all attendance for this student (not filtered by academic year/semester)
-                const classSubjectIds = classSubjectsRes.success && classSubjectsRes.data 
-                    ? classSubjectsRes.data.map((cs: any) => cs.id)
-                    : [];
-                
-                const response = await adminAttendanceService.getAttendance({
-                    student_id: studentId,
                     per_page: 9999,
                 });
 
@@ -161,114 +173,49 @@ const BlockchainStudentAttendance: React.FC = () => {
                         type: 'error', 
                         message: classSubjectsRes.message || 'Failed to load class subjects' 
                     });
-                    setGroupedAttendance([]);
+                    setClassSubjects([]);
                     return;
                 }
 
-                const classSubjects = classSubjectsRes.data || [];
+                const subjects = classSubjectsRes.data || [];
+                setClassSubjects(subjects);
                 
-                if (classSubjects.length === 0) {
+                if (subjects.length === 0) {
                     setNotification({ 
                         type: 'info', 
                         message: 'No subjects found for this class. Please link subjects to this class first.' 
                     });
-                    setGroupedAttendance([]);
+                    setAttendanceRecords([]);
                     return;
                 }
 
-                // Group attendance by academic_year_id and semester_id
-                const attendanceByPeriod = new Map<string, { academic_year_id: number; semester_id: number; academic_year_name: string; semester_name: string; attendance: Map<number, Attendance[]> }>();
-                
-                if (response.success && response.data && response.data.length > 0) {
-                    response.data.forEach((attendance: Attendance) => {
-                        // Only process attendance that belongs to this class
-                        const attendanceClassSubjectId = attendance.class_subject_id;
-                        if (classSubjectIds.length > 0 && !classSubjectIds.includes(attendanceClassSubjectId)) {
-                            return;
-                        }
-                        
-                        // Get academic year and semester from class_subject
-                        const classSubject = (attendance as any).class_subject;
-                        const academicYearId = classSubject?.academic_year_id || (classSubject?.academicYear?.id) || null;
-                        const semesterId = classSubject?.semester_id || (classSubject?.semester?.id) || null;
-                        
-                        if (!academicYearId || !semesterId) {
-                            return;
-                        }
-                        
-                        const key = `${academicYearId}_${semesterId}`;
-                        
-                        // Get academic year and semester names
-                        const academicYearName = classSubject?.academic_year?.year_name || 
-                                               classSubject?.academicYear?.year_name || 
-                                               '';
-                        const semesterName = classSubject?.semester?.semester_name || 
-                                           classSubject?.semester?.semester_name || 
-                                           '';
-                        
-                        if (!attendanceByPeriod.has(key)) {
-                            attendanceByPeriod.set(key, {
-                                academic_year_id: academicYearId,
-                                semester_id: semesterId,
-                                academic_year_name: academicYearName,
-                                semester_name: semesterName,
-                                attendance: new Map()
-                            });
-                        }
-                        
-                        const periodData = attendanceByPeriod.get(key)!;
-                        const subjectId = classSubject?.subject?.id || null;
-                        if (subjectId) {
-                            if (!periodData.attendance.has(subjectId)) {
-                                periodData.attendance.set(subjectId, []);
-                            }
-                            periodData.attendance.get(subjectId)!.push(attendance);
-                        }
+                // Calculate date range for the current month
+                const daysInMonth = getDaysInMonth(currentYear, currentMonth);
+                const startDate = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-01`;
+                const endDate = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(daysInMonth).padStart(2, '0')}`;
+
+                // Get attendance for this student in the selected month
+                const response = await adminAttendanceService.getAttendance({
+                    student_id: studentId,
+                    start_date: startDate,
+                    end_date: endDate,
+                    per_page: 9999,
+                });
+
+                if (response.success) {
+                    // Filter attendance to only include records for this class's subjects
+                    const classSubjectIds = subjects.map((cs: any) => cs.id);
+                    const filteredAttendance = (response.data || []).filter((att: Attendance) => 
+                        classSubjectIds.includes(att.class_subject_id)
+                    );
+                    setAttendanceRecords(filteredAttendance);
+                } else {
+                    setNotification({ 
+                        type: 'error', 
+                        message: response.message || 'Failed to load attendance records' 
                     });
+                    setAttendanceRecords([]);
                 }
-
-                // Create grouped attendance structure
-                const grouped: GroupedAttendance[] = Array.from(attendanceByPeriod.values()).map(periodData => {
-                    // Create the attendance structure for this period
-                    const attendanceTable: StudentAttendance[] = classSubjects.map((cs: any) => {
-                        const subjectId = cs.subject?.id || cs.subject_id;
-                        const records = periodData.attendance.get(subjectId) || [];
-                        
-                        // Sort records by date (descending)
-                        records.sort((a, b) => new Date(b.attendance_date).getTime() - new Date(a.attendance_date).getTime());
-                        
-                        return {
-                            subject: cs.subject || {
-                                id: cs.subject_id,
-                                subject_code: cs.subject_code || '',
-                                subject_name: cs.subject_name || '',
-                            },
-                            attendance_records: records.map(record => ({
-                                id: record.id,
-                                attendance_date: record.attendance_date,
-                                status: record.status,
-                            }))
-                        };
-                    });
-
-                    return {
-                        academic_year_id: periodData.academic_year_id,
-                        semester_id: periodData.semester_id,
-                        academic_year_name: periodData.academic_year_name,
-                        semester_name: periodData.semester_name,
-                        attendance: attendanceTable
-                    };
-                });
-
-                // Sort by academic year (desc) and semester (desc)
-                grouped.sort((a, b) => {
-                    if (a.academic_year_id !== b.academic_year_id) {
-                        return b.academic_year_id - a.academic_year_id;
-                    }
-                    return b.semester_id - a.semester_id;
-                });
-
-                setGroupedAttendance(grouped);
             }
         } catch (error: any) {
             console.error('Error loading student attendance:', error);
@@ -276,33 +223,76 @@ const BlockchainStudentAttendance: React.FC = () => {
                 type: 'error', 
                 message: error.message || 'Failed to load attendance. Please try again or contact support if the issue persists.' 
             });
-            setGroupedAttendance([]);
+            setAttendanceRecords([]);
         } finally {
             setLoading(false);
         }
     };
 
-    const renderStatusTag = (status: 'Present' | 'Absent' | 'Late' | 'Excused') => {
-        const colors = {
-            Present: 'bg-green-100 text-green-800',
-            Absent: 'bg-red-100 text-red-800',
-            Late: 'bg-yellow-100 text-yellow-800',
-            Excused: 'bg-blue-100 text-blue-800',
-        };
-        return (
-            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${colors[status]}`}>
-                {status}
-            </span>
-        );
+    // Create a map of attendance by subject and date
+    const attendanceMap = useMemo(() => {
+        const map = new Map<string, Attendance>();
+        attendanceRecords.forEach(att => {
+            const subjectId = (att.class_subject as any)?.subject?.id || 
+                             (att.class_subject as any)?.subject_id || 
+                             null;
+            if (subjectId) {
+                const date = new Date(att.attendance_date).getDate();
+                const key = `${subjectId}_${date}`;
+                map.set(key, att);
+            }
+        });
+        return map;
+    }, [attendanceRecords]);
+
+    // Get calendar days
+    const calendarDays = useMemo(() => {
+        const daysInMonth = getDaysInMonth(currentYear, currentMonth);
+        const firstDayOfWeek = getFirstDayOfWeek(currentYear, currentMonth);
+        const days: (number | null)[] = [];
+        
+        // Add empty cells for days before the first day of the month
+        for (let i = 0; i < firstDayOfWeek; i++) {
+            days.push(null);
+        }
+        
+        // Add days of the month
+        for (let day = 1; day <= daysInMonth; day++) {
+            days.push(day);
+        }
+        
+        return days;
+    }, [currentYear, currentMonth]);
+
+    // Navigation functions
+    const goToPreviousMonth = () => {
+        if (currentMonth === 0) {
+            setCurrentMonth(11);
+            setCurrentYear(currentYear - 1);
+        } else {
+            setCurrentMonth(currentMonth - 1);
+        }
     };
 
-    const formatDate = (dateString: string) => {
-        return new Date(dateString).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric'
-        });
+    const goToNextMonth = () => {
+        if (currentMonth === 11) {
+            setCurrentMonth(0);
+            setCurrentYear(currentYear + 1);
+        } else {
+            setCurrentMonth(currentMonth + 1);
+        }
     };
+
+    const goToCurrentMonth = () => {
+        const now = new Date();
+        setCurrentMonth(now.getMonth());
+        setCurrentYear(now.getFullYear());
+    };
+
+    const monthNames = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+    ];
 
     return (
         <AppLayout>
@@ -323,7 +313,7 @@ const BlockchainStudentAttendance: React.FC = () => {
                                     router.visit('/admin/blockchain-transactions/attendance');
                                 }
                             }}
-                            className="inline-flex items-center text-purple-600 hover:text-purple-700 mb-4"
+                            className="inline-flex items-center text-purple-600 hover:text-purple-700 mb-4 cursor-pointer"
                         >
                             <ArrowLeft className="w-4 h-4 mr-2" />
                             Back to Students
@@ -338,18 +328,14 @@ const BlockchainStudentAttendance: React.FC = () => {
                                     <div>
                                         <span className="font-semibold">Class:</span> {className}
                                     </div>
-                                    {yearLevel !== null && (
-                                        <div>
-                                            {(() => {
-                                                const { label, value } = formatGradeYearLevel(yearLevel);
-                                                return (
-                                                    <>
-                                                        <span className="font-semibold">{label}:</span> {value}
-                                                    </>
-                                                );
-                                            })()}
-                                        </div>
-                                    )}
+                                    {yearLevel !== null && (() => {
+                                        const { label, value } = formatGradeYearLevel(yearLevel);
+                                        return (
+                                            <div>
+                                                <span className="font-semibold">{label}:</span> {value}
+                                            </div>
+                                        );
+                                    })()}
                                 </div>
                             </div>
                         </div>
@@ -361,70 +347,143 @@ const BlockchainStudentAttendance: React.FC = () => {
                                 <RefreshCw className={`h-8 w-8 ${TEXT_COLOR_CLASS} animate-spin`} />
                             </div>
                         </div>
-                    ) : groupedAttendance.length === 0 ? (
-                        <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 p-6">
-                            <div className="text-center py-12 text-gray-500">
-                                No attendance records found for this student
-                            </div>
-                        </div>
                     ) : (
-                        <div className="space-y-6">
-                            {groupedAttendance.map((group, groupIndex) => (
-                                <div key={`${group.academic_year_id}_${group.semester_id}`} className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
-                                    <div className="bg-gradient-to-r from-purple-50 to-indigo-50 px-6 py-4 border-b border-gray-200">
-                                        <div className="flex flex-wrap gap-4 text-sm">
-                                            <div>
-                                                <span className="font-semibold text-gray-700">Academic Year:</span> 
-                                                <span className="ml-2 text-gray-900">{group.academic_year_name || 'N/A'}</span>
-                                            </div>
-                                            <div>
-                                                <span className="font-semibold text-gray-700">Semester:</span> 
-                                                <span className="ml-2 text-gray-900">{group.semester_name || 'N/A'}</span>
-                                            </div>
+                        <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
+                            {/* Month/Year Navigation */}
+                            <div className="bg-gradient-to-r from-purple-50 to-indigo-50 px-6 py-4 border-b border-gray-200">
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-4">
+                                        <button
+                                            onClick={goToPreviousMonth}
+                                            className="p-2 hover:bg-white rounded-lg transition-colors cursor-pointer"
+                                        >
+                                            <ChevronLeft className="w-5 h-5 text-gray-700" />
+                                        </button>
+                                        <div className="text-lg font-semibold text-gray-900">
+                                            {monthNames[currentMonth]} / {currentYear}
                                         </div>
+                                        <button
+                                            onClick={goToNextMonth}
+                                            className="p-2 hover:bg-white rounded-lg transition-colors cursor-pointer"
+                                        >
+                                            <ChevronRight className="w-5 h-5 text-gray-700" />
+                                        </button>
                                     </div>
-                                    <div className="p-6">
-                                        <div className="space-y-4">
-                                            {group.attendance.map((subjectAttendance, index) => (
-                                                <div key={index} className="border border-gray-200 rounded-lg overflow-hidden">
-                                                    <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
-                                                        <div className="font-semibold text-gray-900">{subjectAttendance.subject.subject_code}</div>
-                                                        <div className="text-sm text-gray-600">{subjectAttendance.subject.subject_name}</div>
-                                                    </div>
-                                                    <div className="p-4">
-                                                        {subjectAttendance.attendance_records.length === 0 ? (
-                                                            <p className="text-sm text-gray-500 text-center py-4">No attendance records</p>
-                                                        ) : (
-                                                            <div className="overflow-x-auto">
-                                                                <table className="min-w-full border-collapse border border-gray-300">
-                                                                    <thead>
-                                                                        <tr className="bg-gray-100">
-                                                                            <th className="border border-gray-300 px-4 py-2 text-left text-sm font-semibold text-gray-700">Date</th>
-                                                                            <th className="border border-gray-300 px-4 py-2 text-center text-sm font-semibold text-gray-700">Status</th>
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <tbody>
-                                                                        {subjectAttendance.attendance_records.map((record) => (
-                                                                            <tr key={record.id} className="hover:bg-gray-50">
-                                                                                <td className="border border-gray-300 px-4 py-2 text-sm">
-                                                                                    {formatDate(record.attendance_date)}
-                                                                                </td>
-                                                                                <td className="border border-gray-300 px-4 py-2 text-center text-sm">
-                                                                                    {renderStatusTag(record.status)}
-                                                                                </td>
-                                                                            </tr>
-                                                                        ))}
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
+                                    <button
+                                        onClick={goToCurrentMonth}
+                                        className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm cursor-pointer"
+                                    >
+                                        Today
+                                    </button>
                                 </div>
-                            ))}
+                            </div>
+
+                            {/* Attendance Grid */}
+                            <div className="p-6 overflow-x-auto">
+                                {classSubjects.length === 0 ? (
+                                    <div className="text-center py-12 text-gray-500">
+                                        No subjects found for this class
+                                    </div>
+                                ) : (
+                                    <div className="min-w-full">
+                                        <table className="w-full border-collapse border border-gray-300 text-sm">
+                                            <thead>
+                                                <tr className="bg-gray-100">
+                                                    <th className="border border-gray-300 px-4 py-2 text-left font-semibold text-gray-700 sticky left-0 bg-gray-100 z-10">
+                                                        Name
+                                                    </th>
+                                                    {/* Date headers */}
+                                                    {Array.from({ length: 31 }, (_, i) => i + 1).map(day => (
+                                                        <th
+                                                            key={day}
+                                                            className="border border-gray-300 px-2 py-2 text-center font-semibold text-gray-700 min-w-[40px]"
+                                                        >
+                                                            {day}
+                                                        </th>
+                                                    ))}
+                                                </tr>
+                                                <tr className="bg-gray-50">
+                                                    <th className="border border-gray-300 px-4 py-1 text-left text-xs text-gray-600 sticky left-0 bg-gray-50 z-10">
+                                                        Subject
+                                                    </th>
+                                                    {/* Day of week headers */}
+                                                    {calendarDays.map((day, index) => (
+                                                        <th
+                                                            key={index}
+                                                            className="border border-gray-300 px-2 py-1 text-center text-xs text-gray-600 min-w-[40px]"
+                                                        >
+                                                            {day !== null ? getDayAbbr(new Date(currentYear, currentMonth, day).getDay()) : ''}
+                                                        </th>
+                                                    ))}
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {classSubjects.map((subject) => {
+                                                    const subjectId = subject.subject?.id || subject.subject_id;
+                                                    const subjectCode = subject.subject?.subject_code || subject.subject_code || '';
+                                                    const subjectName = subject.subject?.subject_name || subject.subject_name || '';
+                                                    
+                                                    return (
+                                                        <tr key={subjectId} className="hover:bg-gray-50">
+                                                            <td className="border border-gray-300 px-4 py-3 sticky left-0 bg-white z-10">
+                                                                <div className="font-semibold text-gray-900">{subjectCode}</div>
+                                                                <div className="text-xs text-gray-600">{subjectName}</div>
+                                                            </td>
+                                                            {/* Attendance cells for each day */}
+                                                            {Array.from({ length: 31 }, (_, i) => i + 1).map(day => {
+                                                                const key = `${subjectId}_${day}`;
+                                                                const attendance = attendanceMap.get(key);
+                                                                const isDayInMonth = day <= getDaysInMonth(currentYear, currentMonth);
+                                                                
+                                                                return (
+                                                                    <td
+                                                                        key={day}
+                                                                        className={`border border-gray-300 px-2 py-2 text-center min-w-[40px] ${
+                                                                            !isDayInMonth ? 'bg-gray-50' : ''
+                                                                        }`}
+                                                                    >
+                                                                        {isDayInMonth && attendance ? (
+                                                                            <span
+                                                                                className={`inline-block px-1.5 py-0.5 rounded text-xs font-medium ${getStatusColor(attendance.status)}`}
+                                                                                title={attendance.status}
+                                                                            >
+                                                                                {getStatusCode(attendance.status)}
+                                                                            </span>
+                                                                        ) : null}
+                                                                    </td>
+                                                                );
+                                                            })}
+                                                        </tr>
+                                                    );
+                                                })}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Legend */}
+                            <div className="bg-gray-50 px-6 py-4 border-t border-gray-200">
+                                <div className="flex flex-wrap items-center gap-4 text-sm">
+                                    <span className="font-semibold text-gray-700">Legend:</span>
+                                    <span className="flex items-center gap-2">
+                                        <span className="inline-block px-2 py-1 rounded bg-green-100 text-green-800 text-xs font-medium">P</span>
+                                        <span className="text-gray-600">Present</span>
+                                    </span>
+                                    <span className="flex items-center gap-2">
+                                        <span className="inline-block px-2 py-1 rounded bg-red-100 text-red-800 text-xs font-medium">A</span>
+                                        <span className="text-gray-600">Absent</span>
+                                    </span>
+                                    <span className="flex items-center gap-2">
+                                        <span className="inline-block px-2 py-1 rounded bg-yellow-100 text-yellow-800 text-xs font-medium">L</span>
+                                        <span className="text-gray-600">Late</span>
+                                    </span>
+                                    <span className="flex items-center gap-2">
+                                        <span className="inline-block px-2 py-1 rounded bg-blue-100 text-blue-800 text-xs font-medium">E</span>
+                                        <span className="text-gray-600">Excused</span>
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                     )}
                 </div>
@@ -434,4 +493,3 @@ const BlockchainStudentAttendance: React.FC = () => {
 };
 
 export default BlockchainStudentAttendance;
-

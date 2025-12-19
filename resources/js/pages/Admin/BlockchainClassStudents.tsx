@@ -30,7 +30,7 @@ const NotificationDisplay: React.FC<{ notification: Notification; onClose: () =>
             <div className={`${bgColor} text-white px-6 py-4 rounded-xl shadow-2xl backdrop-blur-sm`}>
                 <div className="flex items-center justify-between">
                     <div className="font-medium">{notification.message}</div>
-                    <button onClick={onClose} className="ml-4 rounded-full p-1 hover:bg-white/20 transition-colors">
+                    <button onClick={onClose} className="ml-4 rounded-full p-1 hover:bg-white/20 transition-colors cursor-pointer">
                         <X className="w-4 h-4" />
                     </button>
                 </div>
@@ -109,7 +109,7 @@ const BlockchainClassStudents: React.FC = () => {
                     <div className="mb-6">
                         <button
                             onClick={() => router.visit('/admin/blockchain-transactions/grades')}
-                            className="inline-flex items-center text-purple-600 hover:text-purple-700 mb-4"
+                            className="inline-flex items-center text-purple-600 hover:text-purple-700 mb-4 cursor-pointer"
                         >
                             <ArrowLeft className="w-4 h-4 mr-2" />
                             Back to Grades
@@ -146,7 +146,7 @@ const BlockchainClassStudents: React.FC = () => {
                                             </div>
                                             <button
                                                 onClick={() => router.visit(`/admin/blockchain-transactions/grades/${student.id}?class_id=${classId}`)}
-                                                className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
+                                                className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm cursor-pointer"
                                             >
                                                 <Eye className="w-4 h-4 mr-1.5" />
                                                 View Grades

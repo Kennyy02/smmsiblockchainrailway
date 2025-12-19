@@ -78,7 +78,7 @@ const BlockchainAttendance: React.FC = () => {
                             </div>
                             <button
                                 onClick={loadClasses}
-                                className="flex items-center px-4 py-2 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition-all"
+                                className="flex items-center px-4 py-2 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition-all cursor-pointer"
                             >
                                 <RefreshCw className="w-4 h-4 mr-2" />
                                 Refresh
@@ -109,7 +109,7 @@ const BlockchainAttendance: React.FC = () => {
                                             </div>
                                             <button
                                                 onClick={() => router.visit(`/admin/blockchain-transactions/attendance/class/${classItem.id}/students`)}
-                                                className="flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+                                                className="flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors cursor-pointer"
                                             >
                                                 <Users className="w-4 h-4 mr-2" />
                                                 View Students

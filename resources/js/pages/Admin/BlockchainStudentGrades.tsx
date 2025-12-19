@@ -326,7 +326,7 @@ const BlockchainStudentGrades: React.FC = () => {
                                     router.visit('/admin/blockchain-transactions/grades');
                                 }
                             }}
-                            className="inline-flex items-center text-purple-600 hover:text-purple-700 mb-4"
+                            className="inline-flex items-center text-purple-600 hover:text-purple-700 mb-4 cursor-pointer"
                         >
                             <ArrowLeft className="w-4 h-4 mr-2" />
                             Back to Students
