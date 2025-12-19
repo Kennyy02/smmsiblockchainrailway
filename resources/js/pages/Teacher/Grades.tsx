@@ -1193,7 +1193,7 @@ const fetchDropdownLists = async () => {
         }
     }, [selectedClassId]);
 
-    // Load grades for selected class and subject
+    // Load grades for selected class and subject with filters
     useEffect(() => {
         if (selectedClassId && selectedSubjectId) {
             const loadGradesForGrid = async () => {
@@ -1202,6 +1202,9 @@ const fetchDropdownLists = async () => {
                     const response = await adminGradeService.getGrades({
                         class_subject_id: selectedSubjectId,
                         teacher_id: currentTeacherId,
+                        academic_year_id: filters.academic_year_id ? parseInt(filters.academic_year_id) : undefined,
+                        semester_id: filters.semester_id ? parseInt(filters.semester_id) : undefined,
+                        remarks: filters.remarks as GradeRemarks || undefined,
                         per_page: 9999
                     });
                     
@@ -1215,7 +1218,9 @@ const fetchDropdownLists = async () => {
                                 final_grade: grade.final_grade,
                                 final_rating: grade.final_rating,
                                 remarks: grade.remarks,
-                                gradeId: grade.id
+                                gradeId: grade.id,
+                                academic_year_id: grade.academic_year_id,
+                                semester_id: grade.semester_id
                             };
                         });
                         setGridData(gridDataMap);
@@ -1231,7 +1236,7 @@ const fetchDropdownLists = async () => {
         } else {
             setGridData({});
         }
-    }, [selectedClassId, selectedSubjectId, currentTeacherId]);
+    }, [selectedClassId, selectedSubjectId, currentTeacherId, filters.academic_year_id, filters.semester_id, filters.remarks]);
 
     useEffect(() => {
         if (currentTeacherId) {
@@ -1725,7 +1730,38 @@ const fetchDropdownLists = async () => {
                                                         </tr>
                                                     </thead>
                                                     <tbody className="bg-white divide-y divide-gray-200">
-                                                        {classStudents.map((student) => {
+                                                        {classStudents
+                                                            .filter((student) => {
+                                                                // Apply search filter
+                                                                if (filters.search) {
+                                                                    const searchLower = filters.search.toLowerCase();
+                                                                    const matchesSearch = 
+                                                                        student.full_name?.toLowerCase().includes(searchLower) ||
+                                                                        student.student_id?.toLowerCase().includes(searchLower);
+                                                                    if (!matchesSearch) return false;
+                                                                }
+                                                                
+                                                                // Apply remarks filter - check if student has a grade with matching remarks
+                                                                if (filters.remarks) {
+                                                                    const key = `${student.id}_${selectedSubjectId}`;
+                                                                    const gradeData = gridData[key];
+                                                                    if (!gradeData || gradeData.remarks !== filters.remarks) {
+                                                                        return false;
+                                                                    }
+                                                                }
+                                                                
+                                                                // Apply academic year filter - check if student has a grade for the selected academic year
+                                                                if (filters.academic_year_id) {
+                                                                    const key = `${student.id}_${selectedSubjectId}`;
+                                                                    const gradeData = gridData[key];
+                                                                    if (!gradeData || gradeData.academic_year_id !== parseInt(filters.academic_year_id)) {
+                                                                        return false;
+                                                                    }
+                                                                }
+                                                                
+                                                                return true;
+                                                            })
+                                                            .map((student) => {
                                                             const key = `${student.id}_${selectedSubjectId}`;
                                                             const gradeData = gridData[key] || {};
                                                             
