@@ -30,6 +30,7 @@ class PasswordController extends Controller
             'password' => ['required', Password::defaults(), 'confirmed'],
         ]);
 
+        // Update password - Hash::make is fine here, the 'hashed' cast won't double-hash
         $request->user()->update([
             'password' => Hash::make($validated['password']),
         ]);

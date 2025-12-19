@@ -41,15 +41,29 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
-            RateLimiter::hit($this->throttleKey());
+        try {
+            if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+                RateLimiter::hit($this->throttleKey());
 
-            throw ValidationException::withMessages([
-                'email' => __('auth.failed'),
-            ]);
+                throw ValidationException::withMessages([
+                    'email' => __('auth.failed'),
+                ]);
+            }
+
+            RateLimiter::clear($this->throttleKey());
+        } catch (\RuntimeException $e) {
+            // Handle password hashing issues
+            if (str_contains($e->getMessage(), 'Bcrypt')) {
+                RateLimiter::hit($this->throttleKey());
+                
+                throw ValidationException::withMessages([
+                    'email' => 'Authentication failed. Please contact administrator to reset your password.',
+                ]);
+            }
+            
+            // Re-throw if it's a different error
+            throw $e;
         }
-
-        RateLimiter::clear($this->throttleKey());
     }
 
     /**
