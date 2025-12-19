@@ -1027,17 +1027,16 @@ const AttendancePage: React.FC = () => {
 
     return (
         <AppLayout>
-            <div className="p-8 space-y-6 min-h-screen bg-[#f3f4f6]">
-                <div className="flex items-center justify-between">
+            <div className="p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6 min-h-screen bg-[#f3f4f6]">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-900 flex items-center">
-                            <ClipboardCheck className={`h-8 w-8 mr-3 ${TEXT_COLOR_CLASS}`} />
-                            Student Attendance Management
-                         
+                        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 flex items-center">
+                            <ClipboardCheck className={`h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8 mr-2 sm:mr-3 ${TEXT_COLOR_CLASS}`} />
+                            <span className="break-words">Student Attendance Management</span>
                         </h1>
-                        <p className="mt-2 text-gray-600">Track and manage student attendance for your classes</p>
+                        <p className="mt-2 text-sm sm:text-base text-gray-600">Track and manage student attendance for your classes</p>
                     </div>
-                    <div className="flex items-center space-x-3">
+                    <div className="flex items-center">
                         <button
                             onClick={() => { 
                                 fetchAttendance(); 
@@ -1048,7 +1047,7 @@ const AttendancePage: React.FC = () => {
                                     fetchAttendanceForDate();
                                 }
                             }}
-                            className={`flex items-center px-4 py-2 border border-gray-300 rounded-xl text-sm font-medium ${TEXT_COLOR_CLASS} hover:bg-gray-50 transition-colors`}
+                            className={`flex items-center justify-center px-4 py-2 border border-gray-300 rounded-xl text-sm font-medium ${TEXT_COLOR_CLASS} hover:bg-gray-50 transition-colors`}
                         >
                             <RefreshCw className="h-4 w-4 mr-2" />
                             Refresh
@@ -1057,7 +1056,7 @@ const AttendancePage: React.FC = () => {
                 </div>
 
                 {stats && (
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                         <StatCard 
                             title="Total Students" 
                             value={filters.class_subject_id ? classStudents.length : 0} 
@@ -1085,33 +1084,33 @@ const AttendancePage: React.FC = () => {
                     </div>
                 )}
 
-                <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+                <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 border border-gray-100">
                     {!selectedClassId ? (
                         // Class Selection View
                         <div>
-                            <h3 className="text-lg font-semibold text-gray-900 mb-4">Select a Class</h3>
+                            <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-4">Select a Class</h3>
                             {loadingLists ? (
                                 <div className="text-center py-8">
                                     <RefreshCw className={`h-8 w-8 ${TEXT_COLOR_CLASS} animate-spin mx-auto`} />
                                     <p className="mt-2 text-sm text-gray-600">Loading classes...</p>
                                 </div>
                             ) : classes.length === 0 ? (
-                                <div className="text-center py-8 text-gray-500">
+                                <div className="text-center py-8 text-gray-500 text-sm sm:text-base">
                                     No classes found. Please ensure you are assigned to classes.
                                 </div>
                             ) : (
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                                     {classes.map((classItem) => (
                                         <button
                                             key={classItem.id}
                                             onClick={() => setSelectedClassId(classItem.id)}
-                                            className="p-6 bg-white border-2 border-gray-200 rounded-xl hover:border-[#003366] hover:shadow-lg transition-all text-left cursor-pointer group"
+                                            className="p-4 sm:p-6 bg-white border-2 border-gray-200 rounded-xl hover:border-[#003366] hover:shadow-lg transition-all text-left cursor-pointer group"
                                         >
                                             <div className="flex items-center justify-between mb-2">
-                                                <h4 className="text-lg font-semibold text-gray-900 group-hover:text-[#003366]">
+                                                <h4 className="text-base sm:text-lg font-semibold text-gray-900 group-hover:text-[#003366] break-words">
                                                     {classItem.class_code}
                                                 </h4>
-                                                <Users className="w-5 h-5 text-gray-400 group-hover:text-[#003366]" />
+                                                <Users className="w-5 h-5 text-gray-400 group-hover:text-[#003366] flex-shrink-0" />
                                             </div>
                                             <p className="text-sm text-gray-600 mb-2">{classItem.class_name}</p>
                                             <p className="text-xs text-gray-500">

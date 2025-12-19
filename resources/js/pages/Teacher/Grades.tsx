@@ -1460,18 +1460,17 @@ const fetchDropdownLists = async () => {
 
     return (
         <AppLayout>
-            <div className="p-8 space-y-6 min-h-screen bg-[#f3f4f6]">
+            <div className="p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6 min-h-screen bg-[#f3f4f6]">
                 {/* Header */}
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-900 flex items-center">
-                            <Award className={`h-8 w-8 mr-3 ${TEXT_COLOR_CLASS}`} />
-                            Student Grades Management
-                          
+                        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 flex items-center">
+                            <Award className={`h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8 mr-2 sm:mr-3 ${TEXT_COLOR_CLASS}`} />
+                            <span className="break-words">Student Grades Management</span>
                         </h1>
-                        <p className="mt-2 text-gray-600">Manage grades for your students</p>
+                        <p className="mt-2 text-sm sm:text-base text-gray-600">Manage grades for your students</p>
                     </div>
-                    <div className="flex items-center space-x-3">
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:space-x-3">
                         <button
                             onClick={() => { 
                                 fetchGrades(); 
@@ -1479,24 +1478,25 @@ const fetchDropdownLists = async () => {
                                 fetchDropdownLists();
                                 fetchClasses();
                             }}
-                            className={`flex items-center px-4 py-2 border border-gray-300 rounded-xl text-sm font-medium ${TEXT_COLOR_CLASS} hover:bg-gray-50 transition-colors`}
+                            className={`flex items-center justify-center px-4 py-2 border border-gray-300 rounded-xl text-sm font-medium ${TEXT_COLOR_CLASS} hover:bg-gray-50 transition-colors`}
                         >
                             <RefreshCw className="h-4 w-4 mr-2" />
                             Refresh
                         </button>
                         <button
                             onClick={handleAdd}
-                            className={`flex items-center px-6 py-3 ${PRIMARY_COLOR_CLASS} text-white rounded-xl ${HOVER_COLOR_CLASS} transition-all shadow-lg font-medium`}
+                            className={`flex items-center justify-center px-4 sm:px-6 py-2 sm:py-3 ${PRIMARY_COLOR_CLASS} text-white rounded-xl ${HOVER_COLOR_CLASS} transition-all shadow-lg font-medium text-sm sm:text-base`}
                         >
-                            <Plus className="h-5 w-5 mr-2" />
-                            Add Grade
+                            <Plus className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
+                            <span className="hidden sm:inline">Add Grade</span>
+                            <span className="sm:hidden">Add</span>
                         </button>
                     </div>
                 </div>
 
                 {/* Stats Cards */}
                 {stats && (
-                    <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 sm:gap-6">
                         <StatCard 
                             title="Total Grades" 
                             value={stats.total_grades} 
@@ -1531,9 +1531,9 @@ const fetchDropdownLists = async () => {
                 )}
 
                 {/* Filters */}
-                <div className="bg-white rounded-2xl shadow-lg p-6 mb-6 border border-gray-100">
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                        <div className="relative col-span-2">
+                <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 mb-4 sm:mb-6 border border-gray-100">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div className="relative sm:col-span-2 lg:col-span-2">
                             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                                 <Search className="h-5 w-5 text-gray-400" />
                             </div>
@@ -1575,11 +1575,11 @@ const fetchDropdownLists = async () => {
                 </div>
 
                 {/* Class Selection and Grades Grid */}
-                <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+                <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 border border-gray-100">
                     {!selectedClassId ? (
                         // Class Selection View
                         <div>
-                            <h3 className="text-lg font-semibold text-gray-900 mb-4">Select a Class</h3>
+                            <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-4">Select a Class</h3>
                             {loadingLists ? (
                                 <div className="text-center py-8">
                                     <RefreshCw className={`h-8 w-8 ${TEXT_COLOR_CLASS} animate-spin mx-auto`} />
@@ -1615,8 +1615,8 @@ const fetchDropdownLists = async () => {
                     ) : (
                         // Grades Grid View
                         <div>
-                            <div className="flex items-center justify-between mb-4">
-                                <div className="flex items-center gap-4">
+                            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+                                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
                                     <button
                                         onClick={() => {
                                             setSelectedClassId(null);
@@ -1624,16 +1624,17 @@ const fetchDropdownLists = async () => {
                                             setGridData({});
                                             setHasUnsavedChanges(false);
                                         }}
-                                        className="flex items-center text-[#003366] hover:text-[#002244] cursor-pointer"
+                                        className="flex items-center text-[#003366] hover:text-[#002244] cursor-pointer text-sm sm:text-base"
                                     >
                                         <ChevronLeft className="w-4 h-4 mr-1" />
-                                        Back to Classes
+                                        <span className="hidden sm:inline">Back to Classes</span>
+                                        <span className="sm:hidden">Back</span>
                                     </button>
                                     <div>
-                                        <h3 className="text-lg font-semibold text-gray-900">
+                                        <h3 className="text-base sm:text-lg font-semibold text-gray-900 break-words">
                                             {classes.find(c => c.id === selectedClassId)?.class_code || 'Manage Grades'}
                                         </h3>
-                                        <p className="text-sm text-gray-600">
+                                        <p className="text-xs sm:text-sm text-gray-600 break-words">
                                             {classes.find(c => c.id === selectedClassId)?.class_name || ''}
                                         </p>
                                     </div>
@@ -1642,17 +1643,19 @@ const fetchDropdownLists = async () => {
                                     <button
                                         onClick={handleBulkSave}
                                         disabled={saving}
-                                        className={`flex items-center px-4 py-2 ${PRIMARY_COLOR_CLASS} text-white rounded-xl ${HOVER_COLOR_CLASS} transition-all shadow-lg font-medium disabled:opacity-50`}
+                                        className={`flex items-center justify-center px-4 py-2 ${PRIMARY_COLOR_CLASS} text-white rounded-xl ${HOVER_COLOR_CLASS} transition-all shadow-lg font-medium disabled:opacity-50 text-sm sm:text-base`}
                                     >
                                         {saving ? (
                                             <>
                                                 <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                                                Saving...
+                                                <span className="hidden sm:inline">Saving...</span>
+                                                <span className="sm:hidden">Saving</span>
                                             </>
                                         ) : (
                                             <>
                                                 <Save className="h-4 w-4 mr-2" />
-                                                Save All Changes
+                                                <span className="hidden sm:inline">Save All Changes</span>
+                                                <span className="sm:hidden">Save</span>
                                             </>
                                         )}
                                     </button>
@@ -1661,7 +1664,7 @@ const fetchDropdownLists = async () => {
 
                             {/* Subject Selection */}
                             <div className="mb-4">
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Select Subject</label>
+                                <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Select Subject</label>
                                 <select
                                     value={selectedSubjectId || ''}
                                     onChange={(e) => {
@@ -1724,31 +1727,31 @@ const fetchDropdownLists = async () => {
                                         });
                                         
                                         return filteredStudents.length === 0 ? (
-                                            <div className="text-center py-8 text-gray-500">
+                                            <div className="text-center py-8 text-gray-500 text-sm sm:text-base">
                                                 No students found matching the current filters.
                                             </div>
                                         ) : (
-                                            <div className="overflow-x-auto">
-                                            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                                            <div className="overflow-x-auto -mx-4 sm:mx-0">
+                                            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden min-w-full">
                                                 <table className="min-w-full divide-y divide-gray-200">
                                                     <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
                                                         <tr>
-                                                            <th className="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider sticky left-0 bg-gray-50 z-10 border-r border-gray-200">
+                                                            <th className="px-2 sm:px-4 py-2 sm:py-3 text-left text-[10px] sm:text-xs font-bold text-gray-700 uppercase tracking-wider sticky left-0 bg-gray-50 z-10 border-r border-gray-200 min-w-[120px]">
                                                                 Student
                                                             </th>
-                                                            <th className="px-4 py-3 text-center text-xs font-bold text-gray-700 uppercase tracking-wider min-w-[100px]">
+                                                            <th className="px-2 sm:px-4 py-2 sm:py-3 text-center text-[10px] sm:text-xs font-bold text-gray-700 uppercase tracking-wider min-w-[80px] sm:min-w-[100px]">
                                                                 Prelim
                                                             </th>
-                                                            <th className="px-4 py-3 text-center text-xs font-bold text-gray-700 uppercase tracking-wider min-w-[100px]">
+                                                            <th className="px-2 sm:px-4 py-2 sm:py-3 text-center text-[10px] sm:text-xs font-bold text-gray-700 uppercase tracking-wider min-w-[80px] sm:min-w-[100px]">
                                                                 Midterm
                                                             </th>
-                                                            <th className="px-4 py-3 text-center text-xs font-bold text-gray-700 uppercase tracking-wider min-w-[100px]">
+                                                            <th className="px-2 sm:px-4 py-2 sm:py-3 text-center text-[10px] sm:text-xs font-bold text-gray-700 uppercase tracking-wider min-w-[80px] sm:min-w-[100px]">
                                                                 Final
                                                             </th>
-                                                            <th className="px-4 py-3 text-center text-xs font-bold text-gray-700 uppercase tracking-wider min-w-[100px] bg-gray-50">
+                                                            <th className="px-2 sm:px-4 py-2 sm:py-3 text-center text-[10px] sm:text-xs font-bold text-gray-700 uppercase tracking-wider min-w-[90px] sm:min-w-[100px] bg-gray-50">
                                                                 Final Rating
                                                             </th>
-                                                            <th className="px-4 py-3 text-center text-xs font-bold text-gray-700 uppercase tracking-wider min-w-[120px]">
+                                                            <th className="px-2 sm:px-4 py-2 sm:py-3 text-center text-[10px] sm:text-xs font-bold text-gray-700 uppercase tracking-wider min-w-[100px] sm:min-w-[120px]">
                                                                 Remarks
                                                             </th>
                                                         </tr>
@@ -1760,11 +1763,11 @@ const fetchDropdownLists = async () => {
                                                             
                                                             return (
                                                                 <tr key={student.id} className="hover:bg-gray-50">
-                                                                    <td className="px-4 py-3 sticky left-0 bg-white z-10 border-r border-gray-200">
-                                                                        <div className="text-sm font-semibold text-gray-900">{student.student_id}</div>
-                                                                        <div className="text-xs text-gray-600">{student.full_name}</div>
+                                                                    <td className="px-2 sm:px-4 py-2 sm:py-3 sticky left-0 bg-white z-10 border-r border-gray-200 min-w-[120px]">
+                                                                        <div className="text-xs sm:text-sm font-semibold text-gray-900 break-words">{student.student_id}</div>
+                                                                        <div className="text-[10px] sm:text-xs text-gray-600 break-words">{student.full_name}</div>
                                                                     </td>
-                                                                    <td className="px-4 py-2">
+                                                                    <td className="px-2 sm:px-4 py-2">
                                                                         <input
                                                                             type="number"
                                                                             min="0"
@@ -1772,11 +1775,11 @@ const fetchDropdownLists = async () => {
                                                                             step="0.01"
                                                                             value={gradeData.prelim_grade ?? ''}
                                                                             onChange={(e) => handleGridCellChange(student.id, 'prelim_grade', e.target.value)}
-                                                                            className="w-full px-2 py-1 text-center border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent"
+                                                                            className="w-full px-1 sm:px-2 py-1 text-xs sm:text-sm text-center border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent"
                                                                             placeholder="0.00"
                                                                         />
                                                                     </td>
-                                                                    <td className="px-4 py-2">
+                                                                    <td className="px-2 sm:px-4 py-2">
                                                                         <input
                                                                             type="number"
                                                                             min="0"
@@ -1784,11 +1787,11 @@ const fetchDropdownLists = async () => {
                                                                             step="0.01"
                                                                             value={gradeData.midterm_grade ?? ''}
                                                                             onChange={(e) => handleGridCellChange(student.id, 'midterm_grade', e.target.value)}
-                                                                            className="w-full px-2 py-1 text-center border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent"
+                                                                            className="w-full px-1 sm:px-2 py-1 text-xs sm:text-sm text-center border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent"
                                                                             placeholder="0.00"
                                                                         />
                                                                     </td>
-                                                                    <td className="px-4 py-2">
+                                                                    <td className="px-2 sm:px-4 py-2">
                                                                         <input
                                                                             type="number"
                                                                             min="0"
@@ -1796,11 +1799,11 @@ const fetchDropdownLists = async () => {
                                                                             step="0.01"
                                                                             value={gradeData.final_grade ?? ''}
                                                                             onChange={(e) => handleGridCellChange(student.id, 'final_grade', e.target.value)}
-                                                                            className="w-full px-2 py-1 text-center border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent"
+                                                                            className="w-full px-1 sm:px-2 py-1 text-xs sm:text-sm text-center border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent"
                                                                             placeholder="0.00"
                                                                         />
                                                                     </td>
-                                                                    <td className="px-4 py-2 bg-gray-50">
+                                                                    <td className="px-2 sm:px-4 py-2 bg-gray-50">
                                                                         <input
                                                                             type="number"
                                                                             min="0"
@@ -1808,15 +1811,15 @@ const fetchDropdownLists = async () => {
                                                                             step="0.01"
                                                                             value={gradeData.final_rating ?? ''}
                                                                             readOnly
-                                                                            className="w-full px-2 py-1 text-center border border-gray-300 rounded bg-gray-100 text-gray-700 cursor-not-allowed"
+                                                                            className="w-full px-1 sm:px-2 py-1 text-xs sm:text-sm text-center border border-gray-300 rounded bg-gray-100 text-gray-700 cursor-not-allowed"
                                                                             placeholder="Auto"
                                                                         />
                                                                     </td>
-                                                                    <td className="px-4 py-2">
+                                                                    <td className="px-2 sm:px-4 py-2">
                                                                         <select
                                                                             value={gradeData.remarks || 'Passed'}
                                                                             onChange={(e) => handleGridCellChange(student.id, 'remarks', e.target.value as GradeRemarks)}
-                                                                            className="w-full px-2 py-1 text-center border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent text-xs"
+                                                                            className="w-full px-1 sm:px-2 py-1 text-[10px] sm:text-xs text-center border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent"
                                                                         >
                                                                             <option value="Passed">Passed</option>
                                                                             <option value="Failed">Failed</option>

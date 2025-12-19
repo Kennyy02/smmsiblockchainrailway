@@ -371,13 +371,13 @@ const MyGrades: React.FC = () => {
     if (!isStudent) {
         return (
             <AppLayout>
-                <div className="p-8">
-                    <div className="bg-red-50 border border-red-400 text-red-700 px-6 py-4 rounded-xl">
+                <div className="p-4 sm:p-6 lg:p-8">
+                    <div className="bg-red-50 border border-red-400 text-red-700 px-4 sm:px-6 py-4 rounded-xl">
                         <div className="flex items-center">
-                            <AlertCircle className="h-6 w-6 mr-3" />
+                            <AlertCircle className="h-5 w-5 sm:h-6 sm:w-6 mr-3 flex-shrink-0" />
                             <div>
-                                <p className="font-bold">Access Denied</p>
-                                <p className="text-sm">This page is only accessible to students.</p>
+                                <p className="font-bold text-sm sm:text-base">Access Denied</p>
+                                <p className="text-xs sm:text-sm">This page is only accessible to students.</p>
                             </div>
                         </div>
                     </div>
@@ -395,15 +395,15 @@ const MyGrades: React.FC = () => {
                 />
             )}
             <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-                <div className="container mx-auto px-4 py-8">
-                    <div className="mb-6">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
+                    <div className="mb-4 sm:mb-6">
                         <div>
-                            <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent mb-4">
+                            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent mb-4">
                                 My Grades
                             </h1>
                             <div className="mb-4">
-                                <h2 className="text-3xl font-bold text-gray-900 mb-3">{studentName || user?.name || 'Student'}</h2>
-                                <div className="flex flex-wrap gap-4 text-sm text-gray-600">
+                                <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-3 break-words">{studentName || user?.name || 'Student'}</h2>
+                                <div className="flex flex-wrap gap-2 sm:gap-4 text-xs sm:text-sm text-gray-600">
                                     {className && (
                                         <div>
                                             <span className="font-semibold">Class:</span> {className}
@@ -424,7 +424,7 @@ const MyGrades: React.FC = () => {
 
                     {/* Stats Cards */}
                     {stats && (
-                        <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 sm:gap-6 mb-4 sm:mb-6">
                             <StatCard 
                                 title="Total Grades" 
                                 value={stats.total_grades} 
@@ -459,13 +459,13 @@ const MyGrades: React.FC = () => {
                     )}
 
                     {loading ? (
-                        <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 p-6">
+                        <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 p-4 sm:p-6">
                             <div className="flex items-center justify-center py-12">
                                 <RefreshCw className={`h-8 w-8 ${TEXT_COLOR_CLASS} animate-spin`} />
                             </div>
                         </div>
                     ) : groupedGrades.length === 0 ? (
-                        <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 p-6">
+                        <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 p-4 sm:p-6">
                             <div className="text-center py-12 text-gray-500">
                                 No grades found for this student
                             </div>
@@ -486,54 +486,54 @@ const MyGrades: React.FC = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="p-6">
-                                        <div className="overflow-x-auto">
+                                    <div className="p-4 sm:p-6">
+                                        <div className="overflow-x-auto -mx-4 sm:mx-0">
                                             <table className="min-w-full border-collapse border border-gray-300">
                                                 <thead>
                                                     <tr className="bg-gray-100">
-                                                        <th className="border border-gray-300 px-4 py-3 text-left text-sm font-semibold text-gray-700">Subject</th>
-                                                        <th className="border border-gray-300 px-4 py-3 text-center text-sm font-semibold text-gray-700">Prelim</th>
-                                                        <th className="border border-gray-300 px-4 py-3 text-center text-sm font-semibold text-gray-700">Midterm</th>
-                                                        <th className="border border-gray-300 px-4 py-3 text-center text-sm font-semibold text-gray-700">Final</th>
-                                                        <th className="border border-gray-300 px-4 py-3 text-center text-sm font-semibold text-gray-700">Final Rating</th>
-                                                        <th className="border border-gray-300 px-4 py-3 text-center text-sm font-semibold text-gray-700">Units</th>
-                                                        <th className="border border-gray-300 px-4 py-3 text-center text-sm font-semibold text-gray-700">Remarks</th>
+                                                        <th className="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3 text-left text-[10px] sm:text-xs lg:text-sm font-semibold text-gray-700 min-w-[120px]">Subject</th>
+                                                        <th className="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3 text-center text-[10px] sm:text-xs lg:text-sm font-semibold text-gray-700 min-w-[70px]">Prelim</th>
+                                                        <th className="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3 text-center text-[10px] sm:text-xs lg:text-sm font-semibold text-gray-700 min-w-[70px]">Midterm</th>
+                                                        <th className="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3 text-center text-[10px] sm:text-xs lg:text-sm font-semibold text-gray-700 min-w-[70px]">Final</th>
+                                                        <th className="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3 text-center text-[10px] sm:text-xs lg:text-sm font-semibold text-gray-700 min-w-[80px]">Final Rating</th>
+                                                        <th className="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3 text-center text-[10px] sm:text-xs lg:text-sm font-semibold text-gray-700 min-w-[60px]">Units</th>
+                                                        <th className="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3 text-center text-[10px] sm:text-xs lg:text-sm font-semibold text-gray-700 min-w-[90px]">Remarks</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     {group.grades.length === 0 ? (
                                                         <tr>
-                                                            <td colSpan={7} className="border border-gray-300 px-4 py-8 text-center text-gray-500">
+                                                            <td colSpan={7} className="border border-gray-300 px-2 sm:px-4 py-6 sm:py-8 text-center text-xs sm:text-sm text-gray-500">
                                                                 No subjects found for this period
                                                             </td>
                                                         </tr>
                                                     ) : (
                                                         group.grades.map((grade, index) => (
                                                             <tr key={index} className="hover:bg-gray-50">
-                                                                <td className="border border-gray-300 px-4 py-3 text-sm">
+                                                                <td className="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm">
                                                                     <div>
-                                                                        <div className="font-medium">{grade.subject.subject_code}</div>
-                                                                        <div className="text-xs text-gray-600">{grade.subject.subject_name}</div>
+                                                                        <div className="font-medium break-words">{grade.subject.subject_code}</div>
+                                                                        <div className="text-[10px] sm:text-xs text-gray-600 break-words">{grade.subject.subject_name}</div>
                                                                     </div>
                                                                 </td>
-                                                                <td className="border border-gray-300 px-4 py-3 text-center text-sm">
+                                                                <td className="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3 text-center text-xs sm:text-sm">
                                                                     {grade.prelim_grade !== null && grade.prelim_grade !== undefined ? grade.prelim_grade : ''}
                                                                 </td>
-                                                                <td className="border border-gray-300 px-4 py-3 text-center text-sm">
+                                                                <td className="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3 text-center text-xs sm:text-sm">
                                                                     {grade.midterm_grade !== null && grade.midterm_grade !== undefined ? grade.midterm_grade : ''}
                                                                 </td>
-                                                                <td className="border border-gray-300 px-4 py-3 text-center text-sm">
+                                                                <td className="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3 text-center text-xs sm:text-sm">
                                                                     {grade.final_grade !== null && grade.final_grade !== undefined ? grade.final_grade : ''}
                                                                 </td>
-                                                                <td className="border border-gray-300 px-4 py-3 text-center text-sm font-semibold">
+                                                                <td className="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3 text-center text-xs sm:text-sm font-semibold">
                                                                     {grade.final_rating !== null && grade.final_rating !== undefined ? grade.final_rating : ''}
                                                                 </td>
-                                                                <td className="border border-gray-300 px-4 py-3 text-center text-sm">
+                                                                <td className="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3 text-center text-xs sm:text-sm">
                                                                     {grade.units || ''}
                                                                 </td>
-                                                                <td className="border border-gray-300 px-4 py-3 text-center text-sm">
+                                                                <td className="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3 text-center">
                                                                     {grade.remarks ? (
-                                                                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                                                                        <span className={`inline-flex items-center px-1.5 sm:px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-medium ${
                                                                             grade.remarks === 'Passed' ? 'bg-green-100 text-green-800' :
                                                                             grade.remarks === 'Failed' ? 'bg-red-100 text-red-800' :
                                                                             'bg-yellow-100 text-yellow-800'
