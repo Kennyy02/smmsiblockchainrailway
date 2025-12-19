@@ -146,6 +146,16 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
         return Inertia::render('Admin/BlockchainTransactions');
     })->name('blockchain-transactions');
     
+    // Blockchain Grades (View Only)
+    Route::get('/blockchain-transactions/grades', function () {
+        return Inertia::render('Admin/BlockchainGrades');
+    })->name('blockchain-transactions.grades');
+    
+    // Blockchain Attendance (View Only)
+    Route::get('/blockchain-transactions/attendance', function () {
+        return Inertia::render('Admin/BlockchainAttendance');
+    })->name('blockchain-transactions.attendance');
+    
     // ==================== COMMUNICATION ====================
     
     // Announcements

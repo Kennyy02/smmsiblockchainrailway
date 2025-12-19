@@ -257,7 +257,24 @@ function AppHeader() {
         { 
             title: 'Blockchain', 
             href: '/admin/blockchain-transactions', 
-            icon: Database 
+            icon: Database,
+            submenu: [
+                { 
+                    title: 'All Transactions', 
+                    href: '/admin/blockchain-transactions', 
+                    icon: Database 
+                },
+                { 
+                    title: 'Grades', 
+                    href: '/admin/blockchain-transactions/grades', 
+                    icon: FileText 
+                },
+                { 
+                    title: 'Attendance', 
+                    href: '/admin/blockchain-transactions/attendance', 
+                    icon: ClipboardCheck 
+                },
+            ]
         },
         { 
             title: 'Announcements', 

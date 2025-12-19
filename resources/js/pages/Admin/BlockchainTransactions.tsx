@@ -191,6 +191,62 @@ const TransactionDetailsModal: React.FC<{
                                     </div>
                                 </div>
                             )}
+
+                            {transaction.attendance && (
+                                <div className="border-t pt-4 mt-4">
+                                    <label className="block text-xs font-semibold text-gray-500 uppercase mb-2">Attendance Details</label>
+                                    <div className="bg-white rounded-lg border p-4 space-y-2">
+                                        <p><strong>Student:</strong> {transaction.attendance.student?.full_name || `${transaction.attendance.student?.first_name} ${transaction.attendance.student?.last_name}`}</p>
+                                        <p><strong>Subject:</strong> {transaction.attendance.class_subject?.subject?.subject_name || 'N/A'}</p>
+                                        <p><strong>Date:</strong> {new Date(transaction.attendance.attendance_date).toLocaleDateString()}</p>
+                                        <p>
+                                            <strong>Status:</strong>{' '}
+                                            <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${
+                                                transaction.attendance.status === 'Present' ? 'bg-green-100 text-green-800 border-green-200' :
+                                                transaction.attendance.status === 'Absent' ? 'bg-red-100 text-red-800 border-red-200' :
+                                                transaction.attendance.status === 'Late' ? 'bg-yellow-100 text-yellow-800 border-yellow-200' :
+                                                'bg-gray-100 text-gray-800 border-gray-200'
+                                            } border`}>
+                                                {transaction.attendance.status}
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
+                            )}
+
+                            {transaction.grade && (
+                                <div className="border-t pt-4 mt-4">
+                                    <label className="block text-xs font-semibold text-gray-500 uppercase mb-2">Grade Details</label>
+                                    <div className="bg-white rounded-lg border p-4 space-y-2">
+                                        <p><strong>Student:</strong> {transaction.grade.student?.full_name || `${transaction.grade.student?.first_name} ${transaction.grade.student?.last_name}`}</p>
+                                        <p><strong>Subject:</strong> {transaction.grade.class_subject?.subject?.subject_name || 'N/A'}</p>
+                                        {transaction.grade.prelim_grade !== null && transaction.grade.prelim_grade !== undefined && (
+                                            <p><strong>Prelim Grade:</strong> {transaction.grade.prelim_grade}</p>
+                                        )}
+                                        {transaction.grade.midterm_grade !== null && transaction.grade.midterm_grade !== undefined && (
+                                            <p><strong>Midterm Grade:</strong> {transaction.grade.midterm_grade}</p>
+                                        )}
+                                        {transaction.grade.final_grade !== null && transaction.grade.final_grade !== undefined && (
+                                            <p><strong>Final Grade:</strong> {transaction.grade.final_grade}</p>
+                                        )}
+                                        {transaction.grade.final_rating !== null && transaction.grade.final_rating !== undefined && (
+                                            <p><strong>Final Rating:</strong> {transaction.grade.final_rating}</p>
+                                        )}
+                                        {transaction.grade.remarks && (
+                                            <p>
+                                                <strong>Remarks:</strong>{' '}
+                                                <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${
+                                                    transaction.grade.remarks === 'Passed' ? 'bg-green-100 text-green-800 border-green-200' :
+                                                    transaction.grade.remarks === 'Failed' ? 'bg-red-100 text-red-800 border-red-200' :
+                                                    'bg-gray-100 text-gray-800 border-gray-200'
+                                                } border`}>
+                                                    {transaction.grade.remarks}
+                                                </span>
+                                            </p>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -466,18 +522,6 @@ const BlockchainManagement: React.FC = () => {
         }
     };
 
-    const handleDeleteTransaction = async (id: number) => {
-        if (!confirm('Are you sure you want to delete this transaction record?')) return;
-        try {
-            await adminBlockchainService.deleteTransaction(id);
-            setNotification({ type: 'success', message: 'Transaction deleted successfully' });
-            loadTransactions();
-            loadStats();
-        } catch (error: any) {
-            setNotification({ type: 'error', message: error.message || 'Failed to delete transaction' });
-        }
-    };
-
     const handleDeleteCertificate = async (id: number) => {
         if (!confirm('Are you sure you want to delete this certificate? This action cannot be undone.')) return;
         try {
@@ -741,13 +785,6 @@ const BlockchainManagement: React.FC = () => {
                                                                         <Zap className="h-5 w-5" />
                                                                     </button>
                                                                 )}
-                                                                <button
-                                                                    onClick={() => handleDeleteTransaction(tx.id)}
-                                                                    className="p-2 text-red-600 hover:bg-red-50 rounded-lg"
-                                                                    title="Delete"
-                                                                >
-                                                                    <Trash2 className="h-5 w-5" />
-                                                                </button>
                                                             </div>
                                                         </td>
                                                     </tr>

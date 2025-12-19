@@ -40,6 +40,19 @@ class BlockchainTransactionController extends Controller
                 $perPage = $request->input('per_page', 15);
                 $transactions = $query->paginate($perPage);
                 
+                // Load related data for each transaction
+                $transactions->getCollection()->transform(function ($transaction) {
+                    // Add attendance data if it's an attendance transaction
+                    if (in_array($transaction->transaction_type, ['attendance_creation', 'attendance_update'])) {
+                        $transaction->attendance = $transaction->attendance;
+                    }
+                    // Add grade data if it's a grade transaction
+                    if (in_array($transaction->transaction_type, ['grade_creation', 'grade_update'])) {
+                        $transaction->grade = $transaction->grade;
+                    }
+                    return $transaction;
+                });
+                
                 return response()->json([
                     'success' => true,
                     'data' => $transactions->items(),
@@ -73,6 +86,14 @@ class BlockchainTransactionController extends Controller
             $transaction = BlockchainTransaction::with(['initiator', 'certificate'])->findOrFail($id);
             
             if ($request->expectsJson()) {
+                // Load related data
+                if (in_array($transaction->transaction_type, ['attendance_creation', 'attendance_update'])) {
+                    $transaction->attendance = $transaction->attendance;
+                }
+                if (in_array($transaction->transaction_type, ['grade_creation', 'grade_update'])) {
+                    $transaction->grade = $transaction->grade;
+                }
+                
                 return response()->json([
                     'success' => true,
                     'data' => [

@@ -78,6 +78,70 @@ class BlockchainTransaction extends Model
         return $this->hasOne(Certificate::class, 'blockchain_tx_hash', 'transaction_hash');
     }
 
+    /**
+     * Find the attendance record associated with this transaction by matching the hash
+     */
+    public function getAttendanceAttribute()
+    {
+        if (!in_array($this->transaction_type, ['attendance_creation', 'attendance_update'])) {
+            return null;
+        }
+
+        // Only check attendance records created within 1 hour of the transaction
+        // This significantly reduces the search space
+        $startTime = $this->submitted_at->copy()->subHour();
+        $endTime = $this->submitted_at->copy()->addHour();
+        
+        $attendances = Attendance::with(['student', 'classSubject.subject'])
+            ->whereBetween('created_at', [$startTime, $endTime])
+            ->get();
+        
+        foreach ($attendances as $attendance) {
+            try {
+                if ($attendance->generateBlockchainHash() === $this->transaction_hash) {
+                    return $attendance;
+                }
+            } catch (\Exception $e) {
+                // Skip if hash generation fails
+                continue;
+            }
+        }
+        
+        return null;
+    }
+
+    /**
+     * Find the grade record associated with this transaction by matching the hash
+     */
+    public function getGradeAttribute()
+    {
+        if (!in_array($this->transaction_type, ['grade_creation', 'grade_update'])) {
+            return null;
+        }
+
+        // Only check grade records created within 1 hour of the transaction
+        // This significantly reduces the search space
+        $startTime = $this->submitted_at->copy()->subHour();
+        $endTime = $this->submitted_at->copy()->addHour();
+        
+        $grades = Grade::with(['student', 'classSubject.subject'])
+            ->whereBetween('created_at', [$startTime, $endTime])
+            ->get();
+        
+        foreach ($grades as $grade) {
+            try {
+                if ($grade->generateBlockchainHash() === $this->transaction_hash) {
+                    return $grade;
+                }
+            } catch (\Exception $e) {
+                // Skip if hash generation fails
+                continue;
+            }
+        }
+        
+        return null;
+    }
+
     // Helper Methods
     public function isPending(): bool
     {

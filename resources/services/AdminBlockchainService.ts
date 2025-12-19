@@ -54,6 +54,55 @@ export interface MinimalTeacher {
 export type TransactionStatus = 'pending' | 'confirmed' | 'failed';
 export type TransactionType = 'certificate_creation' | 'certificate_update' | 'verification' | 'grade_creation' | 'grade_update' | 'attendance_creation' | 'attendance_update';
 
+export interface AttendanceData {
+    id: number;
+    student_id: number;
+    class_subject_id: number;
+    attendance_date: string;
+    status: 'Present' | 'Absent' | 'Late' | 'Excused';
+    student?: {
+        id: number;
+        first_name: string;
+        last_name: string;
+        full_name?: string;
+    };
+    class_subject?: {
+        id: number;
+        subject?: {
+            id: number;
+            subject_code: string;
+            subject_name: string;
+        };
+    };
+}
+
+export interface GradeData {
+    id: number;
+    student_id: number;
+    class_subject_id: number;
+    academic_year_id: number;
+    semester_id: number;
+    prelim_grade?: number | null;
+    midterm_grade?: number | null;
+    final_grade?: number | null;
+    final_rating?: number | null;
+    remarks?: string | null;
+    student?: {
+        id: number;
+        first_name: string;
+        last_name: string;
+        full_name?: string;
+    };
+    class_subject?: {
+        id: number;
+        subject?: {
+            id: number;
+            subject_code: string;
+            subject_name: string;
+        };
+    };
+}
+
 export interface BlockchainTransaction {
     id: number;
     transaction_hash: string | null;
@@ -72,6 +121,8 @@ export interface BlockchainTransaction {
     // Relationships
     initiator: MinimalUser;
     certificate?: Certificate;
+    attendance?: AttendanceData | null;
+    grade?: GradeData | null;
 }
 
 export interface TransactionFilters {
