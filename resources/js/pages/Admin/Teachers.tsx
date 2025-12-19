@@ -434,25 +434,6 @@ const ViewTeacherModal: React.FC<{
                                 <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Advisory Class</label>
                                 <p className="text-gray-900 font-medium mt-1">{teacher.advisory_class_name || '—'}</p>
                             </div>
-                            <div className="col-span-2">
-                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Subjects Assigned</label>
-                                {teacher.subjects && teacher.subjects.length > 0 ? (
-                                    <div className="mt-2 space-y-2">
-                                        {teacher.subjects.map((subject) => (
-                                            <div 
-                                                key={subject.id} 
-                                                className={`flex items-center gap-2 px-3 py-2 rounded-lg ${LIGHT_BG_CLASS}`}
-                                            >
-                                                <span className={`font-semibold ${TEXT_COLOR_CLASS}`}>{subject.subject_code}</span>
-                                                <span className="text-gray-600">-</span>
-                                                <span className="text-gray-700">{subject.subject_name}</span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                ) : (
-                                    <p className="text-gray-500 italic mt-1">No subjects assigned</p>
-                                )}
-                            </div>
                         </div>
 
                         {/* Footer */}
@@ -967,14 +948,13 @@ const Teachers: React.FC = () => {
                                         <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Teacher</th>
                                         <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Contact</th>
                                         <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Advisory Class</th>
-                                        <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Subjects Assigned</th>
                                         <th className="px-6 py-4 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody className="bg-white divide-y divide-gray-200">
                                     {loading ? (
                                         <tr>
-                                            <td colSpan={5} className="px-6 py-12 text-center">
+                                            <td colSpan={4} className="px-6 py-12 text-center">
                                                 <div className="flex justify-center">
                                                     <RefreshCw className={`h-8 w-8 ${TEXT_COLOR_CLASS} animate-spin`} />
                                                 </div>
@@ -982,7 +962,7 @@ const Teachers: React.FC = () => {
                                         </tr>
                                     ) : teachers.length === 0 ? (
                                         <tr>
-                                            <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
+                                            <td colSpan={4} className="px-6 py-12 text-center text-gray-500">
                                                 <div className="flex flex-col items-center justify-center">
                                                     <UserCheck className="h-12 w-12 text-gray-300 mb-4" />
                                                     <p className="text-lg font-medium">No teachers found</p>
@@ -1022,16 +1002,6 @@ const Teachers: React.FC = () => {
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                                                     {teacher.advisory_class_name || <span className="text-gray-400">—</span>}
-                                                </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                                    {teacher.classes_count && teacher.classes_count > 0 ? (
-                                                        <div className="flex items-center">
-                                                            <Users className="h-4 w-4 text-gray-400 mr-2" />
-                                                            {teacher.classes_count} {teacher.classes_count === 1 ? 'subject' : 'subjects'}
-                                                        </div>
-                                                    ) : (
-                                                        <span className="text-gray-400 italic">No Subjects Assigned</span>
-                                                    )}
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-right">
                                                     <div className="flex justify-end space-x-2">
