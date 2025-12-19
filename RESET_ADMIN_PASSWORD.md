@@ -1,8 +1,66 @@
-# Reset Admin Password Guide
+# Admin Account Setup & Password Reset Guide
 
-If you're unable to log in as an admin due to password hashing issues (Bcrypt error), you can reset the admin password using the artisan command.
+This guide covers multiple ways to set up or reset your admin account, including using environment variables for easy configuration in Railway.
 
-## Method 1: Using the Artisan Command (Recommended)
+## Method 1: Using Environment Variables (Recommended for Railway)
+
+This is the easiest method for Railway deployments. Set the admin credentials as environment variables, and the system will automatically create or update the admin account.
+
+### Step 1: Set Environment Variables in Railway
+
+1. Go to your Railway project dashboard
+2. Click on your **web service**
+3. Go to the **"Variables"** tab
+4. Add the following variables:
+
+   ```
+   ADMIN_EMAIL=admin@smms.edu.ph
+   ADMIN_PASSWORD=YourSecurePassword123
+   ADMIN_NAME=Administrator
+   ```
+
+   **Note:** 
+   - `ADMIN_EMAIL` is required
+   - `ADMIN_PASSWORD` is required (must be at least 8 characters)
+   - `ADMIN_NAME` is optional (defaults to "Administrator")
+
+### Step 2: Run the Setup Command
+
+**Option A: Via Railway Web Interface Shell (Recommended)**
+
+1. Go to Railway dashboard → Your web service → Deployments → Latest deployment
+2. Open the **"Shell"** or **"Terminal"** option
+3. Run:
+   ```bash
+   php artisan admin:setup-from-env
+   ```
+
+**Option B: Add to Start Command (One-time setup)**
+
+You can also add this to your Railway start command temporarily:
+
+```bash
+php artisan admin:setup-from-env && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=$PORT
+```
+
+**Important:** Remove `php artisan admin:setup-from-env &&` from the start command after the first run, or it will reset the password on every deployment.
+
+### Step 3: Log in
+
+After running the command, you can log in with:
+- **Email:** The value you set in `ADMIN_EMAIL`
+- **Password:** The value you set in `ADMIN_PASSWORD`
+
+### Benefits of This Method
+
+- ✅ Easy to configure in Railway's Variables section
+- ✅ No need to remember commands
+- ✅ Can be automated in deployment
+- ✅ Works even if you can't log in
+- ✅ Automatically creates admin if it doesn't exist
+- ✅ Updates existing admin if it does exist
+
+## Method 2: Using the Artisan Command (Manual Reset)
 
 ### ⚠️ Important: Run on Railway, Not Locally
 
@@ -62,7 +120,7 @@ After resetting, you can log in with:
 - **Email:** `admin@smms.edu.ph` (or your admin email)
 - **Password:** The new password you just set
 
-## Method 2: Using Tinker (Alternative)
+## Method 3: Using Tinker (Alternative)
 
 If you prefer to use Laravel Tinker:
 
