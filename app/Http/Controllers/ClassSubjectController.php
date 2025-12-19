@@ -65,7 +65,28 @@ class ClassSubjectController extends Controller
                     $classSubjects = $query->get();
                     return response()->json([
                         'success' => true,
-                        'data' => $classSubjects
+                        'data' => $classSubjects->map(function ($cs) {
+                            return [
+                                'id' => $cs->id,
+                                'class_id' => $cs->class_id,
+                                'subject_id' => $cs->subject_id,
+                                'teacher_id' => $cs->teacher_id,
+                                'academic_year_id' => $cs->academic_year_id,
+                                'semester_id' => $cs->semester_id,
+                                'subject' => $cs->subject ? [
+                                    'id' => $cs->subject->id,
+                                    'subject_code' => $cs->subject->subject_code,
+                                    'subject_name' => $cs->subject->subject_name,
+                                    'units' => $cs->subject->units ?? 0,
+                                ] : null,
+                                'class_name' => $cs->class_name,
+                                'subject_name' => $cs->subject_name,
+                                'subject_code' => $cs->subject ? $cs->subject->subject_code : null,
+                                'teacher_name' => $cs->teacher_name,
+                                'academic_year_name' => $cs->academic_year_name,
+                                'semester_name' => $cs->semester_name,
+                            ];
+                        })
                     ]);
                 }
                 
@@ -74,7 +95,28 @@ class ClassSubjectController extends Controller
 
                 return response()->json([
                     'success' => true,
-                    'data' => $classSubjects->items(),
+                    'data' => collect($classSubjects->items())->map(function ($cs) {
+                        return [
+                            'id' => $cs->id,
+                            'class_id' => $cs->class_id,
+                            'subject_id' => $cs->subject_id,
+                            'teacher_id' => $cs->teacher_id,
+                            'academic_year_id' => $cs->academic_year_id,
+                            'semester_id' => $cs->semester_id,
+                            'subject' => $cs->subject ? [
+                                'id' => $cs->subject->id,
+                                'subject_code' => $cs->subject->subject_code,
+                                'subject_name' => $cs->subject->subject_name,
+                                'units' => $cs->subject->units ?? 0,
+                            ] : null,
+                            'class_name' => $cs->class_name,
+                            'subject_name' => $cs->subject_name,
+                            'subject_code' => $cs->subject ? $cs->subject->subject_code : null,
+                            'teacher_name' => $cs->teacher_name,
+                            'academic_year_name' => $cs->academic_year_name,
+                            'semester_name' => $cs->semester_name,
+                        ];
+                    })->values()->all(),
                     'pagination' => [
                         'current_page' => $classSubjects->currentPage(),
                         'last_page' => $classSubjects->lastPage(),
@@ -95,8 +137,13 @@ class ClassSubjectController extends Controller
             ]);
 
         } catch (\Exception $e) {
-            Log::error('Error fetching class subjects. ' . $e->getMessage());
-            return response()->json(['success' => false, 'message' => 'Failed to retrieve class subjects', 'error' => $e->getMessage()], 500);
+            Log::error('Error fetching class subjects: ' . $e->getMessage());
+            Log::error('Stack trace: ' . $e->getTraceAsString());
+            return response()->json([
+                'success' => false, 
+                'message' => 'Failed to retrieve class subjects', 
+                'error' => config('app.debug') ? $e->getMessage() : 'An error occurred while fetching class subjects'
+            ], 500);
         }
     }
 
