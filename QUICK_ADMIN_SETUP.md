@@ -21,12 +21,15 @@ Since Railway doesn't provide a web shell/terminal, use the Railway CLI:
    ```
    Select your project when prompted.
 
-4. **Run the command**:
+4. **Run the command** (use the full command name):
    ```bash
    railway run php artisan admin:setup-from-env
    ```
 
-**Note:** This runs the command on Railway's server, not locally, so it has access to the database.
+**Note:** 
+- Make sure to use the full command name: `admin:setup-from-env` (not just `admin:setup`)
+- This runs the command on Railway's server, not locally, so it has access to the database
+- If you get connection errors, try Option 2 (Redeploy) instead
 
 You should see output like:
 
@@ -48,7 +51,7 @@ Go to your login page and use:
 - **Email:** `admin@smms.edu.ph` (or whatever you set in `ADMIN_EMAIL`)
 - **Password:** `admin123` (or whatever you set in `ADMIN_PASSWORD`)
 
-## Alternative: Wait for Next Deployment (Automatic)
+## Option 2: Trigger a Redeploy (Easiest - Recommended)
 
 The command is configured to run **automatically on every deployment**. To trigger it:
 
@@ -63,7 +66,12 @@ The command is configured to run **automatically on every deployment**. To trigg
    ```
 4. Once deployment completes, the admin account will be ready
 
-**Check the Deploy Logs** to see if the command ran successfully. Look for messages starting with "===" or "Admin Setup".
+**Check the Deploy Logs** to see if the command ran successfully. Look for messages starting with:
+- `=== Admin Setup from Environment Variables ===`
+- `📧 Found ADMIN_EMAIL:`
+- `✅ Admin account created successfully!`
+
+If you see these messages, the admin account is ready. If not, the variables might not be set correctly or the command didn't run.
 
 ## Troubleshooting
 
