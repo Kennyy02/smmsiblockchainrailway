@@ -77,7 +77,7 @@ const BlockchainAttendance: React.FC = () => {
                                 <p className="text-gray-600">View student attendance by class</p>
                             </div>
                             <button
-                                onClick={loadTransactions}
+                                onClick={loadClasses}
                                 className="flex items-center px-4 py-2 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition-all"
                             >
                                 <RefreshCw className="w-4 h-4 mr-2" />

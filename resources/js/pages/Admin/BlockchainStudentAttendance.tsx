@@ -8,6 +8,16 @@ import { adminClassSubjectService } from '../../../services/AdminClassSubjectSer
 const PRIMARY_COLOR_CLASS = 'bg-gradient-to-r from-purple-600 to-indigo-600';
 const TEXT_COLOR_CLASS = 'text-purple-600';
 
+// Helper function to format year level for college
+const formatYearLevel = (yearLevel: number | null): string => {
+    if (yearLevel === null || yearLevel === undefined) return '';
+    const yearNames = ['1st Year', '2nd Year', '3rd Year', '4th Year', '5th Year'];
+    if (yearLevel >= 1 && yearLevel <= yearNames.length) {
+        return yearNames[yearLevel - 1];
+    }
+    return `${yearLevel}${yearLevel === 1 ? 'st' : yearLevel === 2 ? 'nd' : yearLevel === 3 ? 'rd' : 'th'} Year`;
+};
+
 interface Notification {
     type: 'success' | 'error' | 'info';
     message: string;
@@ -326,7 +336,7 @@ const BlockchainStudentAttendance: React.FC = () => {
                                     </div>
                                     {yearLevel !== null && (
                                         <div>
-                                            <span className="font-semibold">Grade Level:</span> {yearLevel}
+                                            <span className="font-semibold">Year Level:</span> {formatYearLevel(yearLevel)}
                                         </div>
                                     )}
                                 </div>
