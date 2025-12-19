@@ -96,7 +96,25 @@ class AdminAttendanceService {
     private baseURL = '/api';
 
     private async request<T>(url: string, options: RequestInit = {}): Promise<ApiResponse<T>> {
-        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+        // Get CSRF token from meta tag (should be in <head>)
+        let csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+        
+        // Fallback: Try to get from Inertia page props if available
+        if (!csrfToken && typeof window !== 'undefined') {
+            try {
+                // Access Inertia's internal page data
+                const inertiaData = (window as any).__INERTIA_DATA__;
+                if (inertiaData?.page?.props?.csrf_token) {
+                    csrfToken = inertiaData.page.props.csrf_token;
+                }
+            } catch (e) {
+                // Ignore errors
+            }
+        }
+        
+        if (!csrfToken) {
+            console.error('❌ CSRF token not found. Please ensure the meta tag is present in the HTML head.');
+        }
         
         const defaultOptions: RequestInit = {
             headers: {
