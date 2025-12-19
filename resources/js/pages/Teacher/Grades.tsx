@@ -1301,11 +1301,17 @@ const fetchDropdownLists = async () => {
         
         // Auto-calculate final_rating if all three grades are present
         if (field !== 'remarks' && (field === 'prelim_grade' || field === 'midterm_grade' || field === 'final_grade')) {
-            const prelim = field === 'prelim_grade' ? (value === '' ? undefined : parseFloat(value)) : updatedData.prelim_grade;
-            const midterm = field === 'midterm_grade' ? (value === '' ? undefined : parseFloat(value)) : updatedData.midterm_grade;
-            const final = field === 'final_grade' ? (value === '' ? undefined : parseFloat(value)) : updatedData.final_grade;
+            const prelim = field === 'prelim_grade' 
+                ? (value === '' ? undefined : parseFloat(value)) 
+                : (updatedData.prelim_grade !== undefined && updatedData.prelim_grade !== '' ? parseFloat(String(updatedData.prelim_grade)) : undefined);
+            const midterm = field === 'midterm_grade' 
+                ? (value === '' ? undefined : parseFloat(value)) 
+                : (updatedData.midterm_grade !== undefined && updatedData.midterm_grade !== '' ? parseFloat(String(updatedData.midterm_grade)) : undefined);
+            const final = field === 'final_grade' 
+                ? (value === '' ? undefined : parseFloat(value)) 
+                : (updatedData.final_grade !== undefined && updatedData.final_grade !== '' ? parseFloat(String(updatedData.final_grade)) : undefined);
             
-            if (prelim !== undefined && midterm !== undefined && final !== undefined) {
+            if (prelim !== undefined && !isNaN(prelim) && midterm !== undefined && !isNaN(midterm) && final !== undefined && !isNaN(final)) {
                 const average = (prelim + midterm + final) / 3;
                 updatedData.final_rating = Math.round(average * 100) / 100;
             } else {
@@ -1526,7 +1532,7 @@ const fetchDropdownLists = async () => {
 
                 {/* Filters */}
                 <div className="bg-white rounded-2xl shadow-lg p-6 mb-6 border border-gray-100">
-                    <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <div className="relative col-span-2">
                             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                                 <Search className="h-5 w-5 text-gray-400" />
@@ -1538,21 +1544,6 @@ const fetchDropdownLists = async () => {
                                 className={`pl-12 w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
                                 placeholder="Search student name..."
                             />
-                        </div>
-                        
-                        <div className="flex items-center">
-                            <select
-                                value={filters.class_subject_id}
-                                onChange={(e) => setFilters({...filters, class_subject_id: e.target.value, page: 1})}
-                                className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white`}
-                            >
-                                <option value="">Filter by My Subject</option>
-                                {classSubjects.map(cs => (
-                                    <option key={cs.id} value={cs.id}>
-                                        {cs.class?.class_code} - {cs.subject?.subject_code}
-                                    </option>
-                                ))}
-                            </select>
                         </div>
                         
                         <div className="flex items-center">
