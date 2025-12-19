@@ -245,18 +245,12 @@ const BlockchainStudentAttendance: React.FC = () => {
         return map;
     }, [attendanceRecords]);
 
-    // Get calendar days
+    // Get calendar days - start directly on the first day of the month, no padding
     const calendarDays = useMemo(() => {
         const daysInMonth = getDaysInMonth(currentYear, currentMonth);
-        const firstDayOfWeek = getFirstDayOfWeek(currentYear, currentMonth);
-        const days: (number | null)[] = [];
+        const days: number[] = [];
         
-        // Add empty cells for days before the first day of the month
-        for (let i = 0; i < firstDayOfWeek; i++) {
-            days.push(null);
-        }
-        
-        // Add days of the month
+        // Add days of the month directly, starting from day 1
         for (let day = 1; day <= daysInMonth; day++) {
             days.push(day);
         }
@@ -398,7 +392,7 @@ const BlockchainStudentAttendance: React.FC = () => {
                                                             key={index}
                                                             className="border border-gray-300 px-2 py-2 text-center font-semibold text-gray-700 min-w-[40px]"
                                                         >
-                                                            {day !== null ? day : ''}
+                                                            {day}
                                                         </th>
                                                     ))}
                                                 </tr>
@@ -412,7 +406,7 @@ const BlockchainStudentAttendance: React.FC = () => {
                                                             key={index}
                                                             className="border border-gray-300 px-2 py-1 text-center text-xs text-gray-600 min-w-[40px]"
                                                         >
-                                                            {day !== null ? getDayAbbr(new Date(currentYear, currentMonth, day).getDay()) : ''}
+                                                            {getDayAbbr(new Date(currentYear, currentMonth, day).getDay())}
                                                         </th>
                                                     ))}
                                                 </tr>
@@ -431,15 +425,6 @@ const BlockchainStudentAttendance: React.FC = () => {
                                                             </td>
                                                             {/* Attendance cells - aligned with calendar */}
                                                             {calendarDays.map((day, index) => {
-                                                                if (day === null) {
-                                                                    return (
-                                                                        <td
-                                                                            key={index}
-                                                                            className="border border-gray-300 px-2 py-2 text-center min-w-[40px] bg-gray-50"
-                                                                        />
-                                                                    );
-                                                                }
-                                                                
                                                                 const key = `${subjectId}_${day}`;
                                                                 const attendance = attendanceMap.get(key);
                                                                 
