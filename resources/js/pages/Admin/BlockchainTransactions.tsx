@@ -675,37 +675,15 @@ const BlockchainManagement: React.FC = () => {
                         <>
                             {/* Filters */}
                             <div className="bg-white rounded-2xl shadow-lg p-6 mb-6 border border-gray-100">
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                    <div className="flex items-center">
-                                        <Search className="absolute ml-4 h-5 w-5 text-gray-400" />
-                                        <input
-                                            type="text"
-                                            value={transactionFilters.search}
-                                            onChange={(e) => setTransactionFilters({...transactionFilters, search: e.target.value, page: 1})}
-                                            className={`pl-12 w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS}`}
-                                            placeholder="Search transactions..."
-                                        />
-                                    </div>
-                                    <select
-                                        value={transactionFilters.status}
-                                        onChange={(e) => setTransactionFilters({...transactionFilters, status: e.target.value as TransactionStatus | '', page: 1})}
-                                        className={`px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS}`}
-                                    >
-                                        <option value="">All Statuses</option>
-                                        <option value="pending">Pending</option>
-                                        <option value="confirmed">Confirmed</option>
-                                        <option value="failed">Failed</option>
-                                    </select>
-                                    <select
-                                        value={transactionFilters.type}
-                                        onChange={(e) => setTransactionFilters({...transactionFilters, type: e.target.value as TransactionType | '', page: 1})}
-                                        className={`px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS}`}
-                                    >
-                                        <option value="">All Types</option>
-                                        <option value="certificate_creation">Certificate Creation</option>
-                                        <option value="certificate_update">Certificate Update</option>
-                                        <option value="verification">Verification</option>
-                                    </select>
+                                <div className="flex items-center">
+                                    <Search className="absolute ml-4 h-5 w-5 text-gray-400" />
+                                    <input
+                                        type="text"
+                                        value={transactionFilters.search}
+                                        onChange={(e) => setTransactionFilters({...transactionFilters, search: e.target.value, page: 1})}
+                                        className={`pl-12 w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS}`}
+                                        placeholder="Search transactions..."
+                                    />
                                 </div>
                             </div>
 
