@@ -158,14 +158,14 @@ class ClassesController extends Controller
             $class = Classes::with([
                 'academicYear', 
                 'semester',
-                'adviser', // ADDED
-                'students', 
-                'classSubjects.subject', 
-                'classSubjects.teacher'
+                'adviser',
+                'course'
             ])
             ->withCount(['students', 'classSubjects'])
             ->findOrFail($id);
             
+            // Only load students and classSubjects if needed (they can be large)
+            // For API requests, we'll return a simplified version
             if ($request->expectsJson()) {
                 return response()->json([
                     'success' => true,
@@ -173,18 +173,22 @@ class ClassesController extends Controller
                 ]);
             }
             
+            // For Inertia views, load the full relationships
+            $class->load(['students', 'classSubjects.subject', 'classSubjects.teacher']);
+            
             return Inertia::render('Classes/Show', [
                 'class' => $class
             ]);
         } catch (\Exception $e) {
             Log::error('Error fetching class: ' . $e->getMessage());
+            Log::error('Stack trace: ' . $e->getTraceAsString());
             
             if ($request->expectsJson()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Class not found',
-                    'error' => $e->getMessage()
-                ], 404);
+                    'message' => 'Failed to retrieve class',
+                    'error' => config('app.debug') ? $e->getMessage() : 'An error occurred while fetching the class'
+                ], 500);
             }
             
             return back()->with('error', 'Class not found');
