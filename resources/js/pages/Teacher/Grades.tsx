@@ -223,7 +223,12 @@ const GradeModal: React.FC<{
         if (prelim !== undefined && prelim !== null && 
             midterm !== undefined && midterm !== null && 
             final !== undefined && final !== null) {
-            const average = (prelim + midterm + final) / 3;
+            // Ensure values are numbers and calculate average
+            const prelimNum = Number(prelim);
+            const midtermNum = Number(midterm);
+            const finalNum = Number(final);
+            const sum = prelimNum + midtermNum + finalNum;
+            const average = sum / 3;
             const roundedAverage = Math.round(average * 100) / 100; // Round to 2 decimal places
             
             // Update final_rating with the calculated value

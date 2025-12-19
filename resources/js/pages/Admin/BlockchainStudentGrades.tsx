@@ -64,6 +64,9 @@ const BlockchainStudentGrades: React.FC = () => {
     const [grades, setGrades] = useState<StudentGrades[]>([]);
     const [studentName, setStudentName] = useState('');
     const [className, setClassName] = useState('');
+    const [academicYear, setAcademicYear] = useState('');
+    const [semester, setSemester] = useState('');
+    const [yearLevel, setYearLevel] = useState<number | null>(null);
     const [notification, setNotification] = useState<Notification | null>(null);
 
     useEffect(() => {
@@ -96,6 +99,17 @@ const BlockchainStudentGrades: React.FC = () => {
             
             if (classData.success) {
                 setClassName(classData.data.class_code || classData.data.class_name);
+                
+                // Extract academic year, semester, and year level
+                if (classData.data.academic_year) {
+                    setAcademicYear(classData.data.academic_year.year_name || '');
+                }
+                if (classData.data.semester) {
+                    setSemester(classData.data.semester.semester_name || '');
+                }
+                if (classData.data.year_level !== undefined && classData.data.year_level !== null) {
+                    setYearLevel(classData.data.year_level);
+                }
                 
                 // Get student information
                 const studentRes = await fetch(`/api/students/${studentId}`, {
@@ -252,10 +266,32 @@ const BlockchainStudentGrades: React.FC = () => {
                             Back to Students
                         </button>
                         <div>
-                            <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent mb-2">
+                            <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent mb-4">
                                 Student Grades
                             </h1>
-                            <p className="text-gray-600">{studentName} - {className}</p>
+                            <div className="mb-4">
+                                <h2 className="text-3xl font-bold text-gray-900 mb-3">{studentName}</h2>
+                                <div className="flex flex-wrap gap-4 text-sm text-gray-600">
+                                    <div>
+                                        <span className="font-semibold">Class:</span> {className}
+                                    </div>
+                                    {yearLevel !== null && (
+                                        <div>
+                                            <span className="font-semibold">Grade Level:</span> {yearLevel}
+                                        </div>
+                                    )}
+                                    {academicYear && (
+                                        <div>
+                                            <span className="font-semibold">Academic Year:</span> {academicYear}
+                                        </div>
+                                    )}
+                                    {semester && (
+                                        <div>
+                                            <span className="font-semibold">Semester:</span> {semester}
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
                         </div>
                     </div>
 
