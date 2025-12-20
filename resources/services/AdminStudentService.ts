@@ -164,6 +164,13 @@ class AdminStudentService {
     private async request<T>(url: string, options: RequestInit = {}, retryOn419: boolean = true): Promise<ApiResponse<T>> {
         const csrfToken = this.getCsrfToken();
         
+        // Ensure URL is absolute - always use full URL to avoid redirects
+        let absoluteUrl = url;
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+            // Use window.location.origin to create absolute URL
+            absoluteUrl = window.location.origin + (url.startsWith('/') ? url : '/' + url);
+        }
+        
         const defaultOptions: RequestInit = {
             headers: {
                 'Content-Type': 'application/json',
@@ -175,7 +182,26 @@ class AdminStudentService {
         };
 
         try {
-            const response = await fetch(url, { ...defaultOptions, ...options });
+            // Merge options carefully - ensure headers are merged correctly
+            const mergedOptions: RequestInit = {
+                ...defaultOptions,
+                ...options,
+                headers: {
+                    ...defaultOptions.headers,
+                    ...(options.headers || {}),
+                }
+            };
+            
+            // Log the actual URL being used
+            console.log('Making request:', { 
+                originalUrl: url, 
+                absoluteUrl: absoluteUrl, 
+                method: mergedOptions.method || 'GET',
+                currentPath: window.location.pathname,
+                fullUrl: absoluteUrl
+            });
+            
+            const response = await fetch(absoluteUrl, mergedOptions);
             const contentType = response.headers.get('content-type');
             let data;
             
@@ -356,9 +382,14 @@ class AdminStudentService {
             const freshToken = await this.getFreshCsrfToken();
             console.log('Got fresh CSRF token for delete request');
             
-            // Construct the full URL with the student ID
+            // Construct the full URL with the student ID - ensure it's absolute
             const deleteUrl = `${this.baseURL}/students/${id}`;
-            console.log('Deleting student:', { id, url: deleteUrl });
+            console.log('Deleting student:', { 
+                id, 
+                baseURL: this.baseURL,
+                constructedUrl: deleteUrl,
+                fullUrl: window.location.origin + deleteUrl
+            });
             
             // Validate URL construction
             if (!deleteUrl.includes(`/students/${id}`)) {
@@ -366,7 +397,11 @@ class AdminStudentService {
             }
             
             // Make the DELETE request with fresh token
-            return this.request<null>(deleteUrl, {
+            // Use absolute URL to prevent any redirects
+            const absoluteDeleteUrl = window.location.origin + deleteUrl;
+            console.log('Making DELETE request to:', absoluteDeleteUrl);
+            
+            return this.request<null>(absoluteDeleteUrl, {
                 method: 'DELETE',
                 headers: {
                     'X-CSRF-TOKEN': freshToken,
