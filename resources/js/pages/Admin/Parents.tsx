@@ -128,6 +128,25 @@ const ParentModal: React.FC<{
         students: [],
     });
 
+    // Relationship state for the parent/guardian themselves
+    const [relationship, setRelationship] = useState<string>(() => {
+        // If editing, try to get relationship from parent object or infer from students
+        if (parent) {
+            // First try to use relationship_to_student if available
+            if (parent.relationship_to_student && ['Father', 'Mother', 'Guardian'].includes(parent.relationship_to_student)) {
+                return parent.relationship_to_student;
+            }
+            // Otherwise, try to infer from first student's relationship
+            if (parent.students && parent.students.length > 0) {
+                const firstRelationship = parent.students[0].pivot?.relationship || 'Parent';
+                if (['Father', 'Mother', 'Guardian'].includes(firstRelationship)) {
+                    return firstRelationship;
+                }
+            }
+        }
+        return '';
+    });
+
     const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     
@@ -146,20 +165,27 @@ const ParentModal: React.FC<{
 
     const RELATIONSHIP_OPTIONS = ['Father', 'Mother', 'Guardian'];
 
-    // Determine if gender should be auto-set and disabled (all relationships are Father or Mother)
+    // Determine if gender should be auto-set and disabled based on relationship field
     const shouldDisableGender = () => {
-        if (selectedStudents.length === 0) return false;
-        const relationships = selectedStudents.map(s => s.relationship);
-        const allFather = relationships.every(r => r === 'Father');
-        const allMother = relationships.every(r => r === 'Mother');
-        return allFather || allMother;
+        return relationship === 'Father' || relationship === 'Mother';
     };
 
-    // Determine if gender is required (at least one Guardian relationship)
+    // Determine if gender is required (Guardian relationship)
     const isGenderRequired = () => {
-        if (selectedStudents.length === 0) return false;
-        return selectedStudents.some(s => s.relationship === 'Guardian');
+        return relationship === 'Guardian';
     };
+
+    // Auto-set gender when relationship changes
+    useEffect(() => {
+        if (relationship === 'Father') {
+            setFormData(prev => ({ ...prev, gender: 'Male' }));
+        } else if (relationship === 'Mother') {
+            setFormData(prev => ({ ...prev, gender: 'Female' }));
+        } else if (relationship === 'Guardian') {
+            // For Guardian, don't auto-set, but keep current gender if already set
+            // User must select gender manually
+        }
+    }, [relationship]);
 
     // Load existing linked students when editing
     useEffect(() => {
@@ -174,37 +200,6 @@ const ParentModal: React.FC<{
         }
     }, [parent]);
 
-    // Auto-update gender based on relationships whenever selectedStudents changes
-    useEffect(() => {
-        if (selectedStudents.length === 0) {
-            // If no students, don't change gender
-            return;
-        }
-        
-        const relationships = selectedStudents.map(s => s.relationship);
-        const allFather = relationships.every(r => r === 'Father');
-        const allMother = relationships.every(r => r === 'Mother');
-        const hasGuardian = relationships.some(r => r === 'Guardian');
-        
-        // Only auto-set if all relationships are the same (all Father or all Mother)
-        // Don't auto-set if there's a mix or Guardian
-        if (allFather && !hasGuardian) {
-            setFormData(prev => {
-                if (prev.gender !== 'Male') {
-                    return { ...prev, gender: 'Male' };
-                }
-                return prev;
-            });
-        } else if (allMother && !hasGuardian) {
-            setFormData(prev => {
-                if (prev.gender !== 'Female') {
-                    return { ...prev, gender: 'Female' };
-                }
-                return prev;
-            });
-        }
-        // If there's a mix or Guardian, don't auto-set - user must select manually
-    }, [selectedStudents]);
 
     // Search for students
     const searchStudents = useCallback(async (query: string) => {
@@ -352,6 +347,24 @@ const ParentModal: React.FC<{
                                     {errors.email && (<p className="text-red-500 text-xs mt-1">{errors.email[0]}</p>)}
                                 </div>
                                 <div>
+                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Relationship</label>
+                                    <select
+                                        name="relationship"
+                                        value={relationship}
+                                        onChange={(e) => setRelationship(e.target.value)}
+                                        className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white`}
+                                        required
+                                    >
+                                        <option value="">Select Relationship</option>
+                                        <option value="Father">Father</option>
+                                        <option value="Mother">Mother</option>
+                                        <option value="Guardian">Guardian</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
                                     <label className="block text-sm font-semibold text-gray-700 mb-2">
                                         Gender
                                         {isGenderRequired() && <span className="text-red-500 ml-1">*</span>}
@@ -374,12 +387,11 @@ const ParentModal: React.FC<{
                                         <p className="text-red-500 text-xs mt-1">Gender is required when relationship is Guardian</p>
                                     )}
                                 </div>
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">Phone</label>
-                                <input type="text" name="phone" value={formData.phone} onChange={handleChange} className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`} placeholder="+63 XXX XXX XXXX"/>
-                                {errors.phone && (<p className="text-red-500 text-xs mt-1">{errors.phone[0]}</p>)}
+                                <div>
+                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Phone</label>
+                                    <input type="text" name="phone" value={formData.phone} onChange={handleChange} className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`} placeholder="+63 XXX XXX XXXX"/>
+                                    {errors.phone && (<p className="text-red-500 text-xs mt-1">{errors.phone[0]}</p>)}
+                                </div>
                             </div>
 
                             <div>
