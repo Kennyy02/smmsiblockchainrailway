@@ -531,14 +531,25 @@ const Subjects: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* Stats Cards - Centered layout with icon below value */}
-                    <div className="grid grid-cols-1 sm:grid-cols-1 gap-2 sm:gap-3 md:gap-4 mb-4 sm:mb-6">
-                        <div className="bg-white rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 border border-gray-100">
-                            <div className="flex flex-col items-center text-center">
+                    {/* Stats Cards - Mobile: Centered with icon below, Desktop: Icon on right */}
+                    <div className="grid grid-cols-1 gap-2 sm:gap-3 md:gap-4 lg:gap-6 mb-4 sm:mb-6">
+                        <div className="bg-white rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 lg:p-6 border border-gray-100">
+                            {/* Mobile: Centered layout */}
+                            <div className="flex flex-col items-center text-center md:hidden">
                                 <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1 sm:mb-2">Total Subjects</p>
-                                <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 sm:mb-3">{stats.total_subjects}</p>
+                                <p className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 sm:mb-3">{stats.total_subjects}</p>
                                 <div className={`${LIGHT_BG_CLASS} p-2 sm:p-3 rounded-full`}>
-                                    <Hash className={`h-5 w-5 sm:h-6 sm:w-6 md:h-8 md:w-8 ${TEXT_COLOR_CLASS}`} />
+                                    <Hash className={`h-5 w-5 sm:h-6 sm:w-6 ${TEXT_COLOR_CLASS}`} />
+                                </div>
+                            </div>
+                            {/* Desktop: Original layout with icon on right */}
+                            <div className="hidden md:flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm font-medium text-gray-600 mb-1">Total Subjects</p>
+                                    <p className="text-3xl font-bold text-gray-900">{stats.total_subjects}</p>
+                                </div>
+                                <div className={`${LIGHT_BG_CLASS} p-3 rounded-xl`}>
+                                    <Hash className={`h-8 w-8 ${TEXT_COLOR_CLASS}`} />
                                 </div>
                             </div>
                         </div>

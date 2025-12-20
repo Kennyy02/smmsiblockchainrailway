@@ -558,43 +558,89 @@ const Courses: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* Stats Cards - Centered layout with icon below value */}
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 md:gap-4 mb-4 sm:mb-6">
-                        <div className="bg-white rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 border border-gray-100">
-                            <div className="flex flex-col items-center text-center">
+                    {/* Stats Cards - Mobile: Centered with icon below, Desktop: Icon on right */}
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-6 mb-4 sm:mb-6">
+                        <div className="bg-white rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 lg:p-6 border border-gray-100">
+                            {/* Mobile: Centered layout */}
+                            <div className="flex flex-col items-center text-center md:hidden">
                                 <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1 sm:mb-2">Total</p>
-                                <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 sm:mb-3">{stats.total_courses}</p>
+                                <p className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 sm:mb-3">{stats.total_courses}</p>
                                 <div className={`${LIGHT_BG_CLASS} p-2 sm:p-3 rounded-full`}>
-                                    <GraduationCap className={`h-5 w-5 sm:h-6 sm:w-6 md:h-8 md:w-8 ${TEXT_COLOR_CLASS}`} />
+                                    <GraduationCap className={`h-5 w-5 sm:h-6 sm:w-6 ${TEXT_COLOR_CLASS}`} />
+                                </div>
+                            </div>
+                            {/* Desktop: Original layout with icon on right */}
+                            <div className="hidden md:flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm font-medium text-gray-600 mb-1">Total Courses</p>
+                                    <p className="text-3xl font-bold text-gray-900">{stats.total_courses}</p>
+                                </div>
+                                <div className={`${LIGHT_BG_CLASS} p-3 rounded-xl`}>
+                                    <GraduationCap className={`h-8 w-8 ${TEXT_COLOR_CLASS}`} />
                                 </div>
                             </div>
                         </div>
-                        <div className="bg-white rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 border border-gray-100">
-                            <div className="flex flex-col items-center text-center">
+                        <div className="bg-white rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 lg:p-6 border border-gray-100">
+                            {/* Mobile: Centered layout */}
+                            <div className="flex flex-col items-center text-center md:hidden">
                                 <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1 sm:mb-2">Active</p>
-                                <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-green-600 mb-2 sm:mb-3">{stats.active_courses}</p>
+                                <p className="text-2xl sm:text-3xl font-bold text-green-600 mb-2 sm:mb-3">{stats.active_courses}</p>
                                 <div className="bg-green-100 p-2 sm:p-3 rounded-full">
-                                    <CheckCircle className="h-5 w-5 sm:h-6 sm:w-6 md:h-8 md:w-8 text-green-600" />
+                                    <CheckCircle className="h-5 w-5 sm:h-6 sm:w-6 text-green-600" />
+                                </div>
+                            </div>
+                            {/* Desktop: Original layout with icon on right */}
+                            <div className="hidden md:flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm font-medium text-gray-600 mb-1">Active Courses</p>
+                                    <p className="text-3xl font-bold text-green-600">{stats.active_courses}</p>
+                                </div>
+                                <div className="bg-green-100 p-3 rounded-xl">
+                                    <CheckCircle className="h-8 w-8 text-green-600" />
                                 </div>
                             </div>
                         </div>
-                        <div className="bg-white rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 border border-gray-100">
-                            <div className="flex flex-col items-center text-center">
+                        <div className="bg-white rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 lg:p-6 border border-gray-100">
+                            {/* Mobile: Centered layout */}
+                            <div className="flex flex-col items-center text-center md:hidden">
                                 <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1 sm:mb-2">Students</p>
-                                <p className={`text-2xl sm:text-3xl md:text-4xl font-bold ${TEXT_COLOR_CLASS} mb-2 sm:mb-3`}>{stats.total_students}</p>
+                                <p className={`text-2xl sm:text-3xl font-bold ${TEXT_COLOR_CLASS} mb-2 sm:mb-3`}>{stats.total_students}</p>
                                 <div className={`${LIGHT_BG_CLASS} p-2 sm:p-3 rounded-full`}>
-                                    <Users className={`h-5 w-5 sm:h-6 sm:w-6 md:h-8 md:w-8 ${TEXT_COLOR_CLASS}`} />
+                                    <Users className={`h-5 w-5 sm:h-6 sm:w-6 ${TEXT_COLOR_CLASS}`} />
+                                </div>
+                            </div>
+                            {/* Desktop: Original layout with icon on right */}
+                            <div className="hidden md:flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm font-medium text-gray-600 mb-1">Total Students</p>
+                                    <p className={`text-3xl font-bold ${TEXT_COLOR_CLASS}`}>{stats.total_students}</p>
+                                </div>
+                                <div className={`${LIGHT_BG_CLASS} p-3 rounded-xl`}>
+                                    <Users className={`h-8 w-8 ${TEXT_COLOR_CLASS}`} />
                                 </div>
                             </div>
                         </div>
-                        <div className="bg-white rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 border border-gray-100">
-                            <div className="flex flex-col items-center text-center">
+                        <div className="bg-white rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 lg:p-6 border border-gray-100">
+                            {/* Mobile: Centered layout */}
+                            <div className="flex flex-col items-center text-center md:hidden">
                                 <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1 sm:mb-2">College</p>
-                                <p className={`text-2xl sm:text-3xl md:text-4xl font-bold ${TEXT_COLOR_CLASS} mb-2 sm:mb-3`}>
+                                <p className={`text-2xl sm:text-3xl font-bold ${TEXT_COLOR_CLASS} mb-2 sm:mb-3`}>
                                     {stats.by_level?.find(l => l.level === 'College')?.count || 0}
                                 </p>
                                 <div className={`${LIGHT_BG_CLASS} p-2 sm:p-3 rounded-full`}>
-                                    <BookOpen className={`h-5 w-5 sm:h-6 sm:w-6 md:h-8 md:w-8 ${TEXT_COLOR_CLASS}`} />
+                                    <BookOpen className={`h-5 w-5 sm:h-6 sm:w-6 ${TEXT_COLOR_CLASS}`} />
+                                </div>
+                            </div>
+                            {/* Desktop: Original layout with icon on right */}
+                            <div className="hidden md:flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm font-medium text-gray-600 mb-1">College Programs</p>
+                                    <p className={`text-3xl font-bold ${TEXT_COLOR_CLASS}`}>
+                                        {stats.by_level?.find(l => l.level === 'College')?.count || 0}
+                                    </p>
+                                </div>
+                                <div className={`${LIGHT_BG_CLASS} p-3 rounded-xl`}>
+                                    <BookOpen className={`h-8 w-8 ${TEXT_COLOR_CLASS}`} />
                                 </div>
                             </div>
                         </div>
