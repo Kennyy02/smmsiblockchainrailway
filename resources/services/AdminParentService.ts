@@ -172,15 +172,15 @@ class AdminParentService {
         let csrfToken = this.getCsrfToken();
         
         const makeRequest = async (token: string): Promise<Response> => {
-            const defaultOptions: RequestInit = {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
+        const defaultOptions: RequestInit = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
                     'X-CSRF-TOKEN': token,
-                    'X-Requested-With': 'XMLHttpRequest',
+                'X-Requested-With': 'XMLHttpRequest',
                     ...options.headers,
-                },
-                credentials: 'same-origin',
+            },
+            credentials: 'same-origin',
             };
 
             return fetch(url, { ...defaultOptions, ...options });

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, Plus, Search, Edit, Trash2, X, RefreshCw, Layers, UserCheck, BookOpen } from 'lucide-react';
+import { Link, Plus, Search, Edit, Trash2, X, RefreshCw, Layers, UserCheck, BookOpen, Eye } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
 import { 
     adminClassSubjectService, 
@@ -398,6 +398,82 @@ const ClassSubjectModal: React.FC<{
 };
 
 // ========================================================================
+// 👁️ VIEW CLASS SUBJECT MODAL
+// ========================================================================
+
+const ViewClassSubjectModal: React.FC<{
+    classSubject: ClassSubject;
+    onClose: () => void;
+}> = ({ classSubject, onClose }) => {
+    return (
+        <div className="fixed inset-0 z-50 overflow-y-auto">
+            <div className="flex min-h-full items-center justify-center p-4">
+                <div className="fixed inset-0 bg-black/30 backdrop-blur-sm transition-opacity" onClick={onClose}></div>
+                
+                <div className="relative w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white shadow-2xl transition-all">
+                    <div className={`${PRIMARY_COLOR_CLASS} px-6 py-4`}>
+                        <div className="flex items-center justify-between">
+                            <h2 className="text-xl font-bold text-white">Class-Subject Link Details</h2>
+                            <button onClick={onClose} className="rounded-full p-2 text-white/80 hover:bg-white/20 hover:text-white transition-colors">
+                                <X className="h-5 w-5" />
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div className="p-6">
+                        {/* Header with Icon */}
+                        <div className="flex items-center mb-6 pb-6 border-b">
+                            <div className={`${LIGHT_BG_CLASS} p-4 rounded-full mr-4`}>
+                                <Link className={`h-12 w-12 ${TEXT_COLOR_CLASS}`} />
+                            </div>
+                            <div>
+                                <h3 className="text-2xl font-bold text-gray-900">{classSubject.class_name} - {classSubject.subject_name}</h3>
+                                <p className="text-gray-500">{classSubject.subject_code}</p>
+                            </div>
+                        </div>
+
+                        {/* Info Grid */}
+                        <div className="grid grid-cols-2 gap-6">
+                            <div>
+                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Class</label>
+                                <p className="text-gray-900 font-medium mt-1">{classSubject.class_name || 'N/A'}</p>
+                            </div>
+                            <div>
+                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Subject</label>
+                                <p className="text-gray-900 font-medium mt-1">{classSubject.subject_name || 'N/A'}</p>
+                                <p className="text-sm text-gray-500">{classSubject.subject_code}</p>
+                            </div>
+                            <div>
+                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Teacher</label>
+                                <p className="text-gray-900 font-medium mt-1">{classSubject.teacher_name || 'Unassigned'}</p>
+                            </div>
+                            <div>
+                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Academic Year</label>
+                                <p className="text-gray-900 font-medium mt-1">{classSubject.academic_year_name || `AY ID: ${classSubject.academic_year_id}`}</p>
+                            </div>
+                            <div>
+                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Semester</label>
+                                <p className="text-gray-900 font-medium mt-1">{classSubject.semester_name || `Semester ID: ${classSubject.semester_id}`}</p>
+                            </div>
+                        </div>
+
+                        {/* Footer */}
+                        <div className="flex justify-end mt-6 pt-6 border-t">
+                            <button
+                                onClick={onClose}
+                                className={`px-6 py-3 ${PRIMARY_COLOR_CLASS} text-white rounded-xl ${HOVER_COLOR_CLASS} transition-all font-medium`}
+                            >
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+// ========================================================================
 // 📊 CLASS SUBJECTS MAIN COMPONENT
 // ========================================================================
 
@@ -405,6 +481,7 @@ const ClassSubjects: React.FC = () => {
     const [classSubjects, setClassSubjects] = useState<ClassSubject[]>([]);
     const [loading, setLoading] = useState(false);
     const [showModal, setShowModal] = useState(false);
+    const [showViewModal, setShowViewModal] = useState(false);
     const [selectedClassSubject, setSelectedClassSubject] = useState<ClassSubject | null>(null);
     const [notification, setNotification] = useState<Notification | null>(null);
     const [validationErrors, setValidationErrors] = useState<Record<string, string[]>>({});
@@ -467,6 +544,11 @@ const ClassSubjects: React.FC = () => {
         setSelectedClassSubject(classSubject);
         setShowModal(true);
         setValidationErrors({});
+    };
+
+    const handleView = (classSubject: ClassSubject) => {
+        setSelectedClassSubject(classSubject);
+        setShowViewModal(true);
     };
 
     const handleDelete = async (classSubject: ClassSubject) => {
@@ -541,184 +623,212 @@ const ClassSubjects: React.FC = () => {
 
     return (
         <AppLayout>
-            <div className="p-8 space-y-6">
-                {/* Header */}
-                <div className="flex items-center justify-between">
-                    <div>
-                        <h1 className="text-3xl font-bold text-gray-900">Class-Subject Links</h1>
-                        <p className="mt-2 text-gray-600">Manage class-subject assignments and schedules</p>
+            <div className="min-h-screen bg-[#f3f4f6]">
+                <div className="container mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8">
+                    {/* Header */}
+                    <div className="mb-4 sm:mb-6 md:mb-8 flex flex-col md:flex-row md:items-center md:justify-between">
+                        <div className="mb-4 sm:mb-6 md:mb-0">
+                            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">Class-Subject Links</h1>
+                            <p className="text-xs sm:text-sm text-gray-600 mt-0.5 sm:mt-1 md:mt-2">Manage class-subject assignments and schedules</p>
+                        </div>
+                        <button
+                            onClick={() => {
+                                setSelectedClassSubject(null);
+                                setShowModal(true);
+                                setValidationErrors({});
+                            }}
+                            className={`${PRIMARY_COLOR_CLASS} ${HOVER_COLOR_CLASS} text-white px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-lg sm:rounded-xl flex items-center space-x-2 transition-all shadow-lg hover:shadow-xl text-xs sm:text-sm md:text-base`}
+                        >
+                            <Plus className="h-4 w-4 sm:h-5 sm:w-5" />
+                            <span className="hidden sm:inline">Link Class & Subject</span>
+                            <span className="sm:hidden">Link</span>
+                        </button>
                     </div>
-                    <button
-                        onClick={() => {
-                            setSelectedClassSubject(null);
-                            setShowModal(true);
-                            setValidationErrors({});
-                        }}
-                        className={`${PRIMARY_COLOR_CLASS} ${HOVER_COLOR_CLASS} text-white px-6 py-3 rounded-xl flex items-center space-x-2 transition-all shadow-lg hover:shadow-xl`}
-                    >
-                        <Plus className="h-5 w-5" />
-                        <span>Link Class & Subject</span>
-                    </button>
-                </div>
 
-                {/* Filters */}
-                <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        {/* Class filter */}
-                        <div className="relative">
-                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <Layers className="h-5 w-5 text-gray-400" />
+                    {/* Filters - Compact on Mobile */}
+                    <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-3 sm:p-4 md:p-6 mb-4 sm:mb-6 border border-gray-100">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
+                            {/* Class filter */}
+                            <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
+                                    <Layers className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
+                                </div>
+                                <input
+                                    type="text"
+                                    value={filters.class_id}
+                                    onChange={(e) => setFilters({...filters, class_id: e.target.value, page: 1})}
+                                    className={`pl-10 sm:pl-12 w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all text-sm sm:text-base`}
+                                    placeholder="Filter by Class Code or Name..."
+                                />
                             </div>
-                            <input
-                                type="text"
-                                value={filters.class_id}
-                                onChange={(e) => setFilters({...filters, class_id: e.target.value, page: 1})}
-                                className={`pl-12 w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
-                                placeholder="Filter by Class Code or Name..."
-                            />
-                        </div>
-                        {/* Teacher filter */}
-                        <div className="relative">
-                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <UserCheck className="h-5 w-5 text-gray-400" />
+                            {/* Teacher filter */}
+                            <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
+                                    <UserCheck className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
+                                </div>
+                                <input
+                                    type="text"
+                                    value={filters.teacher_id}
+                                    onChange={(e) => setFilters({...filters, teacher_id: e.target.value, page: 1})}
+                                    className={`pl-10 sm:pl-12 w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all text-sm sm:text-base`}
+                                    placeholder="Filter by Teacher Name or ID..."
+                                />
                             </div>
-                            <input
-                                type="text"
-                                value={filters.teacher_id}
-                                onChange={(e) => setFilters({...filters, teacher_id: e.target.value, page: 1})}
-                                className={`pl-12 w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
-                                placeholder="Filter by Teacher Name or ID..."
-                            />
-                        </div>
-                        {/* Subject search */}
-                        <div className="relative">
-                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <Search className="h-5 w-5 text-gray-400" />
+                            {/* Subject search */}
+                            <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
+                                    <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
+                                </div>
+                                <input
+                                    type="text"
+                                    value={filters.search}
+                                    onChange={(e) => setFilters({...filters, search: e.target.value, page: 1})}
+                                    className={`pl-10 sm:pl-12 w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all text-sm sm:text-base`}
+                                    placeholder="Search Subject..."
+                                />
                             </div>
-                            <input
-                                type="text"
-                                value={filters.search}
-                                onChange={(e) => setFilters({...filters, search: e.target.value, page: 1})}
-                                className={`pl-12 w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
-                                placeholder="Search Subject..."
-                            />
                         </div>
                     </div>
-                </div>
 
-                {/* Class Subjects table */}
-                <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
-                    <div className="overflow-x-auto">
-                        <table className="min-w-full divide-y divide-gray-200">
-                            <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
-                                <tr>
-                                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Class</th>
-                                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Subject</th>
-                                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Teacher</th>
-                                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Academic Period</th>
-                                    <th className="px-6 py-4 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody className="bg-white divide-y divide-gray-200">
-                                {loading ? (
+                    {/* Class Subjects table - Responsive: Mobile shows Class & Subject + Actions, Desktop shows all columns */}
+                    <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden border border-gray-100">
+                        <div className="overflow-x-auto">
+                            <table className="min-w-full divide-y divide-gray-200">
+                                <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
                                     <tr>
-                                        <td colSpan={5} className="px-6 py-12 text-center">
-                                            <div className="flex justify-center">
-                                                <RefreshCw className={`h-8 w-8 ${TEXT_COLOR_CLASS} animate-spin`} />
-                                            </div>
-                                        </td>
+                                        <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Class</th>
+                                        <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Subject</th>
+                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Teacher</th>
+                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Academic Period</th>
+                                        <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-right text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Actions</th>
                                     </tr>
-                                ) : classSubjects.length === 0 ? (
-                                    <tr>
-                                        <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
-                                            No class-subject links found
-                                        </td>
-                                    </tr>
-                                ) : (
-                                    classSubjects.map((cs) => (
-                                        <tr key={cs.id} className="hover:bg-gray-50 transition-colors">
-                                            {/* Class info */}
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="flex items-center">
-                                                    <div className={`p-2 rounded-lg mr-3 ${LIGHT_BG_CLASS}`}>
-                                                        <Layers className={`h-5 w-5 ${TEXT_COLOR_CLASS}`} />
-                                                    </div>
-                                                    <div>
-                                                        <div className="text-sm font-semibold text-gray-900">{cs.class_name || 'N/A'}</div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            {/* Subject info */}
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="flex items-center">
-                                                    <div className={`p-2 rounded-lg mr-3 ${LIGHT_BG_CLASS}`}>
-                                                        <BookOpen className={`h-5 w-5 ${TEXT_COLOR_CLASS}`} />
-                                                    </div>
-                                                    <div>
-                                                        <div className="text-sm font-semibold text-gray-900">{cs.subject_name || 'N/A'}</div>
-                                                        <div className="text-xs text-gray-500">{cs.subject_code}</div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            {/* Teacher */}
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="flex items-center">
-                                                    <div className={`p-2 rounded-lg mr-3 ${LIGHT_BG_CLASS}`}>
-                                                        <UserCheck className={`h-4 w-4 ${TEXT_COLOR_CLASS}`} />
-                                                    </div>
-                                                    <div className="text-sm text-gray-900">{cs.teacher_name || 'Unassigned'}</div>
-                                                </div>
-                                            </td>
-                                            {/* Academic Period */}
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="text-sm text-gray-700">
-                                                    <div className="font-medium">{cs.academic_year_name || `AY ID: ${cs.academic_year_id}`}</div>
-                                                    <div className="text-xs text-gray-500">{cs.semester_name || `Semester ID: ${cs.semester_id}`}</div>
-                                                </div>
-                                            </td>
-                                            {/* Action buttons */}
-                                            <td className="px-6 py-4 whitespace-nowrap text-right">
-                                                <div className="flex justify-end space-x-2">
-                                                    {/* Edit button */}
-                                                    <button
-                                                        onClick={() => handleEdit(cs)}
-                                                        className={`p-2 ${TEXT_COLOR_CLASS} ${LIGHT_HOVER_CLASS} rounded-lg transition-colors`}
-                                                        title="Edit Link"
-                                                    >
-                                                        <Edit className="h-5 w-5" />
-                                                    </button>
-                                                    {/* Delete button */}
-                                                    <button
-                                                        onClick={() => handleDelete(cs)}
-                                                        className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                                                        title="Unlink Subject"
-                                                    >
-                                                        <Trash2 className="h-5 w-5" />
-                                                    </button>
+                                </thead>
+                                <tbody className="bg-white divide-y divide-gray-200">
+                                    {loading ? (
+                                        <tr>
+                                            <td colSpan={5} className="px-3 sm:px-6 py-8 sm:py-12 text-center">
+                                                <div className="flex justify-center">
+                                                    <RefreshCw className={`h-6 w-6 sm:h-8 sm:w-8 ${TEXT_COLOR_CLASS} animate-spin`} />
                                                 </div>
                                             </td>
                                         </tr>
-                                    ))
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
+                                    ) : classSubjects.length === 0 ? (
+                                        <tr>
+                                            <td colSpan={5} className="px-3 sm:px-6 py-8 sm:py-12 text-center text-gray-500">
+                                                <div className="flex flex-col items-center">
+                                                    <Link className="h-10 w-10 sm:h-12 sm:w-12 text-gray-300 mb-3 sm:mb-4" />
+                                                    <p className="text-base sm:text-lg font-medium">No class-subject links found</p>
+                                                    <p className="text-xs sm:text-sm">Create a new link or adjust filters</p>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ) : (
+                                        classSubjects.map((cs) => (
+                                            <tr key={cs.id} className="hover:bg-gray-50 transition-colors">
+                                                {/* Class info */}
+                                                <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
+                                                    <div className="flex items-center">
+                                                        <div className={`p-1.5 sm:p-2 rounded-lg mr-2 sm:mr-3 ${LIGHT_BG_CLASS}`}>
+                                                            <Layers className={`h-4 w-4 sm:h-5 sm:w-5 ${TEXT_COLOR_CLASS}`} />
+                                                        </div>
+                                                        <div>
+                                                            <div className="text-xs sm:text-sm font-semibold text-gray-900 truncate">{cs.class_name || 'N/A'}</div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                {/* Subject info */}
+                                                <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
+                                                    <div className="flex items-center">
+                                                        <div className={`p-1.5 sm:p-2 rounded-lg mr-2 sm:mr-3 ${LIGHT_BG_CLASS}`}>
+                                                            <BookOpen className={`h-4 w-4 sm:h-5 sm:w-5 ${TEXT_COLOR_CLASS}`} />
+                                                        </div>
+                                                        <div>
+                                                            <div className="text-xs sm:text-sm font-semibold text-gray-900 truncate">{cs.subject_name || 'N/A'}</div>
+                                                            <div className="text-xs text-gray-500 truncate">{cs.subject_code}</div>
+                                                            {/* Show additional info on mobile */}
+                                                            <div className="md:hidden mt-1 space-y-1">
+                                                                <div className="flex items-center gap-2">
+                                                                    <UserCheck className={`h-3 w-3 ${TEXT_COLOR_CLASS}`} />
+                                                                    <span className="text-xs text-gray-600">{cs.teacher_name || 'Unassigned'}</span>
+                                                                </div>
+                                                                <div className="text-xs text-gray-600">
+                                                                    {cs.academic_year_name || `AY ID: ${cs.academic_year_id}`} - {cs.semester_name || `Semester ID: ${cs.semester_id}`}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                {/* Teacher */}
+                                                <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap">
+                                                    <div className="flex items-center">
+                                                        <div className={`p-1.5 sm:p-2 rounded-lg mr-2 sm:mr-3 ${LIGHT_BG_CLASS}`}>
+                                                            <UserCheck className={`h-3 w-3 sm:h-4 sm:w-4 ${TEXT_COLOR_CLASS}`} />
+                                                        </div>
+                                                        <div className="text-xs sm:text-sm text-gray-900">{cs.teacher_name || 'Unassigned'}</div>
+                                                    </div>
+                                                </td>
+                                                {/* Academic Period */}
+                                                <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap">
+                                                    <div className="text-xs sm:text-sm text-gray-700">
+                                                        <div className="font-medium">{cs.academic_year_name || `AY ID: ${cs.academic_year_id}`}</div>
+                                                        <div className="text-xs text-gray-500">{cs.semester_name || `Semester ID: ${cs.semester_id}`}</div>
+                                                    </div>
+                                                </td>
+                                                {/* Action buttons */}
+                                                <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap text-right">
+                                                    <div className="flex justify-end space-x-1 sm:space-x-2">
+                                                        <button
+                                                            onClick={() => handleView(cs)}
+                                                            className="p-1.5 sm:p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                                                            title="View Details"
+                                                        >
+                                                            <Eye className="h-4 w-4 sm:h-5 sm:w-5" />
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleEdit(cs)}
+                                                            className={`p-1.5 sm:p-2 ${TEXT_COLOR_CLASS} ${LIGHT_HOVER_CLASS} rounded-lg transition-colors`}
+                                                            title="Edit Link"
+                                                        >
+                                                            <Edit className="h-4 w-4 sm:h-5 sm:w-5" />
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleDelete(cs)}
+                                                            className="p-1.5 sm:p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                                            title="Unlink Subject"
+                                                        >
+                                                            <Trash2 className="h-4 w-4 sm:h-5 sm:w-5" />
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
                     
                     {/* Pagination */}
                     {renderPagination()}
                 </div>
 
-                {/* Modal for link creation/editing */}
-                {showModal && (
-                    <ClassSubjectModal
-                        classSubject={selectedClassSubject}
-                        onClose={() => setShowModal(false)}
-                        onSave={handleSave}
-                        errors={validationErrors}
-                    />
-                )}
+                    {/* Modals */}
+                    {showModal && (
+                        <ClassSubjectModal
+                            classSubject={selectedClassSubject}
+                            onClose={() => setShowModal(false)}
+                            onSave={handleSave}
+                            errors={validationErrors}
+                        />
+                    )}
 
-                {/* Toast notification */}
+                    {showViewModal && selectedClassSubject && (
+                        <ViewClassSubjectModal
+                            classSubject={selectedClassSubject}
+                            onClose={() => setShowViewModal(false)}
+                        />
+                    )}
+
+                    {/* Toast notification */}
                 {notification && (
                     <Notification
                         notification={notification}

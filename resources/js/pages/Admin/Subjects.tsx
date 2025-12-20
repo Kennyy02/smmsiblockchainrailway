@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BookOpen, Plus, Search, Filter, Edit, Trash2, X, RefreshCw, Layers, Zap, Hash } from 'lucide-react';
+import { BookOpen, Plus, Search, Filter, Edit, Trash2, X, RefreshCw, Layers, Zap, Hash, Eye } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
 import { 
     adminSubjectService, 
@@ -203,6 +203,79 @@ const SubjectModal: React.FC<{
 };
 
 // ========================================================================
+// 👁️ VIEW SUBJECT MODAL
+// ========================================================================
+
+const ViewSubjectModal: React.FC<{
+    subject: Subject;
+    onClose: () => void;
+}> = ({ subject, onClose }) => {
+    return (
+        <div className="fixed inset-0 z-50 overflow-y-auto">
+            <div className="flex min-h-full items-center justify-center p-4">
+                <div className="fixed inset-0 bg-black/30 backdrop-blur-sm transition-opacity" onClick={onClose}></div>
+                
+                <div className="relative w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white shadow-2xl transition-all">
+                    <div className={`${PRIMARY_COLOR_CLASS} px-6 py-4`}>
+                        <div className="flex items-center justify-between">
+                            <h2 className="text-xl font-bold text-white">Subject Details</h2>
+                            <button onClick={onClose} className="rounded-full p-2 text-white/80 hover:bg-white/20 hover:text-white transition-colors">
+                                <X className="h-5 w-5" />
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div className="p-6">
+                        {/* Header with Icon */}
+                        <div className="flex items-center mb-6 pb-6 border-b">
+                            <div className={`${LIGHT_BG_CLASS} p-4 rounded-full mr-4`}>
+                                <BookOpen className={`h-12 w-12 ${TEXT_COLOR_CLASS}`} />
+                            </div>
+                            <div>
+                                <h3 className="text-2xl font-bold text-gray-900">{subject.subject_name}</h3>
+                                <p className="text-gray-500">{subject.subject_code}</p>
+                            </div>
+                        </div>
+
+                        {/* Info Grid */}
+                        <div className="grid grid-cols-2 gap-6">
+                            <div>
+                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Subject Code</label>
+                                <p className="text-gray-900 font-medium mt-1">{subject.subject_code}</p>
+                            </div>
+                            <div>
+                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Subject Name</label>
+                                <p className="text-gray-900 font-medium mt-1">{subject.subject_name}</p>
+                            </div>
+                            <div>
+                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Units</label>
+                                <p className="text-gray-900 font-medium mt-1">{subject.units}</p>
+                            </div>
+                            {subject.description && (
+                                <div className="col-span-2">
+                                    <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Description</label>
+                                    <p className="text-gray-900 font-medium mt-1">{subject.description}</p>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Footer */}
+                        <div className="flex justify-end mt-6 pt-6 border-t">
+                            <button
+                                onClick={onClose}
+                                className={`px-6 py-3 ${PRIMARY_COLOR_CLASS} text-white rounded-xl ${HOVER_COLOR_CLASS} transition-all font-medium`}
+                            >
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+// ========================================================================
 // ❌ DELETE CONFIRMATION MODAL
 // ========================================================================
 
@@ -271,6 +344,7 @@ const Subjects: React.FC = () => {
     const [subjects, setSubjects] = useState<Subject[]>([]);
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
+    const [showViewModal, setShowViewModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false); 
     const [selectedSubject, setSelectedSubject] = useState<Subject | null>(null);
     const [notification, setNotification] = useState<Notification | null>(null);
@@ -362,6 +436,11 @@ const Subjects: React.FC = () => {
         setShowModal(true);
     };
 
+    const handleView = (subject: Subject) => {
+        setSelectedSubject(subject);
+        setShowViewModal(true);
+    };
+
     const handleSave = async (data: SubjectFormData) => {
         try {
             let response: ApiResponse<Subject>;
@@ -422,109 +501,141 @@ const Subjects: React.FC = () => {
     return (
         <AppLayout>
             <div className="min-h-screen bg-[#f3f4f6]">
-                <div className="container mx-auto px-6 py-8">
-                    <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between">
-                        <div className="flex items-center mb-6 md:mb-0">
-                            <div className={`${PRIMARY_COLOR_CLASS} p-3 rounded-xl mr-4`}>
-                                <BookOpen className="h-8 w-8 text-white" />
+                <div className="container mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8">
+                    <div className="mb-4 sm:mb-6 md:mb-8 flex flex-col md:flex-row md:items-center md:justify-between">
+                        <div className="flex items-center mb-4 sm:mb-6 md:mb-0">
+                            <div className={`${PRIMARY_COLOR_CLASS} p-2 sm:p-3 rounded-lg sm:rounded-xl mr-2 sm:mr-3 md:mr-4`}>
+                                <BookOpen className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 text-white" />
                             </div>
                             <div>
-                                <h1 className="text-3xl font-bold text-gray-900">Subject Management</h1>
-                                <p className="text-gray-600 mt-1">Manage curriculum, subject details, and units</p>
+                                <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">Subject Management</h1>
+                                <p className="text-xs sm:text-sm text-gray-600 mt-0.5 sm:mt-1">Manage curriculum, subject details, and units</p>
                             </div>
                         </div>
-                        <div className="flex space-x-3">
+                        <div className="flex space-x-2 sm:space-x-3">
                             <button 
                                 onClick={handleAdd}
-                                className={`inline-flex items-center px-6 py-3 ${PRIMARY_COLOR_CLASS} text-white rounded-xl ${HOVER_COLOR_CLASS} transition-all shadow-lg font-medium`}
+                                className={`inline-flex items-center px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 ${PRIMARY_COLOR_CLASS} text-white rounded-lg sm:rounded-xl ${HOVER_COLOR_CLASS} transition-all shadow-lg font-medium text-xs sm:text-sm md:text-base`}
                             >
-                                <Plus className="h-5 w-5 mr-2" />
-                                Add Subject
+                                <Plus className="h-4 w-4 sm:h-5 sm:w-5 mr-1 sm:mr-2" />
+                                <span className="hidden sm:inline">Add Subject</span>
+                                <span className="sm:hidden">Add</span>
                             </button>
                             
                             <button 
                                 onClick={() => { loadSubjects(); loadStats(); }}
-                                className="inline-flex items-center px-4 py-3 bg-white border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all shadow-sm"
+                                className="inline-flex items-center px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 bg-white border border-gray-300 text-gray-700 rounded-lg sm:rounded-xl hover:bg-gray-50 transition-all shadow-sm"
                             >
-                                <RefreshCw className={`h-5 w-5 ${loading ? 'animate-spin' : ''}`} />
+                                <RefreshCw className={`h-4 w-4 sm:h-5 sm:w-5 ${loading ? 'animate-spin' : ''}`} />
                             </button>
                         </div>
                     </div>
 
-                    {/* Stats Cards (Simplified) */}
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-                        <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-sm font-medium text-gray-600 mb-1">Total Subjects</p>
-                                    <p className="text-3xl font-bold text-gray-900">{stats.total_subjects}</p>
-                                </div>
-                                <div className={`${LIGHT_BG_CLASS} p-3 rounded-xl`}>
-                                    <Hash className={`h-8 w-8 ${TEXT_COLOR_CLASS}`} />
+                    {/* Stats Cards - Centered layout with icon below value */}
+                    <div className="grid grid-cols-1 sm:grid-cols-1 gap-2 sm:gap-3 md:gap-4 mb-4 sm:mb-6">
+                        <div className="bg-white rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 border border-gray-100">
+                            <div className="flex flex-col items-center text-center">
+                                <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1 sm:mb-2">Total Subjects</p>
+                                <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 sm:mb-3">{stats.total_subjects}</p>
+                                <div className={`${LIGHT_BG_CLASS} p-2 sm:p-3 rounded-full`}>
+                                    <Hash className={`h-5 w-5 sm:h-6 sm:w-6 md:h-8 md:w-8 ${TEXT_COLOR_CLASS}`} />
                                 </div>
                             </div>
                         </div>
-                      
                     </div>
 
-                    {/* Filters (Simplified) */}
-                    <div className="bg-white rounded-2xl shadow-lg p-6 mb-6 border border-gray-100">
-                        <div className="grid grid-cols-1 md:grid-cols-1 gap-4"> {/* Changed to 1 column */}
+                    {/* Filters - Compact on Mobile */}
+                    <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-3 sm:p-4 md:p-6 mb-4 sm:mb-6 border border-gray-100">
+                        <div className="grid grid-cols-1 gap-3 sm:gap-4">
                             <div className="relative">
-                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                    <Search className="h-5 w-5 text-gray-400" />
+                                <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
+                                    <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
                                 </div>
                                 <input
                                     type="text"
                                     value={filters.search}
                                     onChange={(e) => setFilters({...filters, search: e.target.value, page: 1})}
-                                    className={`pl-12 w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
+                                    className={`pl-10 sm:pl-12 w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all text-sm sm:text-base`}
                                     placeholder="Search code or name..."
                                 />
                             </div>
                         </div>
                     </div>
 
-                    {/* Table (Type column removed) */}
-                    <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
+                    {/* Table - Responsive: Mobile shows Code & Name + Actions, Desktop shows all columns */}
+                    <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden border border-gray-100">
                         <div className="overflow-x-auto">
                             <table className="min-w-full divide-y divide-gray-200">
                                 <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
                                     <tr>
-                                        <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Code</th>
-                                        <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Name</th>
-                                        <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Units</th>
-                                        <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Description</th>
-                                        <th className="px-6 py-4 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">Actions</th>
+                                        <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Code</th>
+                                        <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Name</th>
+                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Units</th>
+                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Description</th>
+                                        <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-right text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody className="bg-white divide-y divide-gray-200">
                                     {loading ? (
-                                        <tr><td colSpan={5} className="px-6 py-12 text-center"><RefreshCw className={`h-8 w-8 ${TEXT_COLOR_CLASS} animate-spin`} /></td></tr>
+                                        <tr>
+                                            <td colSpan={5} className="px-3 sm:px-6 py-8 sm:py-12 text-center">
+                                                <div className="flex justify-center">
+                                                    <RefreshCw className={`h-6 w-6 sm:h-8 sm:w-8 ${TEXT_COLOR_CLASS} animate-spin`} />
+                                                </div>
+                                            </td>
+                                        </tr>
                                     ) : subjects.length === 0 ? (
-                                        <tr><td colSpan={5} className="px-6 py-12 text-center text-gray-500">No subjects found</td></tr>
+                                        <tr>
+                                            <td colSpan={5} className="px-3 sm:px-6 py-8 sm:py-12 text-center text-gray-500">
+                                                <div className="flex flex-col items-center">
+                                                    <BookOpen className="h-10 w-10 sm:h-12 sm:w-12 text-gray-300 mb-3 sm:mb-4" />
+                                                    <p className="text-base sm:text-lg font-medium">No subjects found</p>
+                                                    <p className="text-xs sm:text-sm">Add a new subject or adjust filters</p>
+                                                </div>
+                                            </td>
+                                        </tr>
                                     ) : (
                                         subjects.map((subject) => (
                                             <tr key={subject.id} className="hover:bg-gray-50 transition-colors">
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">{subject.subject_code}</td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{subject.subject_name}</td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{subject.units}</td>
-                                                <td className="px-6 py-4 max-w-xs truncate text-sm text-gray-500">{subject.description || 'N/A'}</td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-right">
-                                                    <div className="flex justify-end space-x-2">
+                                                <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
+                                                    <div className="text-xs sm:text-sm font-semibold text-gray-900 truncate">{subject.subject_code}</div>
+                                                </td>
+                                                <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
+                                                    <div className="text-xs sm:text-sm text-gray-900 truncate">{subject.subject_name}</div>
+                                                    {/* Show additional info on mobile */}
+                                                    <div className="md:hidden mt-1 space-y-1">
+                                                        <div className="flex items-center gap-2 flex-wrap">
+                                                            <span className="text-xs text-gray-600">{subject.units} units</span>
+                                                            {subject.description && (
+                                                                <span className="text-xs text-gray-500 truncate">{subject.description}</span>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">{subject.units}</td>
+                                                <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 max-w-xs truncate text-xs sm:text-sm text-gray-500">{subject.description || 'N/A'}</td>
+                                                <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap text-right">
+                                                    <div className="flex justify-end space-x-1 sm:space-x-2">
+                                                        <button
+                                                            onClick={() => handleView(subject)}
+                                                            className="p-1.5 sm:p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                                                            title="View Details"
+                                                        >
+                                                            <Eye className="h-4 w-4 sm:h-5 sm:w-5" />
+                                                        </button>
                                                         <button
                                                             onClick={() => handleEdit(subject)}
-                                                            className={`p-2 ${TEXT_COLOR_CLASS} ${LIGHT_HOVER_CLASS} rounded-lg transition-colors`}
+                                                            className={`p-1.5 sm:p-2 ${TEXT_COLOR_CLASS} ${LIGHT_HOVER_CLASS} rounded-lg transition-colors`}
                                                             title="Edit Subject"
                                                         >
-                                                            <Edit className="h-5 w-5" />
+                                                            <Edit className="h-4 w-4 sm:h-5 sm:w-5" />
                                                         </button>
                                                         <button
                                                             onClick={() => handleDelete(subject)}
-                                                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                                            className="p-1.5 sm:p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                                                             title="Delete Subject"
                                                         >
-                                                            <Trash2 className="h-5 w-5" />
+                                                            <Trash2 className="h-4 w-4 sm:h-5 sm:w-5" />
                                                         </button>
                                                     </div>
                                                 </td>
@@ -545,6 +656,13 @@ const Subjects: React.FC = () => {
                             onClose={() => setShowModal(false)}
                             onSave={handleSave}
                             errors={validationErrors}
+                        />
+                    )}
+
+                    {showViewModal && selectedSubject && (
+                        <ViewSubjectModal
+                            subject={selectedSubject}
+                            onClose={() => setShowViewModal(false)}
                         />
                     )}
 

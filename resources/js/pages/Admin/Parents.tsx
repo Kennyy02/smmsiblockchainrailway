@@ -387,10 +387,10 @@ const ParentModal: React.FC<{
                                         <p className="text-red-500 text-xs mt-1">Gender is required when relationship is Guardian</p>
                                     )}
                                 </div>
-                                <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Phone</label>
-                                    <input type="text" name="phone" value={formData.phone} onChange={handleChange} className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`} placeholder="+63 XXX XXX XXXX"/>
-                                    {errors.phone && (<p className="text-red-500 text-xs mt-1">{errors.phone[0]}</p>)}
+                            <div>
+                                <label className="block text-sm font-semibold text-gray-700 mb-2">Phone</label>
+                                <input type="text" name="phone" value={formData.phone} onChange={handleChange} className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`} placeholder="+63 XXX XXX XXXX"/>
+                                {errors.phone && (<p className="text-red-500 text-xs mt-1">{errors.phone[0]}</p>)}
                                 </div>
                             </div>
 
