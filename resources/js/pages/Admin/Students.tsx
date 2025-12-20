@@ -1244,8 +1244,8 @@ const Students: React.FC = () => {
                                 <p className="text-gray-600 mt-1">Manage student enrollment, details, and academic status</p>
                             </div>
                         </div>
-                        <div className="flex flex-wrap items-center gap-3">
-                            <div className="flex items-center gap-2 sm:gap-3 flex-wrap flex-1 min-w-0">
+                        <div className="flex flex-col gap-3">
+                            <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
                                 <button 
                                     onClick={() => router.visit('/admin/students/dropped')}
                                     className="inline-flex items-center px-4 sm:px-6 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-all shadow-lg font-medium text-sm sm:text-base"
@@ -1342,12 +1342,14 @@ const Students: React.FC = () => {
                                 </div>
                             </div>
                             
-                            <button 
-                                onClick={() => loadStudents()}
-                                className="inline-flex items-center px-4 py-3 bg-white border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all shadow-sm flex-shrink-0 ml-auto sm:ml-0"
-                            >
-                                <RefreshCw className={`h-5 w-5 ${loading ? 'animate-spin' : ''}`} />
-                            </button>
+                            <div className="flex justify-end">
+                                <button 
+                                    onClick={() => loadStudents()}
+                                    className="inline-flex items-center px-4 py-3 bg-white border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all shadow-sm flex-shrink-0"
+                                >
+                                    <RefreshCw className={`h-5 w-5 ${loading ? 'animate-spin' : ''}`} />
+                                </button>
+                            </div>
                         </div>
                     </div>
 
