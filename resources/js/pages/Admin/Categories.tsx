@@ -463,86 +463,87 @@ const Categories: React.FC = () => {
     return (
         <AppLayout>
             <div className="min-h-screen bg-[#f3f4f6]">
-                <div className="container mx-auto px-6 py-8">
-                    <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between">
-                        <div className="flex items-center mb-6 md:mb-0">
-                            <div className={`${PRIMARY_COLOR_CLASS} p-3 rounded-xl mr-4`}>
-                                <Tag className="h-8 w-8 text-white" />
+                <div className="container mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8">
+                    <div className="mb-4 sm:mb-6 md:mb-8 flex flex-col md:flex-row md:items-center md:justify-between">
+                        <div className="flex items-center mb-4 sm:mb-6 md:mb-0">
+                            <div className={`${PRIMARY_COLOR_CLASS} p-2 sm:p-3 rounded-lg sm:rounded-xl mr-2 sm:mr-3 md:mr-4`}>
+                                <Tag className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 text-white" />
                             </div>
                             <div>
-                                <h1 className="text-3xl font-bold text-gray-900">Category Management</h1>
-                                <p className="text-gray-600 mt-1">Manage library book categories</p>
+                                <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">Category Management</h1>
+                                <p className="text-xs sm:text-sm text-gray-600 mt-0.5 sm:mt-1">Manage library book categories</p>
                             </div>
                         </div>
-                        <div className="flex space-x-3">
+                        <div className="flex space-x-2 sm:space-x-3">
                             <button 
                                 onClick={handleAdd}
-                                className={`inline-flex items-center px-6 py-3 ${PRIMARY_COLOR_CLASS} text-white rounded-xl ${HOVER_COLOR_CLASS} transition-all shadow-lg font-medium`}
+                                className={`inline-flex items-center px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 ${PRIMARY_COLOR_CLASS} text-white rounded-lg sm:rounded-xl ${HOVER_COLOR_CLASS} transition-all shadow-lg font-medium text-xs sm:text-sm md:text-base`}
                             >
-                                <Plus className="h-5 w-5 mr-2" />
-                                Add Category
+                                <Plus className="h-4 w-4 sm:h-5 sm:w-5 mr-1 sm:mr-2" />
+                                <span className="hidden sm:inline">Add Category</span>
+                                <span className="sm:hidden">Add</span>
                             </button>
                             
                             <button 
                                 onClick={() => { loadCategories(); loadStats(); }}
-                                className="inline-flex items-center px-4 py-3 bg-white border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all shadow-sm"
+                                className="inline-flex items-center px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 bg-white border border-gray-300 text-gray-700 rounded-lg sm:rounded-xl hover:bg-gray-50 transition-all shadow-sm"
                             >
-                                <RefreshCw className={`h-5 w-5 ${loading ? 'animate-spin' : ''}`} />
+                                <RefreshCw className={`h-4 w-4 sm:h-5 sm:w-5 ${loading ? 'animate-spin' : ''}`} />
                             </button>
                         </div>
                     </div>
 
-                    {/* Stats Cards */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                        <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-sm font-medium text-gray-600 mb-1">Total Categories</p>
-                                    <p className="text-3xl font-bold text-gray-900">{stats.total_categories}</p>
+                    {/* Stats Cards - Compact on Mobile */}
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3 md:gap-4 mb-4 sm:mb-6">
+                        <div className="bg-white rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-2 sm:p-4 md:p-5 border border-gray-100">
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1 sm:gap-0">
+                                <div className="flex-1 min-w-0">
+                                    <p className="text-xs sm:text-sm font-medium text-gray-600 mb-0.5 sm:mb-1 truncate">Total</p>
+                                    <p className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 leading-tight">{stats.total_categories}</p>
                                 </div>
-                                <div className={`${LIGHT_BG_CLASS} p-3 rounded-xl`}>
-                                    <Tag className={`h-8 w-8 ${TEXT_COLOR_CLASS}`} />
+                                <div className={`${LIGHT_BG_CLASS} p-1.5 sm:p-2 md:p-3 rounded-lg sm:rounded-xl flex-shrink-0`}>
+                                    <Tag className={`h-4 w-4 sm:h-5 sm:w-5 md:h-7 md:w-7 ${TEXT_COLOR_CLASS}`} />
                                 </div>
                             </div>
                         </div>
                         
-                        <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-sm font-medium text-gray-600 mb-1">Active Categories</p>
-                                    <p className="text-3xl font-bold text-green-600">{stats.active_categories}</p>
+                        <div className="bg-white rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-2 sm:p-4 md:p-5 border border-gray-100">
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1 sm:gap-0">
+                                <div className="flex-1 min-w-0">
+                                    <p className="text-xs sm:text-sm font-medium text-gray-600 mb-0.5 sm:mb-1 truncate">Active</p>
+                                    <p className="text-xl sm:text-2xl md:text-3xl font-bold text-green-600 leading-tight">{stats.active_categories}</p>
                                 </div>
-                                <div className="bg-green-100 p-3 rounded-xl">
-                                    <CheckCircle className="h-8 w-8 text-green-600" />
+                                <div className="bg-green-100 p-1.5 sm:p-2 md:p-3 rounded-lg sm:rounded-xl flex-shrink-0">
+                                    <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 md:h-7 md:w-7 text-green-600" />
                                 </div>
                             </div>
                         </div>
 
-                        <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-sm font-medium text-gray-600 mb-1">With Books</p>
-                                    <p className="text-3xl font-bold text-blue-600">{stats.categories_with_books}</p>
+                        <div className="bg-white rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-2 sm:p-4 md:p-5 border border-gray-100">
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1 sm:gap-0">
+                                <div className="flex-1 min-w-0">
+                                    <p className="text-xs sm:text-sm font-medium text-gray-600 mb-0.5 sm:mb-1 truncate">With Books</p>
+                                    <p className="text-xl sm:text-2xl md:text-3xl font-bold text-blue-600 leading-tight">{stats.categories_with_books}</p>
                                 </div>
-                                <div className="bg-blue-100 p-3 rounded-xl">
-                                    <Tag className="h-8 w-8 text-blue-600" />
+                                <div className="bg-blue-100 p-1.5 sm:p-2 md:p-3 rounded-lg sm:rounded-xl flex-shrink-0">
+                                    <Tag className="h-4 w-4 sm:h-5 sm:w-5 md:h-7 md:w-7 text-blue-600" />
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    {/* Filters */}
-                    <div className="bg-white rounded-2xl shadow-lg p-6 mb-6 border border-gray-100">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Filters - Compact on Mobile */}
+                    <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-3 sm:p-4 md:p-6 mb-4 sm:mb-6 border border-gray-100">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                             <div className="relative">
-                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                    <Search className="h-5 w-5 text-gray-400" />
+                                <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
+                                    <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
                                 </div>
                                 <input
                                     type="text"
                                     value={filters.search}
                                     onChange={(e) => setFilters({...filters, search: e.target.value, page: 1})}
-                                    className={`pl-12 w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
+                                    className={`pl-10 sm:pl-12 w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all text-sm sm:text-base`}
                                     placeholder="Search categories..."
                                 />
                             </div>
@@ -550,7 +551,7 @@ const Categories: React.FC = () => {
                                 <select
                                     value={filters.is_active}
                                     onChange={(e) => setFilters({...filters, is_active: e.target.value, page: 1})}
-                                    className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
+                                    className={`w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all text-sm sm:text-base`}
                                 >
                                     <option value="">All Status</option>
                                     <option value="true">Active Only</option>
@@ -560,39 +561,77 @@ const Categories: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* Table */}
-                    <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
+                    {/* Table - Responsive: Mobile shows Name & Actions, Desktop shows all columns */}
+                    <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden border border-gray-100">
                         <div className="overflow-x-auto">
                             <table className="min-w-full divide-y divide-gray-200">
                                 <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
                                     <tr>
-                                        <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Name</th>
-                                        <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Slug</th>
-                                        <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Color</th>
-                                        <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Books</th>
-                                        <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Status</th>
-                                        <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Sort Order</th>
-                                        <th className="px-6 py-4 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">Actions</th>
+                                        <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Name</th>
+                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Slug</th>
+                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Color</th>
+                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Books</th>
+                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Status</th>
+                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Sort Order</th>
+                                        <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-right text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody className="bg-white divide-y divide-gray-200">
                                     {loading ? (
-                                        <tr><td colSpan={7} className="px-6 py-12 text-center"><RefreshCw className={`h-8 w-8 ${TEXT_COLOR_CLASS} animate-spin mx-auto`} /></td></tr>
+                                        <tr>
+                                            <td colSpan={7} className="px-3 sm:px-6 py-8 sm:py-12 text-center">
+                                                <div className="flex justify-center">
+                                                    <RefreshCw className={`h-6 w-6 sm:h-8 sm:w-8 ${TEXT_COLOR_CLASS} animate-spin`} />
+                                                </div>
+                                            </td>
+                                        </tr>
                                     ) : categories.length === 0 ? (
-                                        <tr><td colSpan={7} className="px-6 py-12 text-center text-gray-500">No categories found</td></tr>
+                                        <tr>
+                                            <td colSpan={7} className="px-3 sm:px-6 py-8 sm:py-12 text-center text-gray-500">
+                                                <div className="flex flex-col items-center">
+                                                    <Tag className="h-10 w-10 sm:h-12 sm:w-12 text-gray-300 mb-3 sm:mb-4" />
+                                                    <p className="text-base sm:text-lg font-medium">No categories found</p>
+                                                    <p className="text-xs sm:text-sm">Add a new category or adjust filters</p>
+                                                </div>
+                                            </td>
+                                        </tr>
                                     ) : (
                                         categories.map((category) => (
                                             <tr key={category.id} className="hover:bg-gray-50 transition-colors">
-                                                <td className="px-6 py-4">
-                                                    <div className="text-sm font-semibold text-gray-900">{category.name}</div>
+                                                <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
+                                                    <div className="text-xs sm:text-sm font-semibold text-gray-900 truncate">{category.name}</div>
                                                     {category.description && (
                                                         <div className="text-xs text-gray-500 mt-1 truncate max-w-xs">
                                                             {category.description}
                                                         </div>
                                                     )}
+                                                    {/* Show additional info on mobile */}
+                                                    <div className="md:hidden mt-1 space-y-1">
+                                                        <div className="flex items-center gap-2 flex-wrap">
+                                                            <div className="flex items-center">
+                                                                <div 
+                                                                    className="w-4 h-4 rounded-full border border-gray-200"
+                                                                    style={{ backgroundColor: category.color }}
+                                                                ></div>
+                                                                <span className="ml-1 text-xs text-gray-600">{category.color}</span>
+                                                            </div>
+                                                            <span className="text-xs text-gray-600">{category.books_count || 0} books</span>
+                                                            {category.is_active ? (
+                                                                <span className="inline-flex items-center px-2 py-0.5 text-xs font-medium rounded-full bg-green-100 text-green-800">
+                                                                    <CheckCircle className="h-3 w-3 mr-0.5" />
+                                                                    Active
+                                                                </span>
+                                                            ) : (
+                                                                <span className="inline-flex items-center px-2 py-0.5 text-xs font-medium rounded-full bg-red-100 text-red-800">
+                                                                    <XCircle className="h-3 w-3 mr-0.5" />
+                                                                    Inactive
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                    </div>
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{category.slug}</td>
-                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-500">{category.slug}</td>
+                                                <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap">
                                                     <div className="flex items-center">
                                                         <div 
                                                             className="w-8 h-8 rounded-full border-2 border-gray-200"
@@ -601,10 +640,10 @@ const Categories: React.FC = () => {
                                                         <span className="ml-2 text-xs text-gray-600">{category.color}</span>
                                                     </div>
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                                                <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">
                                                     {category.books_count || 0}
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap">
                                                     {category.is_active ? (
                                                         <span className="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
                                                             <CheckCircle className="h-3 w-3 mr-1" />
@@ -617,24 +656,24 @@ const Categories: React.FC = () => {
                                                         </span>
                                                     )}
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                                                <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">
                                                     {category.sort_order}
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-right">
-                                                    <div className="flex justify-end space-x-2">
+                                                <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap text-right">
+                                                    <div className="flex justify-end space-x-1 sm:space-x-2">
                                                         <button
                                                             onClick={() => handleEdit(category)}
-                                                            className={`p-2 ${TEXT_COLOR_CLASS} ${LIGHT_HOVER_CLASS} rounded-lg transition-colors`}
+                                                            className={`p-1.5 sm:p-2 ${TEXT_COLOR_CLASS} ${LIGHT_HOVER_CLASS} rounded-lg transition-colors`}
                                                             title="Edit Category"
                                                         >
-                                                            <Edit className="h-5 w-5" />
+                                                            <Edit className="h-4 w-4 sm:h-5 sm:w-5" />
                                                         </button>
                                                         <button
                                                             onClick={() => handleDelete(category)}
-                                                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                                            className="p-1.5 sm:p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                                                             title="Delete Category"
                                                         >
-                                                            <Trash2 className="h-5 w-5" />
+                                                            <Trash2 className="h-4 w-4 sm:h-5 sm:w-5" />
                                                         </button>
                                                     </div>
                                                 </td>
