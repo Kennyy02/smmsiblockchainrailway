@@ -1244,7 +1244,7 @@ const Students: React.FC = () => {
                                 <p className="text-gray-600 mt-1">Manage student enrollment, details, and academic status</p>
                             </div>
                         </div>
-                        <div className="flex flex-col gap-3">
+                        <div className="flex flex-col gap-2 sm:gap-3">
                             <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
                                 <button 
                                     onClick={() => router.visit('/admin/students/dropped')}
@@ -1262,92 +1262,98 @@ const Students: React.FC = () => {
                                     <span className="hidden sm:inline">Enroll Student</span>
                                     <span className="sm:hidden">Enroll</span>
                                 </button>
-                                <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2 sm:gap-3">
+                                <div className="relative flex-shrink-0">
                                     <button 
-                                        onClick={() => loadStudents()}
-                                        className="inline-flex items-center px-4 py-3 bg-white border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all shadow-sm flex-shrink-0 order-first sm:order-last"
+                                        onClick={() => setShowExportDropdown(!showExportDropdown)}
+                                        className="inline-flex items-center gap-2 px-4 py-3 bg-white border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all shadow-sm whitespace-nowrap"
+                                        title="Download Students Report"
                                     >
-                                        <RefreshCw className={`h-5 w-5 ${loading ? 'animate-spin' : ''}`} />
+                                        <Download className="h-5 w-5" />
+                                        <span className="text-sm font-medium">Export</span>
+                                        <ChevronDown className={`h-4 w-4 transition-transform ${showExportDropdown ? 'rotate-180' : ''}`} />
                                     </button>
-                                    <div className="relative flex-shrink-0">
-                                        <button 
-                                            onClick={() => setShowExportDropdown(!showExportDropdown)}
-                                            className="inline-flex items-center gap-2 px-4 py-3 bg-white border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all shadow-sm whitespace-nowrap"
-                                            title="Download Students Report"
-                                        >
-                                            <Download className="h-5 w-5" />
-                                            <span className="text-sm font-medium">Export</span>
-                                            <ChevronDown className={`h-4 w-4 transition-transform ${showExportDropdown ? 'rotate-180' : ''}`} />
-                                        </button>
-                                        
-                                        {/* Export Dropdown Menu */}
-                                        {showExportDropdown && (
-                                            <>
-                                                <div 
-                                                    className="fixed inset-0 z-10" 
-                                                    onClick={() => setShowExportDropdown(false)}
-                                                />
-                                                <div className="absolute right-0 sm:right-0 left-0 sm:left-auto mt-2 w-full sm:w-56 bg-white rounded-xl shadow-xl border border-gray-200 py-2 z-20">
-                                                    <p className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase">Export Students</p>
-                                                    {[
-                                                        { id: '', label: '📚 All Students', icon: '📚' },
-                                                        { id: 'college', label: '🎓 College Only', icon: '🎓' },
-                                                        { id: 'senior_high', label: '📖 Senior High Only', icon: '📖' },
-                                                        { id: 'junior_high', label: '📝 Junior High Only', icon: '📝' },
-                                                        { id: 'elementary', label: '✏️ Elementary Only', icon: '✏️' },
-                                                    ].map((option) => (
-                                                        <button
-                                                            key={option.id}
-                                                            onClick={async () => {
-                                                                setShowExportDropdown(false);
-                                                                try {
-                                                                    setNotification({ type: 'success', message: 'Preparing export...' });
-                                                                    
-                                                                    // Fetch ALL students (no pagination limit)
-                                                                    const response = await adminStudentService.getStudents({
-                                                                        per_page: 9999, // Get all students
-                                                                    });
-                                                                    
-                                                                    if (!response.success) {
-                                                                        throw new Error('Failed to fetch students');
-                                                                    }
-                                                                    
-                                                                    let exportStudents = response.data;
-                                                                    
-                                                                    // Filter by selected education level
-                                                                    if (option.id) {
-                                                                        exportStudents = exportStudents.filter(s => {
-                                                                            const level = getEducationLevel(s.year_level);
-                                                                            return level.toLowerCase().replace(' ', '_') === option.id;
-                                                                        });
-                                                                    }
-                                                                    
-                                                                    // Generate filename
-                                                                    const levelName = option.id ? option.id.replace('_', '-') : 'all';
-                                                                    const filename = `students_${levelName}_${new Date().toISOString().split('T')[0]}.csv`;
-                                                                    
-                                                                    if (exportStudents.length === 0) {
-                                                                        setNotification({ type: 'error', message: 'No students found for this level' });
-                                                                        return;
-                                                                    }
-                                                                    
-                                                                    adminStudentService.exportStudentsToCSV(exportStudents, filename);
-                                                                    setNotification({ type: 'success', message: `Exported ${exportStudents.length} students to CSV` });
-                                                                } catch (error) {
-                                                                    console.error('Export error:', error);
-                                                                    setNotification({ type: 'error', message: 'Failed to export students' });
+                                    
+                                    {/* Export Dropdown Menu */}
+                                    {showExportDropdown && (
+                                        <>
+                                            <div 
+                                                className="fixed inset-0 z-10" 
+                                                onClick={() => setShowExportDropdown(false)}
+                                            />
+                                            <div className="absolute right-0 sm:right-0 left-0 sm:left-auto mt-2 w-full sm:w-56 bg-white rounded-xl shadow-xl border border-gray-200 py-2 z-20">
+                                                <p className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase">Export Students</p>
+                                                {[
+                                                    { id: '', label: '📚 All Students', icon: '📚' },
+                                                    { id: 'college', label: '🎓 College Only', icon: '🎓' },
+                                                    { id: 'senior_high', label: '📖 Senior High Only', icon: '📖' },
+                                                    { id: 'junior_high', label: '📝 Junior High Only', icon: '📝' },
+                                                    { id: 'elementary', label: '✏️ Elementary Only', icon: '✏️' },
+                                                ].map((option) => (
+                                                    <button
+                                                        key={option.id}
+                                                        onClick={async () => {
+                                                            setShowExportDropdown(false);
+                                                            try {
+                                                                setNotification({ type: 'success', message: 'Preparing export...' });
+                                                                
+                                                                // Fetch ALL students (no pagination limit)
+                                                                const response = await adminStudentService.getStudents({
+                                                                    per_page: 9999, // Get all students
+                                                                });
+                                                                
+                                                                if (!response.success) {
+                                                                    throw new Error('Failed to fetch students');
                                                                 }
-                                                            }}
-                                                            className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
-                                                        >
-                                                            <span>{option.label}</span>
-                                                        </button>
-                                                    ))}
-                                                </div>
-                                            </>
-                                        )}
-                                    </div>
+                                                                
+                                                                let exportStudents = response.data;
+                                                                
+                                                                // Filter by selected education level
+                                                                if (option.id) {
+                                                                    exportStudents = exportStudents.filter(s => {
+                                                                        const level = getEducationLevel(s.year_level);
+                                                                        return level.toLowerCase().replace(' ', '_') === option.id;
+                                                                    });
+                                                                }
+                                                                
+                                                                // Generate filename
+                                                                const levelName = option.id ? option.id.replace('_', '-') : 'all';
+                                                                const filename = `students_${levelName}_${new Date().toISOString().split('T')[0]}.csv`;
+                                                                
+                                                                if (exportStudents.length === 0) {
+                                                                    setNotification({ type: 'error', message: 'No students found for this level' });
+                                                                    return;
+                                                                }
+                                                                
+                                                                adminStudentService.exportStudentsToCSV(exportStudents, filename);
+                                                                setNotification({ type: 'success', message: `Exported ${exportStudents.length} students to CSV` });
+                                                            } catch (error) {
+                                                                console.error('Export error:', error);
+                                                                setNotification({ type: 'error', message: 'Failed to export students' });
+                                                            }
+                                                        }}
+                                                        className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
+                                                    >
+                                                        <span>{option.label}</span>
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </>
+                                    )}
                                 </div>
+                                <button 
+                                    onClick={() => loadStudents()}
+                                    className="hidden sm:inline-flex items-center px-4 py-3 bg-white border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all shadow-sm flex-shrink-0 ml-auto"
+                                >
+                                    <RefreshCw className={`h-5 w-5 ${loading ? 'animate-spin' : ''}`} />
+                                </button>
+                            </div>
+                            <div className="flex justify-end sm:hidden">
+                                <button 
+                                    onClick={() => loadStudents()}
+                                    className="inline-flex items-center px-4 py-3 bg-white border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all shadow-sm flex-shrink-0"
+                                >
+                                    <RefreshCw className={`h-5 w-5 ${loading ? 'animate-spin' : ''}`} />
+                                </button>
                             </div>
                         </div>
                     </div>
