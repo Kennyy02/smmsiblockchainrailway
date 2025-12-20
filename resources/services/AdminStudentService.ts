@@ -322,12 +322,25 @@ class AdminStudentService {
 
     /**
      * Create new student
+     * Fetches a fresh CSRF token from server before making the request
      */
     async createStudent(studentData: StudentFormData): Promise<ApiResponse<Student>> {
-        return this.request<Student>(`${this.baseURL}/students`, {
-            method: 'POST',
-            body: JSON.stringify(studentData),
-        });
+        try {
+            // Get a fresh CSRF token from the server
+            const freshToken = await this.getFreshCsrfToken();
+            console.log('Got fresh CSRF token for create request');
+            
+            return this.request<Student>(`${this.baseURL}/students`, {
+                method: 'POST',
+                body: JSON.stringify(studentData),
+                headers: {
+                    'X-CSRF-TOKEN': freshToken,
+                },
+            });
+        } catch (error) {
+            console.error('Error creating student:', error);
+            throw error;
+        }
     }
 
     /**
@@ -370,11 +383,32 @@ class AdminStudentService {
 
     /**
      * Drop student (mark as dropped status instead of deleting)
+     * Fetches a fresh CSRF token from server before making the request
      */
     async dropStudent(id: number): Promise<ApiResponse<Student>> {
-        return this.request<Student>(`${this.baseURL}/students/${id}/drop`, {
-            method: 'POST',
-        });
+        // Validate ID
+        if (!id || isNaN(id)) {
+            throw new Error('Invalid student ID provided');
+        }
+        
+        try {
+            // Get a fresh CSRF token from the server
+            const freshToken = await this.getFreshCsrfToken();
+            console.log('Got fresh CSRF token for drop request');
+            
+            // Construct the full URL with the student ID
+            const dropUrl = `${this.baseURL}/students/${id}/drop`;
+            
+            return this.request<Student>(dropUrl, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': freshToken,
+                },
+            });
+        } catch (error) {
+            console.error('Error dropping student:', error);
+            throw error;
+        }
     }
 
     /**
