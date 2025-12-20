@@ -441,38 +441,38 @@ const ClassModal: React.FC<{
 
     return (
         <div className="fixed inset-0 z-50 overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4">
+            <div className="flex min-h-full items-center justify-center p-2 sm:p-4">
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" onClick={onClose}></div>
                 
-                <div className="relative w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white shadow-2xl transition-all">
-                    <div className={`${PRIMARY_COLOR_CLASS} px-6 py-4`}>
+                <div className="relative w-full max-w-2xl transform overflow-hidden rounded-xl sm:rounded-2xl bg-white shadow-2xl transition-all">
+                    <div className={`${PRIMARY_COLOR_CLASS} px-4 py-3 sm:px-6 sm:py-4`}>
                         <div className="flex items-center justify-between">
-                            <h2 className="text-xl font-bold text-white">
+                            <h2 className="text-lg sm:text-xl font-bold text-white">
                                 {classItem ? 'Edit Class/Section' : 'Create New Class/Section'}
                             </h2>
-                            <button onClick={onClose} className="rounded-full p-2 text-white/80 hover:bg-white/20 hover:text-white transition-colors">
-                                <X className="h-5 w-5" />
+                            <button onClick={onClose} className="rounded-full p-1.5 sm:p-2 text-white/80 hover:bg-white/20 hover:text-white transition-colors">
+                                <X className="h-4 w-4 sm:h-5 sm:w-5" />
                             </button>
                         </div>
                     </div>
 
                     {loadingOptions ? (
-                        <div className="p-12 flex flex-col items-center justify-center">
-                            <RefreshCw className={`h-8 w-8 ${TEXT_COLOR_CLASS} animate-spin mb-4`} />
-                            <p className="text-gray-600">Loading form options...</p>
+                        <div className="p-8 sm:p-12 flex flex-col items-center justify-center">
+                            <RefreshCw className={`h-6 w-6 sm:h-8 sm:w-8 ${TEXT_COLOR_CLASS} animate-spin mb-3 sm:mb-4`} />
+                            <p className="text-sm sm:text-base text-gray-600">Loading form options...</p>
                         </div>
                     ) : (
-                        <form onSubmit={handleSubmit} className="p-6 space-y-6">
+                        <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4 sm:space-y-6">
                             {/* Row 1: Grade Level (First - determines available courses) */}
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
                                     Grade Level <span className="text-red-500">*</span>
                                 </label>
                                 <select 
                                     name="year_level" 
                                     value={formData.year_level} 
                                     onChange={handleChange} 
-                                    className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white`}
+                                    className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white`}
                                     required
                                 >
                                     <optgroup label="Elementary">
@@ -504,14 +504,14 @@ const ClassModal: React.FC<{
 
                             {/* Row 2: Course/Program Dropdown (Filtered by Grade Level) */}
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
                                     Course/Program {formData.year_level >= 11 && <span className="text-red-500">*</span>}
                                 </label>
                                 <select
                                     name="course_id"
                                     value={formData.course_id || ''}
                                     onChange={handleChange}
-                                    className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white`}
+                                    className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white`}
                                     required={formData.year_level >= 11}
                                 >
                                     <option value="">Select Course/Program</option>
@@ -536,7 +536,7 @@ const ClassModal: React.FC<{
                             
                             {/* Row 3: Section */}
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
                                     Section <span className="text-red-500">*</span>
                                 </label>
                                 <input
@@ -544,7 +544,7 @@ const ClassModal: React.FC<{
                                     name="section"
                                     value={formData.section}
                                     onChange={handleChange}
-                                    className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
+                                    className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
                                     placeholder="e.g., A, B, C"
                                     required
                                 />
@@ -553,18 +553,18 @@ const ClassModal: React.FC<{
                             </div>
 
                             {/* Row 4: Class Code & Class Name (Auto-generated) */}
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
                                         Class Code <span className="text-red-500">*</span>
-                                        <span className="text-xs font-normal text-gray-500 ml-2">(Auto-generated)</span>
+                                        <span className="text-xs font-normal text-gray-500 ml-1 sm:ml-2">(Auto-generated)</span>
                                     </label>
                                     <input
                                         type="text"
                                         name="class_code"
                                         value={formData.class_code}
                                         onChange={handleChange}
-                                        className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-gray-50`}
+                                        className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-gray-50`}
                                         placeholder={formData.year_level >= 13 ? "e.g., BSIT-1A" : "e.g., Grade7-A"}
                                         readOnly
                                         required
@@ -572,16 +572,16 @@ const ClassModal: React.FC<{
                                     {errors.class_code && (<p className="text-red-500 text-xs mt-1">{errors.class_code[0]}</p>)}
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
                                         Class Name <span className="text-red-500">*</span>
-                                        <span className="text-xs font-normal text-gray-500 ml-2">(Auto-generated)</span>
+                                        <span className="text-xs font-normal text-gray-500 ml-1 sm:ml-2">(Auto-generated)</span>
                                     </label>
                                     <input
                                         type="text"
                                         name="class_name"
                                         value={formData.class_name}
                                         onChange={handleChange}
-                                        className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-gray-50`}
+                                        className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-gray-50`}
                                         placeholder={formData.year_level >= 13 ? "e.g., BSIT-1A" : "e.g., Grade 7 - Section A"}
                                         readOnly
                                         required
@@ -591,17 +591,17 @@ const ClassModal: React.FC<{
                             </div>
 
                             {/* Row 3: Academic Year, Semester, Adviser - NOW WITH DROPDOWNS */}
-                            <div className="grid grid-cols-3 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                                 {/* Academic Year Dropdown */}
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
                                         Academic Year <span className="text-red-500">*</span>
                                     </label>
                                     <select
                                         name="academic_year_id"
                                         value={formData.academic_year_id}
                                         onChange={handleChange}
-                                        className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white`}
+                                        className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white`}
                                         required
                                     >
                                         <option value="">Select Academic Year</option>
@@ -616,14 +616,14 @@ const ClassModal: React.FC<{
 
                                 {/* Semester Dropdown - Filtered by Academic Year */}
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
                                         Semester <span className="text-red-500">*</span>
                                     </label>
                                     <select
                                         name="semester_id"
                                         value={formData.semester_id}
                                         onChange={handleChange}
-                                        className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white`}
+                                        className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white`}
                                         required
                                         disabled={!formData.academic_year_id}
                                     >
@@ -642,14 +642,14 @@ const ClassModal: React.FC<{
 
                                 {/* Adviser Dropdown - Optional */}
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
                                         Class Adviser (Optional)
                                     </label>
                                     <select
                                         name="adviser_id"
                                         value={formData.adviser_id || ''}
                                         onChange={handleChange}
-                                        className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white`}
+                                        className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white`}
                                     >
                                         <option value="">No Adviser Assigned</option>
                                         {teachers.map(teacher => (
@@ -663,22 +663,22 @@ const ClassModal: React.FC<{
                             </div>
 
                             {/* Action Buttons */}
-                            <div className="flex justify-end space-x-3 pt-4 border-t">
+                            <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-3 pt-3 sm:pt-4 border-t">
                                 <button 
                                     type="button" 
                                     onClick={onClose} 
-                                    className="px-6 py-3 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors font-medium" 
+                                    className="w-full sm:w-auto px-4 py-2.5 sm:px-6 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg sm:rounded-xl text-gray-700 hover:bg-gray-50 transition-colors font-medium" 
                                     disabled={loading}
                                 >
                                     Cancel
                                 </button>
                                 <button 
                                     type="submit" 
-                                    className={`px-6 py-3 ${PRIMARY_COLOR_CLASS} text-white rounded-xl ${HOVER_COLOR_CLASS} transition-all font-medium shadow-lg disabled:opacity-50 disabled:cursor-not-allowed`} 
+                                    className={`w-full sm:w-auto px-4 py-2.5 sm:px-6 sm:py-3 text-sm sm:text-base ${PRIMARY_COLOR_CLASS} text-white rounded-lg sm:rounded-xl ${HOVER_COLOR_CLASS} transition-all font-medium shadow-lg disabled:opacity-50 disabled:cursor-not-allowed`} 
                                     disabled={loading || loadingOptions}
                                 >
                                     {loading ? (
-                                        <span className="flex items-center">
+                                        <span className="flex items-center justify-center">
                                             <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
                                             Saving...
                                         </span>
