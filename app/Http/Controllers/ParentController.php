@@ -31,7 +31,8 @@ class ParentController extends Controller
             }
             
             // Filter by education level of children
-            // IMPORTANT: Also include parents with no children (students_count = 0) so they remain visible
+            // Parents with no students only appear in "No Students" filter
+            // Parents with students only appear in their children's education level filter
             if ($educationLevel = $request->input('education_level')) {
                 // Handle "No Students" filter
                 if ($educationLevel === 'no_students') {
@@ -46,14 +47,10 @@ class ParentController extends Controller
                     
                     if (isset($gradeRanges[$educationLevel])) {
                         [$minGrade, $maxGrade] = $gradeRanges[$educationLevel];
-                        // Show parents who either:
-                        // 1. Have students in this education level, OR
-                        // 2. Have no students at all (so they remain visible after student deletion)
-                        $query->where(function($q) use ($minGrade, $maxGrade) {
-                            $q->whereHas('students', function($studentQuery) use ($minGrade, $maxGrade) {
-                                $studentQuery->whereBetween('year_level', [$minGrade, $maxGrade]);
-                            })
-                            ->orWhereDoesntHave('students'); // Include parents with no children
+                        // Show ONLY parents who have students in this education level
+                        // Exclude parents with no students (they should only appear in "No Students" filter)
+                        $query->whereHas('students', function($studentQuery) use ($minGrade, $maxGrade) {
+                            $studentQuery->whereBetween('year_level', [$minGrade, $maxGrade]);
                         });
                     }
                 }
