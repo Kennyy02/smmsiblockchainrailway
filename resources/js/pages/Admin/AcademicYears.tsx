@@ -427,12 +427,13 @@ const AcademicYears: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* Stats Cards - Centered layout with icon below value */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3 md:gap-4 mb-4 sm:mb-6">
-                        <div className="bg-white rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 border border-gray-100 sm:col-span-2">
-                            <div className="flex flex-col items-center text-center">
+                    {/* Stats Cards - Mobile: Centered with icon below, Desktop: Icon on right */}
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-6 mb-4 sm:mb-6">
+                        <div className="bg-white rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 lg:p-6 border border-gray-100 md:col-span-2">
+                            {/* Mobile: Centered layout */}
+                            <div className="flex flex-col items-center text-center md:hidden">
                                 <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1 sm:mb-2">Current Academic Year</p>
-                                <p className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">
+                                <p className="text-xl sm:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">
                                     {stats.current_year ? stats.current_year.year_name : 'N/A'}
                                 </p>
                                 {stats.current_year && (
@@ -441,25 +442,64 @@ const AcademicYears: React.FC = () => {
                                     </p>
                                 )}
                                 <div className={`${LIGHT_BG_CLASS} p-2 sm:p-3 rounded-full`}>
-                                    <Calendar className={`h-5 w-5 sm:h-6 sm:w-6 md:h-8 md:w-8 ${TEXT_COLOR_CLASS}`} />
+                                    <Calendar className={`h-5 w-5 sm:h-6 sm:w-6 ${TEXT_COLOR_CLASS}`} />
+                                </div>
+                            </div>
+                            {/* Desktop: Original layout with icon on right */}
+                            <div className="hidden md:flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm font-medium text-gray-600 mb-1">Current Academic Year</p>
+                                    <p className="text-3xl font-bold text-gray-900">
+                                        {stats.current_year ? stats.current_year.year_name : 'N/A'}
+                                    </p>
+                                    {stats.current_year && (
+                                        <p className={`text-sm font-medium text-green-600 mt-1`}>
+                                            {formatShortDate(stats.current_year.start_date)} - {formatShortDate(stats.current_year.end_date)}
+                                        </p>
+                                    )}
+                                </div>
+                                <div className={`${LIGHT_BG_CLASS} p-3 rounded-xl`}>
+                                    <Calendar className={`h-8 w-8 ${TEXT_COLOR_CLASS}`} />
                                 </div>
                             </div>
                         </div>
-                        <div className="bg-white rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 border border-gray-100">
-                            <div className="flex flex-col items-center text-center">
+                        <div className="bg-white rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 lg:p-6 border border-gray-100">
+                            {/* Mobile: Centered layout */}
+                            <div className="flex flex-col items-center text-center md:hidden">
                                 <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1 sm:mb-2">Total</p>
-                                <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 sm:mb-3">{pagination.total}</p>
+                                <p className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 sm:mb-3">{pagination.total}</p>
                                 <div className={`${LIGHT_BG_CLASS} p-2 sm:p-3 rounded-full`}>
-                                    <Layers className={`h-5 w-5 sm:h-6 sm:w-6 md:h-8 md:w-8 ${TEXT_COLOR_CLASS}`} />
+                                    <Layers className={`h-5 w-5 sm:h-6 sm:w-6 ${TEXT_COLOR_CLASS}`} />
+                                </div>
+                            </div>
+                            {/* Desktop: Original layout with icon on right */}
+                            <div className="hidden md:flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm font-medium text-gray-600 mb-1">Total Records</p>
+                                    <p className="text-3xl font-bold text-gray-900">{pagination.total}</p>
+                                </div>
+                                <div className={`${LIGHT_BG_CLASS} p-3 rounded-xl`}>
+                                    <Layers className={`h-8 w-8 ${TEXT_COLOR_CLASS}`} />
                                 </div>
                             </div>
                         </div>
-                        <div className="bg-white rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 border border-gray-100">
-                            <div className="flex flex-col items-center text-center">
+                        <div className="bg-white rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 lg:p-6 border border-gray-100">
+                            {/* Mobile: Centered layout */}
+                            <div className="flex flex-col items-center text-center md:hidden">
                                 <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1 sm:mb-2">Active</p>
-                                <p className={`text-2xl sm:text-3xl md:text-4xl font-bold ${TEXT_COLOR_CLASS} mb-2 sm:mb-3`}>{stats.active_years_count}</p>
+                                <p className={`text-2xl sm:text-3xl font-bold ${TEXT_COLOR_CLASS} mb-2 sm:mb-3`}>{stats.active_years_count}</p>
                                 <div className={`${LIGHT_BG_CLASS} p-2 sm:p-3 rounded-full`}>
-                                    <GraduationCap className={`h-5 w-5 sm:h-6 sm:w-6 md:h-8 md:w-8 ${TEXT_COLOR_CLASS}`} />
+                                    <GraduationCap className={`h-5 w-5 sm:h-6 sm:w-6 ${TEXT_COLOR_CLASS}`} />
+                                </div>
+                            </div>
+                            {/* Desktop: Original layout with icon on right */}
+                            <div className="hidden md:flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm font-medium text-gray-600 mb-1">Active Years</p>
+                                    <p className={`text-3xl font-bold ${TEXT_COLOR_CLASS}`}>{stats.active_years_count}</p>
+                                </div>
+                                <div className={`${LIGHT_BG_CLASS} p-3 rounded-xl`}>
+                                    <GraduationCap className={`h-8 w-8 ${TEXT_COLOR_CLASS}`} />
                                 </div>
                             </div>
                         </div>
