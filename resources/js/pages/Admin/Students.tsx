@@ -286,46 +286,46 @@ const StudentModal: React.FC<{
 
     return (
         <div className="fixed inset-0 z-50 overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4">
+            <div className="flex min-h-full items-center justify-center p-2 sm:p-4">
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" onClick={onClose}></div>
                 
-                <div className="relative w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white shadow-2xl transition-all">
-                    <div className={`${PRIMARY_COLOR_CLASS} px-6 py-4`}>
+                <div className="relative w-full max-w-2xl transform overflow-hidden rounded-xl sm:rounded-2xl bg-white shadow-2xl transition-all">
+                    <div className={`${PRIMARY_COLOR_CLASS} px-4 py-3 sm:px-6 sm:py-4`}>
                         <div className="flex items-center justify-between">
-                            <h2 className="text-xl font-bold text-white">
+                            <h2 className="text-lg sm:text-xl font-bold text-white">
                                 {student ? 'Edit Student' : 'Add New Student'}
                             </h2>
-                            <button onClick={onClose} className="rounded-full p-2 text-white/80 hover:bg-white/20 hover:text-white transition-colors">
-                                <X className="h-5 w-5" />
+                            <button onClick={onClose} className="rounded-full p-1.5 sm:p-2 text-white/80 hover:bg-white/20 hover:text-white transition-colors">
+                                <X className="h-4 w-4 sm:h-5 sm:w-5" />
                             </button>
                         </div>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="p-6 space-y-6">
+                    <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4 sm:space-y-6">
 
-                        <div className="space-y-4">
-                            <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-3 sm:space-y-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Student ID</label>
+                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Student ID</label>
                                     <input
                                         type="text"
                                         name="student_id"
                                         value={formData.student_id}
                                         onChange={handleChange}
-                                        className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
+                                        className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
                                         placeholder="e.g., SMMS-2023001"
                                         required
                                     />
                                     {errors.student_id && (<p className="text-red-500 text-xs mt-1">{errors.student_id[0]}</p>)}
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Email</label>
+                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Email</label>
                                     <input
                                         type="email"
                                         name="email"
                                         value={formData.email}
                                         onChange={handleChange}
-                                        className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
+                                        className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
                                         placeholder="student@example.com"
                                         required
                                     />
@@ -333,14 +333,14 @@ const StudentModal: React.FC<{
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-1 gap-4">
+                            <div className="grid grid-cols-1 gap-3 sm:gap-4">
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Gender</label>
+                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Gender</label>
                                     <select
                                         name="gender"
                                         value={formData.gender || ''}
                                         onChange={handleChange}
-                                        className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white`}
+                                        className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white`}
                                     >
                                         <option value="">Select Gender</option>
                                         <option value="Male">Male</option>
@@ -350,31 +350,31 @@ const StudentModal: React.FC<{
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-3 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-2">First Name</label>
-                                    <input type="text" name="first_name" value={formData.first_name} onChange={handleChange} className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`} required/>
+                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">First Name</label>
+                                    <input type="text" name="first_name" value={formData.first_name} onChange={handleChange} className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`} required/>
                                     {errors.first_name && (<p className="text-red-500 text-xs mt-1">{errors.first_name[0]}</p>)}
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Middle Name</label>
-                                    <input type="text" name="middle_name" value={formData.middle_name} onChange={handleChange} className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`} />
+                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Middle Name</label>
+                                    <input type="text" name="middle_name" value={formData.middle_name} onChange={handleChange} className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`} />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Last Name</label>
-                                    <input type="text" name="last_name" value={formData.last_name} onChange={handleChange} className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`} required/>
+                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Last Name</label>
+                                    <input type="text" name="last_name" value={formData.last_name} onChange={handleChange} className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`} required/>
                                     {errors.last_name && (<p className="text-red-500 text-xs mt-1">{errors.last_name[0]}</p>)}
                                 </div>
                             </div>
                             
-                            <div className={`grid ${requiresCourse(formData.year_level) ? 'grid-cols-2' : 'grid-cols-1'} gap-4`}>
+                            <div className={`grid ${requiresCourse(formData.year_level) ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1'} gap-3 sm:gap-4`}>
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Grade Level <span className="text-red-500">*</span></label>
+                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Grade Level <span className="text-red-500">*</span></label>
                                     <select 
                                         name="year_level" 
                                         value={formData.year_level} 
                                         onChange={handleChange} 
-                                        className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white`}
+                                        className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white`}
                                         required
                                     >
                                         <optgroup label="Elementary">
@@ -402,12 +402,12 @@ const StudentModal: React.FC<{
                                 </div>
                                 {requiresCourse(formData.year_level) && (
                                     <div>
-                                        <label className="block text-sm font-semibold text-gray-700 mb-2">Course/Program <span className="text-red-500">*</span></label>
+                                        <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Course/Program <span className="text-red-500">*</span></label>
                                         <select 
                                             name="program" 
                                             value={formData.program} 
                                             onChange={handleChange} 
-                                            className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white`}
+                                            className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white`}
                                             required
                                             disabled={loadingCourses}
                                         >
@@ -428,20 +428,20 @@ const StudentModal: React.FC<{
                                 )}
                             </div>
                             
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Phone</label>
-                                    <input type="text" name="phone" value={formData.phone} onChange={handleChange} className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`} placeholder="+63 XXX XXX XXXX"/>
+                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Phone</label>
+                                    <input type="text" name="phone" value={formData.phone} onChange={handleChange} className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`} placeholder="+63 XXX XXX XXXX"/>
                                     {errors.phone && (<p className="text-red-500 text-xs mt-1">{errors.phone[0]}</p>)}
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Date of Birth <span className="text-red-500">*</span></label>
+                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Date of Birth <span className="text-red-500">*</span></label>
                                     <input 
                                         type="date" 
                                         name="date_of_birth" 
                                         value={formData.date_of_birth} 
                                         onChange={handleChange} 
-                                        className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`} 
+                                        className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`} 
                                         required
                                     />
                                     {errors.date_of_birth && (<p className="text-red-500 text-xs mt-1">{errors.date_of_birth[0]}</p>)}
@@ -449,37 +449,37 @@ const StudentModal: React.FC<{
                             </div>
 
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">Address</label>
+                                <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Address</label>
                                 <input 
                                     type="text" 
                                     name="address" 
                                     value={formData.address || ''} 
                                     onChange={handleChange} 
-                                    className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
+                                    className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
                                     placeholder="Complete address"
                                 />
                                 {errors.address && (<p className="text-red-500 text-xs mt-1">{errors.address[0]}</p>)}
                             </div>
 
-                            <p className='text-sm text-gray-500 pt-2'>{student ? "Leave password fields empty to keep current password." : "Set an initial password for the student."}</p>
-                            <div className="grid grid-cols-2 gap-4">
+                            <p className='text-xs sm:text-sm text-gray-500 pt-2'>{student ? "Leave password fields empty to keep current password." : "Set an initial password for the student."}</p>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Password</label>
+                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Password</label>
                                     <div className="relative">
                                         <input
                                             type={showPassword ? "text" : "password"}
                                             name="password"
                                             value={formData.password}
                                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e)}
-                                            className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all pr-12`}
+                                            className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all pr-10 sm:pr-12`}
                                             required={!student}
                                         />
                                         <button 
                                             type="button" 
                                             onClick={togglePasswordVisibility}
-                                            className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+                                            className="absolute inset-y-0 right-0 pr-2.5 sm:pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
                                         >
-                                            {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                                            {showPassword ? <EyeOff className="h-4 w-4 sm:h-5 sm:w-5" /> : <Eye className="h-4 w-4 sm:h-5 sm:w-5" />}
                                         </button>
                                     </div>
                                     {errors.password && (
@@ -489,22 +489,22 @@ const StudentModal: React.FC<{
                                     )}
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Confirm Password</label>
+                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Confirm Password</label>
                                     <div className="relative">
                                         <input
                                             type={showPassword ? "text" : "password"}
                                             name="password_confirmation"
                                             value={formData.password_confirmation}
                                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e)}
-                                            className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all pr-12`}
+                                            className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all pr-10 sm:pr-12`}
                                             required={!student}
                                         />
                                         <button 
                                             type="button" 
                                             onClick={togglePasswordVisibility}
-                                            className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+                                            className="absolute inset-y-0 right-0 pr-2.5 sm:pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
                                         >
-                                            {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                                            {showPassword ? <EyeOff className="h-4 w-4 sm:h-5 sm:w-5" /> : <Eye className="h-4 w-4 sm:h-5 sm:w-5" />}
                                         </button>
                                     </div>
                                     
@@ -532,15 +532,15 @@ const StudentModal: React.FC<{
                             </div>
                             
                                                         {/* Parent/Guardian Section */}
-                            <div className="border-t pt-4 mt-4">
-                                <h3 className="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2">
-                                    <User className="h-4 w-4" />
+                            <div className="border-t pt-3 sm:pt-4 mt-3 sm:mt-4">
+                                <h3 className="text-xs sm:text-sm font-bold text-gray-800 mb-3 sm:mb-4 flex items-center gap-2">
+                                    <User className="h-3 w-3 sm:h-4 sm:w-4" />
                                     Parent/Guardian Information
                                 </h3>
                                 
-                                <div className="grid grid-cols-4 gap-4 mb-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-3 sm:mb-4">
                                     <div>
-                                        <label className="block text-sm font-semibold text-gray-700 mb-2">Relationship</label>
+                                        <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Relationship</label>
                                         <select 
                                             name="relationship" 
                                             value={formData.parent_guardian?.relationship || ''} 
@@ -565,7 +565,7 @@ const StudentModal: React.FC<{
                                                     } : undefined
                                                 }));
                                             }}
-                                            className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white`}
+                                            className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white`}
                                         >
                                             <option value="">Select Relationship</option>
                                             <option value="Father">Father</option>
@@ -574,57 +574,57 @@ const StudentModal: React.FC<{
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-semibold text-gray-700 mb-2">First Name</label>
+                                        <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">First Name</label>
                                         <input 
                                             type="text" 
                                             name="first_name" 
                                             value={formData.parent_guardian?.first_name || ''} 
                                             onChange={handleParentChange} 
-                                            className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
+                                            className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
                                             placeholder="First name"
                                         />
                                         {errors['parent_guardian.first_name'] && (<p className="text-red-500 text-xs mt-1">{errors['parent_guardian.first_name'][0]}</p>)}
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-semibold text-gray-700 mb-2">Middle Name</label>
+                                        <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Middle Name</label>
                                         <input 
                                             type="text" 
                                             name="middle_name" 
                                             value={formData.parent_guardian?.middle_name || ''} 
                                             onChange={handleParentChange} 
-                                            className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
+                                            className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
                                             placeholder="Middle name"
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-semibold text-gray-700 mb-2">Last Name</label>
+                                        <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Last Name</label>
                                         <input 
                                             type="text" 
                                             name="last_name" 
                                             value={formData.parent_guardian?.last_name || ''} 
                                             onChange={handleParentChange} 
-                                            className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
+                                            className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
                                             placeholder="Last name"
                                         />
                                         {errors['parent_guardian.last_name'] && (<p className="text-red-500 text-xs mt-1">{errors['parent_guardian.last_name'][0]}</p>)}
                                     </div>
                                 </div>
                                 
-                                <div className="grid grid-cols-2 gap-4 mb-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-3 sm:mb-4">
                                     <div>
-                                        <label className="block text-sm font-semibold text-gray-700 mb-2">Email</label>
+                                        <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Email</label>
                                         <input 
                                             type="email" 
                                             name="email" 
                                             value={formData.parent_guardian?.email || ''} 
                                             onChange={handleParentChange} 
-                                            className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
+                                            className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
                                             placeholder="parent@example.com"
                                         />
                                         {errors['parent_guardian.email'] && (<p className="text-red-500 text-xs mt-1">{errors['parent_guardian.email'][0]}</p>)}
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                        <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
                                             Gender
                                             {formData.parent_guardian?.relationship === 'Guardian' && <span className="text-red-500 ml-1">*</span>}
                                         </label>
@@ -634,7 +634,7 @@ const StudentModal: React.FC<{
                                             onChange={handleParentChange}
                                             disabled={formData.parent_guardian?.relationship === 'Father' || formData.parent_guardian?.relationship === 'Mother'}
                                             required={formData.parent_guardian?.relationship === 'Guardian'}
-                                            className={`w-full px-4 py-3 border ${formData.parent_guardian?.relationship === 'Guardian' && !formData.parent_guardian?.gender ? 'border-red-300' : 'border-gray-200'} rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none ${(formData.parent_guardian?.relationship === 'Father' || formData.parent_guardian?.relationship === 'Mother') ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'}`}
+                                            className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border ${formData.parent_guardian?.relationship === 'Guardian' && !formData.parent_guardian?.gender ? 'border-red-300' : 'border-gray-200'} rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none ${(formData.parent_guardian?.relationship === 'Father' || formData.parent_guardian?.relationship === 'Mother') ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'}`}
                                         >
                                             <option value="">Select Gender</option>
                                             <option value="Male">Male</option>
@@ -647,50 +647,50 @@ const StudentModal: React.FC<{
                                     </div>
                                 </div>
 
-                                <div className="grid grid-cols-1 gap-4 mb-4">
+                                <div className="grid grid-cols-1 gap-3 sm:gap-4 mb-3 sm:mb-4">
                                     <div>
-                                        <label className="block text-sm font-semibold text-gray-700 mb-2">Phone</label>
+                                        <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Phone</label>
                                         <input 
                                             type="text" 
                                             name="phone" 
                                             value={formData.parent_guardian?.phone || ''} 
                                             onChange={handleParentChange} 
-                                            className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
+                                            className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
                                             placeholder="+63 XXX XXX XXXX"
                                         />
                                     </div>
                                 </div>
                                 
-                                <div className="mb-4">
-                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Address</label>
+                                <div className="mb-3 sm:mb-4">
+                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Address</label>
                                     <input 
                                         type="text" 
                                         name="address" 
                                         value={formData.parent_guardian?.address || ''} 
                                         onChange={handleParentChange} 
-                                        className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
+                                        className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
                                         placeholder="Complete address"
                                     />
                                 </div>
                                 
-                                <div className="grid grid-cols-2 gap-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                                     <div>
-                                        <label className="block text-sm font-semibold text-gray-700 mb-2">Password</label>
+                                        <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Password</label>
                                         <div className="relative">
                                             <input 
                                                 type={showParentPassword ? "text" : "password"}
                                                 name="password" 
                                                 value={formData.parent_guardian?.password || ''} 
                                                 onChange={handleParentChange} 
-                                                className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all pr-12`}
+                                                className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all pr-10 sm:pr-12`}
                                                 placeholder="Parent login password"
                                             />
                                             <button 
                                                 type="button" 
                                                 onClick={() => setShowParentPassword(prev => !prev)}
-                                                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+                                                className="absolute inset-y-0 right-0 pr-2.5 sm:pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
                                             >
-                                                {showParentPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                                                {showParentPassword ? <EyeOff className="h-4 w-4 sm:h-5 sm:w-5" /> : <Eye className="h-4 w-4 sm:h-5 sm:w-5" />}
                                             </button>
                                         </div>
                                         {errors['parent_guardian.password'] && (
@@ -700,22 +700,22 @@ const StudentModal: React.FC<{
                                         )}
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-semibold text-gray-700 mb-2">Confirm Password</label>
+                                        <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Confirm Password</label>
                                         <div className="relative">
                                             <input 
                                                 type={showParentPassword ? "text" : "password"}
                                                 name="password_confirmation" 
                                                 value={formData.parent_guardian?.password_confirmation || ''} 
                                                 onChange={handleParentChange} 
-                                                className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all pr-12`}
+                                                className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all pr-10 sm:pr-12`}
                                                 placeholder="Confirm password"
                                             />
                                             <button 
                                                 type="button" 
                                                 onClick={() => setShowParentPassword(prev => !prev)}
-                                                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+                                                className="absolute inset-y-0 right-0 pr-2.5 sm:pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
                                             >
-                                                {showParentPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                                                {showParentPassword ? <EyeOff className="h-4 w-4 sm:h-5 sm:w-5" /> : <Eye className="h-4 w-4 sm:h-5 sm:w-5" />}
                                             </button>
                                         </div>
                                         
@@ -745,11 +745,11 @@ const StudentModal: React.FC<{
                             </div>
                         </div>
 
-                        <div className="flex justify-end space-x-3 pt-4 border-t">
-                            <button type="button" onClick={onClose} className="px-6 py-3 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors font-medium" disabled={loading}>
+                        <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-3 pt-3 sm:pt-4 border-t">
+                            <button type="button" onClick={onClose} className="w-full sm:w-auto px-4 py-2.5 sm:px-6 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg sm:rounded-xl text-gray-700 hover:bg-gray-50 transition-colors font-medium" disabled={loading}>
                                 Cancel
                             </button>
-                            <button type="submit" className={`px-6 py-3 ${PRIMARY_COLOR_CLASS} text-white rounded-xl ${HOVER_COLOR_CLASS} transition-all font-medium shadow-lg disabled:opacity-50`} disabled={loading}>
+                            <button type="submit" className={`w-full sm:w-auto px-4 py-2.5 sm:px-6 sm:py-3 text-sm sm:text-base ${PRIMARY_COLOR_CLASS} text-white rounded-lg sm:rounded-xl ${HOVER_COLOR_CLASS} transition-all font-medium shadow-lg disabled:opacity-50`} disabled={loading}>
                                 {loading ? 'Saving...' : student ? 'Update Student' : 'Add Student'}
                             </button>
                         </div>
