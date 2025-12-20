@@ -194,6 +194,12 @@ class AdminStudentService {
                     throw new Error('Unauthorized. Please log in again.');
                 }
                 
+                // Handle 405 Method Not Allowed - usually means wrong URL or route
+                if (response.status === 405) {
+                    console.error('Method Not Allowed (405). URL:', url, 'Method:', options.method || 'GET');
+                    throw new Error(`Invalid request: The URL '${url}' does not support ${options.method || 'GET'} method. Please check the route configuration.`);
+                }
+                
                 // Handle 419 CSRF token mismatch
                 if (response.status === 419) {
                     console.error('CSRF token mismatch (419). Current token:', csrfToken ? csrfToken.substring(0, 10) + '...' : 'missing');
@@ -301,6 +307,11 @@ class AdminStudentService {
      * Refreshes CSRF token from server before making the request
      */
     async deleteStudent(id: number): Promise<ApiResponse<null>> {
+        // Validate ID
+        if (!id || isNaN(id)) {
+            throw new Error('Invalid student ID provided');
+        }
+        
         try {
             // First, try to refresh the CSRF token by making a simple request
             // This ensures the session is active and we have a valid token
@@ -321,8 +332,17 @@ class AdminStudentService {
             // Get a fresh CSRF token right before the DELETE request
             const freshToken = this.getCsrfToken();
             
+            // Construct the full URL with the student ID - ensure it's absolute
+            const deleteUrl = `${this.baseURL}/students/${id}`;
+            console.log('Deleting student:', { id, url: deleteUrl, baseURL: this.baseURL });
+            
+            // Validate URL construction
+            if (!deleteUrl.includes(`/students/${id}`)) {
+                throw new Error(`Invalid URL constructed: ${deleteUrl}. Expected to include /students/${id}`);
+            }
+            
             // Make the DELETE request with explicit credentials and fresh token
-            return this.request<null>(`${this.baseURL}/students/${id}`, {
+            return this.request<null>(deleteUrl, {
                 method: 'DELETE',
                 headers: {
                     'X-CSRF-TOKEN': freshToken,
@@ -331,7 +351,7 @@ class AdminStudentService {
             });
         } catch (error) {
             // If delete fails with 419, suggest page refresh
-            if (error instanceof Error && error.message.includes('CSRF') || error.message.includes('419')) {
+            if (error instanceof Error && (error.message.includes('CSRF') || error.message.includes('419'))) {
                 throw new Error('Session expired. Please refresh the page (F5) and try again.');
             }
             throw error;
