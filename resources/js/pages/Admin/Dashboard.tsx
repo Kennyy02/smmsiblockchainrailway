@@ -45,12 +45,12 @@ interface StatCardProps {
 
 const StatCard: React.FC<StatCardProps> = ({ title, value, icon: Icon, iconBgClass, iconColorClass, onClick, clickable = false }) => (
     <div 
-        className={`bg-white rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 lg:p-6 border border-gray-100 transition-all duration-300 ${clickable ? 'hover:shadow-xl cursor-pointer hover:scale-105' : 'hover:shadow-xl'}`}
+        className={`bg-white dark:bg-gray-800 rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 lg:p-6 border border-gray-100 dark:border-gray-700 transition-all duration-300 ${clickable ? 'hover:shadow-xl cursor-pointer hover:scale-105' : 'hover:shadow-xl'}`}
         onClick={clickable ? onClick : undefined}
     >
         <div className="flex flex-col items-center text-center">
-            <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1 sm:mb-2">{title}</p>
-            <p className={`text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 sm:mb-3`}>
+            <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400 mb-1 sm:mb-2">{title}</p>
+            <p className={`text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2 sm:mb-3`}>
                     {value}
                 </p>
             <div className={`p-2 sm:p-3 rounded-full ${iconBgClass}`}>
@@ -70,28 +70,28 @@ const TopFailingSubjects: React.FC<{ stats: GradeStats }> = ({ stats }) => {
         .filter(item => (item.failed_count || 0) > 0);
 
     return (
-        <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-            <h3 className="text-xl font-bold mb-4 flex items-center text-red-700">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-gray-700">
+            <h3 className="text-xl font-bold mb-4 flex items-center text-red-700 dark:text-red-400">
                 <TrendingDown className="w-5 h-5 mr-2" /> Top 5 Failing Subjects
             </h3>
             {topFailing.length === 0 ? (
-                <p className="text-gray-500">No significant failing grades recorded in this filter period.</p>
+                <p className="text-gray-500 dark:text-gray-400">No significant failing grades recorded in this filter period.</p>
             ) : (
                 <ul className="space-y-4">
                     {topFailing.map((item, index) => (
-                        <li key={index} className="flex justify-between items-center border-b pb-2 last:border-b-0 last:pb-0">
+                        <li key={index} className="flex justify-between items-center border-b dark:border-gray-700 pb-2 last:border-b-0 last:pb-0">
                             <div className="flex items-center">
                                 <span className={`w-8 h-8 flex items-center justify-center font-bold text-lg rounded-full mr-3 ${LIGHT_BG_CLASS} ${TEXT_COLOR_CLASS}`}>
                                     {index + 1}
                                 </span>
                                 <div>
-                                    <p className="font-semibold text-gray-800">{item.subject_name}</p>
-                                    <p className="text-sm text-gray-500">{item.class_code}</p>
+                                    <p className="font-semibold text-gray-800 dark:text-gray-200">{item.subject_name}</p>
+                                    <p className="text-sm text-gray-500 dark:text-gray-400">{item.class_code}</p>
                                 </div>
                             </div>
                             <div className="text-right">
-                                <p className="font-bold text-red-600 text-lg">{item.failed_count}</p>
-                                <p className="text-xs text-gray-500">Failures</p>
+                                <p className="font-bold text-red-600 dark:text-red-400 text-lg">{item.failed_count}</p>
+                                <p className="text-xs text-gray-500 dark:text-gray-400">Failures</p>
                             </div>
                         </li>
                     ))}
@@ -191,7 +191,7 @@ const Dashboard: React.FC = () => {
     const currentAYName = academicYears.find(ay => ay.id === selectedAY)?.year_name || 'Overall';
     const currentSemName = semesters.find(sem => sem.id === selectedSemester)?.semester_name || 'All Semesters';
     
-    const loadingSpinner = <RefreshCw className="h-6 w-6 animate-spin text-gray-400" />;
+    const loadingSpinner = <RefreshCw className="h-6 w-6 animate-spin text-gray-400 dark:text-gray-500" />;
 
     const displayStats = loading ? {
         total_students: loadingSpinner,
@@ -209,17 +209,17 @@ const Dashboard: React.FC = () => {
 
     return (
         <AppLayout>
-            <div className="min-h-screen bg-[#f3f4f6]">
+            <div className="min-h-screen bg-[#f3f4f6] dark:bg-gray-900">
                 <div className="container mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8">
                     {/* ☀️ GREETING COMPONENT */}
                     <Greeting userRole="admin" />
 
                     {/* Header/Subtitle */}
-                    <div className="mb-4 sm:mb-6 md:mb-8 border-b pb-3 sm:pb-4">
+                    <div className="mb-4 sm:mb-6 md:mb-8 border-b dark:border-gray-700 pb-3 sm:pb-4">
                         <div className="flex items-center justify-between">
                             <div>
-                                <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">School Overview</h1>
-                                <p className="text-xs sm:text-sm text-gray-600">{dashboardSubtitle}</p>
+                                <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-1 sm:mb-2">School Overview</h1>
+                                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">{dashboardSubtitle}</p>
                             </div>
                         </div>
                     </div>

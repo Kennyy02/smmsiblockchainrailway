@@ -1460,7 +1460,7 @@ const fetchDropdownLists = async () => {
 
     return (
         <AppLayout>
-            <div className="p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6 min-h-screen bg-[#f3f4f6]">
+            <div className="p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6 min-h-screen bg-[#f3f4f6] dark:bg-gray-900">
                 {/* Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>

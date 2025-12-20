@@ -943,7 +943,7 @@ const Grades: React.FC = () => {
 
     return (
         <AppLayout>
-            <div className="min-h-screen bg-[#f3f4f6]">
+            <div className="min-h-screen bg-[#f3f4f6] dark:bg-gray-900">
                 <div className="container mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8">
                     {/* Header */}
                     <div className="mb-4 sm:mb-6 md:mb-8">

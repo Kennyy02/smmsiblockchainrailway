@@ -291,7 +291,7 @@ const StudentModal: React.FC<{
             <div className="flex min-h-full items-center justify-center p-2 sm:p-4">
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" onClick={onClose}></div>
                 
-                <div className="relative w-full max-w-2xl transform overflow-hidden rounded-xl sm:rounded-2xl bg-white shadow-2xl transition-all">
+                <div className="relative w-full max-w-2xl transform overflow-hidden rounded-xl sm:rounded-2xl bg-white dark:bg-gray-800 shadow-2xl transition-all">
                     <div className={`${PRIMARY_COLOR_CLASS} px-4 py-3 sm:px-6 sm:py-4`}>
                         <div className="flex items-center justify-between">
                             <h2 className="text-lg sm:text-xl font-bold text-white">
@@ -314,7 +314,7 @@ const StudentModal: React.FC<{
                                         name="student_id"
                                         value={formData.student_id}
                                         onChange={handleChange}
-                                        className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
+                                        className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 dark:border-gray-700 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-800 dark:text-gray-100`}
                                         placeholder="e.g., SMMS-2023001"
                                         required
                                     />
@@ -327,7 +327,7 @@ const StudentModal: React.FC<{
                                         name="email"
                                         value={formData.email}
                                         onChange={handleChange}
-                                        className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
+                                        className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 dark:border-gray-700 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-800 dark:text-gray-100`}
                                         placeholder="student@example.com"
                                         required
                                     />
@@ -342,7 +342,7 @@ const StudentModal: React.FC<{
                                         name="gender"
                                         value={formData.gender || ''}
                                         onChange={handleChange}
-                                        className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white`}
+                                        className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 dark:border-gray-700 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white dark:bg-gray-800 dark:text-gray-100`}
                                     >
                                         <option value="">Select Gender</option>
                                         <option value="Male">Male</option>
@@ -376,7 +376,7 @@ const StudentModal: React.FC<{
                                         name="year_level" 
                                         value={formData.year_level} 
                                         onChange={handleChange} 
-                                        className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white`}
+                                        className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 dark:border-gray-700 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white dark:bg-gray-800 dark:text-gray-100`}
                                         required
                                     >
                                         <optgroup label="Elementary">
@@ -409,7 +409,7 @@ const StudentModal: React.FC<{
                                             name="program" 
                                             value={formData.program} 
                                             onChange={handleChange} 
-                                            className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white`}
+                                            className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 dark:border-gray-700 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white dark:bg-gray-800 dark:text-gray-100`}
                                             required
                                             disabled={loadingCourses}
                                         >
@@ -443,7 +443,7 @@ const StudentModal: React.FC<{
                                         name="date_of_birth" 
                                         value={formData.date_of_birth} 
                                         onChange={handleChange} 
-                                        className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`} 
+                                        className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 dark:border-gray-700 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-800 dark:text-gray-100`} 
                                         required
                                     />
                                     {errors.date_of_birth && (<p className="text-red-500 text-xs mt-1">{errors.date_of_birth[0]}</p>)}
@@ -463,7 +463,7 @@ const StudentModal: React.FC<{
                                 {errors.address && (<p className="text-red-500 text-xs mt-1">{errors.address[0]}</p>)}
                             </div>
 
-                            <p className='text-xs sm:text-sm text-gray-500 pt-2'>{student ? "Leave password fields empty to keep current password." : "Set an initial password for the student."}</p>
+                            <p className='text-xs sm:text-sm text-gray-500 dark:text-gray-400 pt-2'>{student ? "Leave password fields empty to keep current password." : "Set an initial password for the student."}</p>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                                 <div>
                                     <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Password</label>
@@ -567,7 +567,7 @@ const StudentModal: React.FC<{
                                                     } : undefined
                                                 }));
                                             }}
-                                            className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white`}
+                                            className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 dark:border-gray-700 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white dark:bg-gray-800 dark:text-gray-100`}
                                         >
                                             <option value="">Select Relationship</option>
                                             <option value="Father">Father</option>
@@ -582,7 +582,7 @@ const StudentModal: React.FC<{
                                             name="first_name" 
                                             value={formData.parent_guardian?.first_name || ''} 
                                             onChange={handleParentChange} 
-                                            className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
+                                            className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 dark:border-gray-700 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-800 dark:text-gray-100`}
                                             placeholder="First name"
                                         />
                                         {errors['parent_guardian.first_name'] && (<p className="text-red-500 text-xs mt-1">{errors['parent_guardian.first_name'][0]}</p>)}
@@ -594,7 +594,7 @@ const StudentModal: React.FC<{
                                             name="middle_name" 
                                             value={formData.parent_guardian?.middle_name || ''} 
                                             onChange={handleParentChange} 
-                                            className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
+                                            className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 dark:border-gray-700 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-800 dark:text-gray-100`}
                                             placeholder="Middle name"
                                         />
                                     </div>
@@ -605,7 +605,7 @@ const StudentModal: React.FC<{
                                             name="last_name" 
                                             value={formData.parent_guardian?.last_name || ''} 
                                             onChange={handleParentChange} 
-                                            className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
+                                            className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 dark:border-gray-700 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-800 dark:text-gray-100`}
                                             placeholder="Last name"
                                         />
                                         {errors['parent_guardian.last_name'] && (<p className="text-red-500 text-xs mt-1">{errors['parent_guardian.last_name'][0]}</p>)}
@@ -620,7 +620,7 @@ const StudentModal: React.FC<{
                                             name="email" 
                                             value={formData.parent_guardian?.email || ''} 
                                             onChange={handleParentChange} 
-                                            className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
+                                            className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 dark:border-gray-700 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-800 dark:text-gray-100`}
                                             placeholder="parent@example.com"
                                         />
                                         {errors['parent_guardian.email'] && (<p className="text-red-500 text-xs mt-1">{errors['parent_guardian.email'][0]}</p>)}
@@ -657,7 +657,7 @@ const StudentModal: React.FC<{
                                             name="phone" 
                                             value={formData.parent_guardian?.phone || ''} 
                                             onChange={handleParentChange} 
-                                            className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
+                                            className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 dark:border-gray-700 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-800 dark:text-gray-100`}
                                             placeholder="+63 XXX XXX XXXX"
                                         />
                                     </div>
@@ -670,7 +670,7 @@ const StudentModal: React.FC<{
                                         name="address" 
                                         value={formData.parent_guardian?.address || ''} 
                                         onChange={handleParentChange} 
-                                        className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
+                                        className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 dark:border-gray-700 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-800 dark:text-gray-100`}
                                         placeholder="Complete address"
                                     />
                                 </div>
@@ -781,7 +781,7 @@ const ViewStudentModal: React.FC<{
             <div className="flex min-h-full items-center justify-center p-4">
                 <div className="fixed inset-0 bg-black/30 backdrop-blur-sm transition-opacity" onClick={onClose}></div>
                 
-                <div className="relative w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white shadow-2xl transition-all">
+                <div className="relative w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 shadow-2xl transition-all">
                     <div className={`${PRIMARY_COLOR_CLASS} px-6 py-4`}>
                         <div className="flex items-center justify-between">
                             <h2 className="text-xl font-bold text-white">Student Details</h2>
@@ -797,85 +797,85 @@ const ViewStudentModal: React.FC<{
                                 <User className={`h-12 w-12 ${TEXT_COLOR_CLASS}`} />
                             </div>
                             <div>
-                                <h3 className="text-2xl font-bold text-gray-900">
+                                <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                                     {student.first_name} {student.middle_name ? `${student.middle_name.charAt(0)}.` : ''} {student.last_name}
                                 </h3>
-                                <p className="text-gray-500">{student.student_id}</p>
+                                <p className="text-gray-500 dark:text-gray-400">{student.student_id}</p>
                             </div>
                             <div className="ml-auto">
                                 {student.current_class_id ? (
                                     <span className="px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">ACTIVE</span>
                                 ) : (
-                                    <span className="px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-600">INACTIVE</span>
+                                    <span className="px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">INACTIVE</span>
                                 )}
                             </div>
                         </div>
 
                         <div className="grid grid-cols-2 gap-6">
                             <div>
-                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">First Name</label>
-                                <p className="text-gray-900 font-medium mt-1">{student.first_name}</p>
+                                <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">First Name</label>
+                                <p className="text-gray-900 dark:text-gray-100 font-medium mt-1">{student.first_name}</p>
                             </div>
                             <div>
-                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Last Name</label>
-                                <p className="text-gray-900 font-medium mt-1">{student.last_name}</p>
+                                <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Last Name</label>
+                                <p className="text-gray-900 dark:text-gray-100 font-medium mt-1">{student.last_name}</p>
                             </div>
                             <div>
-                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Middle Name</label>
-                                <p className="text-gray-900 font-medium mt-1">{student.middle_name || '—'}</p>
+                                <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Middle Name</label>
+                                <p className="text-gray-900 dark:text-gray-100 font-medium mt-1">{student.middle_name || '—'}</p>
                             </div>
                             <div>
-                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Student ID</label>
-                                <p className="text-gray-900 font-medium mt-1">{student.student_id}</p>
+                                <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Student ID</label>
+                                <p className="text-gray-900 dark:text-gray-100 font-medium mt-1">{student.student_id}</p>
                             </div>
                             <div>
-                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Email Address</label>
-                                <p className="text-gray-900 font-medium mt-1 flex items-center">
-                                    <Mail className="h-4 w-4 text-gray-400 mr-2" />
+                                <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Email Address</label>
+                                <p className="text-gray-900 dark:text-gray-100 font-medium mt-1 flex items-center">
+                                    <Mail className="h-4 w-4 text-gray-400 dark:text-gray-500 mr-2" />
                                     {student.email}
                                 </p>
                             </div>
                             <div>
-                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Gender</label>
-                                <p className="text-gray-900 font-medium mt-1">{student.gender || '—'}</p>
+                                <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Gender</label>
+                                <p className="text-gray-900 dark:text-gray-100 font-medium mt-1">{student.gender || '—'}</p>
                             </div>
                             <div>
-                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Program/Course</label>
-                                <p className="text-gray-900 font-medium mt-1">{student.course?.code || student.program || '—'}</p>
+                                <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Program/Course</label>
+                                <p className="text-gray-900 dark:text-gray-100 font-medium mt-1">{student.course?.code || student.program || '—'}</p>
                             </div>
                             <div>
-                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Grade Level</label>
-                                <p className="text-gray-900 font-medium mt-1">{formatGradeLevel(student.year_level, student.course?.level)}</p>
+                                <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Grade Level</label>
+                                <p className="text-gray-900 dark:text-gray-100 font-medium mt-1">{formatGradeLevel(student.year_level, student.course?.level)}</p>
                             </div>
                             <div>
-                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Section</label>
-                                <p className="text-gray-900 font-medium mt-1">{student.section || '—'}</p>
+                                <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Section</label>
+                                <p className="text-gray-900 dark:text-gray-100 font-medium mt-1">{student.section || '—'}</p>
                             </div>
                             <div>
-                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Enrollment Date</label>
-                                <p className="text-gray-900 font-medium mt-1">{formatDate(student.enrollment_date)}</p>
+                                <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Enrollment Date</label>
+                                <p className="text-gray-900 dark:text-gray-100 font-medium mt-1">{formatDate(student.enrollment_date)}</p>
                             </div>
                             <div>
-                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Address</label>
-                                <p className="text-gray-900 font-medium mt-1">{student.address || '—'}</p>
+                                <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Address</label>
+                                <p className="text-gray-900 dark:text-gray-100 font-medium mt-1">{student.address || '—'}</p>
                             </div>
                         </div>
 
                         {student.parents && student.parents.length > 0 && (
-                            <div className="mt-6 pt-6 border-t">
-                                <h4 className="text-sm font-semibold text-gray-700 mb-3">Parent/Guardian Information</h4>
+                            <div className="mt-6 pt-6 border-t dark:border-gray-700">
+                                <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Parent/Guardian Information</h4>
                                 <div className="space-y-2">
                                     {student.parents.map((parent, idx) => (
-                                        <div key={idx} className="flex items-center justify-between bg-gray-50 px-4 py-2 rounded-lg">
-                                            <span className="font-medium text-gray-900">{parent.full_name}</span>
-                                            <span className="text-sm text-gray-500">{parent.pivot?.relationship || 'Parent'}</span>
+                                        <div key={idx} className="flex items-center justify-between bg-gray-50 dark:bg-gray-700 px-4 py-2 rounded-lg">
+                                            <span className="font-medium text-gray-900 dark:text-gray-100">{parent.full_name}</span>
+                                            <span className="text-sm text-gray-500 dark:text-gray-400">{parent.pivot?.relationship || 'Parent'}</span>
                                         </div>
                                     ))}
                                 </div>
                             </div>
                         )}
 
-                        <div className="flex justify-end mt-6 pt-6 border-t">
+                        <div className="flex justify-end mt-6 pt-6 border-t dark:border-gray-700">
                             <button
                                 onClick={onClose}
                                 className={`px-6 py-3 ${PRIMARY_COLOR_CLASS} text-white rounded-xl ${HOVER_COLOR_CLASS} transition-all font-medium`}
@@ -911,18 +911,18 @@ const DeleteStudentModal: React.FC<{
             <div className="flex min-h-full items-center justify-center p-4">
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" onClick={onClose}></div>
                 
-                <div className="relative w-full max-w-md transform overflow-hidden rounded-2xl bg-white shadow-2xl transition-all">
+                <div className="relative w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 shadow-2xl transition-all">
                     <div className={`${PRIMARY_COLOR_CLASS} px-6 py-4`}>
                         <h2 className="text-xl font-bold text-white">Drop Student</h2>
                     </div>
                     
                     <div className="p-6">
-                        <p className="text-gray-600 mb-6">
-                            Are you sure you want to drop student <strong className="text-gray-900">{student.full_name} ({student.student_id})</strong>? This action will mark the student as dropped.
+                        <p className="text-gray-600 dark:text-gray-400 mb-6">
+                            Are you sure you want to drop student <strong className="text-gray-900 dark:text-gray-100">{student.full_name} ({student.student_id})</strong>? This action will mark the student as dropped.
                         </p>
                         
                         <div className="flex justify-end space-x-3">
-                            <button onClick={onClose} className="px-6 py-3 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors font-medium" disabled={loading}>
+                            <button onClick={onClose} className="px-6 py-3 border border-gray-300 dark:border-gray-700 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-medium" disabled={loading}>
                                 Cancel
                             </button>
                             <button onClick={handleDelete} className="px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl hover:from-red-600 hover:to-red-700 transition-all font-medium shadow-lg disabled:opacity-50" disabled={loading}>
@@ -1232,7 +1232,7 @@ const Students: React.FC = () => {
 
     return (
         <AppLayout>
-            <div className="min-h-screen bg-[#f3f4f6]">
+            <div className="min-h-screen bg-[#f3f4f6] dark:bg-gray-900">
                 <div className="container mx-auto px-6 py-8">
                     <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between">
                         <div className="flex items-center mb-6 md:mb-0">
@@ -1240,15 +1240,15 @@ const Students: React.FC = () => {
                                 <User className="h-8 w-8 text-white" />
                             </div>
                             <div>
-                                <h1 className="text-3xl font-bold text-gray-900">Student Management</h1>
-                                <p className="text-gray-600 mt-1">Manage student enrollment, details, and academic status</p>
+                                <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Student Management</h1>
+                                <p className="text-gray-600 dark:text-gray-400 mt-1">Manage student enrollment, details, and academic status</p>
                             </div>
                         </div>
                         <div className="flex flex-col gap-2 sm:gap-3">
                         <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2 sm:gap-3">
                                     <button 
                                         onClick={() => loadStudents()}
-                                        className="inline-flex items-center px-4 py-3 bg-white border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all shadow-sm flex-shrink-0 order-first sm:order-last sm:ml-auto"
+                                        className="inline-flex items-center px-4 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all shadow-sm flex-shrink-0 order-first sm:order-last sm:ml-auto"
                                     >
                                         <RefreshCw className={`h-5 w-5 ${loading ? 'animate-spin' : ''}`} />
                                     </button>
@@ -1273,7 +1273,7 @@ const Students: React.FC = () => {
                                 <div className="relative flex-shrink-0">
                                     <button 
                                         onClick={() => setShowExportDropdown(!showExportDropdown)}
-                                        className="inline-flex items-center gap-2 px-4 py-3 bg-white border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all shadow-sm whitespace-nowrap"
+                                        className="inline-flex items-center gap-2 px-4 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all shadow-sm whitespace-nowrap"
                                         title="Download Students Report"
                                     >
                                         <Download className="h-5 w-5" />
@@ -1339,7 +1339,7 @@ const Students: React.FC = () => {
                                                                 setNotification({ type: 'error', message: 'Failed to export students' });
                                                             }
                                                         }}
-                                                        className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
+                                                        className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2"
                                                     >
                                                         <span>{option.label}</span>
                                                     </button>
@@ -1355,44 +1355,44 @@ const Students: React.FC = () => {
 
                     {/* Stats Cards - Total, Active, Inactive, Dropped - Compact on Mobile */}
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 md:gap-4 mb-4 sm:mb-6">
-                        <div className="bg-white rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-2 sm:p-4 md:p-5 border border-gray-100">
+                        <div className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-2 sm:p-4 md:p-5 border border-gray-100 dark:border-gray-700">
                             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1 sm:gap-0">
                                 <div className="flex-1 min-w-0">
-                                    <p className="text-xs sm:text-sm font-medium text-gray-600 mb-0.5 sm:mb-1 truncate">Total</p>
-                                    <p className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 leading-tight">{stats.total_students}</p>
+                                    <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400 mb-0.5 sm:mb-1 truncate">Total</p>
+                                    <p className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100 leading-tight">{stats.total_students}</p>
                                 </div>
                                 <div className={`${LIGHT_BG_CLASS} p-1.5 sm:p-2 md:p-3 rounded-lg sm:rounded-xl flex-shrink-0`}>
                                     <User className={`h-4 w-4 sm:h-5 sm:w-5 md:h-7 md:w-7 ${TEXT_COLOR_CLASS}`} />
                                 </div>
                             </div>
                         </div>
-                        <div className="bg-white rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-2 sm:p-4 md:p-5 border border-green-100">
+                        <div className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-2 sm:p-4 md:p-5 border border-green-100 dark:border-green-900">
                             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1 sm:gap-0">
                                 <div className="flex-1 min-w-0">
-                                    <p className="text-xs sm:text-sm font-medium text-green-600 mb-0.5 sm:mb-1 truncate">Active</p>
-                                    <p className="text-xl sm:text-2xl md:text-3xl font-bold text-green-700 leading-tight">{stats.active_students}</p>
+                                    <p className="text-xs sm:text-sm font-medium text-green-600 dark:text-green-400 mb-0.5 sm:mb-1 truncate">Active</p>
+                                    <p className="text-xl sm:text-2xl md:text-3xl font-bold text-green-700 dark:text-green-400 leading-tight">{stats.active_students}</p>
                                 </div>
                                 <div className="bg-green-100 p-1.5 sm:p-2 md:p-3 rounded-lg sm:rounded-xl flex-shrink-0">
                                     <User className="h-4 w-4 sm:h-5 sm:w-5 md:h-7 md:w-7 text-green-600" />
                                 </div>
                             </div>
                         </div>
-                        <div className="bg-white rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-2 sm:p-4 md:p-5 border border-red-100">
+                        <div className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-2 sm:p-4 md:p-5 border border-red-100 dark:border-red-900">
                             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1 sm:gap-0">
                                 <div className="flex-1 min-w-0">
-                                    <p className="text-xs sm:text-sm font-medium text-red-600 mb-0.5 sm:mb-1 truncate">Inactive</p>
-                                    <p className="text-xl sm:text-2xl md:text-3xl font-bold text-red-700 leading-tight">{stats.inactive_students}</p>
+                                    <p className="text-xs sm:text-sm font-medium text-red-600 dark:text-red-400 mb-0.5 sm:mb-1 truncate">Inactive</p>
+                                    <p className="text-xl sm:text-2xl md:text-3xl font-bold text-red-700 dark:text-red-400 leading-tight">{stats.inactive_students}</p>
                                 </div>
                                 <div className="bg-red-100 p-1.5 sm:p-2 md:p-3 rounded-lg sm:rounded-xl flex-shrink-0">
                                     <User className="h-4 w-4 sm:h-5 sm:w-5 md:h-7 md:w-7 text-red-600" />
                                 </div>
                             </div>
                         </div>
-                        <div className="bg-white rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-2 sm:p-4 md:p-5 border border-orange-100">
+                        <div className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-2 sm:p-4 md:p-5 border border-orange-100 dark:border-orange-900">
                             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1 sm:gap-0">
                                 <div className="flex-1 min-w-0">
-                                    <p className="text-xs sm:text-sm font-medium text-orange-600 mb-0.5 sm:mb-1 truncate">Dropped</p>
-                                    <p className="text-xl sm:text-2xl md:text-3xl font-bold text-orange-700 leading-tight">{stats.dropped_students ?? 0}</p>
+                                    <p className="text-xs sm:text-sm font-medium text-orange-600 dark:text-orange-400 mb-0.5 sm:mb-1 truncate">Dropped</p>
+                                    <p className="text-xl sm:text-2xl md:text-3xl font-bold text-orange-700 dark:text-orange-400 leading-tight">{stats.dropped_students ?? 0}</p>
                                 </div>
                                 <div className="bg-orange-100 p-1.5 sm:p-2 md:p-3 rounded-lg sm:rounded-xl flex-shrink-0">
                                     <User className="h-4 w-4 sm:h-5 sm:w-5 md:h-7 md:w-7 text-orange-600" />
@@ -1552,19 +1552,19 @@ const Students: React.FC = () => {
                     {/* Table - Responsive: Mobile shows Student & ID + Actions, Desktop shows all columns */}
                     <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden border border-gray-100">
                         <div className="overflow-x-auto">
-                            <table className="min-w-full divide-y divide-gray-200">
-                                <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
+                            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                <thead className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-800">
                                     <tr>
-                                        <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Student & ID</th>
-                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Parent/Guardian</th>
-                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Level</th>
-                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Program</th>
-                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Grade</th>
-                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Status</th> 
-                                        <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-right text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Actions</th>
+                                        <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">Student & ID</th>
+                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">Parent/Guardian</th>
+                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">Level</th>
+                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">Program</th>
+                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">Grade</th>
+                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">Status</th> 
+                                        <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-right text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody className="bg-white divide-y divide-gray-200">
+                                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                     {loading ? (
                                         <tr>
                                             <td colSpan={7} className="px-3 sm:px-6 py-8 sm:py-12 text-center">
@@ -1575,11 +1575,11 @@ const Students: React.FC = () => {
                                         </tr>
                                     ) : students.length === 0 ? (
                                         <tr>
-                                            <td colSpan={7} className="px-3 sm:px-6 py-8 sm:py-12 text-center text-gray-500">
+                                            <td colSpan={7} className="px-3 sm:px-6 py-8 sm:py-12 text-center text-gray-500 dark:text-gray-400">
                                                 <div className="flex flex-col items-center">
-                                                    <User className="h-10 w-10 sm:h-12 sm:w-12 text-gray-300 mb-3 sm:mb-4" />
-                                                    <p className="text-base sm:text-lg font-medium">No students found</p>
-                                                    <p className="text-xs sm:text-sm">Try adjusting your search or filters</p>
+                                                    <User className="h-10 w-10 sm:h-12 sm:w-12 text-gray-300 dark:text-gray-600 mb-3 sm:mb-4" />
+                                                    <p className="text-base sm:text-lg font-medium dark:text-gray-200">No students found</p>
+                                                    <p className="text-xs sm:text-sm dark:text-gray-400">Try adjusting your search or filters</p>
                                                 </div>
                                             </td>
                                         </tr>
@@ -1588,17 +1588,17 @@ const Students: React.FC = () => {
                                             const eduLevel = getEducationLevel(student.year_level);
                                             const primaryParent = student.parents && student.parents.length > 0 ? student.parents[0] : null;
                                             return (
-                                                <tr key={student.id} className="hover:bg-gray-50 transition-colors">
+                                                <tr key={student.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                                                     <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
                                                         <div className="flex items-center">
                                                             <div className={`flex-shrink-0 h-8 w-8 sm:h-10 sm:w-10 rounded-full ${LIGHT_BG_CLASS} flex items-center justify-center border border-[#003366]`}>
                                                                 <User className={`h-4 w-4 sm:h-5 sm:w-5 ${TEXT_COLOR_CLASS}`} />
                                                             </div>
                                                             <div className="ml-2 sm:ml-4 min-w-0 flex-1">
-                                                                <div className="text-xs sm:text-sm font-semibold text-gray-900 truncate">
+                                                                <div className="text-xs sm:text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">
                                                                     {student.full_name}
                                                                 </div>
-                                                                <div className="text-xs text-gray-500 truncate">{student.student_id}</div>
+                                                                <div className="text-xs text-gray-500 dark:text-gray-400 truncate">{student.student_id}</div>
                                                             </div>
                                                         </div>
                                                     </td>

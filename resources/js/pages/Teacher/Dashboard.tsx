@@ -182,7 +182,7 @@ const Dashboard: React.FC = () => {
 
     return (
         <AppLayout>
-            <div className="p-8 space-y-8 min-h-screen bg-[#f3f4f6]">
+            <div className="p-8 space-y-8 min-h-screen bg-[#f3f4f6] dark:bg-gray-900">
                 {/* Greeting */}
                 <Greeting 
                     userName={user?.name} 
