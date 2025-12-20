@@ -1244,6 +1244,12 @@ const Students: React.FC = () => {
                                 <p className="text-gray-600 mt-1">Manage student enrollment, details, and academic status</p>
                             </div>
                         </div>
+                                <button 
+                                    onClick={() => loadStudents()}
+                                    className="hidden sm:inline-flex items-center px-4 py-3 bg-white border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all shadow-sm flex-shrink-0 ml-auto"
+                                >
+                                    <RefreshCw className={`h-5 w-5 ${loading ? 'animate-spin' : ''}`} />
+                                </button>
                         <div className="flex flex-col gap-2 sm:gap-3">
                             <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
                                 <button 
@@ -1340,12 +1346,6 @@ const Students: React.FC = () => {
                                         </>
                                     )}
                                 </div>
-                                <button 
-                                    onClick={() => loadStudents()}
-                                    className="hidden sm:inline-flex items-center px-4 py-3 bg-white border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all shadow-sm flex-shrink-0 ml-auto"
-                                >
-                                    <RefreshCw className={`h-5 w-5 ${loading ? 'animate-spin' : ''}`} />
-                                </button>
                             </div>
                             <div className="flex justify-end sm:hidden">
                                 <button 
