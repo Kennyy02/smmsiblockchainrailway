@@ -171,7 +171,7 @@ class AdminStudentService {
                 'X-CSRF-TOKEN': csrfToken,
                 'X-Requested-With': 'XMLHttpRequest',
             },
-            credentials: 'same-origin',
+            credentials: 'include', // Changed from 'same-origin' to 'include' to ensure cookies are sent
         };
 
         try {
@@ -298,11 +298,44 @@ class AdminStudentService {
 
     /**
      * Delete student
+     * Refreshes CSRF token from server before making the request
      */
     async deleteStudent(id: number): Promise<ApiResponse<null>> {
-        return this.request<null>(`${this.baseURL}/students/${id}`, {
-            method: 'DELETE',
-        });
+        try {
+            // First, try to refresh the CSRF token by making a simple request
+            // This ensures the session is active and we have a valid token
+            try {
+                await fetch('/api/students/stats', {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                    }
+                });
+            } catch (e) {
+                // If stats request fails, continue anyway
+                console.warn('Could not refresh session:', e);
+            }
+            
+            // Get a fresh CSRF token right before the DELETE request
+            const freshToken = this.getCsrfToken();
+            
+            // Make the DELETE request with explicit credentials and fresh token
+            return this.request<null>(`${this.baseURL}/students/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': freshToken,
+                },
+                credentials: 'include', // Ensure cookies are sent
+            });
+        } catch (error) {
+            // If delete fails with 419, suggest page refresh
+            if (error instanceof Error && error.message.includes('CSRF') || error.message.includes('419')) {
+                throw new Error('Session expired. Please refresh the page (F5) and try again.');
+            }
+            throw error;
+        }
     }
     
     /**
