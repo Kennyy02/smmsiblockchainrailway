@@ -807,9 +807,9 @@ const ClassSubjects: React.FC = () => {
                             </table>
                         </div>
                     
-                    {/* Pagination */}
-                    {renderPagination()}
-                </div>
+                        {/* Pagination */}
+                        {renderPagination()}
+                    </div>
 
                     {/* Modals */}
                     {showModal && (
@@ -829,12 +829,13 @@ const ClassSubjects: React.FC = () => {
                     )}
 
                     {/* Toast notification */}
-                {notification && (
-                    <Notification
-                        notification={notification}
-                        onClose={() => setNotification(null)}
-                    />
-                )}
+                    {notification && (
+                        <Notification
+                            notification={notification}
+                            onClose={() => setNotification(null)}
+                        />
+                    )}
+                </div>
             </div>
         </AppLayout>
     );
