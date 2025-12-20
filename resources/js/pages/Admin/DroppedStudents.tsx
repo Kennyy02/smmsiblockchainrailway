@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { User, Search, Filter, Edit, Trash2, X, RefreshCw, Download, Mail, BookOpen, Clock, Eye, EyeOff, GraduationCap, ChevronDown, CheckCircle, AlertCircle, ArrowLeft, Plus } from 'lucide-react';
+import { User, Search, Filter, Edit, Trash2, X, RefreshCw, Download, Mail, BookOpen, Clock, Eye, EyeOff, GraduationCap, ChevronDown, ChevronRight, CheckCircle, AlertCircle, ArrowLeft, Plus } from 'lucide-react';
 import { router } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { adminStudentService, Student, StudentFormData, StudentStats, StudentsResponse, ApiResponse } from '../../../services/AdminStudentService';
@@ -179,15 +179,15 @@ const DroppedStudents: React.FC = () => {
         if (!selectedStudent) return;
 
         try {
-            const response = await adminStudentService.dropStudent(selectedStudent.id);
+            const response = await adminStudentService.deleteStudent(selectedStudent.id);
             if (response.success) {
-                setNotification({ type: 'success', message: 'Student dropped successfully!' });
+                setNotification({ type: 'success', message: 'Student deleted successfully!' });
                 setShowDeleteModal(false);
                 loadStudents();
                 loadStats();
             }
         } catch (error: any) {
-            setNotification({ type: 'error', message: error.message || 'Failed to drop student' });
+            setNotification({ type: 'error', message: error.message || 'Failed to delete student' });
         }
     };
 
@@ -405,7 +405,7 @@ const DroppedStudents: React.FC = () => {
                                                         <button
                                                             onClick={() => handleDelete(student)}
                                                             className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                                                            title="Drop Student"
+                                                            title="Delete Student"
                                                         >
                                                             <Trash2 className="h-4 w-4" />
                                                         </button>
@@ -638,11 +638,11 @@ const DroppedStudents: React.FC = () => {
                                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setShowDeleteModal(false)}></div>
                                 <div className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl">
                                     <div className="bg-red-600 px-6 py-4 rounded-t-2xl">
-                                        <h2 className="text-xl font-bold text-white">Drop Student</h2>
+                                        <h2 className="text-xl font-bold text-white">Delete Student</h2>
                                     </div>
                                     <div className="p-6">
                                         <p className="text-gray-600 mb-6">
-                                            Are you sure you want to drop student <strong className="text-gray-900">{selectedStudent.full_name} ({selectedStudent.student_id})</strong>? This action will mark the student as dropped.
+                                            Are you sure you want to permanently delete student <strong className="text-gray-900">{selectedStudent.full_name} ({selectedStudent.student_id})</strong>? This action cannot be undone and will permanently remove the student from the database.
                                         </p>
                                         <div className="flex justify-end space-x-3">
                                             <button
@@ -655,7 +655,7 @@ const DroppedStudents: React.FC = () => {
                                                 onClick={handleConfirmDelete}
                                                 className="px-6 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-all font-medium shadow-lg"
                                             >
-                                                Drop Student
+                                                Delete Student
                                             </button>
                                         </div>
                                     </div>
