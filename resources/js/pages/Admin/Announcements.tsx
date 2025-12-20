@@ -814,31 +814,41 @@ const Announcements: React.FC = () => {
 
     return (
         <AppLayout>
-            <div className="p-8">
-                <div className="max-w-7xl mx-auto">
+            <div className="min-h-screen bg-[#f3f4f6]">
+                <div className="container mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8">
                     {/* Header */}
-                    <div className="mb-8">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <h1 className="text-3xl font-bold text-gray-900 mb-2">School Announcements</h1>
-                                <p className="text-gray-600">Create, manage, and publish announcements for all user groups.</p>
+                    <div className="mb-4 sm:mb-6 md:mb-8">
+                        <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+                            <div className="mb-4 sm:mb-6 md:mb-0">
+                                <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">School Announcements</h1>
+                                <p className="text-xs sm:text-sm text-gray-600">Create, manage, and publish announcements for all user groups.</p>
                             </div>
                             <button
                                 onClick={handleCreate}
-                                className={`flex items-center px-6 py-3 ${PRIMARY_COLOR_CLASS} text-white rounded-xl ${HOVER_COLOR_CLASS} transition-all font-medium shadow-lg`}
+                                className={`flex items-center px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 ${PRIMARY_COLOR_CLASS} text-white rounded-lg sm:rounded-xl ${HOVER_COLOR_CLASS} transition-all font-medium shadow-lg text-xs sm:text-sm md:text-base`}
                             >
-                                <Plus className="w-5 h-5 mr-2" />
-                                New Announcement
+                                <Plus className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
+                                <span className="hidden sm:inline">New Announcement</span>
+                                <span className="sm:hidden">New</span>
                             </button>
                         </div>
                     </div>
 
-                    {/* Stats */}
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                        <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-                            <div className="flex items-center justify-between">
+                    {/* Stats - Mobile: Centered with icon below, Desktop: Icon on right */}
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-6 mb-4 sm:mb-6 md:mb-8">
+                        <div className="bg-white rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 lg:p-6 border border-gray-100">
+                            {/* Mobile: Centered layout */}
+                            <div className="flex flex-col items-center text-center md:hidden">
+                                <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1 sm:mb-2">Total</p>
+                                <p className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 sm:mb-3">{stats.total_announcements || 0}</p>
+                                <div className={`p-2 sm:p-3 rounded-full ${LIGHT_BG_CLASS}`}>
+                                    <BookOpen className={`w-5 w-5 sm:w-6 sm:h-6 ${TEXT_COLOR_CLASS}`} />
+                                </div>
+                            </div>
+                            {/* Desktop: Original layout with icon on right */}
+                            <div className="hidden md:flex items-center justify-between">
                                 <div>
-                                    <p className="text-gray-500 text-sm font-medium mb-1">Total</p>
+                                    <p className="text-sm font-medium text-gray-600 mb-1">Total</p>
                                     <p className="text-3xl font-bold text-gray-900">{stats.total_announcements || 0}</p>
                                 </div>
                                 <div className={`p-3 ${LIGHT_BG_CLASS} rounded-xl`}>
@@ -847,10 +857,19 @@ const Announcements: React.FC = () => {
                             </div>
                         </div>
                         
-                        <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-                            <div className="flex items-center justify-between">
+                        <div className="bg-white rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 lg:p-6 border border-gray-100">
+                            {/* Mobile: Centered layout */}
+                            <div className="flex flex-col items-center text-center md:hidden">
+                                <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1 sm:mb-2">Published</p>
+                                <p className="text-2xl sm:text-3xl font-bold text-green-600 mb-2 sm:mb-3">{stats.published_count || 0}</p>
+                                <div className="p-2 sm:p-3 bg-green-50 rounded-full">
+                                    <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" />
+                                </div>
+                            </div>
+                            {/* Desktop: Original layout with icon on right */}
+                            <div className="hidden md:flex items-center justify-between">
                                 <div>
-                                    <p className="text-gray-500 text-sm font-medium mb-1">Published</p>
+                                    <p className="text-sm font-medium text-gray-600 mb-1">Published</p>
                                     <p className="text-3xl font-bold text-green-600">{stats.published_count || 0}</p>
                                 </div>
                                 <div className="p-3 bg-green-50 rounded-xl">
@@ -859,10 +878,19 @@ const Announcements: React.FC = () => {
                             </div>
                         </div>
                         
-                        <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-                            <div className="flex items-center justify-between">
+                        <div className="bg-white rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 lg:p-6 border border-gray-100">
+                            {/* Mobile: Centered layout */}
+                            <div className="flex flex-col items-center text-center md:hidden">
+                                <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1 sm:mb-2">Drafts</p>
+                                <p className="text-2xl sm:text-3xl font-bold text-gray-600 mb-2 sm:mb-3">{stats.draft_count || 0}</p>
+                                <div className="p-2 sm:p-3 bg-gray-50 rounded-full">
+                                    <BookOpen className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600" />
+                                </div>
+                            </div>
+                            {/* Desktop: Original layout with icon on right */}
+                            <div className="hidden md:flex items-center justify-between">
                                 <div>
-                                    <p className="text-gray-500 text-sm font-medium mb-1">Drafts</p>
+                                    <p className="text-sm font-medium text-gray-600 mb-1">Drafts</p>
                                     <p className="text-3xl font-bold text-gray-600">{stats.draft_count || 0}</p>
                                 </div>
                                 <div className="p-3 bg-gray-50 rounded-xl">
@@ -871,10 +899,19 @@ const Announcements: React.FC = () => {
                             </div>
                         </div>
                         
-                        <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-                            <div className="flex items-center justify-between">
+                        <div className="bg-white rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 lg:p-6 border border-gray-100">
+                            {/* Mobile: Centered layout */}
+                            <div className="flex flex-col items-center text-center md:hidden">
+                                <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1 sm:mb-2">Scheduled</p>
+                                <p className="text-2xl sm:text-3xl font-bold text-yellow-600 mb-2 sm:mb-3">{stats.scheduled_count || 0}</p>
+                                <div className="p-2 sm:p-3 bg-yellow-50 rounded-full">
+                                    <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-600" />
+                                </div>
+                            </div>
+                            {/* Desktop: Original layout with icon on right */}
+                            <div className="hidden md:flex items-center justify-between">
                                 <div>
-                                    <p className="text-gray-500 text-sm font-medium mb-1">Scheduled</p>
+                                    <p className="text-sm font-medium text-gray-600 mb-1">Scheduled</p>
                                     <p className="text-3xl font-bold text-yellow-600">{stats.scheduled_count || 0}</p>
                                 </div>
                                 <div className="p-3 bg-yellow-50 rounded-xl">
@@ -884,25 +921,27 @@ const Announcements: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* Filters */}
-                    <div className="bg-white rounded-2xl shadow-lg p-6 mb-6 border border-gray-100">
-                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                            <div className="flex items-center md:col-span-2">
-                                <Search className="absolute ml-4 h-5 w-5 text-gray-400" />
+                    {/* Filters - Compact on Mobile */}
+                    <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-3 sm:p-4 md:p-6 mb-4 sm:mb-6 border border-gray-100">
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-3 sm:gap-4">
+                            <div className="relative md:col-span-2">
+                                <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
+                                    <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
+                                </div>
                                 <input
                                     type="text"
                                     value={filters.search}
                                     onChange={(e) => setFilters({...filters, search: e.target.value, page: 1})}
-                                    className={`pl-12 w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
+                                    className={`pl-10 sm:pl-12 w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all text-sm sm:text-base`}
                                     placeholder="Search announcement title or content..."
                                 />
                             </div>
                             <div className="flex items-center">
-                                <Users className="h-5 w-5 text-gray-400 mr-3" />
+                                <Users className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 mr-2 sm:mr-3" />
                                 <select
                                     value={filters.audience}
                                     onChange={(e) => setFilters({...filters, audience: e.target.value, page: 1})}
-                                    className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white`}
+                                    className={`w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white text-sm sm:text-base`}
                                 >
                                     <option value="">Filter by Audience</option>
                                     {AUDIENCE_OPTIONS.map(audience => (
@@ -911,11 +950,11 @@ const Announcements: React.FC = () => {
                                 </select>
                             </div>
                             <div className="flex items-center">
-                                <Filter className="h-5 w-5 text-gray-400 mr-3" />
+                                <Filter className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 mr-2 sm:mr-3" />
                                 <select
                                     value={filters.status}
                                     onChange={(e) => setFilters({...filters, status: e.target.value, page: 1})}
-                                    className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white`}
+                                    className={`w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white text-sm sm:text-base`}
                                 >
                                     <option value="">Filter by Status</option>
                                     {STATUS_OPTIONS.map(status => (
@@ -926,49 +965,76 @@ const Announcements: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* Table */}
-                    <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
+                    {/* Table - Responsive: Mobile shows Title + Actions, Desktop shows all columns */}
+                    <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden border border-gray-100">
                         <div className="overflow-x-auto">
                             <table className="min-w-full divide-y divide-gray-200">
                                 <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
-                                    {/* FIX APPLIED HERE: Remove unnecessary whitespace between <tr> and <th>/<td> tags */}
                                     <tr>
-                                        <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">ID</th>
-                                        <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Title</th>
-                                        <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Content</th>
-                                        <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Audience</th>
-                                        <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Published</th>
-                                        <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Creator</th>
-                                        <th className="px-6 py-4 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">Actions</th>
+                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">ID</th>
+                                        <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Title</th>
+                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Content</th>
+                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Audience</th>
+                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Published</th>
+                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Creator</th>
+                                        <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-right text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody className="bg-white divide-y divide-gray-200">
                                     {loading ? (
-                                        <tr><td colSpan={7} className="px-6 py-12 text-center"><RefreshCw className={`h-8 w-8 ${TEXT_COLOR_CLASS} animate-spin mx-auto`} /></td></tr>
+                                        <tr>
+                                            <td colSpan={7} className="px-3 sm:px-6 py-8 sm:py-12 text-center">
+                                                <div className="flex justify-center">
+                                                    <RefreshCw className={`h-6 w-6 sm:h-8 sm:w-8 ${TEXT_COLOR_CLASS} animate-spin`} />
+                                                </div>
+                                            </td>
+                                        </tr>
                                     ) : announcements.length === 0 ? (
-                                        <tr><td colSpan={7} className="px-6 py-12 text-center text-gray-500">No announcements found</td></tr>
+                                        <tr>
+                                            <td colSpan={7} className="px-3 sm:px-6 py-8 sm:py-12 text-center text-gray-500">
+                                                <div className="flex flex-col items-center">
+                                                    <Info className="h-10 w-10 sm:h-12 sm:w-12 text-gray-300 mb-3 sm:mb-4" />
+                                                    <p className="text-base sm:text-lg font-medium">No announcements found</p>
+                                                    <p className="text-xs sm:text-sm">Create a new announcement or adjust filters</p>
+                                                </div>
+                                            </td>
+                                        </tr>
                                     ) : (
                                         announcements.map((announcement) => (
                                             <tr key={announcement.id} className="hover:bg-gray-50 transition-colors">
-                                                <td className="px-6 py-4 whitespace-nowrap">
-                                                    <span className="text-sm font-mono text-gray-600">#{announcement.id}</span>
+                                                <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap">
+                                                    <span className="text-xs sm:text-sm font-mono text-gray-600">#{announcement.id}</span>
                                                 </td>
-                                                <td className="px-6 py-4">
-                                                    <div className="text-sm font-semibold text-gray-900">{announcement.title}</div>
+                                                <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
+                                                    <div className="text-xs sm:text-sm font-semibold text-gray-900 truncate">{announcement.title}</div>
+                                                    {/* Show additional info on mobile */}
+                                                    <div className="md:hidden mt-1 space-y-1">
+                                                        <div className="text-xs text-gray-500 line-clamp-2">{announcement.content.length > 80 ? announcement.content.substring(0, 77) + '...' : announcement.content}</div>
+                                                        <div className="flex items-center gap-2 flex-wrap">
+                                                            {renderAudienceTag(announcement.target_audience, announcement.audience_badge_color)}
+                                                            <span className="text-xs text-gray-600">
+                                                                {announcement.published_at 
+                                                                    ? new Date(announcement.published_at).toLocaleDateString('en-US', {
+                                                                            month: 'short',
+                                                                            day: 'numeric',
+                                                                            year: 'numeric',
+                                                                        })
+                                                                    : 'Draft'
+                                                                }
+                                                            </span>
+                                                        </div>
+                                                        <div className="text-xs text-gray-600">By: {announcement.creator?.name || 'Admin'}</div>
+                                                    </div>
                                                 </td>
-                                                {/* Content Data Cell */}
-                                                <td className="px-6 py-4">
-                                                    <div className="text-xs text-gray-500 max-w-xs overflow-hidden text-ellipsis whitespace-nowrap" style={{ maxWidth: '200px' }}>
+                                                <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4">
+                                                    <div className="text-xs sm:text-sm text-gray-500 max-w-xs overflow-hidden text-ellipsis whitespace-nowrap" style={{ maxWidth: '200px' }}>
                                                         {announcement.content.length > 80 ? announcement.content.substring(0, 77) + '...' : announcement.content}
                                                     </div>
                                                 </td>
-                                                {/* End Content Data Cell */}
-                                                <td className="px-6 py-4 whitespace-nowrap">
-                                                    {/* Assuming audience_badge_color is available from the model accessor */}
+                                                <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap">
                                                     {renderAudienceTag(announcement.target_audience, announcement.audience_badge_color)}
                                                 </td>
-                                                
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                                                <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">
                                                     {announcement.published_at 
                                                         ? new Date(announcement.published_at).toLocaleDateString('en-US', {
                                                                 month: 'short',
@@ -978,32 +1044,31 @@ const Announcements: React.FC = () => {
                                                         : <span className="text-gray-400 italic">Draft</span>
                                                     }
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                                                    {/* Assumes creator object is eagerly loaded, and has a 'name' property */}
+                                                <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">
                                                     {announcement.creator?.name || 'Admin'}
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-right">
-                                                    <div className="flex justify-end space-x-2">
+                                                <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap text-right">
+                                                    <div className="flex justify-end space-x-1 sm:space-x-2">
                                                         <button
                                                             onClick={() => handleViewDetails(announcement)}
-                                                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                                            className="p-1.5 sm:p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                                                             title="View Details"
                                                         >
-                                                            <Eye className="h-5 w-5" />
+                                                            <Eye className="h-4 w-4 sm:h-5 sm:w-5" />
                                                         </button>
                                                         <button
                                                             onClick={() => handleEdit(announcement)}
-                                                            className={`p-2 ${TEXT_COLOR_CLASS} ${LIGHT_HOVER_CLASS} rounded-lg transition-colors`}
+                                                            className={`p-1.5 sm:p-2 ${TEXT_COLOR_CLASS} ${LIGHT_HOVER_CLASS} rounded-lg transition-colors`}
                                                             title="Edit Announcement"
                                                         >
-                                                            <Edit className="h-5 w-5" />
+                                                            <Edit className="h-4 w-4 sm:h-5 sm:w-5" />
                                                         </button>
                                                         <button
                                                             onClick={() => handleDelete(announcement)}
-                                                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                                            className="p-1.5 sm:p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                                                             title="Delete Announcement"
                                                         >
-                                                            <Trash2 className="h-5 w-5" />
+                                                            <Trash2 className="h-4 w-4 sm:h-5 sm:w-5" />
                                                         </button>
                                                     </div>
                                                 </td>
