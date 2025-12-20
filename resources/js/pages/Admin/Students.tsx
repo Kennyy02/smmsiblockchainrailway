@@ -1244,36 +1244,28 @@ const Students: React.FC = () => {
                                 <p className="text-gray-600 mt-1">Manage student enrollment, details, and academic status</p>
                             </div>
                         </div>
-                        <div className="flex flex-col sm:flex-row gap-3">
-                            <div className="flex flex-wrap gap-3">
-                                <button 
-                                    onClick={() => router.visit('/admin/students/dropped')}
-                                    className="inline-flex items-center px-4 sm:px-6 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-all shadow-lg font-medium text-sm sm:text-base"
-                                >
-                                    <Trash2 className="h-5 w-5 mr-2" />
-                                    <span className="hidden sm:inline">Dropped Students</span>
-                                    <span className="sm:hidden">Dropped</span>
-                                </button>
-                                <button 
-                                    onClick={handleAdd}
-                                    className={`inline-flex items-center px-4 sm:px-6 py-3 ${PRIMARY_COLOR_CLASS} text-white rounded-xl ${HOVER_COLOR_CLASS} transition-all shadow-lg font-medium text-sm sm:text-base`}
-                                >
-                                    <Plus className="h-5 w-5 mr-2" />
-                                    <span className="hidden sm:inline">Enroll Student</span>
-                                    <span className="sm:hidden">Enroll</span>
-                                </button>
-                                
-                                <button 
-                                    onClick={() => loadStudents()}
-                                    className="inline-flex items-center px-4 py-3 bg-white border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all shadow-sm"
-                                >
-                                    <RefreshCw className={`h-5 w-5 ${loading ? 'animate-spin' : ''}`} />
-                                </button>
-                            </div>
+                        <div className="flex flex-wrap gap-3">
+                            <button 
+                                onClick={() => router.visit('/admin/students/dropped')}
+                                className="inline-flex items-center px-4 sm:px-6 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-all shadow-lg font-medium text-sm sm:text-base"
+                            >
+                                <Trash2 className="h-5 w-5 mr-2" />
+                                <span className="hidden sm:inline">Dropped Students</span>
+                                <span className="sm:hidden">Dropped</span>
+                            </button>
+                            <button 
+                                onClick={handleAdd}
+                                className={`inline-flex items-center px-4 sm:px-6 py-3 ${PRIMARY_COLOR_CLASS} text-white rounded-xl ${HOVER_COLOR_CLASS} transition-all shadow-lg font-medium text-sm sm:text-base`}
+                            >
+                                <Plus className="h-5 w-5 mr-2" />
+                                <span className="hidden sm:inline">Enroll Student</span>
+                                <span className="sm:hidden">Enroll</span>
+                            </button>
+                            
                             <div className="relative">
                                 <button 
                                     onClick={() => setShowExportDropdown(!showExportDropdown)}
-                                    className="inline-flex items-center gap-2 px-4 py-3 bg-white border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all shadow-sm w-full sm:w-auto justify-center sm:justify-start"
+                                    className="inline-flex items-center gap-2 px-4 py-3 bg-white border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all shadow-sm"
                                     title="Download Students Report"
                                 >
                                     <Download className="h-5 w-5" />
@@ -1348,6 +1340,13 @@ const Students: React.FC = () => {
                                     </>
                                 )}
                             </div>
+                            
+                            <button 
+                                onClick={() => loadStudents()}
+                                className="inline-flex items-center px-4 py-3 bg-white border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all shadow-sm"
+                            >
+                                <RefreshCw className={`h-5 w-5 ${loading ? 'animate-spin' : ''}`} />
+                            </button>
                         </div>
                     </div>
 
