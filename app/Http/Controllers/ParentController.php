@@ -8,6 +8,7 @@ use App\Models\Message;
 use App\Models\Announcement;
 use App\Models\CourseMaterial;
 use App\Models\Student;
+use App\Models\Teacher;
 use App\Models\User;
 use App\Models\ClassSubject;
 use Illuminate\Http\Request;
@@ -360,18 +361,59 @@ class ParentController extends Controller
     public function destroy(Request $request, $id)
     {
         try {
-            $parent = ParentModel::findOrFail($id);
+            $parent = ParentModel::withTrashed()->findOrFail($id);
             
-            // Detach all students
+            // Get the associated user_id before deleting
+            $userId = $parent->user_id;
+            
+            // Detach all students (unlink parent-student relationships)
             $parent->students()->detach();
             
-            // Delete the parent record
-            $parent->delete();
+            // Permanently delete the parent record from database (force delete)
+            $parent->forceDelete();
             
-            return $request->expectsJson() ? response()->json(['success' => true, 'message' => 'Parent deleted successfully']) : redirect()->route('parents.index')->with('success', 'Parent deleted successfully');
+            // Also delete the associated User record if it exists
+            if ($userId) {
+                try {
+                    $user = User::withTrashed()->find($userId);
+                    if ($user) {
+                        // Check if this user is used by other entities (students, teachers, other parents)
+                        $isUsedElsewhere = false;
+                        
+                        // Check if user is linked to a student
+                        if (Student::where('user_id', $userId)->exists()) {
+                            $isUsedElsewhere = true;
+                            Log::warning("User ID {$userId} is also linked to a student. Skipping user deletion.");
+                        }
+                        
+                        // Check if user is linked to a teacher
+                        if (Teacher::where('user_id', $userId)->exists()) {
+                            $isUsedElsewhere = true;
+                            Log::warning("User ID {$userId} is also linked to a teacher. Skipping user deletion.");
+                        }
+                        
+                        // Check if user is linked to another parent (shouldn't happen, but safety check)
+                        if (ParentModel::where('user_id', $userId)->where('id', '!=', $id)->exists()) {
+                            $isUsedElsewhere = true;
+                            Log::warning("User ID {$userId} is also linked to another parent. Skipping user deletion.");
+                        }
+                        
+                        // Only delete if not used elsewhere
+                        if (!$isUsedElsewhere) {
+                            $user->forceDelete(); // Permanently delete the user from database
+                            Log::info("Deleted parent's user account: User ID {$userId}");
+                        }
+                    }
+                } catch (\Exception $userException) {
+                    // Log but don't fail the parent deletion if user deletion fails
+                    Log::warning('Failed to delete associated user for parent: ' . $userException->getMessage());
+                }
+            }
+            
+            return $request->expectsJson() ? response()->json(['success' => true, 'message' => 'Parent and associated user account deleted successfully']) : redirect()->route('parents.index')->with('success', 'Parent deleted successfully');
         } catch (\Exception $e) {
             Log::error('Error deleting parent: ' . $e->getMessage());
-            return $request->expectsJson() ? response()->json(['success' => false, 'message' => 'Failed to delete parent'], 500) : back()->with('error', 'Failed to delete parent');
+            return $request->expectsJson() ? response()->json(['success' => false, 'message' => 'Failed to delete parent: ' . $e->getMessage()], 500) : back()->with('error', 'Failed to delete parent');
         }
     }
 }
