@@ -183,23 +183,27 @@ class AdminClassSubjectService {
 
     private async request<T>(url: string, options: RequestInit = {}, retryOn419: boolean = true): Promise<ApiResponse<T>> {
         let csrfToken = this.getCsrfToken();
+        
+        const makeRequest = async (token: string): Promise<Response> => {
+            const defaultOptions: RequestInit = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': token,
+                    'X-Requested-With': 'XMLHttpRequest',
+                    ...options.headers,
+                },
+                credentials: 'same-origin',
+            };
 
-        const defaultOptions: RequestInit = {
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'X-CSRF-TOKEN': csrfToken,
-                'X-Requested-With': 'XMLHttpRequest',
-                ...options.headers,
-            },
-            credentials: 'same-origin',
+            return fetch(url, { ...defaultOptions, ...options });
         };
 
         try {
-            const response = await fetch(url, { ...defaultOptions, ...options });
+            let response = await makeRequest(csrfToken);
             const contentType = response.headers.get('content-type');
             let data;
-
+            
             if (contentType && contentType.includes('application/json')) {
                 data = await response.json();
             } else {
@@ -207,21 +211,28 @@ class AdminClassSubjectService {
                 throw new Error('Unexpected response format from server');
             }
 
-            if (!response.ok) {
-                if (response.status === 419 && retryOn419) {
-                    console.warn('CSRF token mismatch (419). Attempting to refresh token and retry...');
-                    const newCsrfToken = await this.refreshCsrfToken();
-                    // Retry the request with the new token, but prevent further retries
-                    const retryOptions = {
-                        ...options,
-                        headers: {
-                            ...defaultOptions.headers,
-                            'X-CSRF-TOKEN': newCsrfToken,
-                        },
-                    };
-                    return this.request<T>(url, retryOptions, false); // Do not retry again
+            // Handle CSRF token mismatch (419) - retry with fresh token
+            if (response.status === 419 && retryOn419) {
+                console.warn('CSRF token mismatch detected. Attempting to refresh token...');
+                const freshToken = await this.refreshCsrfToken();
+                
+                if (freshToken) {
+                    // Retry the request with the fresh token (only once)
+                    response = await makeRequest(freshToken);
+                    
+                    if (response.headers.get('content-type')?.includes('application/json')) {
+                        data = await response.json();
+                    } else {
+                        const text = await response.text();
+                        throw new Error('Unexpected response format from server');
+                    }
+                } else {
+                    console.error('CSRF token mismatch. Could not refresh token. Please refresh the page.');
+                    throw new Error('Session expired. Please refresh the page and try again.');
                 }
+            }
 
+            if (!response.ok) {
                 if (data.errors) {
                     const errorMessages = Object.entries(data.errors)
                         .map(([field, msgs]) => `${field}: ${Array.isArray(msgs) ? msgs.join(', ') : msgs}`)

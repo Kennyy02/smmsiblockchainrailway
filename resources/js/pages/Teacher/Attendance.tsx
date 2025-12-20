@@ -1285,8 +1285,8 @@ const AttendancePage: React.FC = () => {
                                                         return (
                                                             <tr key={student.id} className="hover:bg-gray-50">
                                                                 <td className="border border-gray-300 px-4 py-3 sticky left-0 bg-white z-10">
-                                                                    <div className="font-semibold text-gray-900">{student.student_id}</div>
-                                                                    <div className="text-xs text-gray-600">{student.full_name}</div>
+                                                                    <div className="text-sm sm:text-base font-semibold text-gray-900">{student.full_name}</div>
+                                                                    <div className="text-xs text-gray-600">{student.student_id}</div>
                                                                 </td>
                                                                 {/* Attendance cells for each day */}
                                                                 {calendarDays.map((day) => {

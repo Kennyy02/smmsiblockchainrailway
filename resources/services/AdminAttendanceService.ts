@@ -95,40 +95,91 @@ export interface AttendanceFilters {
 class AdminAttendanceService {
     private baseURL = '/api';
 
-    private async request<T>(url: string, options: RequestInit = {}): Promise<ApiResponse<T>> {
-        // Get CSRF token from meta tag (should be in <head>)
-        let csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    private getCsrfToken(): string {
+        // Try multiple sources for CSRF token
+        let csrfToken: string | null = null;
         
-        // Fallback: Try to get from Inertia page props if available
+        // 1. Try meta tag first
+        csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || null;
+        
+        // 2. Try Inertia page props
         if (!csrfToken && typeof window !== 'undefined') {
             try {
-                // Access Inertia's internal page data
                 const inertiaData = (window as any).__INERTIA_DATA__;
                 if (inertiaData?.page?.props?.csrf_token) {
                     csrfToken = inertiaData.page.props.csrf_token;
+                } else if ((window as any).Inertia?.page?.props?.csrf_token) {
+                    csrfToken = (window as any).Inertia.page.props.csrf_token;
                 }
             } catch (e) {
-                // Ignore errors
+                console.warn('Could not retrieve CSRF token from Inertia props:', e);
+            }
+        }
+        
+        // 3. Try Laravel's default token name
+        if (!csrfToken) {
+            const tokenInput = document.querySelector('input[name="_token"]') as HTMLInputElement;
+            if (tokenInput) {
+                csrfToken = tokenInput.value;
             }
         }
         
         if (!csrfToken) {
-            console.error('❌ CSRF token not found. Please ensure the meta tag is present in the HTML head.');
+            console.error('CSRF token not found. Please refresh the page.');
+            throw new Error('CSRF token not found. Please refresh the page.');
         }
         
-        const defaultOptions: RequestInit = {
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'X-CSRF-TOKEN': csrfToken || '',
-                'X-Requested-With': 'XMLHttpRequest',
-                ...options.headers,
-            },
-            credentials: 'same-origin',
+        return csrfToken;
+    }
+
+    private async refreshCsrfToken(): Promise<string> {
+        try {
+            const response = await fetch(`${this.baseURL}/csrf-token`, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+                credentials: 'same-origin',
+            });
+            if (!response.ok) {
+                throw new Error('Failed to fetch new CSRF token');
+            }
+            const data = await response.json();
+            if (data.success && data.csrf_token) {
+                const metaTag = document.querySelector('meta[name="csrf-token"]');
+                if (metaTag) {
+                    metaTag.setAttribute('content', data.csrf_token);
+                }
+                return data.csrf_token;
+            }
+            throw new Error('Invalid CSRF token response');
+        } catch (error) {
+            console.error('Error refreshing CSRF token:', error);
+            throw new Error('Failed to refresh session. Please refresh the page manually.');
+        }
+    }
+
+    private async request<T>(url: string, options: RequestInit = {}, retryOn419: boolean = true): Promise<ApiResponse<T>> {
+        let csrfToken = this.getCsrfToken();
+        
+        const makeRequest = async (token: string): Promise<Response> => {
+            const defaultOptions: RequestInit = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': token,
+                    'X-Requested-With': 'XMLHttpRequest',
+                    ...options.headers,
+                },
+                credentials: 'same-origin',
+            };
+
+            return fetch(url, { ...defaultOptions, ...options });
         };
 
         try {
-            const response = await fetch(url, { ...defaultOptions, ...options });
+            let response = await makeRequest(csrfToken);
             const contentType = response.headers.get('content-type');
             let data: any;
             
@@ -137,6 +188,27 @@ class AdminAttendanceService {
             } else {
                 const text = await response.text();
                 throw new Error(text || 'Unexpected response format from server');
+            }
+
+            // Handle CSRF token mismatch (419) - retry with fresh token
+            if (response.status === 419 && retryOn419) {
+                console.warn('CSRF token mismatch detected. Attempting to refresh token...');
+                const freshToken = await this.refreshCsrfToken();
+                
+                if (freshToken) {
+                    // Retry the request with the fresh token (only once)
+                    response = await makeRequest(freshToken);
+                    
+                    if (response.headers.get('content-type')?.includes('application/json')) {
+                        data = await response.json();
+                    } else {
+                        const text = await response.text();
+                        throw new Error(text || 'Unexpected response format from server');
+                    }
+                } else {
+                    console.error('CSRF token mismatch. Could not refresh token. Please refresh the page.');
+                    throw new Error('Session expired. Please refresh the page and try again.');
+                }
             }
 
             if (!response.ok) {
