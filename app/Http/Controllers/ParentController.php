@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 // ==========================================
@@ -35,9 +36,13 @@ class ParentController extends Controller
             // Parents with ANY linked students appear ONLY in their children's education level filter
             if ($educationLevel = $request->input('education_level')) {
                 // Handle "No Students" filter
-                // Show ONLY parents who have NO students linked to them at all
+                // Show ONLY parents who have NO students linked to them at all (checking the pivot table directly)
                 if ($educationLevel === 'no_students') {
-                    $query->doesntHave('students');
+                    $query->whereDoesntExist(function($subQuery) {
+                        $subQuery->select(DB::raw(1))
+                                 ->from('parent_student')
+                                 ->whereColumn('parent_student.parent_id', 'parents.id');
+                    });
                 } else {
                     $gradeRanges = [
                         'College' => [13, 16],
@@ -100,7 +105,11 @@ class ParentController extends Controller
             $totalParents = ParentModel::count();
 
             // 2. Get count of unlinked parents (parents with no students linked at all)
-            $unlinkedParents = ParentModel::doesntHave('students')->count();
+            $unlinkedParents = ParentModel::whereDoesntExist(function($subQuery) {
+                $subQuery->select(DB::raw(1))
+                         ->from('parent_student')
+                         ->whereColumn('parent_student.parent_id', 'parents.id');
+            })->count();
 
             // 3. Count parents by their children's education level
             $gradeRanges = [
@@ -124,7 +133,11 @@ class ParentController extends Controller
             }
             
             // Add count for parents with no students linked at all
-            $noStudentsCount = ParentModel::doesntHave('students')->count();
+            $noStudentsCount = ParentModel::whereDoesntExist(function($subQuery) {
+                $subQuery->select(DB::raw(1))
+                         ->from('parent_student')
+                         ->whereColumn('parent_student.parent_id', 'parents.id');
+            })->count();
             $byEducationLevel[] = [
                 'level' => 'No Students',
                 'count' => $noStudentsCount,
