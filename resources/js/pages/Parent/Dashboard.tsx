@@ -111,10 +111,10 @@ const StatCard: React.FC<{ title: string; value: string | number; icon: React.El
     const bgColor = color.replace('text-', 'bg-').replace('-600', '-100').replace('[#007bff]', '[#007bff]/10');
     
     return (
-        <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-white">
             <div className="flex items-center justify-between">
                 <div>
-                    <p className="text-sm font-medium text-gray-600 mb-1">{title}</p>
+                    <p className="text-sm font-medium text-gray-600 dark:text-white mb-1">{title}</p>
                     <p className={`text-3xl font-bold ${color}`}>{displayValue}</p>
                 </div>
                 <div className={`${bgColor} p-3 rounded-xl`}>
@@ -131,11 +131,11 @@ const QuickNavLink: React.FC<{ title: string; href: string; icon: React.ElementT
     return (
         <a 
             href={finalHref} 
-            className={`flex items-center justify-between p-3 border border-gray-200 rounded-lg ${TEXT_COLOR_CLASS} hover:bg-[#e6f2ff] transition-colors`}
-        >
-            <div className="flex items-center">
-                <Icon className={`h-5 w-5 mr-3 ${TEXT_COLOR_CLASS}`} />
-                <span className="font-medium text-gray-800">{title}</span>
+            className={`flex items-center justify-between p-3 border border-gray-200 dark:border-white dark:bg-gray-800 rounded-lg ${TEXT_COLOR_CLASS} hover:bg-[#e6f2ff] dark:hover:bg-gray-700 transition-colors`}
+    >
+        <div className="flex items-center">
+            <Icon className={`h-5 w-5 mr-3 ${TEXT_COLOR_CLASS}`} />
+            <span className="font-medium text-gray-800 dark:text-white">{title}</span>
             </div>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 opacity-60">
                 <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
@@ -165,24 +165,24 @@ const ChildSection: React.FC<{
     return (
         <div className="mb-8">
             {/* Child Header */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-6">
+            <div className="bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-sm border border-gray-200 dark:border-white p-6 mb-6">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center">
-                        <div className="text-gray-400 mr-4">
+                        <div className="text-gray-400 dark:text-white mr-4">
                             <GraduationCap className="h-8 w-8" />
                         </div>
                         <div>
                             <h2 className="text-xl font-semibold text-gray-900">
                                 {child.studentName}
-                                {index > 0 && <span className="ml-2 text-sm font-normal text-gray-500">(Child {index + 1})</span>}
+                                {index > 0 && <span className="ml-2 text-sm font-normal text-gray-500 dark:text-white">(Child {index + 1})</span>}
                             </h2>
-                            <p className="text-gray-500 text-sm">Student ID: {child.studentIdNumber}</p>
+                            <p className="text-gray-500 dark:text-white text-sm">Student ID: {child.studentIdNumber}</p>
                         </div>
                     </div>
                     <div className="flex items-center gap-10">
                         <div>
-                            <p className="text-xs text-gray-400 uppercase tracking-wide mb-1">Program</p>
-                            <p className="text-base font-medium text-gray-900">
+                            <p className="text-xs text-gray-400 dark:text-white uppercase tracking-wide mb-1">Program</p>
+                            <p className="text-base font-medium text-gray-900 dark:text-white">
                                 {child.program || 'N/A'}
                             </p>
                         </div>
@@ -227,7 +227,7 @@ const ChildSection: React.FC<{
             {/* Alerts and Navigation for this child */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Alerts/Announcements */}
-                <div className="lg:col-span-2 bg-white rounded-2xl shadow-lg p-6 border border-gray-100 space-y-4">
+                <div className="lg:col-span-2 bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-white space-y-4">
                     <h2 className={`text-xl font-bold ${TEXT_COLOR_CLASS} flex items-center`}>
                         <AlertTriangle className="h-6 w-6 mr-2" />
                         Important Alerts & Notices
@@ -248,8 +248,8 @@ const ChildSection: React.FC<{
                                 <div className="flex items-start">
                                     <item.icon className={`h-6 w-6 mr-3 ${item.color}`} />
                                     <div>
-                                        <p className="font-semibold text-gray-900">{item.title}</p>
-                                        <p className="text-sm text-gray-600 mt-0.5">{item.description}</p>
+                                        <p className="font-semibold text-gray-900 dark:text-white">{item.title}</p>
+                                        <p className="text-sm text-gray-600 dark:text-white mt-0.5">{item.description}</p>
                                     </div>
                                 </div>
                             </a>
@@ -258,7 +258,7 @@ const ChildSection: React.FC<{
                 </div>
 
                 {/* Quick Navigation for this child */}
-                <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 space-y-4">
+                <div className="bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-white space-y-4">
                     <h2 className={`text-xl font-bold ${TEXT_COLOR_CLASS} flex items-center`}>
                         <LayoutGrid className="h-6 w-6 mr-2" />
                         Quick Navigation
@@ -406,7 +406,7 @@ const ParentDashboard: React.FC = () => {
                     </div>
                     <button 
                         onClick={fetchDashboardData}
-                        className={`inline-flex items-center px-4 py-2 bg-white border border-gray-300 ${TEXT_COLOR_CLASS} rounded-xl ${HOVER_COLOR_CLASS} transition-all shadow-sm`}
+                        className={`inline-flex items-center px-4 py-2 bg-white dark:bg-gray-800 dark:border-white dark:text-white border border-gray-300 dark:border-white ${TEXT_COLOR_CLASS} rounded-xl ${HOVER_COLOR_CLASS} transition-all shadow-sm`}
                         disabled={loading}
                     >
                         <RefreshCw className={`h-5 w-5 mr-2 ${loading ? 'animate-spin' : ''}`} />
@@ -419,7 +419,7 @@ const ParentDashboard: React.FC = () => {
                     <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center">
-                                <div className="text-gray-400 mr-4">
+                                <div className="text-gray-400 dark:text-white mr-4">
                                     <Users className="h-8 w-8" />
                                 </div>
                                 <div>

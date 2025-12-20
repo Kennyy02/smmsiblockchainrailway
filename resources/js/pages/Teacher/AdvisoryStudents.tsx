@@ -202,17 +202,17 @@ const AdvisoryStudents: React.FC<Props> = ({ classId: propClassId }) => {
                                 Back to My Classes
                             </a>
                         </div>
-                        <h1 className="text-3xl font-bold text-gray-900 flex items-center">
+                        <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center">
                             <Users className={`h-8 w-8 mr-3 ${TEXT_COLOR_CLASS}`} />
                             {isAdvisoryClass ? 'Advisory Class Students' : 'Class Students'}
                         </h1>
-                        <p className="mt-2 text-gray-600">
+                        <p className="mt-2 text-gray-600 dark:text-white">
                             {isAdvisoryClass ? 'View and manage students in your advisory class' : 'View students in this class'}
                         </p>
                     </div>
                     <button
                         onClick={fetchStudents}
-                        className={`flex items-center px-4 py-2 border border-gray-300 rounded-xl text-sm font-medium ${TEXT_COLOR_CLASS} hover:bg-gray-50 transition-colors`}
+                        className={`flex items-center px-4 py-2 border border-gray-300 dark:border-white rounded-xl text-sm font-medium ${TEXT_COLOR_CLASS} hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors`}
                     >
                         <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
                         Refresh
@@ -221,7 +221,7 @@ const AdvisoryStudents: React.FC<Props> = ({ classId: propClassId }) => {
 
                 {/* Class Info Card - Different styling for advisory vs regular class */}
                 {classInfo && (
-                    <div className={`${isAdvisoryClass ? PRIMARY_COLOR_CLASS + ' text-white' : 'bg-white border border-gray-200'} rounded-2xl shadow-lg p-6`}>
+                    <div className={`${isAdvisoryClass ? PRIMARY_COLOR_CLASS + ' text-white' : 'bg-white dark:bg-gray-800 dark:border-white border border-gray-200 dark:border-white'} rounded-2xl shadow-lg p-6`}>
                         <div className="flex items-center justify-between">
                             <div>
                                 {isAdvisoryClass && (
@@ -257,16 +257,16 @@ const AdvisoryStudents: React.FC<Props> = ({ classId: propClassId }) => {
                 )}
 
                 {/* Search */}
-                <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+                <div className="bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-white">
                     <div className="relative">
                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                            <Search className="h-5 w-5 text-gray-400" />
+                            <Search className="h-5 w-5 text-gray-400 dark:text-white" />
                         </div>
                         <input
                             type="text"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="pl-12 w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent transition-all"
+                            className="pl-12 w-full px-4 py-3 border border-gray-200 dark:border-white dark:bg-gray-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent transition-all"
                             placeholder="Search by student ID, name, or email..."
                         />
                     </div>
@@ -286,27 +286,27 @@ const AdvisoryStudents: React.FC<Props> = ({ classId: propClassId }) => {
                 {loading ? (
                     <div className="flex items-center justify-center py-12">
                         <RefreshCw className={`h-12 w-12 ${TEXT_COLOR_CLASS} animate-spin`} />
-                        <p className="ml-4 text-lg text-gray-600">Loading students...</p>
+                        <p className="ml-4 text-lg text-gray-600 dark:text-white">Loading students...</p>
                     </div>
                 ) : !currentClassId ? (
                     // No Class Selected
-                    <div className="bg-white rounded-2xl shadow-lg p-12 text-center border border-gray-100">
-                        <GraduationCap className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                        <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                    <div className="bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg p-12 text-center border border-gray-100 dark:border-white">
+                        <GraduationCap className="h-16 w-16 text-gray-300 dark:text-white mx-auto mb-4" />
+                        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
                             No Class Selected
                         </h3>
-                        <p className="text-gray-600">
+                        <p className="text-gray-600 dark:text-white">
                             Please select a class to view its students.
                         </p>
                     </div>
                 ) : filteredStudents.length === 0 ? (
                     // No Students Found
-                    <div className="bg-white rounded-2xl shadow-lg p-12 text-center border border-gray-100">
-                        <Users className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                        <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                    <div className="bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg p-12 text-center border border-gray-100 dark:border-white">
+                        <Users className="h-16 w-16 text-gray-300 dark:text-white mx-auto mb-4" />
+                        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
                             {searchTerm ? 'No students match your search' : 'No students enrolled'}
                         </h3>
-                        <p className="text-gray-600">
+                        <p className="text-gray-600 dark:text-white">
                             {searchTerm 
                                 ? 'Try adjusting your search criteria' 
                                 : 'There are no students enrolled in this class yet'}
@@ -322,7 +322,7 @@ const AdvisoryStudents: React.FC<Props> = ({ classId: propClassId }) => {
                     </div>
                 ) : (
                     // Students List
-                    <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+                    <div className="bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg border border-gray-100 dark:border-white overflow-hidden">
                         <div className="overflow-x-auto">
                             <table className="w-full">
                                 <thead className={`${PRIMARY_COLOR_CLASS} text-white`}>
@@ -335,7 +335,7 @@ const AdvisoryStudents: React.FC<Props> = ({ classId: propClassId }) => {
                                         <th className="px-6 py-4 text-left text-sm font-semibold">Status</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-gray-100">
+                                <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
                                     {filteredStudents.map((student, index) => (
                                         <tr 
                                             key={student.id}

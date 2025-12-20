@@ -104,7 +104,7 @@ const BlockchainClassStudentsAttendance: React.FC = () => {
                     onClose={() => setNotification(null)} 
                 />
             )}
-            <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+            <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-900">
                 <div className="container mx-auto px-4 py-8">
                     <div className="mb-6">
                         <button
@@ -118,19 +118,19 @@ const BlockchainClassStudentsAttendance: React.FC = () => {
                             <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent mb-2">
                                 Class Students
                             </h1>
-                            <p className="text-gray-600">{className}</p>
+                            <p className="text-gray-600 dark:text-white">{className}</p>
                         </div>
                     </div>
 
-                    <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
+                    <div className="bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-white">
                         <div className="p-6">
                             {loading ? (
                                 <div className="flex items-center justify-center py-12">
                                     <RefreshCw className={`h-8 w-8 ${TEXT_COLOR_CLASS} animate-spin`} />
                                 </div>
                             ) : students.length === 0 ? (
-                                <div className="text-center py-12 text-gray-500">
-                                    <Users className="h-12 w-12 mx-auto mb-4 text-gray-400" />
+                                <div className="text-center py-12 text-gray-500 dark:text-white">
+                                    <Users className="h-12 w-12 mx-auto mb-4 text-gray-400 dark:text-white" />
                                     <p>No students found in this class</p>
                                 </div>
                             ) : (
@@ -138,11 +138,11 @@ const BlockchainClassStudentsAttendance: React.FC = () => {
                                     {students.map((student) => (
                                         <div
                                             key={student.id}
-                                            className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                                            className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-900 dark:border-white rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors border dark:border-white"
                                         >
                                             <div>
-                                                <p className="font-medium text-gray-900">{student.full_name}</p>
-                                                <p className="text-sm text-gray-600">{student.student_id}</p>
+                                                <p className="font-medium text-gray-900 dark:text-white">{student.full_name}</p>
+                                                <p className="text-sm text-gray-600 dark:text-white">{student.student_id}</p>
                                             </div>
                                             <button
                                                 onClick={() => router.visit(`/admin/blockchain-transactions/attendance/${student.id}?class_id=${classId}`)}

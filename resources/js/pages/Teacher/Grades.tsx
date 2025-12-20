@@ -101,10 +101,10 @@ const StatCard: React.FC<{ title: string; value: string | number; icon: React.El
     const bgColor = color.replace('text-', 'bg-').replace('-600', '-100').replace('[#003366]', '[#003366]/10');
     
     return (
-        <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-white">
             <div className="flex items-center justify-between">
                 <div>
-                    <p className="text-sm font-medium text-gray-600 mb-1">{title}</p>
+                    <p className="text-sm font-medium text-gray-600 dark:text-white mb-1">{title}</p>
                     <p className={`text-3xl font-bold ${color}`}>{displayValue}</p>
                 </div>
                 <div className={`${bgColor} p-3 rounded-xl`}>
@@ -118,16 +118,16 @@ const StatCard: React.FC<{ title: string; value: string | number; icon: React.El
 const renderRemarksTag = (remarks: GradeRemarks | undefined) => {
     if (!remarks) {
         return (
-            <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-600`}>
+            <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 dark:bg-gray-800 dark:border-white dark:text-white text-gray-600 dark:text-white border dark:border-white`}>
                 N/A
             </span>
         );
     }
 
-    let color = 'bg-gray-100 text-gray-600';
-    if (remarks === 'Passed') color = 'bg-green-100 text-green-800';
-    else if (remarks === 'Failed') color = 'bg-red-100 text-red-800';
-    else if (remarks === 'Incomplete') color = 'bg-yellow-100 text-yellow-800';
+    let color = 'bg-gray-100 dark:bg-gray-800 dark:border-white dark:text-white text-gray-600 dark:text-white border dark:border-white';
+    if (remarks === 'Passed') color = 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-white dark:border-white border dark:border-white';
+    else if (remarks === 'Failed') color = 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-white dark:border-white border dark:border-white';
+    else if (remarks === 'Incomplete') color = 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-white dark:border-white border dark:border-white';
 
     return (
         <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${color}`}>
@@ -457,7 +457,7 @@ const GradeModal: React.FC<{
             <div className="flex min-h-full items-center justify-center p-4">
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" onClick={onClose}></div>
                 
-                <div className="relative w-full max-w-3xl transform overflow-hidden rounded-2xl bg-white shadow-2xl transition-all">
+                <div className="relative w-full max-w-3xl transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 dark:border-white shadow-2xl transition-all border dark:border-white">
                     <div className="bg-[#003366] px-6 py-4">
                         <h2 className="text-xl font-bold text-white">
                             {isEditing ? 'Edit Grade' : 'Add New Grade'}
@@ -514,7 +514,7 @@ const GradeModal: React.FC<{
                             <div className="grid grid-cols-2 gap-4">
                                 {/* Student */}
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-white mb-1">
                                         Student *
                                     </label>
                                     <select
@@ -522,7 +522,7 @@ const GradeModal: React.FC<{
                                         name="student_id"
                                         value={formData.student_id}
                                         onChange={handleChange}
-                                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent transition-all"
+                                        className="w-full px-4 py-3 border border-gray-200 dark:border-white dark:bg-gray-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent transition-all"
                                         disabled={isEditing || loadingStudents || !formData.class_subject_id || formData.class_subject_id === 0}
                                         required
                                     >
@@ -550,14 +550,14 @@ const GradeModal: React.FC<{
 
                                 {/* Class/Subject */}
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-white mb-1">
                                         Class & Subject *
                                     </label>
                                     <select
                                         name="class_subject_id"
                                         value={formData.class_subject_id}
                                         onChange={handleChange}
-                                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent transition-all"
+                                        className="w-full px-4 py-3 border border-gray-200 dark:border-white dark:bg-gray-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent transition-all"
                                         disabled={isEditing || classSubjects.length === 0}
                                         required
                                     >
@@ -576,14 +576,14 @@ const GradeModal: React.FC<{
 
                                 {/* Academic Year */}
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-white mb-1">
                                         Academic Year *
                                     </label>
                                     <select
                                         name="academic_year_id"
                                         value={formData.academic_year_id}
                                         onChange={handleChange}
-                                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent transition-all"
+                                        className="w-full px-4 py-3 border border-gray-200 dark:border-white dark:bg-gray-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent transition-all"
                                         disabled={isEditing || academicYears.length === 0}
                                         required
                                     >
@@ -602,14 +602,14 @@ const GradeModal: React.FC<{
 
                                 {/* Semester */}
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-white mb-1">
                                         Semester *
                                     </label>
                                     <select
                                         name="semester_id"
                                         value={formData.semester_id}
                                         onChange={handleChange}
-                                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent transition-all"
+                                        className="w-full px-4 py-3 border border-gray-200 dark:border-white dark:bg-gray-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent transition-all"
                                         disabled={isEditing || semesters.length === 0}
                                         required
                                     >
@@ -628,7 +628,7 @@ const GradeModal: React.FC<{
 
                                 {/* Prelim Grade */}
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-white mb-1">
                                         Prelim Grade (0-100)
                                     </label>
                                     <input
@@ -639,14 +639,14 @@ const GradeModal: React.FC<{
                                         min="0"
                                         max="100"
                                         step="0.01"
-                                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent transition-all"
+                                        className="w-full px-4 py-3 border border-gray-200 dark:border-white dark:bg-gray-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent transition-all"
                                     />
                                     {errors.prelim_grade && <p className="mt-1 text-sm text-red-600">{errors.prelim_grade[0]}</p>}
                                 </div>
 
                                 {/* Midterm Grade */}
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-white mb-1">
                                         Midterm Grade (0-100)
                                     </label>
                                     <input
@@ -657,14 +657,14 @@ const GradeModal: React.FC<{
                                         min="0"
                                         max="100"
                                         step="0.01"
-                                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent transition-all"
+                                        className="w-full px-4 py-3 border border-gray-200 dark:border-white dark:bg-gray-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent transition-all"
                                     />
                                     {errors.midterm_grade && <p className="mt-1 text-sm text-red-600">{errors.midterm_grade[0]}</p>}
                                 </div>
 
                                 {/* Final Grade */}
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-white mb-1">
                                         Final Grade (0-100)
                                     </label>
                                     <input
@@ -675,14 +675,14 @@ const GradeModal: React.FC<{
                                         min="0"
                                         max="100"
                                         step="0.01"
-                                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent transition-all"
+                                        className="w-full px-4 py-3 border border-gray-200 dark:border-white dark:bg-gray-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent transition-all"
                                     />
                                     {errors.final_grade && <p className="mt-1 text-sm text-red-600">{errors.final_grade[0]}</p>}
                                 </div>
 
                                 {/* Final Rating - Auto-calculated */}
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-white mb-1">
                                         Final Rating (0-100) <span className="text-xs text-gray-500">(Auto-calculated)</span>
                                     </label>
                                     <input
@@ -693,12 +693,12 @@ const GradeModal: React.FC<{
                                         min="0"
                                         max="100"
                                         step="0.01"
-                                        className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 text-gray-700 cursor-not-allowed transition-all"
+                                        className="w-full px-4 py-3 border border-gray-200 dark:border-white dark:bg-gray-900 dark:text-white rounded-xl bg-gray-50 dark:bg-gray-900 text-gray-700 dark:text-white cursor-not-allowed transition-all"
                                         title="Final Rating is automatically calculated as the average of Prelim, Midterm, and Final grades"
                                     />
                                     {errors.final_rating && <p className="mt-1 text-sm text-red-600">{errors.final_rating[0]}</p>}
                                     {formData.prelim_grade !== undefined && formData.midterm_grade !== undefined && formData.final_grade !== undefined && (
-                                        <p className="mt-1 text-xs text-gray-500">
+                                        <p className="mt-1 text-xs text-gray-500 dark:text-white dark:border-white">
                                             ({formData.prelim_grade} + {formData.midterm_grade} + {formData.final_grade}) ÷ 3 = {formData.final_rating != null ? Number(formData.final_rating).toFixed(2) : 'N/A'}
                                         </p>
                                     )}
@@ -706,14 +706,14 @@ const GradeModal: React.FC<{
 
                                 {/* Remarks */}
                                 <div className="col-span-2">
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-white mb-1">
                                         Remarks *
                                     </label>
                                     <select
                                         name="remarks"
                                         value={formData.remarks}
                                         onChange={handleChange}
-                                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent transition-all"
+                                        className="w-full px-4 py-3 border border-gray-200 dark:border-white dark:bg-gray-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent transition-all"
                                         required
                                     >
                                         <option value="Passed">Passed</option>
@@ -729,7 +729,7 @@ const GradeModal: React.FC<{
                             <button
                                 type="button"
                                 onClick={onClose}
-                                className="px-6 py-3 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors font-medium"
+                                className="px-6 py-3 border border-gray-300 dark:border-white rounded-xl text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-medium"
                                 disabled={loading}
                             >
                                 Cancel
@@ -1411,22 +1411,22 @@ const fetchDropdownLists = async () => {
         if (pagination.last_page <= 1) return null;
 
         return (
-            <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200">
-                <div className="text-sm text-gray-600">
+            <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 dark:border-gray-700">
+                <div className="text-sm text-gray-600 dark:text-white">
                     Showing {((pagination.current_page - 1) * pagination.per_page) + 1} to {Math.min(pagination.current_page * pagination.per_page, pagination.total)} of {pagination.total} results
                 </div>
                 <div className="flex items-center space-x-2">
                     <button
                         onClick={() => setFilters(prev => ({...prev, page: prev.page - 1}))}
                         disabled={pagination.current_page === 1}
-                        className={`px-4 py-2 border border-gray-300 rounded-lg ${TEXT_COLOR_CLASS} hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed`}
+                        className={`px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg ${TEXT_COLOR_CLASS} hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed`}
                     >
                         Previous
                     </button>
                     <button
                         onClick={() => setFilters(prev => ({...prev, page: prev.page + 1}))}
                         disabled={pagination.current_page === pagination.last_page}
-                        className={`px-4 py-2 border border-gray-300 rounded-lg ${TEXT_COLOR_CLASS} hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed`}
+                        className={`px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg ${TEXT_COLOR_CLASS} hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed`}
                     >
                         Next
                     </button>
@@ -1464,11 +1464,11 @@ const fetchDropdownLists = async () => {
                 {/* Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
-                        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 flex items-center">
+                        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white flex items-center">
                             <Award className={`h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8 mr-2 sm:mr-3 ${TEXT_COLOR_CLASS}`} />
                             <span className="break-words">Student Grades Management</span>
                         </h1>
-                        <p className="mt-2 text-sm sm:text-base text-gray-600">Manage grades for your students</p>
+                        <p className="mt-2 text-sm sm:text-base text-gray-600 dark:text-white">Manage grades for your students</p>
                     </div>
                     <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:space-x-3">
                         <button
@@ -1478,7 +1478,7 @@ const fetchDropdownLists = async () => {
                                 fetchDropdownLists();
                                 fetchClasses();
                             }}
-                            className={`flex items-center justify-center px-4 py-2 border border-gray-300 rounded-xl text-sm font-medium ${TEXT_COLOR_CLASS} hover:bg-gray-50 transition-colors`}
+                            className={`flex items-center justify-center px-4 py-2 border border-gray-300 dark:border-white rounded-xl text-sm font-medium ${TEXT_COLOR_CLASS} hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors`}
                         >
                             <RefreshCw className="h-4 w-4 mr-2" />
                             Refresh
@@ -1531,17 +1531,17 @@ const fetchDropdownLists = async () => {
                 )}
 
                 {/* Filters */}
-                <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 mb-4 sm:mb-6 border border-gray-100">
+                <div className="bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg p-4 sm:p-6 mb-4 sm:mb-6 border border-gray-100 dark:border-white">
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                         <div className="relative sm:col-span-2 lg:col-span-2">
                             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <Search className="h-5 w-5 text-gray-400" />
+                                <Search className="h-5 w-5 text-gray-400 dark:text-white" />
                             </div>
                             <input
                                 type="text"
                                 value={filters.search}
                                 onChange={(e) => setFilters({...filters, search: e.target.value, page: 1})}
-                                className={`pl-12 w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
+                                className={`pl-12 w-full px-4 py-3 border border-gray-200 dark:border-white dark:bg-gray-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
                                 placeholder="Search student name..."
                             />
                         </div>
@@ -1550,7 +1550,7 @@ const fetchDropdownLists = async () => {
                             <select
                                 value={filters.academic_year_id}
                                 onChange={(e) => setFilters({...filters, academic_year_id: e.target.value, page: 1})}
-                                className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white`}
+                                className={`w-full px-4 py-3 border border-gray-200 dark:border-white dark:bg-gray-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white dark:bg-gray-900`}
                             >
                                 <option value="">Filter by Academic Year</option>
                                 {academicYears.map(ay => (
@@ -1563,7 +1563,7 @@ const fetchDropdownLists = async () => {
                             <select
                                 value={filters.remarks}
                                 onChange={(e) => setFilters({...filters, remarks: e.target.value, page: 1})}
-                                className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white`}
+                                className={`w-full px-4 py-3 border border-gray-200 dark:border-white dark:bg-gray-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white dark:bg-gray-900`}
                             >
                                 <option value="">Filter by Remarks</option>
                                 <option value="Passed">Passed</option>
@@ -1575,18 +1575,18 @@ const fetchDropdownLists = async () => {
                 </div>
 
                 {/* Class Selection and Grades Grid */}
-                <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 border border-gray-100">
+                <div className="bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg p-4 sm:p-6 border border-gray-100 dark:border-white">
                     {!selectedClassId ? (
                         // Class Selection View
                         <div>
-                            <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-4">Select a Class</h3>
+                            <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-4">Select a Class</h3>
                             {loadingLists ? (
                                 <div className="text-center py-8">
                                     <RefreshCw className={`h-8 w-8 ${TEXT_COLOR_CLASS} animate-spin mx-auto`} />
-                                    <p className="mt-2 text-sm text-gray-600">Loading classes...</p>
+                                    <p className="mt-2 text-sm text-gray-600 dark:text-white">Loading classes...</p>
                                 </div>
                             ) : classes.length === 0 ? (
-                                <div className="text-center py-8 text-gray-500">
+                                <div className="text-center py-8 text-gray-500 dark:text-white">
                                     No classes found. Please ensure you are assigned to classes.
                                 </div>
                             ) : (
@@ -1595,16 +1595,16 @@ const fetchDropdownLists = async () => {
                                         <button
                                             key={classItem.id}
                                             onClick={() => setSelectedClassId(classItem.id)}
-                                            className="p-6 bg-white border-2 border-gray-200 rounded-xl hover:border-[#003366] hover:shadow-lg transition-all text-left cursor-pointer group"
+                                            className="p-6 bg-white dark:bg-gray-800 dark:border-white border-2 border-gray-200 dark:border-white rounded-xl hover:border-[#003366] dark:hover:border-white hover:shadow-lg transition-all text-left cursor-pointer group"
                                         >
                                             <div className="flex items-center justify-between mb-2">
-                                                <h4 className="text-lg font-semibold text-gray-900 group-hover:text-[#003366]">
+                                                <h4 className="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-[#003366] dark:group-hover:text-white">
                                                     {classItem.class_code}
                                                 </h4>
                                                 <Award className="w-5 h-5 text-gray-400 group-hover:text-[#003366]" />
                                             </div>
-                                            <p className="text-sm text-gray-600 mb-2">{classItem.class_name}</p>
-                                            <p className="text-xs text-gray-500">
+                                            <p className="text-sm text-gray-600 dark:text-white mb-2">{classItem.class_name}</p>
+                                            <p className="text-xs text-gray-500 dark:text-white">
                                                 {classItem.subjectCount} {classItem.subjectCount === 1 ? 'subject' : 'subjects'}
                                             </p>
                                         </button>
@@ -1631,10 +1631,10 @@ const fetchDropdownLists = async () => {
                                         <span className="sm:hidden">Back</span>
                                     </button>
                                     <div>
-                                        <h3 className="text-base sm:text-lg font-semibold text-gray-900 break-words">
+                                        <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white break-words">
                                             {classes.find(c => c.id === selectedClassId)?.class_code || 'Manage Grades'}
                                         </h3>
-                                        <p className="text-xs sm:text-sm text-gray-600 break-words">
+                                        <p className="text-xs sm:text-sm text-gray-600 dark:text-white break-words">
                                             {classes.find(c => c.id === selectedClassId)?.class_name || ''}
                                         </p>
                                     </div>
@@ -1664,7 +1664,7 @@ const fetchDropdownLists = async () => {
 
                             {/* Subject Selection */}
                             <div className="mb-4">
-                                <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Select Subject</label>
+                                <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-white mb-2">Select Subject</label>
                                 <select
                                     value={selectedSubjectId || ''}
                                     onChange={(e) => {
@@ -1672,7 +1672,7 @@ const fetchDropdownLists = async () => {
                                         setGridData({});
                                         setHasUnsavedChanges(false);
                                     }}
-                                    className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white`}
+                                    className={`w-full px-4 py-3 border border-gray-200 dark:border-white dark:bg-gray-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white dark:bg-gray-900`}
                                 >
                                     <option value="">Select a subject...</option>
                                     {classSubjects
@@ -1691,7 +1691,7 @@ const fetchDropdownLists = async () => {
                                     {loadingClassStudents ? (
                                         <div className="text-center py-8">
                                             <RefreshCw className={`h-8 w-8 ${TEXT_COLOR_CLASS} animate-spin mx-auto`} />
-                                            <p className="mt-2 text-sm text-gray-600">Loading students...</p>
+                                            <p className="mt-2 text-sm text-gray-600 dark:text-white">Loading students...</p>
                                         </div>
                                     ) : (() => {
                                         // Apply filters to students
@@ -1727,45 +1727,45 @@ const fetchDropdownLists = async () => {
                                         });
                                         
                                         return filteredStudents.length === 0 ? (
-                                            <div className="text-center py-8 text-gray-500 text-sm sm:text-base">
+                                            <div className="text-center py-8 text-gray-500 dark:text-white text-sm sm:text-base">
                                                 No students found matching the current filters.
                                             </div>
                                         ) : (
                                             <div className="overflow-x-auto -mx-4 sm:mx-0">
-                                            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden min-w-full">
-                                                <table className="min-w-full divide-y divide-gray-200">
-                                                    <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
+                                            <div className="bg-white dark:bg-gray-800 dark:border-white rounded-xl shadow-sm border border-gray-200 dark:border-white overflow-hidden min-w-full">
+                                                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                                    <thead className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-800">
                                                         <tr>
-                                                            <th className="px-2 sm:px-4 py-2 sm:py-3 text-left text-[10px] sm:text-xs font-bold text-gray-700 uppercase tracking-wider sticky left-0 bg-gray-50 z-10 border-r border-gray-200 min-w-[120px]">
+                                                            <th className="px-2 sm:px-4 py-2 sm:py-3 text-left text-[10px] sm:text-xs font-bold text-gray-700 dark:text-white uppercase tracking-wider sticky left-0 bg-gray-50 dark:bg-gray-900 z-10 border-r border-gray-200 dark:border-white min-w-[120px]">
                                                                 Student
                                                             </th>
-                                                            <th className="px-2 sm:px-4 py-2 sm:py-3 text-center text-[10px] sm:text-xs font-bold text-gray-700 uppercase tracking-wider min-w-[80px] sm:min-w-[100px]">
+                                                            <th className="px-2 sm:px-4 py-2 sm:py-3 text-center text-[10px] sm:text-xs font-bold text-gray-700 dark:text-white uppercase tracking-wider min-w-[80px] sm:min-w-[100px]">
                                                                 Prelim
                                                             </th>
-                                                            <th className="px-2 sm:px-4 py-2 sm:py-3 text-center text-[10px] sm:text-xs font-bold text-gray-700 uppercase tracking-wider min-w-[80px] sm:min-w-[100px]">
+                                                            <th className="px-2 sm:px-4 py-2 sm:py-3 text-center text-[10px] sm:text-xs font-bold text-gray-700 dark:text-white uppercase tracking-wider min-w-[80px] sm:min-w-[100px]">
                                                                 Midterm
                                                             </th>
-                                                            <th className="px-2 sm:px-4 py-2 sm:py-3 text-center text-[10px] sm:text-xs font-bold text-gray-700 uppercase tracking-wider min-w-[80px] sm:min-w-[100px]">
+                                                            <th className="px-2 sm:px-4 py-2 sm:py-3 text-center text-[10px] sm:text-xs font-bold text-gray-700 dark:text-white uppercase tracking-wider min-w-[80px] sm:min-w-[100px]">
                                                                 Final
                                                             </th>
-                                                            <th className="px-2 sm:px-4 py-2 sm:py-3 text-center text-[10px] sm:text-xs font-bold text-gray-700 uppercase tracking-wider min-w-[90px] sm:min-w-[100px] bg-gray-50">
+                                                            <th className="px-2 sm:px-4 py-2 sm:py-3 text-center text-[10px] sm:text-xs font-bold text-gray-700 dark:text-white uppercase tracking-wider min-w-[90px] sm:min-w-[100px] bg-gray-50 dark:bg-gray-900">
                                                                 Final Rating
                                                             </th>
-                                                            <th className="px-2 sm:px-4 py-2 sm:py-3 text-center text-[10px] sm:text-xs font-bold text-gray-700 uppercase tracking-wider min-w-[100px] sm:min-w-[120px]">
+                                                            <th className="px-2 sm:px-4 py-2 sm:py-3 text-center text-[10px] sm:text-xs font-bold text-gray-700 dark:text-white uppercase tracking-wider min-w-[100px] sm:min-w-[120px]">
                                                                 Remarks
                                                             </th>
                                                         </tr>
                                                     </thead>
-                                                    <tbody className="bg-white divide-y divide-gray-200">
+                                                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                                         {filteredStudents.map((student) => {
                                                             const key = `${student.id}_${selectedSubjectId}`;
                                                             const gradeData = gridData[key] || {};
                                                             
                                                             return (
-                                                                <tr key={student.id} className="hover:bg-gray-50">
-                                                                    <td className="px-2 sm:px-4 py-2 sm:py-3 sticky left-0 bg-white z-10 border-r border-gray-200 min-w-[120px]">
-                                                                        <div className="text-xs sm:text-sm font-semibold text-gray-900 break-words">{student.student_id}</div>
-                                                                        <div className="text-[10px] sm:text-xs text-gray-600 break-words">{student.full_name}</div>
+                                                                <tr key={student.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                                                                    <td className="px-2 sm:px-4 py-2 sm:py-3 sticky left-0 bg-white dark:bg-gray-800 z-10 border-r border-gray-200 dark:border-white min-w-[120px]">
+                                                                        <div className="text-xs sm:text-sm font-semibold text-gray-900 dark:text-white break-words">{student.student_id}</div>
+                                                                        <div className="text-[10px] sm:text-xs text-gray-600 dark:text-white break-words">{student.full_name}</div>
                                                                     </td>
                                                                     <td className="px-2 sm:px-4 py-2">
                                                                         <input
@@ -1775,7 +1775,7 @@ const fetchDropdownLists = async () => {
                                                                             step="0.01"
                                                                             value={gradeData.prelim_grade ?? ''}
                                                                             onChange={(e) => handleGridCellChange(student.id, 'prelim_grade', e.target.value)}
-                                                                            className="w-full px-1 sm:px-2 py-1 text-xs sm:text-sm text-center border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent"
+                                                                            className="w-full px-1 sm:px-2 py-1 text-xs sm:text-sm text-center border border-gray-300 dark:border-white dark:bg-gray-900 dark:text-white rounded focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent"
                                                                             placeholder="0.00"
                                                                         />
                                                                     </td>
@@ -1787,7 +1787,7 @@ const fetchDropdownLists = async () => {
                                                                             step="0.01"
                                                                             value={gradeData.midterm_grade ?? ''}
                                                                             onChange={(e) => handleGridCellChange(student.id, 'midterm_grade', e.target.value)}
-                                                                            className="w-full px-1 sm:px-2 py-1 text-xs sm:text-sm text-center border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent"
+                                                                            className="w-full px-1 sm:px-2 py-1 text-xs sm:text-sm text-center border border-gray-300 dark:border-white dark:bg-gray-900 dark:text-white rounded focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent"
                                                                             placeholder="0.00"
                                                                         />
                                                                     </td>
@@ -1799,11 +1799,11 @@ const fetchDropdownLists = async () => {
                                                                             step="0.01"
                                                                             value={gradeData.final_grade ?? ''}
                                                                             onChange={(e) => handleGridCellChange(student.id, 'final_grade', e.target.value)}
-                                                                            className="w-full px-1 sm:px-2 py-1 text-xs sm:text-sm text-center border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent"
+                                                                            className="w-full px-1 sm:px-2 py-1 text-xs sm:text-sm text-center border border-gray-300 dark:border-white dark:bg-gray-900 dark:text-white rounded focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent"
                                                                             placeholder="0.00"
                                                                         />
                                                                     </td>
-                                                                    <td className="px-2 sm:px-4 py-2 bg-gray-50">
+                                                                    <td className="px-2 sm:px-4 py-2 bg-gray-50 dark:bg-gray-900">
                                                                         <input
                                                                             type="number"
                                                                             min="0"
@@ -1811,7 +1811,7 @@ const fetchDropdownLists = async () => {
                                                                             step="0.01"
                                                                             value={gradeData.final_rating ?? ''}
                                                                             readOnly
-                                                                            className="w-full px-1 sm:px-2 py-1 text-xs sm:text-sm text-center border border-gray-300 rounded bg-gray-100 text-gray-700 cursor-not-allowed"
+                                                                            className="w-full px-1 sm:px-2 py-1 text-xs sm:text-sm text-center border border-gray-300 dark:border-white rounded bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-white cursor-not-allowed"
                                                                             placeholder="Auto"
                                                                         />
                                                                     </td>
@@ -1819,7 +1819,7 @@ const fetchDropdownLists = async () => {
                                                                         <select
                                                                             value={gradeData.remarks || 'Passed'}
                                                                             onChange={(e) => handleGridCellChange(student.id, 'remarks', e.target.value as GradeRemarks)}
-                                                                            className="w-full px-1 sm:px-2 py-1 text-[10px] sm:text-xs text-center border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent"
+                                                                            className="w-full px-1 sm:px-2 py-1 text-[10px] sm:text-xs text-center border border-gray-300 dark:border-white dark:bg-gray-900 dark:text-white rounded focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent"
                                                                         >
                                                                             <option value="Passed">Passed</option>
                                                                             <option value="Failed">Failed</option>

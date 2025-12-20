@@ -151,13 +151,13 @@ const StatCard: React.FC<{
     const bgColor = color.replace('text-', 'bg-').replace('-600', '-100').replace('[#003366]', '[#003366]/10');
     
     return (
-        <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 hover:shadow-xl transition-shadow">
+        <div className="bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-white hover:shadow-xl transition-shadow">
             <div className="flex items-center justify-between">
                 <div>
-                    <p className="text-sm font-medium text-gray-600 mb-1">{title}</p>
+                    <p className="text-sm font-medium text-gray-600 dark:text-white mb-1">{title}</p>
                     <p className={`text-3xl font-bold ${color}`}>{displayValue}</p>
                     {subtitle && (
-                        <p className="text-xs text-gray-500 mt-1">{subtitle}</p>
+                        <p className="text-xs text-gray-500 dark:text-white mt-1">{subtitle}</p>
                     )}
                 </div>
                 <div className={`${bgColor} p-3 rounded-xl`}>
@@ -170,7 +170,7 @@ const StatCard: React.FC<{
 
 const ClassCard: React.FC<{ classSubject: ClassSubject }> = ({ classSubject }) => {
     return (
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-all hover:scale-[1.02] overflow-hidden">
+        <div className="bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg border border-gray-100 dark:border-white hover:shadow-xl transition-all hover:scale-[1.02] overflow-hidden">
             {/* Header with gradient */}
             <div className={`${PRIMARY_COLOR_CLASS} px-6 py-4`}>
                 <div className="flex items-center justify-between">
@@ -192,26 +192,26 @@ const ClassCard: React.FC<{ classSubject: ClassSubject }> = ({ classSubject }) =
             <div className="p-6 space-y-4">
                 {/* Subject Info */}
                 <div>
-                    <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Subject</p>
-                    <p className="text-lg font-bold text-gray-900">
+                    <p className="text-xs text-gray-500 dark:text-white uppercase tracking-wider mb-1">Subject</p>
+                    <p className="text-lg font-bold text-gray-900 dark:text-white">
                         {classSubject.subject?.subject_name || 'Unknown Subject'}
                     </p>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-gray-600 dark:text-white">
                         {classSubject.subject?.subject_code || 'N/A'}
                     </p>
                 </div>
 
                 {/* Academic Info */}
-                <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-100">
+                <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-100 dark:border-white">
                     <div>
-                        <p className="text-xs text-gray-500 mb-1">Academic Year</p>
-                        <p className="text-sm font-semibold text-gray-900">
+                        <p className="text-xs text-gray-500 dark:text-white mb-1">Academic Year</p>
+                        <p className="text-sm font-semibold text-gray-900 dark:text-white">
                             {classSubject.academic_year?.year_name || 'N/A'}
                         </p>
                     </div>
                     <div>
-                        <p className="text-xs text-gray-500 mb-1">Semester</p>
-                        <p className="text-sm font-semibold text-gray-900">
+                        <p className="text-xs text-gray-500 dark:text-white mb-1">Semester</p>
+                        <p className="text-sm font-semibold text-gray-900 dark:text-white">
                             {classSubject.semester?.semester_name || 'N/A'}
                         </p>
                     </div>
@@ -219,9 +219,9 @@ const ClassCard: React.FC<{ classSubject: ClassSubject }> = ({ classSubject }) =
 
                 {/* Additional Info */}
                 {classSubject.subject?.units && (
-                    <div className="pt-4 border-t border-gray-100">
-                        <p className="text-xs text-gray-500 mb-1">Units</p>
-                        <p className="text-sm font-semibold text-gray-900">
+                    <div className="pt-4 border-t border-gray-100 dark:border-white">
+                        <p className="text-xs text-gray-500 dark:text-white mb-1">Units</p>
+                        <p className="text-sm font-semibold text-gray-900 dark:text-white">
                             {classSubject.subject.units} {classSubject.subject.units === 1 ? 'unit' : 'units'}
                         </p>
                     </div>
@@ -435,17 +435,17 @@ const MyClasses: React.FC = () => {
                 {/* Header */}
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-900 flex items-center">
+                        <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center">
                             <GraduationCap className={`h-8 w-8 mr-3 ${TEXT_COLOR_CLASS}`} />
                             My Assigned Classes & Subjects
                         </h1>
-                        <p className="mt-2 text-gray-600">
+                        <p className="mt-2 text-gray-600 dark:text-white">
                             View and manage all classes assigned to you
                         </p>
                     </div>
                     <button
                         onClick={fetchMyClasses}
-                        className={`flex items-center px-4 py-2 border border-gray-300 rounded-xl text-sm font-medium ${TEXT_COLOR_CLASS} hover:bg-gray-50 transition-colors`}
+                        className={`flex items-center px-4 py-2 border border-gray-300 dark:border-white rounded-xl text-sm font-medium ${TEXT_COLOR_CLASS} hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors`}
                     >
                         <RefreshCw className="h-4 w-4 mr-2" />
                         Refresh
@@ -509,17 +509,17 @@ const MyClasses: React.FC = () => {
                 </div>
 
                 {/* Search and Filters */}
-                <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+                <div className="bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-white">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div className="relative col-span-2">
                             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <BookOpen className="h-5 w-5 text-gray-400" />
+                                <BookOpen className="h-5 w-5 text-gray-400 dark:text-white" />
                             </div>
                             <input
                                 type="text"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="pl-12 w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent transition-all"
+                                className="pl-12 w-full px-4 py-3 border border-gray-200 dark:border-white dark:bg-gray-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent transition-all"
                                 placeholder="Search by class or subject name..."
                             />
                         </div>
@@ -527,7 +527,7 @@ const MyClasses: React.FC = () => {
                         <select
                             value={filterSemester}
                             onChange={(e) => setFilterSemester(e.target.value)}
-                            className="px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent transition-all appearance-none bg-white"
+                            className="px-4 py-3 border border-gray-200 dark:border-white dark:bg-gray-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent transition-all appearance-none bg-white dark:bg-gray-900"
                         >
                             <option value="">All Semesters</option>
                             {uniqueSemesters.map((semester, idx) => (
@@ -542,15 +542,15 @@ const MyClasses: React.FC = () => {
                 {loading ? (
                     <div className="flex items-center justify-center py-12">
                         <RefreshCw className={`h-12 w-12 ${TEXT_COLOR_CLASS} animate-spin`} />
-                        <p className="ml-4 text-lg text-gray-600">Loading your classes...</p>
+                        <p className="ml-4 text-lg text-gray-600 dark:text-white">Loading your classes...</p>
                     </div>
                 ) : classesWithSubjects.length === 0 && !teacherInfo?.advisory_class ? (
-                    <div className="bg-white rounded-2xl shadow-lg p-12 text-center border border-gray-100">
-                        <GraduationCap className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                        <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                    <div className="bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg p-12 text-center border border-gray-100 dark:border-white">
+                        <GraduationCap className="h-16 w-16 text-gray-300 dark:text-white mx-auto mb-4" />
+                        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
                             {searchTerm || filterSemester ? 'No classes match your filters' : 'No classes assigned yet'}
                         </h3>
-                        <p className="text-gray-600">
+                        <p className="text-gray-600 dark:text-white">
                             {searchTerm || filterSemester 
                                 ? 'Try adjusting your search or filter criteria'
                                 : 'You will see your assigned classes here once they are set up'}

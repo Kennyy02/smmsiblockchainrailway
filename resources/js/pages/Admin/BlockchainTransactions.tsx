@@ -84,11 +84,11 @@ const StatsCards: React.FC<{ stats: BlockchainStats }> = ({ stats }) => {
     return (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3 md:gap-4 lg:gap-6 mb-4 sm:mb-6">
             {cards.map((card, idx) => (
-                <div key={idx} className="bg-white rounded-lg sm:rounded-xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 lg:p-6 border border-gray-100 transform hover:scale-105 transition-all">
+                <div key={idx} className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 lg:p-6 border border-gray-100 dark:border-white transform hover:scale-105 transition-all">
                     {/* Mobile: Centered layout */}
                     <div className="flex flex-col items-center text-center md:hidden">
-                        <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1 sm:mb-2">{card.title}</p>
-                        <p className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-3">{card.value}</p>
+                        <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-white mb-1 sm:mb-2">{card.title}</p>
+                        <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-2 sm:mb-3">{card.value}</p>
                         <div className={`${card.color} p-2 sm:p-3 rounded-full`}>
                             <card.icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                         </div>
@@ -96,8 +96,8 @@ const StatsCards: React.FC<{ stats: BlockchainStats }> = ({ stats }) => {
                     {/* Desktop: Original layout with icon on right */}
                     <div className="hidden md:flex items-center justify-between">
                         <div>
-                            <p className="text-sm font-medium text-gray-600">{card.title}</p>
-                            <p className="text-2xl font-bold text-gray-900 mt-2">{card.value}</p>
+                            <p className="text-sm font-medium text-gray-600 dark:text-white">{card.title}</p>
+                            <p className="text-2xl font-bold text-gray-900 dark:text-white mt-2">{card.value}</p>
                         </div>
                         <div className={`${card.color} p-3 rounded-lg`}>
                             <card.icon className="w-6 h-6 text-white" />
@@ -149,51 +149,51 @@ const TransactionDetailsModal: React.FC<{
                     </div>
 
                     <div className="p-6 space-y-6 max-h-[calc(100vh-200px)] overflow-y-auto">
-                        <div className="bg-gray-50 rounded-xl p-6 space-y-4">
+                        <div className="bg-gray-50 dark:bg-gray-800 dark:border-white rounded-xl p-6 space-y-4 border dark:border-white">
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Transaction ID</label>
-                                    <p className="text-sm font-mono bg-white px-3 py-2 rounded-lg border">#{transaction.id}</p>
+                                    <label className="block text-xs font-semibold text-gray-500 dark:text-white uppercase mb-1">Transaction ID</label>
+                                    <p className="text-sm font-mono bg-white dark:bg-gray-900 dark:text-white dark:border-white px-3 py-2 rounded-lg border dark:border-white">#{transaction.id}</p>
                                 </div>
                                 <div>
-                                    <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Status</label>
-                                    <span className={`inline-flex items-center px-4 py-2 rounded-lg text-sm font-semibold border ${statusColor(transaction.status)}`}>
+                                    <label className="block text-xs font-semibold text-gray-500 dark:text-white uppercase mb-1">Status</label>
+                                    <span className={`inline-flex items-center px-4 py-2 rounded-lg text-sm font-semibold border dark:border-white dark:text-white ${statusColor(transaction.status)}`}>
                                         {transaction.status.charAt(0).toUpperCase() + transaction.status.slice(1)}
                                     </span>
                                 </div>
                             </div>
                             
                             <div>
-                                <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Blockchain Hash</label>
-                                <p className="text-sm font-mono break-all bg-white px-3 py-2 rounded-lg border">{transaction.transaction_hash || 'Not yet generated'}</p>
+                                <label className="block text-xs font-semibold text-gray-500 dark:text-white uppercase mb-1">Blockchain Hash</label>
+                                <p className="text-sm font-mono break-all bg-white dark:bg-gray-900 dark:text-white dark:border-white px-3 py-2 rounded-lg border dark:border-white">{transaction.transaction_hash || 'Not yet generated'}</p>
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Type</label>
-                                    <p className="text-sm capitalize bg-white px-3 py-2 rounded-lg border">{transaction.transaction_type.replace('_', ' ')}</p>
+                                    <label className="block text-xs font-semibold text-gray-500 dark:text-white uppercase mb-1">Type</label>
+                                    <p className="text-sm capitalize bg-white dark:bg-gray-900 dark:text-white dark:border-white px-3 py-2 rounded-lg border dark:border-white">{transaction.transaction_type.replace('_', ' ')}</p>
                                 </div>
                                 <div>
-                                    <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Initiated By</label>
-                                    <p className="text-sm bg-white px-3 py-2 rounded-lg border">{transaction.initiator?.name || `User #${transaction.initiated_by}`}</p>
+                                    <label className="block text-xs font-semibold text-gray-500 dark:text-white uppercase mb-1">Initiated By</label>
+                                    <p className="text-sm bg-white dark:bg-gray-900 dark:text-white dark:border-white px-3 py-2 rounded-lg border dark:border-white">{transaction.initiator?.name || `User #${transaction.initiated_by}`}</p>
                                 </div>
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Submitted At</label>
-                                    <p className="text-sm bg-white px-3 py-2 rounded-lg border">{formatDate(transaction.submitted_at)}</p>
+                                    <label className="block text-xs font-semibold text-gray-500 dark:text-white uppercase mb-1">Submitted At</label>
+                                    <p className="text-sm bg-white dark:bg-gray-900 dark:text-white dark:border-white px-3 py-2 rounded-lg border dark:border-white">{formatDate(transaction.submitted_at)}</p>
                                 </div>
                                 <div>
-                                    <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Processing Time</label>
-                                    <p className="text-sm bg-white px-3 py-2 rounded-lg border font-semibold">{transaction.processing_time_human || 'N/A'}</p>
+                                    <label className="block text-xs font-semibold text-gray-500 dark:text-white uppercase mb-1">Processing Time</label>
+                                    <p className="text-sm bg-white dark:bg-gray-900 dark:text-white dark:border-white px-3 py-2 rounded-lg border dark:border-white font-semibold">{transaction.processing_time_human || 'N/A'}</p>
                                 </div>
                             </div>
 
                             {transaction.certificate && (
-                                <div className="border-t pt-4 mt-4">
-                                    <label className="block text-xs font-semibold text-gray-500 uppercase mb-2">Related Certificate</label>
-                                    <div className="bg-white rounded-lg border p-4 space-y-2">
+                                <div className="border-t dark:border-white pt-4 mt-4">
+                                    <label className="block text-xs font-semibold text-gray-500 dark:text-white uppercase mb-2">Related Certificate</label>
+                                    <div className="bg-white dark:bg-gray-900 dark:text-white dark:border-white rounded-lg border dark:border-white p-4 space-y-2">
                                         <p><strong>Title:</strong> {transaction.certificate.title}</p>
                                         <p><strong>Certificate #:</strong> {transaction.certificate.certificate_number}</p>
                                         <p><strong>Student:</strong> {transaction.certificate.student?.full_name}</p>
@@ -202,20 +202,20 @@ const TransactionDetailsModal: React.FC<{
                             )}
 
                             {transaction.attendance && (
-                                <div className="border-t pt-4 mt-4">
-                                    <label className="block text-xs font-semibold text-gray-500 uppercase mb-2">Attendance Details</label>
-                                    <div className="bg-white rounded-lg border p-4 space-y-2">
+                                <div className="border-t dark:border-white pt-4 mt-4">
+                                    <label className="block text-xs font-semibold text-gray-500 dark:text-white uppercase mb-2">Attendance Details</label>
+                                    <div className="bg-white dark:bg-gray-900 dark:text-white dark:border-white rounded-lg border dark:border-white p-4 space-y-2">
                                         <p><strong>Student:</strong> {transaction.attendance.student?.full_name || `${transaction.attendance.student?.first_name} ${transaction.attendance.student?.last_name}`}</p>
                                         <p><strong>Subject:</strong> {transaction.attendance.class_subject?.subject?.subject_name || 'N/A'}</p>
                                         <p><strong>Date:</strong> {new Date(transaction.attendance.attendance_date).toLocaleDateString()}</p>
                                         <p>
                                             <strong>Status:</strong>{' '}
-                                            <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${
-                                                transaction.attendance.status === 'Present' ? 'bg-green-100 text-green-800 border-green-200' :
-                                                transaction.attendance.status === 'Absent' ? 'bg-red-100 text-red-800 border-red-200' :
-                                                transaction.attendance.status === 'Late' ? 'bg-yellow-100 text-yellow-800 border-yellow-200' :
-                                                'bg-gray-100 text-gray-800 border-gray-200'
-                                            } border`}>
+                                            <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold dark:border-white dark:text-white ${
+                                                transaction.attendance.status === 'Present' ? 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900' :
+                                                transaction.attendance.status === 'Absent' ? 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900' :
+                                                transaction.attendance.status === 'Late' ? 'bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900' :
+                                                'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900'
+                                            } border dark:border-white`}>
                                                 {transaction.attendance.status}
                                             </span>
                                         </p>
@@ -224,9 +224,9 @@ const TransactionDetailsModal: React.FC<{
                             )}
 
                             {transaction.grade && (
-                                <div className="border-t pt-4 mt-4">
-                                    <label className="block text-xs font-semibold text-gray-500 uppercase mb-2">Grade Details</label>
-                                    <div className="bg-white rounded-lg border p-4 space-y-2">
+                                <div className="border-t dark:border-white pt-4 mt-4">
+                                    <label className="block text-xs font-semibold text-gray-500 dark:text-white uppercase mb-2">Grade Details</label>
+                                    <div className="bg-white dark:bg-gray-900 dark:text-white dark:border-white rounded-lg border dark:border-white p-4 space-y-2">
                                         <p><strong>Student:</strong> {transaction.grade.student?.full_name || `${transaction.grade.student?.first_name} ${transaction.grade.student?.last_name}`}</p>
                                         <p><strong>Subject:</strong> {transaction.grade.class_subject?.subject?.subject_name || 'N/A'}</p>
                                         {transaction.grade.prelim_grade !== null && transaction.grade.prelim_grade !== undefined && (
@@ -244,11 +244,11 @@ const TransactionDetailsModal: React.FC<{
                                         {transaction.grade.remarks && (
                                             <p>
                                                 <strong>Remarks:</strong>{' '}
-                                                <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${
-                                                    transaction.grade.remarks === 'Passed' ? 'bg-green-100 text-green-800 border-green-200' :
-                                                    transaction.grade.remarks === 'Failed' ? 'bg-red-100 text-red-800 border-red-200' :
-                                                    'bg-gray-100 text-gray-800 border-gray-200'
-                                                } border`}>
+                                                <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold dark:border-white dark:text-white ${
+                                                    transaction.grade.remarks === 'Passed' ? 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900' :
+                                                    transaction.grade.remarks === 'Failed' ? 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900' :
+                                                    'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900'
+                                                } border dark:border-white`}>
                                                     {transaction.grade.remarks}
                                                 </span>
                                             </p>
@@ -272,15 +272,15 @@ const CertificateDetailsModal: React.FC<{
     onClose: () => void;
 }> = ({ certificate, onClose }) => {
     return (
-        <div className="fixed inset-0 z-50 overflow-y-auto bg-gray-100">
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-gray-100 dark:bg-gray-900">
             <div className="relative min-h-full">
                 {/* Close button */}
                 <button 
                     onClick={onClose}
-                    className="fixed top-4 right-4 z-50 p-3 bg-white rounded-full shadow-lg hover:bg-gray-100 transition-colors"
+                    className="fixed top-4 right-4 z-50 p-3 bg-white dark:bg-gray-800 dark:border-white dark:text-white rounded-full shadow-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors border dark:border-white"
                     title="Close"
                 >
-                    <X className="h-6 w-6 text-gray-700" />
+                    <X className="h-6 w-6 text-gray-700 dark:text-white" />
                 </button>
                 
                 {/* Certificate Template */}
@@ -326,8 +326,8 @@ const VerificationUtility: React.FC<{
     };
 
     return (
-        <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-            <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
+        <div className="bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-white">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center">
                 <Shield className={`w-5 h-5 mr-2 ${TEXT_COLOR_CLASS}`} />
                 Certificate Verification
             </h2>
@@ -336,7 +336,7 @@ const VerificationUtility: React.FC<{
                     type="text"
                     value={verificationCode}
                     onChange={(e) => setVerificationCode(e.target.value)}
-                    className={`flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS}`}
+                    className={`flex-1 px-4 py-3 border border-gray-200 dark:border-white dark:bg-gray-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS}`}
                     placeholder="Enter Certificate Number (e.g., CERT-2024-ABC123)"
                     required
                 />
@@ -350,12 +350,12 @@ const VerificationUtility: React.FC<{
             </form>
             
             {result && (
-                <div className="bg-green-50 border-l-4 border-green-500 p-4 rounded-lg">
+                <div className="bg-green-50 dark:bg-green-900 dark:border-white border-l-4 border-green-500 dark:border-white p-4 rounded-lg">
                     <div className="flex items-start">
-                        <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 mr-3" />
+                        <CheckCircle className="w-5 h-5 text-green-600 dark:text-white mt-0.5 mr-3" />
                         <div>
-                            <p className="font-bold text-green-900">Certificate Valid ✓</p>
-                            <ul className="mt-2 text-sm text-green-800 space-y-1">
+                            <p className="font-bold text-green-900 dark:text-white">Certificate Valid ✓</p>
+                            <ul className="mt-2 text-sm text-green-800 dark:text-white space-y-1">
                                 <li><strong>Title:</strong> {result.title}</li>
                                 <li><strong>Student:</strong> {result.student?.full_name}</li>
                                 <li><strong>Issued:</strong> {new Date(result.date_issued).toLocaleDateString()}</li>
@@ -611,12 +611,12 @@ const BlockchainManagement: React.FC = () => {
     // Status badge rendering
     const renderStatusBadge = (status: TransactionStatus) => {
         const colors = {
-            confirmed: 'bg-green-100 text-green-800 border-green-200',
-            pending: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-            failed: 'bg-red-100 text-red-800 border-red-200',
+            confirmed: 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900 dark:text-white dark:border-white',
+            pending: 'bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900 dark:text-white dark:border-white',
+            failed: 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900 dark:text-white dark:border-white',
         };
         return (
-            <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${colors[status]}`}>
+            <span className={`px-3 py-1 rounded-full text-xs font-semibold border dark:border-white ${colors[status]}`}>
                 {status.charAt(0).toUpperCase() + status.slice(1)}
             </span>
         );
@@ -627,8 +627,8 @@ const BlockchainManagement: React.FC = () => {
         if (pagination.last_page <= 1) return null;
 
         return (
-            <div className="bg-gray-50 px-6 py-4 border-t border-gray-200 flex items-center justify-between">
-                <div className="text-sm text-gray-700">
+            <div className="bg-gray-50 dark:bg-gray-800 dark:border-white px-6 py-4 border-t border-gray-200 dark:border-white flex items-center justify-between">
+                <div className="text-sm text-gray-700 dark:text-white">
                     Showing <span className="font-semibold">{((pagination.current_page - 1) * pagination.per_page) + 1}</span> to{' '}
                     <span className="font-semibold">{Math.min(pagination.current_page * pagination.per_page, pagination.total)}</span> of{' '}
                     <span className="font-semibold">{pagination.total}</span> results
@@ -637,14 +637,14 @@ const BlockchainManagement: React.FC = () => {
                     <button
                         onClick={() => onPageChange(pagination.current_page - 1)}
                         disabled={pagination.current_page === 1}
-                        className="px-4 py-2 border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
+                        className="px-4 py-2 border border-gray-300 dark:border-white dark:text-white dark:bg-gray-900 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 dark:hover:bg-gray-700"
                     >
                         Previous
                     </button>
                     <button
                         onClick={() => onPageChange(pagination.current_page + 1)}
                         disabled={pagination.current_page === pagination.last_page}
-                        className="px-4 py-2 border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
+                        className="px-4 py-2 border border-gray-300 dark:border-white dark:text-white dark:bg-gray-900 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 dark:hover:bg-gray-700"
                     >
                         Next
                     </button>
@@ -655,7 +655,7 @@ const BlockchainManagement: React.FC = () => {
 
     return (
         <AppLayout>
-            <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+            <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-900">
                 <div className="container mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8">
                     {/* Header */}
                     <div className="mb-4 sm:mb-6 md:mb-8">
@@ -664,7 +664,7 @@ const BlockchainManagement: React.FC = () => {
                                 <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent mb-1 sm:mb-2">
                                     Blockchain Management
                                 </h1>
-                                <p className="text-xs sm:text-sm text-gray-600">Manage blockchain transactions and certificate verification</p>
+                                <p className="text-xs sm:text-sm text-gray-600 dark:text-white">Manage blockchain transactions and certificate verification</p>
                             </div>
                             <button
                                 onClick={() => {
@@ -673,7 +673,7 @@ const BlockchainManagement: React.FC = () => {
                                     else if (activeTab === 'certificates') loadCertificates();
                                     else loadVerifications();
                                 }}
-                                className="flex items-center px-3 sm:px-4 py-2 bg-gray-200 text-gray-700 rounded-lg sm:rounded-xl hover:bg-gray-300 transition-all text-xs sm:text-sm"
+                                className="flex items-center px-3 sm:px-4 py-2 bg-gray-200 dark:bg-gray-800 dark:border-white dark:text-white text-gray-700 rounded-lg sm:rounded-xl hover:bg-gray-300 dark:hover:bg-gray-700 transition-all text-xs sm:text-sm border dark:border-white"
                             >
                                 <RefreshCw className="w-4 h-4 mr-1 sm:mr-2" />
                                 Refresh
@@ -685,14 +685,14 @@ const BlockchainManagement: React.FC = () => {
                     </div>
 
                     {/* Tabs */}
-                    <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-gray-100 mb-4 sm:mb-6">
-                        <div className="flex border-b border-gray-200">
+                    <div className="bg-white dark:bg-gray-800 dark:border-white rounded-xl sm:rounded-2xl shadow-lg border border-gray-100 dark:border-white mb-4 sm:mb-6">
+                        <div className="flex border-b border-gray-200 dark:border-white">
                             <button
                                 onClick={() => setActiveTab('transactions')}
                                 className={`flex-1 px-3 sm:px-4 md:px-6 py-2 sm:py-3 md:py-4 font-semibold transition-all text-xs sm:text-sm md:text-base ${
                                     activeTab === 'transactions'
-                                        ? 'border-b-2 border-purple-600 text-purple-600 bg-purple-50'
-                                        : 'text-gray-600 hover:bg-gray-50'
+                                        ? 'border-b-2 border-purple-600 dark:border-white text-purple-600 dark:text-white bg-purple-50 dark:bg-gray-900'
+                                        : 'text-gray-600 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700'
                                 }`}
                             >
                                 <Hash className="w-4 h-4 sm:w-5 sm:h-5 inline mr-1 sm:mr-2" />
@@ -703,8 +703,8 @@ const BlockchainManagement: React.FC = () => {
                                 onClick={() => setActiveTab('certificates')}
                                 className={`flex-1 px-3 sm:px-4 md:px-6 py-2 sm:py-3 md:py-4 font-semibold transition-all text-xs sm:text-sm md:text-base ${
                                     activeTab === 'certificates'
-                                        ? 'border-b-2 border-purple-600 text-purple-600 bg-purple-50'
-                                        : 'text-gray-600 hover:bg-gray-50'
+                                        ? 'border-b-2 border-purple-600 dark:border-white text-purple-600 dark:text-white bg-purple-50 dark:bg-gray-900'
+                                        : 'text-gray-600 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700'
                                 }`}
                             >
                                 <Award className="w-4 h-4 sm:w-5 sm:h-5 inline mr-1 sm:mr-2" />
@@ -715,8 +715,8 @@ const BlockchainManagement: React.FC = () => {
                                 onClick={() => setActiveTab('verify')}
                                 className={`flex-1 px-3 sm:px-4 md:px-6 py-2 sm:py-3 md:py-4 font-semibold transition-all text-xs sm:text-sm md:text-base ${
                                     activeTab === 'verify'
-                                        ? 'border-b-2 border-purple-600 text-purple-600 bg-purple-50'
-                                        : 'text-gray-600 hover:bg-gray-50'
+                                        ? 'border-b-2 border-purple-600 dark:border-white text-purple-600 dark:text-white bg-purple-50 dark:bg-gray-900'
+                                        : 'text-gray-600 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700'
                                 }`}
                             >
                                 <Shield className="w-4 h-4 sm:w-5 sm:h-5 inline mr-1 sm:mr-2" />
@@ -729,36 +729,36 @@ const BlockchainManagement: React.FC = () => {
                     {activeTab === 'transactions' && (
                         <>
                             {/* Filters - Compact on Mobile */}
-                            <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-3 sm:p-4 md:p-6 mb-4 sm:mb-6 border border-gray-100">
+                            <div className="bg-white dark:bg-gray-800 dark:border-white rounded-xl sm:rounded-2xl shadow-lg p-3 sm:p-4 md:p-6 mb-4 sm:mb-6 border border-gray-100 dark:border-white">
                                 <div className="relative">
                                     <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
-                                        <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
+                                        <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 dark:text-white" />
                                     </div>
                                     <input
                                         type="text"
                                         value={transactionFilters.search}
                                         onChange={(e) => setTransactionFilters({...transactionFilters, search: e.target.value, page: 1})}
-                                        className={`pl-10 sm:pl-12 w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} text-sm sm:text-base`}
+                                        className={`pl-10 sm:pl-12 w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border border-gray-200 dark:border-white dark:bg-gray-900 dark:text-white rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} text-sm sm:text-base`}
                                         placeholder="Search transactions..."
                                     />
                                 </div>
                             </div>
 
                             {/* Transactions Table - Responsive */}
-                            <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden border border-gray-100">
+                            <div className="bg-white dark:bg-gray-800 dark:border-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-white">
                                 <div className="overflow-x-auto">
-                                    <table className="min-w-full divide-y divide-gray-200">
-                                        <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
+                                    <table className="min-w-full divide-y divide-gray-200 dark:divide-white">
+                                        <thead className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-900 dark:border-white">
                                             <tr>
-                                                <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase whitespace-nowrap">ID</th>
-                                                <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase whitespace-nowrap">Hash</th>
-                                                <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase whitespace-nowrap">Type</th>
-                                                <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase whitespace-nowrap">Status</th>
-                                                <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase whitespace-nowrap">Submitted</th>
-                                                <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-right text-xs font-bold text-gray-700 uppercase whitespace-nowrap">Actions</th>
+                                                <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 dark:text-white uppercase whitespace-nowrap">ID</th>
+                                                <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 dark:text-white uppercase whitespace-nowrap">Hash</th>
+                                                <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 dark:text-white uppercase whitespace-nowrap">Type</th>
+                                                <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 dark:text-white uppercase whitespace-nowrap">Status</th>
+                                                <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 dark:text-white uppercase whitespace-nowrap">Submitted</th>
+                                                <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-right text-xs font-bold text-gray-700 dark:text-white uppercase whitespace-nowrap">Actions</th>
                                             </tr>
                                         </thead>
-                                        <tbody className="bg-white divide-y divide-gray-200">
+                                        <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-white">
                                             {loading ? (
                                                 <tr>
                                                     <td colSpan={6} className="px-3 sm:px-6 py-8 sm:py-12 text-center">
@@ -769,36 +769,36 @@ const BlockchainManagement: React.FC = () => {
                                                 </tr>
                                             ) : transactions.length === 0 ? (
                                                 <tr>
-                                                    <td colSpan={6} className="px-3 sm:px-6 py-8 sm:py-12 text-center text-gray-500">
+                                                    <td colSpan={6} className="px-3 sm:px-6 py-8 sm:py-12 text-center text-gray-500 dark:text-white">
                                                         <div className="flex flex-col items-center">
-                                                            <Hash className="h-10 w-10 sm:h-12 sm:w-12 text-gray-300 mb-3 sm:mb-4" />
-                                                            <p className="text-base sm:text-lg font-medium">No transactions found</p>
-                                                            <p className="text-xs sm:text-sm">Try adjusting your search or filters</p>
+                                                            <Hash className="h-10 w-10 sm:h-12 sm:w-12 text-gray-300 dark:text-white mb-3 sm:mb-4" />
+                                                            <p className="text-base sm:text-lg font-medium dark:text-white">No transactions found</p>
+                                                            <p className="text-xs sm:text-sm dark:text-white">Try adjusting your search or filters</p>
                                                         </div>
                                                     </td>
                                                 </tr>
                                             ) : (
                                                 transactions.map((tx) => (
-                                                    <tr key={tx.id} className="hover:bg-gray-50 transition-colors">
-                                                        <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap font-mono text-xs sm:text-sm">#{tx.id}</td>
+                                                    <tr key={tx.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                                        <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap font-mono text-xs sm:text-sm dark:text-white">#{tx.id}</td>
                                                         <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
-                                                            <div className="font-mono text-xs sm:text-sm text-gray-900 truncate">
+                                                            <div className="font-mono text-xs sm:text-sm text-gray-900 dark:text-white truncate">
                                                                 {tx.transaction_hash ? `${tx.transaction_hash.substring(0, 12)}...` : 'Pending'}
                                                             </div>
                                                             {/* Show additional info on mobile */}
                                                             <div className="md:hidden mt-1 space-y-1">
-                                                                <div className="text-xs text-gray-600 capitalize">{tx.transaction_type.replace('_', ' ')}</div>
+                                                                <div className="text-xs text-gray-600 dark:text-white capitalize">{tx.transaction_type.replace('_', ' ')}</div>
                                                                 <div className="flex items-center gap-2">
                                                                     {renderStatusBadge(tx.status)}
-                                                                    <span className="text-xs text-gray-600">{new Date(tx.submitted_at).toLocaleDateString()}</span>
+                                                                    <span className="text-xs text-gray-600 dark:text-white">{new Date(tx.submitted_at).toLocaleDateString()}</span>
                                                                 </div>
                                                             </div>
                                                         </td>
-                                                        <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm capitalize">
+                                                        <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm capitalize dark:text-white">
                                                             {tx.transaction_type.replace('_', ' ')}
                                                         </td>
                                                         <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap">{renderStatusBadge(tx.status)}</td>
-                                                        <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm">
+                                                        <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm dark:text-white">
                                                             {new Date(tx.submitted_at).toLocaleDateString()}
                                                         </td>
                                                         <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap text-right">
@@ -808,7 +808,7 @@ const BlockchainManagement: React.FC = () => {
                                                                         setSelectedTransaction(tx);
                                                                         setShowTransactionModal(true);
                                                                     }}
-                                                                    className="p-1.5 sm:p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                                                    className="p-1.5 sm:p-2 text-blue-600 dark:text-white hover:bg-blue-50 dark:hover:bg-gray-700 rounded-lg transition-colors border dark:border-white"
                                                                     title="View Details"
                                                                 >
                                                                     <Eye className="h-4 w-4 sm:h-5 sm:w-5" />
@@ -816,7 +816,7 @@ const BlockchainManagement: React.FC = () => {
                                                                 {tx.status === 'failed' && (
                                                                     <button
                                                                         onClick={() => handleRetryTransaction(tx.id)}
-                                                                        className="p-1.5 sm:p-2 text-orange-600 hover:bg-orange-50 rounded-lg transition-colors"
+                                                                        className="p-1.5 sm:p-2 text-orange-600 dark:text-white hover:bg-orange-50 dark:hover:bg-gray-700 rounded-lg transition-colors border dark:border-white"
                                                                         title="Retry"
                                                                     >
                                                                         <Zap className="h-4 w-4 sm:h-5 sm:w-5" />
@@ -842,7 +842,7 @@ const BlockchainManagement: React.FC = () => {
                         <>
                             {/* Header with Create Button */}
                             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6">
-                                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-0">Certificates</h2>
+                                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-0">Certificates</h2>
                                 <button
                                     onClick={() => {
                                         if (students.length === 0 || teachers.length === 0) {
@@ -859,24 +859,24 @@ const BlockchainManagement: React.FC = () => {
                             </div>
 
                             {/* Filters - Compact on Mobile */}
-                            <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-3 sm:p-4 md:p-6 mb-4 sm:mb-6 border border-gray-100">
+                            <div className="bg-white dark:bg-gray-800 dark:border-white rounded-xl sm:rounded-2xl shadow-lg p-3 sm:p-4 md:p-6 mb-4 sm:mb-6 border border-gray-100 dark:border-white">
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
                                     <div className="relative">
                                         <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
-                                            <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
+                                            <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 dark:text-white" />
                                         </div>
                                         <input
                                             type="text"
                                             value={certificateFilters.search}
                                             onChange={(e) => setCertificateFilters({...certificateFilters, search: e.target.value, page: 1})}
-                                            className={`pl-10 sm:pl-12 w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} text-sm sm:text-base`}
+                                            className={`pl-10 sm:pl-12 w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border border-gray-200 dark:border-white dark:bg-gray-900 dark:text-white rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} text-sm sm:text-base`}
                                             placeholder="Search certificates..."
                                         />
                                     </div>
                                     <select
                                         value={certificateFilters.type}
                                         onChange={(e) => setCertificateFilters({...certificateFilters, type: e.target.value as CertificateType | '', page: 1})}
-                                        className={`px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS}`}
+                                        className={`px-4 py-3 border border-gray-200 dark:border-white dark:bg-gray-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS}`}
                                     >
                                         <option value="">All Types</option>
                                         <option value="Completion">Completion</option>
@@ -887,52 +887,52 @@ const BlockchainManagement: React.FC = () => {
                                         type="text"
                                         value={certificateFilters.student_id}
                                         onChange={(e) => setCertificateFilters({...certificateFilters, student_id: e.target.value, page: 1})}
-                                        className={`px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS}`}
+                                        className={`px-4 py-3 border border-gray-200 dark:border-white dark:bg-gray-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS}`}
                                         placeholder="Filter by Student ID"
                                     />
                                 </div>
                             </div>
 
                             {/* Certificates Table */}
-                            <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
+                            <div className="bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-white">
                                 <div className="overflow-x-auto">
-                                    <table className="min-w-full divide-y divide-gray-200">
-                                        <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
+                                    <table className="min-w-full divide-y divide-gray-200 dark:divide-white">
+                                        <thead className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-900 dark:border-white">
                                             <tr>
-                                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase">Certificate #</th>
-                                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase">Title</th>
-                                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase">Student</th>
-                                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase">Type</th>
-                                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase">Date Issued</th>
-                                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase">Blockchain</th>
-                                                <th className="px-6 py-4 text-right text-xs font-bold text-gray-700 uppercase">Actions</th>
+                                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-white uppercase">Certificate #</th>
+                                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-white uppercase">Title</th>
+                                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-white uppercase">Student</th>
+                                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-white uppercase">Type</th>
+                                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-white uppercase">Date Issued</th>
+                                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-white uppercase">Blockchain</th>
+                                                <th className="px-6 py-4 text-right text-xs font-bold text-gray-700 dark:text-white uppercase">Actions</th>
                                             </tr>
                                         </thead>
-                                        <tbody className="bg-white divide-y divide-gray-200">
+                                        <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-white">
                                             {loading ? (
                                                 <tr><td colSpan={7} className="px-6 py-12 text-center"><RefreshCw className={`h-8 w-8 ${TEXT_COLOR_CLASS} animate-spin mx-auto`} /></td></tr>
                                             ) : certificates.length === 0 ? (
-                                                <tr><td colSpan={7} className="px-6 py-12 text-center text-gray-500">No certificates found</td></tr>
+                                                <tr><td colSpan={7} className="px-6 py-12 text-center text-gray-500 dark:text-white">No certificates found</td></tr>
                                             ) : (
                                                 certificates.map((cert) => (
-                                                    <tr key={cert.id} className="hover:bg-gray-50 transition-colors">
-                                                        <td className="px-6 py-4 whitespace-nowrap font-mono text-sm">{cert.certificate_number}</td>
-                                                        <td className="px-6 py-4 font-semibold text-sm">{cert.title}</td>
-                                                        <td className="px-6 py-4 text-sm">{cert.student?.full_name}</td>
-                                                        <td className="px-6 py-4 whitespace-nowrap text-sm">{cert.certificate_type}</td>
-                                                        <td className="px-6 py-4 whitespace-nowrap text-sm">
+                                                    <tr key={cert.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                                        <td className="px-6 py-4 whitespace-nowrap font-mono text-sm dark:text-white">{cert.certificate_number}</td>
+                                                        <td className="px-6 py-4 font-semibold text-sm dark:text-white">{cert.title}</td>
+                                                        <td className="px-6 py-4 text-sm dark:text-white">{cert.student?.full_name}</td>
+                                                        <td className="px-6 py-4 whitespace-nowrap text-sm dark:text-white">{cert.certificate_type}</td>
+                                                        <td className="px-6 py-4 whitespace-nowrap text-sm dark:text-white">
                                                             {new Date(cert.date_issued).toLocaleDateString()}
                                                         </td>
                                                         <td className="px-6 py-4 whitespace-nowrap">
                                                             {cert.blockchain_hash ? (
-                                                                <span className="flex items-center text-green-600 text-sm">
+                                                                <span className="flex items-center text-green-600 dark:text-white text-sm">
                                                                     <CheckCircle className="w-4 h-4 mr-1" />
                                                                     Verified
                                                                 </span>
                                                             ) : (
                                                                 <button
                                                                     onClick={() => handleRegisterOnBlockchain(cert.id)}
-                                                                    className="text-orange-600 text-sm hover:underline flex items-center"
+                                                                    className="text-orange-600 dark:text-white text-sm hover:underline flex items-center border dark:border-white px-2 py-1 rounded"
                                                                 >
                                                                     <Clock className="w-4 h-4 mr-1" />
                                                                     Register
@@ -946,14 +946,14 @@ const BlockchainManagement: React.FC = () => {
                                                                         setSelectedCertificate(cert);
                                                                         setShowCertificateModal(true);
                                                                     }}
-                                                                    className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"
+                                                                    className="p-2 text-blue-600 dark:text-white hover:bg-blue-50 dark:hover:bg-gray-700 rounded-lg border dark:border-white"
                                                                     title="View Details"
                                                                 >
                                                                     <Eye className="h-5 w-5" />
                                                                 </button>
                                                                 <button
                                                                     onClick={() => handleDeleteCertificate(cert.id)}
-                                                                    className="p-2 text-red-600 hover:bg-red-50 rounded-lg"
+                                                                    className="p-2 text-red-600 dark:text-white hover:bg-red-50 dark:hover:bg-gray-700 rounded-lg border dark:border-white"
                                                                     title="Delete"
                                                                 >
                                                                     <Trash2 className="h-5 w-5" />
@@ -983,32 +983,32 @@ const BlockchainManagement: React.FC = () => {
                             />
 
                             {/* Verification History */}
-                            <div className="mt-6 bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
-                                <div className="px-6 py-4 border-b border-gray-200">
-                                    <h2 className="text-xl font-bold text-gray-900">Verification History</h2>
+                            <div className="mt-6 bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-white">
+                                <div className="px-6 py-4 border-b border-gray-200 dark:border-white">
+                                    <h2 className="text-xl font-bold text-gray-900 dark:text-white">Verification History</h2>
                                 </div>
                                 <div className="overflow-x-auto">
-                                    <table className="min-w-full divide-y divide-gray-200">
-                                        <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
+                                    <table className="min-w-full divide-y divide-gray-200 dark:divide-white">
+                                        <thead className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-900 dark:border-white">
                                             <tr>
-                                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase">ID</th>
-                                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase">Certificate</th>
-                                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase">Verified By</th>
-                                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase">Verified At</th>
+                                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-white uppercase">ID</th>
+                                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-white uppercase">Certificate</th>
+                                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-white uppercase">Verified By</th>
+                                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-white uppercase">Verified At</th>
                                             </tr>
                                         </thead>
-                                        <tbody className="bg-white divide-y divide-gray-200">
+                                        <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-white">
                                             {loading ? (
                                                 <tr><td colSpan={4} className="px-6 py-12 text-center"><RefreshCw className={`h-8 w-8 ${TEXT_COLOR_CLASS} animate-spin mx-auto`} /></td></tr>
                                             ) : verifications.length === 0 ? (
-                                                <tr><td colSpan={4} className="px-6 py-12 text-center text-gray-500">No verification history</td></tr>
+                                                <tr><td colSpan={4} className="px-6 py-12 text-center text-gray-500 dark:text-white">No verification history</td></tr>
                                             ) : (
                                                 verifications.map((ver) => (
-                                                    <tr key={ver.id} className="hover:bg-gray-50 transition-colors">
-                                                        <td className="px-6 py-4 whitespace-nowrap font-mono text-sm">#{ver.id}</td>
-                                                        <td className="px-6 py-4 text-sm">{ver.certificate?.title || 'N/A'}</td>
-                                                        <td className="px-6 py-4 text-sm">{ver.verified_by_name || 'Public Lookup'}</td>
-                                                        <td className="px-6 py-4 whitespace-nowrap text-sm">
+                                                    <tr key={ver.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                                        <td className="px-6 py-4 whitespace-nowrap font-mono text-sm dark:text-white">#{ver.id}</td>
+                                                        <td className="px-6 py-4 text-sm dark:text-white">{ver.certificate?.title || 'N/A'}</td>
+                                                        <td className="px-6 py-4 text-sm dark:text-white">{ver.verified_by_name || 'Public Lookup'}</td>
+                                                        <td className="px-6 py-4 whitespace-nowrap text-sm dark:text-white">
                                                             {new Date(ver.verified_at).toLocaleString()}
                                                         </td>
                                                     </tr>
@@ -1046,7 +1046,7 @@ const BlockchainManagement: React.FC = () => {
                             <div className="flex min-h-full items-center justify-center p-4">
                                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" onClick={() => setShowCreateCertificateModal(false)}></div>
                                 
-                                <div className="relative w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white shadow-2xl transition-all">
+                                <div className="relative w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 dark:border-white shadow-2xl transition-all border dark:border-white">
                                     <div className={`${PRIMARY_COLOR_CLASS} px-6 py-4`}>
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center space-x-3">
@@ -1062,11 +1062,11 @@ const BlockchainManagement: React.FC = () => {
                                     <div className="p-6 space-y-6">
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <div>
-                                                <label className="block text-sm font-semibold text-gray-700 mb-2">Student *</label>
+                                                <label className="block text-sm font-semibold text-gray-700 dark:text-white mb-2">Student *</label>
                                                 <select
                                                     value={certificateFormData.student_id}
                                                     onChange={(e) => setCertificateFormData({...certificateFormData, student_id: parseInt(e.target.value)})}
-                                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                                    className="w-full px-4 py-3 border border-gray-200 dark:border-white dark:bg-gray-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
                                                     required
                                                     disabled={loadingOptions}
                                                 >
@@ -1080,11 +1080,11 @@ const BlockchainManagement: React.FC = () => {
                                             </div>
 
                                             <div>
-                                                <label className="block text-sm font-semibold text-gray-700 mb-2">Issued By (Teacher) *</label>
+                                                <label className="block text-sm font-semibold text-gray-700 dark:text-white mb-2">Issued By (Teacher) *</label>
                                                 <select
                                                     value={certificateFormData.issued_by}
                                                     onChange={(e) => setCertificateFormData({...certificateFormData, issued_by: parseInt(e.target.value)})}
-                                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                                    className="w-full px-4 py-3 border border-gray-200 dark:border-white dark:bg-gray-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
                                                     required
                                                     disabled={loadingOptions}
                                                 >
@@ -1098,11 +1098,11 @@ const BlockchainManagement: React.FC = () => {
                                             </div>
 
                                             <div>
-                                                <label className="block text-sm font-semibold text-gray-700 mb-2">Certificate Type *</label>
+                                                <label className="block text-sm font-semibold text-gray-700 dark:text-white mb-2">Certificate Type *</label>
                                                 <select
                                                     value={certificateFormData.certificate_type}
                                                     onChange={(e) => setCertificateFormData({...certificateFormData, certificate_type: e.target.value as CertificateType})}
-                                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                                    className="w-full px-4 py-3 border border-gray-200 dark:border-white dark:bg-gray-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
                                                     required
                                                 >
                                                     <option value="Completion">Completion</option>
@@ -1112,33 +1112,33 @@ const BlockchainManagement: React.FC = () => {
                                             </div>
 
                                             <div>
-                                                <label className="block text-sm font-semibold text-gray-700 mb-2">Date Issued *</label>
+                                                <label className="block text-sm font-semibold text-gray-700 dark:text-white mb-2">Date Issued *</label>
                                                 <input
                                                     type="date"
                                                     value={certificateFormData.date_issued}
                                                     onChange={(e) => setCertificateFormData({...certificateFormData, date_issued: e.target.value})}
-                                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                                    className="w-full px-4 py-3 border border-gray-200 dark:border-white dark:bg-gray-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
                                                     required
                                                 />
                                             </div>
                                         </div>
 
                                         <div>
-                                            <label className="block text-sm font-semibold text-gray-700 mb-2">Certificate Title *</label>
+                                            <label className="block text-sm font-semibold text-gray-700 dark:text-white mb-2">Certificate Title *</label>
                                             <input
                                                 type="text"
                                                 value={certificateFormData.title}
                                                 onChange={(e) => setCertificateFormData({...certificateFormData, title: e.target.value})}
-                                                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                                className="w-full px-4 py-3 border border-gray-200 dark:border-white dark:bg-gray-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
                                                 placeholder="e.g., Certificate of Completion - BS Marine Transportation"
                                                 required
                                             />
                                         </div>
 
-                                        <div className="flex justify-end space-x-3 pt-4 border-t">
+                                        <div className="flex justify-end space-x-3 pt-4 border-t dark:border-white">
                                             <button
                                                 onClick={() => setShowCreateCertificateModal(false)}
-                                                className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                                                className="px-6 py-2 border border-gray-300 dark:border-white dark:text-white dark:bg-gray-900 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                                             >
                                                 Cancel
                                             </button>

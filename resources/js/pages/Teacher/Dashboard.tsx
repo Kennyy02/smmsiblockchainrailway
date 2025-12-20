@@ -54,10 +54,10 @@ const StatCard: React.FC<{ title: string; value: string | number; icon: React.El
     const bgColor = color.replace('text-', 'bg-').replace('-600', '-100').replace('[#003366]', '[#003366]/10');
     
     return (
-        <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-white">
             <div className="flex items-center justify-between">
                 <div>
-                    <p className="text-sm font-medium text-gray-600 mb-1">{title}</p>
+                    <p className="text-sm font-medium text-gray-600 dark:text-white mb-1">{title}</p>
                     <p className={`text-3xl font-bold ${color}`}>{displayValue}</p>
                 </div>
                 <div className={`${bgColor} p-3 rounded-xl`}>
@@ -192,15 +192,15 @@ const Dashboard: React.FC = () => {
                 {/* Header */}
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-900">
+                        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
                             Teacher Dashboard
                          
                         </h1>
-                        <p className="mt-2 text-gray-600">Quick overview of your current academic workload.</p>
+                        <p className="mt-2 text-gray-600 dark:text-white">Quick overview of your current academic workload.</p>
                     </div>
                     <button 
                         onClick={fetchDashboardData}
-                        className={`inline-flex items-center px-4 py-2 bg-white border border-gray-300 ${TEXT_COLOR_CLASS} rounded-xl hover:bg-gray-50 transition-all shadow-sm`}
+                        className={`inline-flex items-center px-4 py-2 bg-white dark:bg-gray-800 dark:border-white dark:text-white border border-gray-300 dark:border-white ${TEXT_COLOR_CLASS} rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all shadow-sm`}
                         disabled={loading}
                     >
                         <RefreshCw className={`h-5 w-5 mr-2 ${loading ? 'animate-spin' : ''}`} />
@@ -241,7 +241,7 @@ const Dashboard: React.FC = () => {
                 <div className="grid grid-cols-1 lg:grid-cols- gap-6 mt-6">
                   
                     {/* Quick Navigation */}
-                    <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 space-y-4">
+                    <div className="bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-white space-y-4">
                         <h2 className={`text-xl font-bold ${TEXT_COLOR_CLASS} flex items-center`}>
                             <BookOpen className="h-6 w-6 mr-2" />
                             Quick Navigation
@@ -269,11 +269,11 @@ const Dashboard: React.FC = () => {
 const QuickNavLink: React.FC<{ title: string; href: string; icon: React.ElementType }> = ({ title, href, icon: Icon }) => (
     <a 
         href={href} 
-        className={`flex items-center justify-between p-3 border border-gray-200 rounded-lg ${TEXT_COLOR_CLASS} hover:bg-[#e6f2ff] transition-colors`}
+        className={`flex items-center justify-between p-3 border border-gray-200 dark:border-white dark:bg-gray-800 rounded-lg ${TEXT_COLOR_CLASS} hover:bg-[#e6f2ff] dark:hover:bg-gray-700 transition-colors`}
     >
         <div className="flex items-center">
             <Icon className={`h-5 w-5 mr-3 ${TEXT_COLOR_CLASS}`} />
-            <span className="font-medium text-gray-800">{title}</span>
+            <span className="font-medium text-gray-800 dark:text-white">{title}</span>
         </div>
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 opacity-60">
             <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />

@@ -60,7 +60,7 @@ const NotificationBanner: React.FC<{ notification: Notification; onClose: () => 
 
 const SubjectCard: React.FC<{ subject: Subject }> = ({ subject }) => {
     return (
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-all hover:scale-[1.02] overflow-hidden">
+        <div className="bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg border border-gray-100 dark:border-white hover:shadow-xl transition-all hover:scale-[1.02] overflow-hidden">
             {/* Header with gradient */}
             <div className={`${PRIMARY_COLOR_CLASS} px-6 py-4`}>
                 <div className="flex items-center justify-between">
@@ -83,16 +83,16 @@ const SubjectCard: React.FC<{ subject: Subject }> = ({ subject }) => {
                 {/* Description */}
                 {subject.description && (
                     <div>
-                        <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Description</p>
-                        <p className="text-sm text-gray-700">{subject.description}</p>
+                        <p className="text-xs text-gray-500 dark:text-white uppercase tracking-wider mb-1">Description</p>
+                        <p className="text-sm text-gray-700 dark:text-white">{subject.description}</p>
                     </div>
                 )}
 
                 {/* Units */}
-                <div className="flex items-center gap-4 pt-4 border-t border-gray-100">
+                <div className="flex items-center gap-4 pt-4 border-t border-gray-100 dark:border-white">
                     <div className="flex items-center gap-2">
-                        <Layers className="h-4 w-4 text-gray-400" />
-                        <span className="text-sm text-gray-600">
+                        <Layers className="h-4 w-4 text-gray-400 dark:text-white" />
+                        <span className="text-sm text-gray-600 dark:text-white">
                             {subject.units || 0} {(subject.units || 0) === 1 ? 'unit' : 'units'}
                         </span>
                     </div>
@@ -198,17 +198,17 @@ const MySubjects: React.FC = () => {
                 {/* Header */}
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-900 flex items-center">
+                        <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center">
                             <BookOpen className={`h-8 w-8 mr-3 ${TEXT_COLOR_CLASS}`} />
                             My Subjects
                         </h1>
-                        <p className="mt-2 text-gray-600">
+                        <p className="mt-2 text-gray-600 dark:text-white">
                             View all subjects assigned to you
                         </p>
                     </div>
                     <button
                         onClick={fetchMySubjects}
-                        className={`flex items-center px-4 py-2 border border-gray-300 rounded-xl text-sm font-medium ${TEXT_COLOR_CLASS} hover:bg-gray-50 transition-colors`}
+                        className={`flex items-center px-4 py-2 border border-gray-300 dark:border-white rounded-xl text-sm font-medium ${TEXT_COLOR_CLASS} hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors`}
                     >
                         <RefreshCw className="h-4 w-4 mr-2" />
                         Refresh
@@ -217,43 +217,43 @@ const MySubjects: React.FC = () => {
 
                 {/* Stats Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+                    <div className="bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-white">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm font-medium text-gray-600 mb-1">Total Subjects</p>
+                                <p className="text-sm font-medium text-gray-600 dark:text-white mb-1">Total Subjects</p>
                                 <p className={`text-3xl font-bold ${TEXT_COLOR_CLASS}`}>{subjects.length}</p>
-                                <p className="text-xs text-gray-500 mt-1">Assigned to you</p>
+                                <p className="text-xs text-gray-500 dark:text-white mt-1">Assigned to you</p>
                             </div>
                             <div className={`${LIGHT_BG_CLASS} p-3 rounded-xl`}>
                                 <BookOpen className={`h-8 w-8 ${TEXT_COLOR_CLASS}`} />
                             </div>
                         </div>
                     </div>
-                    <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+                    <div className="bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-white">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm font-medium text-gray-600 mb-1">Total Units</p>
-                                <p className="text-3xl font-bold text-blue-600">{totalUnits}</p>
-                                <p className="text-xs text-gray-500 mt-1">Combined teaching load</p>
+                                <p className="text-sm font-medium text-gray-600 dark:text-white mb-1">Total Units</p>
+                                <p className="text-3xl font-bold text-blue-600 dark:text-white">{totalUnits}</p>
+                                <p className="text-xs text-gray-500 dark:text-white mt-1">Combined teaching load</p>
                             </div>
-                            <div className="bg-blue-100 p-3 rounded-xl">
-                                <Layers className="h-8 w-8 text-blue-600" />
+                            <div className="bg-blue-100 dark:bg-gray-700 p-3 rounded-xl">
+                                <Layers className="h-8 w-8 text-blue-600 dark:text-white" />
                             </div>
                         </div>
                     </div>
                 </div>
 
                 {/* Search */}
-                <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+                <div className="bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-white">
                     <div className="relative">
                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                            <BookOpen className="h-5 w-5 text-gray-400" />
+                            <BookOpen className="h-5 w-5 text-gray-400 dark:text-white" />
                         </div>
                         <input
                             type="text"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="pl-12 w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent transition-all"
+                            className="pl-12 w-full px-4 py-3 border border-gray-200 dark:border-white dark:bg-gray-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent transition-all"
                             placeholder="Search subjects..."
                         />
                     </div>
@@ -263,15 +263,15 @@ const MySubjects: React.FC = () => {
                 {loading ? (
                     <div className="flex items-center justify-center py-12">
                         <RefreshCw className={`h-12 w-12 ${TEXT_COLOR_CLASS} animate-spin`} />
-                        <p className="ml-4 text-lg text-gray-600">Loading your subjects...</p>
+                        <p className="ml-4 text-lg text-gray-600 dark:text-white">Loading your subjects...</p>
                     </div>
                 ) : filteredSubjects.length === 0 ? (
-                    <div className="bg-white rounded-2xl shadow-lg p-12 text-center border border-gray-100">
-                        <BookOpen className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                        <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                    <div className="bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg p-12 text-center border border-gray-100 dark:border-white">
+                        <BookOpen className="h-16 w-16 text-gray-300 dark:text-white mx-auto mb-4" />
+                        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
                             {searchTerm ? 'No subjects match your search' : 'No subjects assigned yet'}
                         </h3>
-                        <p className="text-gray-600">
+                        <p className="text-gray-600 dark:text-white">
                             {searchTerm 
                                 ? 'Try adjusting your search criteria'
                                 : 'You will see your assigned subjects here once they are set up'}
@@ -294,7 +294,7 @@ const MySubjects: React.FC = () => {
                         </div>
 
                         {/* Results count */}
-                        <div className="text-center text-sm text-gray-600">
+                        <div className="text-center text-sm text-gray-600 dark:text-white">
                             Showing {filteredSubjects.length} of {subjects.length} subjects
                         </div>
                     </>

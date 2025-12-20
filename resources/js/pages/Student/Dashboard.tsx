@@ -81,10 +81,10 @@ const StatCard: React.FC<{ title: string; value: string | number; icon: React.El
     const bgColor = color.replace('text-', 'bg-').replace('-600', '-100').replace('[#007bff]', '[#007bff]/10');
     
     return (
-        <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-white">
             <div className="flex items-center justify-between">
                 <div>
-                    <p className="text-sm font-medium text-gray-600 mb-1">{title}</p>
+                    <p className="text-sm font-medium text-gray-600 dark:text-white mb-1">{title}</p>
                     <p className={`text-3xl font-bold ${color}`}>{displayValue}</p>
                 </div>
                 <div className={`${bgColor} p-3 rounded-xl`}>
@@ -99,11 +99,11 @@ const StatCard: React.FC<{ title: string; value: string | number; icon: React.El
 const QuickNavLink: React.FC<{ title: string; href: string; icon: React.ElementType }> = ({ title, href, icon: Icon }) => (
     <a 
         href={href} 
-        className={`flex items-center justify-between p-3 border border-gray-200 rounded-lg ${TEXT_COLOR_CLASS} hover:bg-[#e6f2ff] transition-colors`}
+        className={`flex items-center justify-between p-3 border border-gray-200 dark:border-white dark:bg-gray-800 rounded-lg ${TEXT_COLOR_CLASS} hover:bg-[#e6f2ff] dark:hover:bg-gray-700 transition-colors`}
     >
         <div className="flex items-center">
             <Icon className={`h-5 w-5 mr-3 ${TEXT_COLOR_CLASS}`} />
-            <span className="font-medium text-gray-800">{title}</span>
+            <span className="font-medium text-gray-800 dark:text-white">{title}</span>
         </div>
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 opacity-60">
             <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
@@ -199,16 +199,16 @@ const StudentDashboard: React.FC = () => {
                 {/* Header */}
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-900">Student Dashboard</h1>
+                        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Student Dashboard</h1>
                         {user && student && (
-                            <p className="mt-2 text-gray-600">
+                            <p className="mt-2 text-gray-600 dark:text-white">
                                 Welcome back, {user.name}! (ID: {student.student_id})
                             </p>
                         )}
                     </div>
                     <button 
                         onClick={fetchDashboardData}
-                        className={`inline-flex items-center px-4 py-2 bg-white border border-gray-300 ${TEXT_COLOR_CLASS} rounded-xl ${HOVER_COLOR_CLASS} transition-all shadow-sm`}
+                        className={`inline-flex items-center px-4 py-2 bg-white dark:bg-gray-800 dark:border-white dark:text-white border border-gray-300 dark:border-white ${TEXT_COLOR_CLASS} rounded-xl ${HOVER_COLOR_CLASS} transition-all shadow-sm`}
                         disabled={loading}
                     >
                         <RefreshCw className={`h-5 w-5 mr-2 ${loading ? 'animate-spin' : ''}`} />
@@ -218,33 +218,33 @@ const StudentDashboard: React.FC = () => {
 
                 {/* Student Info - Course, Grade Level, and Section */}
                 {student && (
-                    <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+                    <div className="bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-sm border border-gray-200 dark:border-white p-6">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center">
-                                <div className="text-gray-400 mr-4">
+                                <div className="text-gray-400 dark:text-white mr-4">
                                     <GraduationCap className="h-8 w-8" />
                                 </div>
                                 <div>
-                                    <h2 className="text-xl font-semibold text-gray-900">{student.first_name} {student.last_name}</h2>
-                                    <p className="text-gray-500 text-sm">Student ID: {student.student_id}</p>
+                                    <h2 className="text-xl font-semibold text-gray-900 dark:text-white">{student.first_name} {student.last_name}</h2>
+                                    <p className="text-gray-500 dark:text-white text-sm">Student ID: {student.student_id}</p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-10">
                                 <div>
                                     <p className="text-xs text-gray-400 uppercase tracking-wide mb-1">Program</p>
-                                    <p className="text-base font-medium text-gray-900">
+                                    <p className="text-base font-medium text-gray-900 dark:text-white">
                                         {student.course?.course_name || student.program || 'N/A'}
                                     </p>
                                 </div>
                                 <div>
                                     <p className="text-xs text-gray-400 uppercase tracking-wide mb-1">Grade Level</p>
-                                    <p className="text-base font-medium text-gray-900">
+                                    <p className="text-base font-medium text-gray-900 dark:text-white">
                                         {formatGradeLevel(student.year_level)}
                                     </p>
                                 </div>
                                 <div>
                                     <p className="text-xs text-gray-400 uppercase tracking-wide mb-1">Section</p>
-                                    <p className="text-base font-medium text-gray-900">
+                                    <p className="text-base font-medium text-gray-900 dark:text-white">
                                         {student.section || 'N/A'}
                                     </p>
                                 </div>
@@ -262,7 +262,7 @@ const StudentDashboard: React.FC = () => {
                 
                 {/* Display loading state */}
                 {loading && !notification ? (
-                    <div className="py-20 text-center text-gray-500">
+                    <div className="py-20 text-center text-gray-500 dark:text-white">
                         <RefreshCw className={`h-12 w-12 mx-auto ${TEXT_COLOR_CLASS} animate-spin`} />
                         <p className="mt-4 text-lg">Loading your personalized dashboard data...</p>
                     </div>
@@ -278,7 +278,7 @@ const StudentDashboard: React.FC = () => {
                         {/* Alerts and Navigation */}
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                             {/* Alerts/Announcements */}
-                            <div className="lg:col-span-2 bg-white rounded-2xl shadow-lg p-6 border border-gray-100 space-y-4">
+                            <div className="lg:col-span-2 bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-white space-y-4">
                                 <h2 className={`text-xl font-bold ${TEXT_COLOR_CLASS} flex items-center`}>
                                     <AlertTriangle className="h-6 w-6 mr-2" />
                                     Important Alerts & Notices
@@ -299,8 +299,8 @@ const StudentDashboard: React.FC = () => {
                                             <div className="flex items-start">
                                                 <item.icon className={`h-6 w-6 mr-3 ${item.color}`} />
                                                 <div>
-                                                    <p className="font-semibold text-gray-900">{item.title}</p>
-                                                    <p className="text-sm text-gray-600 mt-0.5">{item.description}</p>
+                                                    <p className="font-semibold text-gray-900 dark:text-white">{item.title}</p>
+                                                    <p className="text-sm text-gray-600 dark:text-white mt-0.5">{item.description}</p>
                                                 </div>
                                             </div>
                                         </a>
@@ -309,7 +309,7 @@ const StudentDashboard: React.FC = () => {
                             </div>
 
                             {/* Quick Navigation */}
-                            <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 space-y-4">
+                            <div className="bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-white space-y-4">
                                 <h2 className={`text-xl font-bold ${TEXT_COLOR_CLASS} flex items-center`}>
                                     <LayoutGrid className="h-6 w-6 mr-2" />
                                     Quick Navigation
