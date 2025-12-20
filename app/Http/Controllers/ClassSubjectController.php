@@ -48,11 +48,13 @@ class ClassSubjectController extends Controller
                     $query->where('teacher_id', $teacherFilter);
                 } else {
                     // Search by teacher name or teacher ID
+                    // Use actual database columns (first_name, last_name, middle_name, teacher_id)
                     $query->whereHas('teacher', function($q) use ($teacherFilter) {
-                        $q->where('full_name', 'like', "%{$teacherFilter}%")
-                          ->orWhere('teacher_id', 'like', "%{$teacherFilter}%")
+                        $q->where('teacher_id', 'like', "%{$teacherFilter}%")
                           ->orWhere('first_name', 'like', "%{$teacherFilter}%")
-                          ->orWhere('last_name', 'like', "%{$teacherFilter}%");
+                          ->orWhere('last_name', 'like', "%{$teacherFilter}%")
+                          ->orWhere('middle_name', 'like', "%{$teacherFilter}%")
+                          ->orWhere('email', 'like', "%{$teacherFilter}%");
                     });
                 }
             }
