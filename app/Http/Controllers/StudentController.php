@@ -446,25 +446,60 @@ class StudentController extends Controller
             // Example: If Parent A has Student 1, 2, 3, and we delete Student 1:
             //   - Student 1's relationship with Parent A is removed
             //   - Student 2 and 3's relationships with Parent A remain intact
+            $parentIds = [];
+            $parentUserIds = [];
             if ($student->parents()->count() > 0) {
-                $parentIds = $student->parents()->pluck('parent_id')->toArray();
+                // Get parent IDs and their user IDs BEFORE detaching
+                $parents = $student->parents()->get();
+                $parentIds = $parents->pluck('id')->toArray();
+                $parentUserIds = $parents->pluck('user_id')->filter()->toArray();
+                
+                // Log parent info before detaching
+                Log::info("Before detaching: Student {$id} ({$studentName}) has " . count($parentIds) . " parent(s). Parent IDs: " . implode(', ', $parentIds) . ". Parent User IDs: " . implode(', ', $parentUserIds));
+                
+                // Detach the relationships (this only removes pivot table entries, NOT parent records)
                 $student->parents()->detach();
-                Log::info("Detached parent relationships for student {$id} (student: {$studentName}). Parent IDs unlinked: " . implode(', ', $parentIds) . ". Parent records and other children's relationships preserved.");
+                
+                // Verify parents still exist after detaching
+                $parentsAfterDetach = ParentModel::whereIn('id', $parentIds)->get();
+                if ($parentsAfterDetach->count() !== count($parentIds)) {
+                    $missingParentIds = array_diff($parentIds, $parentsAfterDetach->pluck('id')->toArray());
+                    Log::error("CRITICAL: Parent records were deleted during detach! Missing Parent IDs: " . implode(', ', $missingParentIds));
+                } else {
+                    Log::info("After detaching: All " . count($parentIds) . " parent record(s) still exist. Parent IDs: " . implode(', ', $parentIds));
+                }
             }
             
             // Permanently delete the student from database (force delete)
             $student->forceDelete();
             
             // Also delete the associated User record if it exists
+            // IMPORTANT: Only delete the student's user, NOT parent users
             if ($userId) {
-                try {
-                    $user = User::find($userId);
-                    if ($user) {
-                        $user->forceDelete(); // Permanently delete the user from database
+                // Double-check this user_id is not a parent's user_id
+                if (in_array($userId, $parentUserIds)) {
+                    Log::warning("CRITICAL: Student's user_id ({$userId}) matches a parent's user_id! Skipping user deletion to prevent parent deletion.");
+                } else {
+                    try {
+                        $user = User::find($userId);
+                        if ($user) {
+                            $user->forceDelete(); // Permanently delete the user from database
+                            Log::info("Deleted student's user account: User ID {$userId}");
+                        }
+                    } catch (\Exception $userException) {
+                        // Log but don't fail the student deletion if user deletion fails
+                        Log::warning('Failed to delete associated user for student: ' . $userException->getMessage());
                     }
-                } catch (\Exception $userException) {
-                    // Log but don't fail the student deletion if user deletion fails
-                    Log::warning('Failed to delete associated user for student: ' . $userException->getMessage());
+                }
+            }
+            
+            // Final verification: Check that all parents still exist
+            if (!empty($parentIds)) {
+                $finalParentCheck = ParentModel::whereIn('id', $parentIds)->count();
+                if ($finalParentCheck !== count($parentIds)) {
+                    Log::error("CRITICAL: Some parent records were deleted! Expected " . count($parentIds) . " parents, found {$finalParentCheck}");
+                } else {
+                    Log::info("Final verification: All " . count($parentIds) . " parent record(s) are preserved.");
                 }
             }
             
