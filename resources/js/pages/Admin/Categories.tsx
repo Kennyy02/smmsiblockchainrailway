@@ -118,119 +118,119 @@ const CategoryModal: React.FC<{
 
     return (
         <div className="fixed inset-0 z-50 overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4">
+            <div className="flex min-h-full items-center justify-center p-2 sm:p-4">
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" onClick={onClose}></div>
                 
-                <div className="relative w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white shadow-2xl transition-all">
-                    <div className={`${PRIMARY_COLOR_CLASS} px-6 py-4`}>
+                <div className="relative w-full max-w-2xl transform overflow-hidden rounded-xl sm:rounded-2xl bg-white shadow-2xl transition-all">
+                    <div className={`${PRIMARY_COLOR_CLASS} px-4 py-3 sm:px-6 sm:py-4`}>
                         <div className="flex items-center justify-between">
-                            <h2 className="text-xl font-bold text-white">
+                            <h2 className="text-lg sm:text-xl font-bold text-white">
                                 {category ? 'Edit Category' : 'Add New Category'}
                             </h2>
-                            <button onClick={onClose} className="rounded-full p-2 text-white/80 hover:bg-white/20 hover:text-white transition-colors">
-                                <X className="h-5 w-5" />
+                            <button onClick={onClose} className="rounded-full p-1.5 sm:p-2 text-white/80 hover:bg-white/20 hover:text-white transition-colors">
+                                <X className="h-4 w-4 sm:h-5 sm:w-5" />
                             </button>
                         </div>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="p-6 space-y-6">
-                        <div className="grid grid-cols-2 gap-4">
+                    <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">Name *</label>
+                                <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Name *</label>
                                 <input
                                     type="text"
                                     name="name"
                                     value={formData.name}
                                     onChange={handleChange}
-                                    className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
+                                    className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
                                     placeholder="Category Name"
                                     required
                                 />
                                 {errors.name && (<p className="text-red-500 text-xs mt-1">{errors.name[0]}</p>)}
                             </div>
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">Slug</label>
+                                <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Slug</label>
                                 <input
                                     type="text"
                                     name="slug"
                                     value={formData.slug}
                                     onChange={handleChange}
-                                    className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
+                                    className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
                                     placeholder="auto-generated"
                                 />
                                 {errors.slug && (<p className="text-red-500 text-xs mt-1">{errors.slug[0]}</p>)}
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">Color</label>
+                                <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Color</label>
                                 <div className="flex gap-2">
                                     <input
                                         type="color"
                                         name="color"
                                         value={formData.color}
                                         onChange={handleChange}
-                                        className="h-12 w-16 border border-gray-200 rounded-xl cursor-pointer"
+                                        className="h-10 sm:h-12 w-14 sm:w-16 border border-gray-200 rounded-lg sm:rounded-xl cursor-pointer"
                                     />
                                     <input
                                         type="text"
                                         value={formData.color}
                                         onChange={(e) => setFormData(prev => ({ ...prev, color: e.target.value }))}
-                                        className={`flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
+                                        className={`flex-1 px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
                                         placeholder="#6366f1"
                                         pattern="^#[0-9A-Fa-f]{6}$"
                                     />
                                 </div>
                                 {errors.color && (<p className="text-red-500 text-xs mt-1">{errors.color[0]}</p>)}
                             </div>
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Sort Order</label>
+                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Sort Order</label>
                                     <input
                                         type="number"
                                         name="sort_order"
                                         value={formData.sort_order}
                                         onChange={handleChange}
-                                        className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
+                                        className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
                                         min="0"
                                     />
                                     {errors.sort_order && (<p className="text-red-500 text-xs mt-1">{errors.sort_order[0]}</p>)}
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Status</label>
-                                    <label className="flex items-center h-12 px-4 border border-gray-200 rounded-xl bg-gray-50">
+                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Status</label>
+                                    <label className="flex items-center h-10 sm:h-12 px-3 sm:px-4 border border-gray-200 rounded-lg sm:rounded-xl bg-gray-50">
                                         <input
                                             type="checkbox"
                                             name="is_active"
                                             checked={formData.is_active}
                                             onChange={handleChange}
-                                            className="w-5 h-5 text-[#003366] border-gray-300 rounded focus:ring-[#003366]"
+                                            className="w-4 h-4 sm:w-5 sm:h-5 text-[#003366] border-gray-300 rounded focus:ring-[#003366]"
                                         />
-                                        <span className="ml-2 text-sm text-gray-700">Active</span>
+                                        <span className="ml-2 text-xs sm:text-sm text-gray-700">Active</span>
                                     </label>
                                 </div>
                             </div>
                         </div>
 
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">Description</label>
+                            <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Description</label>
                             <textarea
                                 name="description"
                                 value={formData.description}
                                 onChange={handleChange}
-                                className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
+                                className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
                                 rows={3}
                                 placeholder="Category description..."
                             />
                             {errors.description && (<p className="text-red-500 text-xs mt-1">{errors.description[0]}</p>)}
                         </div>
 
-                        <div className="flex justify-end space-x-3 pt-4 border-t">
-                            <button type="button" onClick={onClose} className="px-6 py-3 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors font-medium" disabled={loading}>
+                        <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-3 pt-3 sm:pt-4 border-t">
+                            <button type="button" onClick={onClose} className="w-full sm:w-auto px-4 py-2.5 sm:px-6 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg sm:rounded-xl text-gray-700 hover:bg-gray-50 transition-colors font-medium" disabled={loading}>
                                 Cancel
                             </button>
-                            <button type="submit" className={`px-6 py-3 ${PRIMARY_COLOR_CLASS} text-white rounded-xl ${HOVER_COLOR_CLASS} transition-all font-medium shadow-lg disabled:opacity-50`} disabled={loading}>
+                            <button type="submit" className={`w-full sm:w-auto px-4 py-2.5 sm:px-6 sm:py-3 text-sm sm:text-base ${PRIMARY_COLOR_CLASS} text-white rounded-lg sm:rounded-xl ${HOVER_COLOR_CLASS} transition-all font-medium shadow-lg disabled:opacity-50`} disabled={loading}>
                                 {loading ? 'Saving...' : category ? 'Update Category' : 'Add Category'}
                             </button>
                         </div>
