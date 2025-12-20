@@ -3,6 +3,7 @@ import {
     Award, BarChart, Hash, Zap, BookOpen, Clock, TrendingDown, 
     Sunrise, Sun, Moon, RefreshCw, Users, GraduationCap, UserCheck 
 } from 'lucide-react';
+import { router } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { 
     adminGradeService, 
@@ -31,26 +32,29 @@ interface Notification {
     message: string;
 }
 
-// Custom Stat Card Component
+// Custom Stat Card Component - Clickable
 interface StatCardProps {
     title: string;
     value: string | number | React.ReactNode; // Value can be a node (like the loading spinner)
     icon: React.ElementType;
     iconBgClass: string;
     iconColorClass: string;
+    onClick?: () => void;
+    clickable?: boolean;
 }
 
-const StatCard: React.FC<StatCardProps> = ({ title, value, icon: Icon, iconBgClass, iconColorClass }) => (
-    <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 transition-shadow duration-300 hover:shadow-xl">
-        <div className="flex items-center justify-between">
-            <div>
-                <p className="text-gray-500 text-sm font-medium mb-1">{title}</p>
-                <p className="text-3xl font-bold text-gray-900">
-                    {value}
-                </p>
-            </div>
-            <div className={`p-3 rounded-xl ${iconBgClass}`}>
-                <Icon className={`w-6 h-6 ${iconColorClass}`} />
+const StatCard: React.FC<StatCardProps> = ({ title, value, icon: Icon, iconBgClass, iconColorClass, onClick, clickable = false }) => (
+    <div 
+        className={`bg-white rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 lg:p-6 border border-gray-100 transition-all duration-300 ${clickable ? 'hover:shadow-xl cursor-pointer hover:scale-105' : 'hover:shadow-xl'}`}
+        onClick={clickable ? onClick : undefined}
+    >
+        <div className="flex flex-col items-center text-center">
+            <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1 sm:mb-2">{title}</p>
+            <p className={`text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 sm:mb-3`}>
+                {value}
+            </p>
+            <div className={`p-2 sm:p-3 rounded-full ${iconBgClass}`}>
+                <Icon className={`w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 ${iconColorClass}`} />
             </div>
         </div>
     </div>
@@ -205,31 +209,31 @@ const Dashboard: React.FC = () => {
 
     return (
         <AppLayout>
-            {/* 🐛 FIX: Replaced <style jsx global> with standard <style> to remove React warnings */}
-            <div className="p-8">
-                <div className="max-w-7xl mx-auto">
-                    
+            <div className="min-h-screen bg-[#f3f4f6]">
+                <div className="container mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8">
                     {/* ☀️ GREETING COMPONENT */}
                     <Greeting userRole="admin" />
 
                     {/* Header/Subtitle */}
-                    <div className="mb-8 border-b pb-4">
+                    <div className="mb-4 sm:mb-6 md:mb-8 border-b pb-3 sm:pb-4">
                         <div className="flex items-center justify-between">
                             <div>
-                                <h1 className="text-3xl font-bold text-gray-900 mb-2">School Overview</h1>
-                                <p className="text-gray-600">{dashboardSubtitle}</p>
+                                <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">School Overview</h1>
+                                <p className="text-xs sm:text-sm text-gray-600">{dashboardSubtitle}</p>
                             </div>
                         </div>
                     </div>
 
-                    {/* Stats Summary - Main KPIs */}
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    {/* Stats Summary - Main KPIs - Clickable and Responsive */}
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-6 mb-4 sm:mb-6 md:mb-8">
                         <StatCard 
                             title="Total Students"
                             value={displayStats.total_students}
                             icon={GraduationCap}
                             iconBgClass="bg-blue-50"
                             iconColorClass="text-blue-600"
+                            clickable={true}
+                            onClick={() => router.visit('/admin/students')}
                         />
                         <StatCard 
                             title="Total Teachers"
@@ -237,6 +241,8 @@ const Dashboard: React.FC = () => {
                             icon={UserCheck}
                             iconBgClass="bg-purple-50"
                             iconColorClass="text-purple-600"
+                            clickable={true}
+                            onClick={() => router.visit('/admin/teachers')}
                         />
                         <StatCard 
                             title="Total Parents"
@@ -244,6 +250,8 @@ const Dashboard: React.FC = () => {
                             icon={Users}
                             iconBgClass="bg-green-50"
                             iconColorClass="text-green-600"
+                            clickable={true}
+                            onClick={() => router.visit('/admin/parents')}
                         />
                         <StatCard 
                             title="Failed Students"
@@ -251,6 +259,8 @@ const Dashboard: React.FC = () => {
                             icon={TrendingDown}
                             iconBgClass="bg-red-50"
                             iconColorClass="text-red-600"
+                            clickable={true}
+                            onClick={() => router.visit('/admin/students')}
                         />
                     </div>
 

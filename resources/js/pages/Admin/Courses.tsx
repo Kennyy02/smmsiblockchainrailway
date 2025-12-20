@@ -651,7 +651,6 @@ const Courses: React.FC = () => {
                                 <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
                                     <tr>
                                         <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Course Code</th>
-                                        <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Course Name</th>
                                         <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Level</th>
                                         <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Duration</th>
                                         <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Status</th>
@@ -661,7 +660,7 @@ const Courses: React.FC = () => {
                                 <tbody className="bg-white divide-y divide-gray-200">
                                     {loading ? (
                                         <tr>
-                                            <td colSpan={6} className="px-3 sm:px-6 py-8 sm:py-12 text-center">
+                                            <td colSpan={5} className="px-3 sm:px-6 py-8 sm:py-12 text-center">
                                                 <div className="flex flex-col items-center justify-center">
                                                     <RefreshCw className={`h-6 w-6 sm:h-8 sm:w-8 ${TEXT_COLOR_CLASS} animate-spin mb-2`} />
                                                     <p className="text-sm sm:text-base text-gray-500">Loading courses...</p>
@@ -670,7 +669,7 @@ const Courses: React.FC = () => {
                                         </tr>
                                     ) : courses.length === 0 ? (
                                         <tr>
-                                            <td colSpan={6} className="px-3 sm:px-6 py-8 sm:py-12 text-center text-gray-500">
+                                            <td colSpan={5} className="px-3 sm:px-6 py-8 sm:py-12 text-center text-gray-500">
                                                 <div className="flex flex-col items-center">
                                                     <GraduationCap className="h-10 w-10 sm:h-12 sm:w-12 text-gray-300 mb-3 sm:mb-4" />
                                                     <p className="text-base sm:text-lg font-medium">No courses found</p>
@@ -683,11 +682,9 @@ const Courses: React.FC = () => {
                                             <tr key={course.id} className="hover:bg-gray-50 transition-colors">
                                                 <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
                                                     <div className="text-xs sm:text-sm font-semibold text-gray-900 truncate">{course.course_code}</div>
-                                                </td>
-                                                <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
-                                                    <div className="text-xs sm:text-sm font-medium text-gray-900 truncate">{course.course_name}</div>
+                                                    <div className="text-xs sm:text-sm font-medium text-gray-700 truncate mt-0.5">{course.course_name}</div>
                                                     {course.description && (
-                                                        <div className="text-xs text-gray-500 truncate max-w-xs">{course.description}</div>
+                                                        <div className="text-xs text-gray-500 truncate max-w-xs mt-0.5">{course.description}</div>
                                                     )}
                                                     {/* Show additional info on mobile */}
                                                     <div className="md:hidden mt-1 space-y-1">

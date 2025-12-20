@@ -863,157 +863,163 @@ const CourseYearSubjects: React.FC = () => {
 
     return (
         <AppLayout>
-            <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
+            <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-3 sm:p-4 md:p-6">
                 {notification && (
                     <NotificationComponent notification={notification} onClose={() => setNotification(null)} />
                 )}
 
                 {/* Header */}
-                <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-8 gap-4">
-                    <div className="flex items-center gap-4">
-                        <div className={`${PRIMARY_COLOR_CLASS} p-3 rounded-2xl shadow-lg`}>
-                            <Layers className="h-8 w-8 text-white" />
+                <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-4 sm:mb-6 md:mb-8 gap-3 sm:gap-4">
+                    <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
+                        <div className={`${PRIMARY_COLOR_CLASS} p-2 sm:p-3 rounded-lg sm:rounded-2xl shadow-lg`}>
+                            <Layers className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 text-white" />
                         </div>
                         <div>
-                            <h1 className={`text-3xl font-bold ${TEXT_COLOR_CLASS}`}>Curriculum / Prospectus</h1>
-                            <p className="text-gray-600">View and manage curriculum for each course</p>
+                            <h1 className={`text-xl sm:text-2xl md:text-3xl font-bold ${TEXT_COLOR_CLASS}`}>Curriculum / Prospectus</h1>
+                            <p className="text-xs sm:text-sm text-gray-600">View and manage curriculum for each course</p>
                         </div>
                     </div>
-                    <div className="flex gap-3">
+                    <div className="flex gap-2 sm:gap-3">
                         <button
                             onClick={() => handleAdd()}
-                            className={`flex items-center gap-2 px-5 py-3 ${PRIMARY_COLOR_CLASS} text-white rounded-xl ${HOVER_COLOR_CLASS} shadow-lg font-semibold`}
+                            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 md:py-3 ${PRIMARY_COLOR_CLASS} text-white rounded-lg sm:rounded-xl ${HOVER_COLOR_CLASS} shadow-lg font-semibold text-xs sm:text-sm md:text-base`}
                         >
-                            <Plus className="h-5 w-5" />
-                            Add Subject
+                            <Plus className="h-4 w-4 sm:h-5 sm:w-5" />
+                            <span className="hidden sm:inline">Add Subject</span>
+                            <span className="sm:hidden">Add</span>
                         </button>
-                        <button onClick={loadData} className="p-3 border border-gray-200 rounded-xl hover:bg-gray-100 bg-white">
-                            <RefreshCw className={`h-5 w-5 ${loading ? 'animate-spin' : ''} text-gray-600`} />
+                        <button onClick={loadData} className="p-2 sm:p-2.5 md:p-3 border border-gray-200 rounded-lg sm:rounded-xl hover:bg-gray-100 bg-white">
+                            <RefreshCw className={`h-4 w-4 sm:h-5 sm:w-5 ${loading ? 'animate-spin' : ''} text-gray-600`} />
                         </button>
                     </div>
                 </div>
 
-                {/* Stats Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                    <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm font-medium text-gray-600 mb-1">Total Courses</p>
-                                <p className={`text-3xl font-bold ${TEXT_COLOR_CLASS}`}>{coursesWithCurriculum.length}</p>
-                            </div>
-                            <div className={`${LIGHT_BG_CLASS} p-3 rounded-xl`}>
-                                <GraduationCap className={`h-8 w-8 ${TEXT_COLOR_CLASS}`} />
+                {/* Stats Cards - Centered layout with icon below value */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-6 mb-4 sm:mb-6 md:mb-8">
+                    <div className="bg-white rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 lg:p-6 border border-gray-100">
+                        <div className="flex flex-col items-center text-center">
+                            <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1 sm:mb-2">Courses</p>
+                            <p className={`text-xl sm:text-2xl md:text-3xl font-bold ${TEXT_COLOR_CLASS} mb-2 sm:mb-3`}>{coursesWithCurriculum.length}</p>
+                            <div className={`${LIGHT_BG_CLASS} p-2 sm:p-3 rounded-full`}>
+                                <GraduationCap className={`h-5 w-5 sm:h-6 sm:w-6 md:h-8 md:w-8 ${TEXT_COLOR_CLASS}`} />
                             </div>
                         </div>
                     </div>
-                    <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm font-medium text-gray-600 mb-1">Total Subjects</p>
-                                <p className={`text-3xl font-bold ${TEXT_COLOR_CLASS}`}>{links.length}</p>
-                            </div>
-                            <div className={`${LIGHT_BG_CLASS} p-3 rounded-xl`}>
-                                <BookOpen className={`h-8 w-8 ${TEXT_COLOR_CLASS}`} />
+                    <div className="bg-white rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 lg:p-6 border border-gray-100">
+                        <div className="flex flex-col items-center text-center">
+                            <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1 sm:mb-2">Subjects</p>
+                            <p className={`text-xl sm:text-2xl md:text-3xl font-bold ${TEXT_COLOR_CLASS} mb-2 sm:mb-3`}>{links.length}</p>
+                            <div className={`${LIGHT_BG_CLASS} p-2 sm:p-3 rounded-full`}>
+                                <BookOpen className={`h-5 w-5 sm:h-6 sm:w-6 md:h-8 md:w-8 ${TEXT_COLOR_CLASS}`} />
                             </div>
                         </div>
                     </div>
-                    <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm font-medium text-gray-600 mb-1">Total Units</p>
-                                <p className={`text-3xl font-bold ${TEXT_COLOR_CLASS}`}>
-                                    {links.reduce((sum, l) => sum + (l.units || 0), 0)}
-                                </p>
-                            </div>
-                            <div className={`${LIGHT_BG_CLASS} p-3 rounded-xl`}>
-                                <Calendar className={`h-8 w-8 ${TEXT_COLOR_CLASS}`} />
+                    <div className="bg-white rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 lg:p-6 border border-gray-100">
+                        <div className="flex flex-col items-center text-center">
+                            <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1 sm:mb-2">Units</p>
+                            <p className={`text-xl sm:text-2xl md:text-3xl font-bold ${TEXT_COLOR_CLASS} mb-2 sm:mb-3`}>
+                                {links.reduce((sum, l) => sum + (l.units || 0), 0)}
+                            </p>
+                            <div className={`${LIGHT_BG_CLASS} p-2 sm:p-3 rounded-full`}>
+                                <Calendar className={`h-5 w-5 sm:h-6 sm:w-6 md:h-8 md:w-8 ${TEXT_COLOR_CLASS}`} />
                             </div>
                         </div>
                     </div>
-                    <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm font-medium text-gray-600 mb-1">Unique Subjects</p>
-                                <p className={`text-3xl font-bold ${TEXT_COLOR_CLASS}`}>{stats.total_subjects}</p>
-                            </div>
-                            <div className={`${LIGHT_BG_CLASS} p-3 rounded-xl`}>
-                                <LinkIcon className={`h-8 w-8 ${TEXT_COLOR_CLASS}`} />
+                    <div className="bg-white rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 lg:p-6 border border-gray-100">
+                        <div className="flex flex-col items-center text-center">
+                            <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1 sm:mb-2">Unique</p>
+                            <p className={`text-xl sm:text-2xl md:text-3xl font-bold ${TEXT_COLOR_CLASS} mb-2 sm:mb-3`}>{stats.total_subjects}</p>
+                            <div className={`${LIGHT_BG_CLASS} p-2 sm:p-3 rounded-full`}>
+                                <LinkIcon className={`h-5 w-5 sm:h-6 sm:w-6 md:h-8 md:w-8 ${TEXT_COLOR_CLASS}`} />
                             </div>
                         </div>
                     </div>
                 </div>
 
-                {/* Search */}
-                <div className="bg-white rounded-2xl shadow-lg p-6 mb-6 border border-gray-100">
+                {/* Search - Compact on Mobile */}
+                <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-3 sm:p-4 md:p-6 mb-4 sm:mb-6 border border-gray-100">
                     <div className="flex items-center">
-                        <Search className="h-5 w-5 text-gray-400 mr-3" />
+                        <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 mr-2 sm:mr-3" />
                         <input
                             type="text"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS}`}
+                            className={`w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} text-sm sm:text-base`}
                             placeholder="Search courses..."
                         />
                     </div>
                 </div>
 
-                {/* Courses Table */}
-                <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
+                {/* Courses Table - Responsive: Mobile shows Course Code & Name + Actions, Desktop shows all columns */}
+                <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden border border-gray-100">
                     <div className="overflow-x-auto">
                         <table className="min-w-full divide-y divide-gray-200">
                             <thead className={`${PRIMARY_COLOR_CLASS}`}>
                                 <tr>
-                                    <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Course Code</th>
-                                    <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Course Name</th>
-                                    <th className="px-6 py-4 text-center text-xs font-bold text-white uppercase tracking-wider">Subjects</th>
-                                    <th className="px-6 py-4 text-center text-xs font-bold text-white uppercase tracking-wider">Total Units</th>
-                                    <th className="px-6 py-4 text-center text-xs font-bold text-white uppercase tracking-wider">Actions</th>
+                                    <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">Course Code</th>
+                                    <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">Course Name</th>
+                                    <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-center text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">Subjects</th>
+                                    <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-center text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">Total Units</th>
+                                    <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-center text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">Actions</th>
                                 </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-100">
                                 {loading ? (
                                     <tr>
-                                        <td colSpan={5} className="px-6 py-12 text-center">
-                                            <RefreshCw className="h-8 w-8 animate-spin text-gray-400 mx-auto mb-2" />
-                                            <p className="text-gray-500">Loading courses...</p>
+                                        <td colSpan={5} className="px-3 sm:px-6 py-8 sm:py-12 text-center">
+                                            <div className="flex flex-col items-center">
+                                                <RefreshCw className="h-6 w-6 sm:h-8 sm:w-8 animate-spin text-gray-400 mb-2" />
+                                                <p className="text-sm sm:text-base text-gray-500">Loading courses...</p>
+                                            </div>
                                         </td>
                                     </tr>
                                 ) : filteredCourses.length === 0 ? (
                                     <tr>
-                                        <td colSpan={5} className="px-6 py-12 text-center">
-                                            <GraduationCap className="h-12 w-12 text-gray-300 mx-auto mb-2" />
-                                            <p className={`${TEXT_COLOR_CLASS} font-medium`}>No courses with curriculum</p>
-                                            <p className="text-gray-500 text-sm">Add subjects to courses to see them here</p>
+                                        <td colSpan={5} className="px-3 sm:px-6 py-8 sm:py-12 text-center">
+                                            <div className="flex flex-col items-center">
+                                                <GraduationCap className="h-10 w-10 sm:h-12 sm:w-12 text-gray-300 mb-3 sm:mb-4" />
+                                                <p className={`${TEXT_COLOR_CLASS} font-medium text-base sm:text-lg`}>No courses with curriculum</p>
+                                                <p className="text-gray-500 text-xs sm:text-sm">Add subjects to courses to see them here</p>
+                                            </div>
                                         </td>
                                     </tr>
                                 ) : (
                                     filteredCourses.map((course) => (
                                         <tr key={course.id} className="hover:bg-gray-50 transition-colors">
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <span className={`inline-flex px-3 py-1 text-sm font-bold rounded-lg ${LIGHT_BG_CLASS} ${TEXT_COLOR_CLASS}`}>
+                                            <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
+                                                <span className={`inline-flex px-2 sm:px-3 py-0.5 sm:py-1 text-xs sm:text-sm font-bold rounded-lg ${LIGHT_BG_CLASS} ${TEXT_COLOR_CLASS}`}>
                                                     {course.course_code}
                                                 </span>
                                             </td>
-                                            <td className="px-6 py-4">
-                                                <div className="font-medium text-gray-900">{course.course_name}</div>
-                                                <div className="text-xs text-gray-500">{course.level}</div>
+                                            <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
+                                                <div className="text-xs sm:text-sm font-medium text-gray-900 truncate">{course.course_name}</div>
+                                                <div className="text-xs text-gray-500 truncate">{course.level}</div>
+                                                {/* Show additional info on mobile */}
+                                                <div className="md:hidden mt-1 space-y-1">
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="text-xs text-gray-600">{course.total_subjects} subjects</span>
+                                                        <span className="text-xs text-gray-600">•</span>
+                                                        <span className="text-xs text-gray-600">{course.total_units} units</span>
+                                                    </div>
+                                                </div>
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-center">
-                                                <span className="font-semibold text-gray-900">{course.total_subjects}</span>
-                                                <span className="text-gray-500 ml-1">subjects</span>
+                                            <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap text-center">
+                                                <span className="text-xs sm:text-sm font-semibold text-gray-900">{course.total_subjects}</span>
+                                                <span className="text-xs sm:text-sm text-gray-500 ml-1">subjects</span>
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-center">
-                                                <span className="font-semibold text-gray-900">{course.total_units}</span>
-                                                <span className="text-gray-500 ml-1">units</span>
+                                            <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap text-center">
+                                                <span className="text-xs sm:text-sm font-semibold text-gray-900">{course.total_units}</span>
+                                                <span className="text-xs sm:text-sm text-gray-500 ml-1">units</span>
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-center">
+                                            <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap text-center">
                                                 <button
                                                     onClick={() => handleViewCurriculum(course)}
-                                                    className={`inline-flex items-center gap-2 px-4 py-2 ${PRIMARY_COLOR_CLASS} text-white rounded-lg ${HOVER_COLOR_CLASS} transition-all font-medium`}
+                                                    className={`inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 ${PRIMARY_COLOR_CLASS} text-white rounded-lg ${HOVER_COLOR_CLASS} transition-all font-medium text-xs sm:text-sm`}
                                                 >
-                                                    <Eye className="h-4 w-4" />
-                                                    View Curriculum
-                                                    <ChevronRight className="h-4 w-4" />
+                                                    <Eye className="h-3 w-3 sm:h-4 sm:w-4" />
+                                                    <span className="hidden sm:inline">View Curriculum</span>
+                                                    <span className="sm:hidden">View</span>
+                                                    <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4 hidden sm:inline" />
                                                 </button>
                                             </td>
                                         </tr>
@@ -1067,3 +1073,4 @@ const CourseYearSubjects: React.FC = () => {
 };
 
 export default CourseYearSubjects;
+
