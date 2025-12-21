@@ -1432,24 +1432,24 @@ const Students: React.FC = () => {
                                             setEducationLevelFilter(level.id);
                                             setFilters(prev => ({ ...prev, year_level: '', program: '', page: 1 }));
                                         }}
-                                            className={`flex items-center px-3 py-2 sm:px-4 sm:py-2.5 md:px-5 md:py-3 rounded-lg sm:rounded-xl font-medium transition-all whitespace-nowrap flex-shrink-0 ${
+                                            className={`flex items-center px-2.5 py-1.5 sm:px-4 sm:py-2.5 md:px-5 md:py-3 rounded-lg sm:rounded-xl font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                                                 isSelected
                                                     ? isDropped
-                                                        ? 'bg-red-600 text-white shadow-md sm:shadow-lg scale-105'
-                                                        : `${PRIMARY_COLOR_CLASS} text-white shadow-md sm:shadow-lg scale-105`
+                                                        ? 'bg-red-600 text-white shadow-md sm:shadow-lg dark:bg-red-600 dark:text-white'
+                                                        : `${PRIMARY_COLOR_CLASS} text-white shadow-md sm:shadow-lg dark:bg-[#003366] dark:text-white`
                                                     : isDropped
-                                                        ? 'bg-red-50 text-red-700 hover:bg-red-100 hover:scale-102'
-                                                        : 'bg-gray-50 text-gray-700 hover:bg-gray-100 hover:scale-102'
+                                                        ? 'bg-red-50 text-red-700 hover:bg-red-100 dark:bg-red-900/20 dark:text-red-300 dark:hover:bg-red-900/30'
+                                                        : 'bg-gray-50 text-gray-700 hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
                                             }`}
                                         >
-                                            <span className="mr-1.5 sm:mr-2 text-base sm:text-lg">{level.icon}</span>
+                                            <span className="mr-1 sm:mr-2 text-sm sm:text-base md:text-lg">{level.icon}</span>
                                             <span className="text-xs sm:text-sm md:text-base">{level.label}</span>
-                                            <span className={`ml-1.5 sm:ml-2 px-1.5 sm:px-2 md:px-2.5 py-0.5 rounded-full text-xs font-bold ${
+                                            <span className={`ml-1 sm:ml-2 px-1.5 sm:px-2 md:px-2.5 py-0.5 rounded-full text-xs font-bold ${
                                                 isSelected
-                                                    ? 'bg-white/20 text-white'
+                                                    ? 'bg-white/20 text-white dark:bg-white/20 dark:text-white'
                                                     : isDropped
-                                                        ? 'bg-red-200 text-red-800'
-                                                        : 'bg-gray-200 text-gray-600'
+                                                        ? 'bg-red-200 text-red-800 dark:bg-red-800/30 dark:text-red-300'
+                                                        : 'bg-gray-200 text-gray-600 dark:bg-gray-600 dark:text-gray-300'
                                             }`}>
                                                 {levelCount}
                                             </span>
