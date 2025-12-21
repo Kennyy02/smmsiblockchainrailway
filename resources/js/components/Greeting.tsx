@@ -61,11 +61,11 @@ const Greeting: React.FC<GreetingProps> = ({ userName, userRole = 'admin' }) => 
                     animation: spin-slow 15s linear infinite;
                 }
             `}</style>
-            <div className={`flex items-center space-x-3 mb-6 p-4 bg-white/70 backdrop-blur-sm rounded-2xl shadow-md border-l-4 ${borderColor} animate-in fade-in duration-500`}>
-                <div className={`p-2 rounded-full ${iconColor} bg-white shadow-inner`}>
-                    <Icon className={`w-8 h-8 ${iconColor} animate-spin-slow`} />
+            <div className={`flex items-center space-x-2 sm:space-x-3 mb-4 sm:mb-6 p-3 sm:p-4 bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-md border-l-4 ${borderColor} animate-in fade-in duration-500`}>
+                <div className={`p-1.5 sm:p-2 rounded-full ${iconColor} bg-white dark:bg-gray-700 shadow-inner`}>
+                    <Icon className={`w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 ${iconColor} animate-spin-slow`} />
                 </div>
-                <h2 className="text-2xl font-extrabold text-gray-800">
+                <h2 className="text-lg sm:text-xl md:text-2xl font-extrabold text-gray-800 dark:text-gray-100">
                     {greeting}, {displayName}!
                 </h2>
             </div>
