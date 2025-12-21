@@ -420,9 +420,9 @@ const AcademicYears: React.FC = () => {
                             
                             <button 
                                 onClick={() => { loadYears(); loadStats(); }}
-                                className="inline-flex items-center px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 bg-white border border-gray-300 text-gray-700 rounded-lg sm:rounded-xl hover:bg-gray-50 transition-all shadow-sm"
+                                className="inline-flex items-center px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 bg-white dark:bg-transparent border border-gray-300 dark:border-white text-gray-700 dark:text-white rounded-lg sm:rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all shadow-sm"
                             >
-                                <RefreshCw className={`h-4 w-4 sm:h-5 sm:w-5 ${loading ? 'animate-spin' : ''}`} />
+                                <RefreshCw className={`h-4 w-4 sm:h-5 sm:w-5 ${loading ? 'animate-spin' : ''} dark:text-white`} />
                             </button>
                         </div>
                     </div>
@@ -506,26 +506,26 @@ const AcademicYears: React.FC = () => {
                     </div>
 
                     {/* Filters - Compact on Mobile */}
-                    <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-3 sm:p-4 md:p-6 mb-4 sm:mb-6 border border-gray-100">
+                    <div className="bg-white dark:bg-transparent rounded-xl sm:rounded-2xl shadow-lg p-3 sm:p-4 md:p-6 mb-4 sm:mb-6 border border-gray-100 dark:border-white">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
-                                    <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
+                                    <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 dark:text-white" />
                                 </div>
                                 <input
                                     type="text"
                                     value={filters.search}
                                     onChange={(e) => setFilters({...filters, search: e.target.value, page: 1})}
-                                    className={`pl-10 sm:pl-12 w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all text-sm sm:text-base`}
+                                    className={`pl-10 sm:pl-12 w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border border-gray-200 dark:border-white dark:bg-transparent dark:text-white rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all text-sm sm:text-base`}
                                     placeholder="Search year name..."
                                 />
                             </div>
                             <div className="flex items-center md:col-span-2">
-                                <Filter className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 mr-2 sm:mr-3" />
+                                <Filter className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 dark:text-white mr-2 sm:mr-3" />
                                 <select
                                     value={filters.status}
                                     onChange={(e) => setFilters({...filters, status: e.target.value, page: 1})}
-                                    className={`w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white text-sm sm:text-base`}
+                                    className={`w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border border-gray-200 dark:border-white dark:bg-transparent dark:text-white rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none text-sm sm:text-base`}
                                 >
                                     <option value="">Filter by Status</option>
                                     <option value="current">Current</option>
@@ -537,20 +537,20 @@ const AcademicYears: React.FC = () => {
                     </div>
 
                     {/* Table - Responsive: Mobile shows Academic Year + Actions, Desktop shows all columns */}
-                    <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden border border-gray-100">
+                    <div className="bg-white dark:bg-transparent rounded-xl sm:rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-white">
                         <div className="overflow-x-auto">
-                            <table className="min-w-full divide-y divide-gray-200">
-                                <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
+                            <table className="min-w-full divide-y divide-gray-200 dark:divide-white">
+                                <thead className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-900 dark:border-white">
                                     <tr>
-                                        <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Academic Year</th>
-                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Start Date</th>
-                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">End Date</th>
-                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Semesters</th>
-                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Classes</th>
-                                        <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-right text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Actions</th>
+                                        <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 dark:text-white uppercase tracking-wider whitespace-nowrap">Academic Year</th>
+                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 dark:text-white uppercase tracking-wider whitespace-nowrap">Start Date</th>
+                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 dark:text-white uppercase tracking-wider whitespace-nowrap">End Date</th>
+                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 dark:text-white uppercase tracking-wider whitespace-nowrap">Semesters</th>
+                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 dark:text-white uppercase tracking-wider whitespace-nowrap">Classes</th>
+                                        <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-right text-xs font-bold text-gray-700 dark:text-white uppercase tracking-wider whitespace-nowrap">Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody className="bg-white divide-y divide-gray-200">
+                                <tbody className="bg-white dark:bg-transparent divide-y divide-gray-200 dark:divide-white">
                                     {loading ? (
                                         <tr>
                                             <td colSpan={6} className="px-3 sm:px-6 py-8 sm:py-12 text-center">
@@ -561,35 +561,35 @@ const AcademicYears: React.FC = () => {
                                         </tr>
                                     ) : years.length === 0 ? (
                                         <tr>
-                                            <td colSpan={6} className="px-3 sm:px-6 py-8 sm:py-12 text-center text-gray-500">
+                                            <td colSpan={6} className="px-3 sm:px-6 py-8 sm:py-12 text-center text-gray-500 dark:text-white">
                                                 <div className="flex flex-col items-center">
-                                                    <Calendar className="h-10 w-10 sm:h-12 sm:w-12 text-gray-300 mb-3 sm:mb-4" />
-                                                    <p className="text-base sm:text-lg font-medium">No academic years found</p>
-                                                    <p className="text-xs sm:text-sm">Create a new academic year or adjust filters</p>
+                                                    <Calendar className="h-10 w-10 sm:h-12 sm:w-12 text-gray-300 dark:text-white mb-3 sm:mb-4" />
+                                                    <p className="text-base sm:text-lg font-medium dark:text-white">No academic years found</p>
+                                                    <p className="text-xs sm:text-sm dark:text-white">Create a new academic year or adjust filters</p>
                                                 </div>
                                             </td>
                                         </tr>
                                     ) : (
                                         years.map((yearItem) => (
-                                            <tr key={yearItem.id} className="hover:bg-gray-50 transition-colors">
+                                            <tr key={yearItem.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                                                 <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
-                                                    <div className="text-xs sm:text-sm font-semibold text-gray-900 truncate">{yearItem.year_name}</div>
+                                                    <div className="text-xs sm:text-sm font-semibold text-gray-900 dark:text-white truncate">{yearItem.year_name}</div>
                                                     {/* Show additional info on mobile */}
                                                     <div className="md:hidden mt-1 space-y-1">
                                                         <div className="flex items-center gap-2 flex-wrap">
-                                                            <span className="text-xs text-gray-600">{formatShortDate(yearItem.start_date)} - {formatShortDate(yearItem.end_date)}</span>
+                                                            <span className="text-xs text-gray-600 dark:text-white">{formatShortDate(yearItem.start_date)} - {formatShortDate(yearItem.end_date)}</span>
                                                         </div>
                                                         <div className="flex items-center gap-2">
-                                                            <span className="text-xs text-gray-600">{yearItem.semesters_count} semesters</span>
-                                                            <span className="text-xs text-gray-600">•</span>
-                                                            <span className="text-xs text-gray-600">{yearItem.classes_count} classes</span>
+                                                            <span className="text-xs text-gray-600 dark:text-white">{yearItem.semesters_count} semesters</span>
+                                                            <span className="text-xs text-gray-600 dark:text-white">•</span>
+                                                            <span className="text-xs text-gray-600 dark:text-white">{yearItem.classes_count} classes</span>
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">{formatShortDate(yearItem.start_date)}</td>
-                                                <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">{formatShortDate(yearItem.end_date)}</td>
-                                                <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">{yearItem.semesters_count}</td>
-                                                <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">{yearItem.classes_count}</td>
+                                                <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700 dark:text-white">{formatShortDate(yearItem.start_date)}</td>
+                                                <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700 dark:text-white">{formatShortDate(yearItem.end_date)}</td>
+                                                <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700 dark:text-white">{yearItem.semesters_count}</td>
+                                                <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700 dark:text-white">{yearItem.classes_count}</td>
                                                 <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap text-right">
                                                     <div className="flex justify-end space-x-1 sm:space-x-2">
                                                         <button
