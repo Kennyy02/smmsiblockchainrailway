@@ -250,7 +250,7 @@ const DroppedStudents: React.FC = () => {
                         <div className="flex items-center mb-6 md:mb-0">
                             <button
                                 onClick={() => router.visit('/admin/students')}
-                                className="mr-4 p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                                className="mr-4 p-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
                                 title="Back to Students"
                             >
                                 <ArrowLeft className="h-6 w-6" />
@@ -259,8 +259,8 @@ const DroppedStudents: React.FC = () => {
                                 <User className="h-8 w-8 text-white" />
                             </div>
                             <div>
-                                <h1 className="text-3xl font-bold text-gray-900">Dropped Students</h1>
-                                <p className="text-gray-600 mt-1">View and manage all dropped students</p>
+                                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Dropped Students</h1>
+                                <p className="text-gray-600 dark:text-gray-300 mt-1">View and manage all dropped students</p>
                             </div>
                         </div>
                         <div className="flex space-x-3">
@@ -273,7 +273,7 @@ const DroppedStudents: React.FC = () => {
                             </button>
                             <button 
                                 onClick={() => loadStudents()}
-                                className="inline-flex items-center px-4 py-3 bg-white border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all shadow-sm"
+                                className="inline-flex items-center px-4 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all shadow-sm"
                             >
                                 <RefreshCw className={`h-5 w-5 ${loading ? 'animate-spin' : ''}`} />
                             </button>
@@ -282,30 +282,30 @@ const DroppedStudents: React.FC = () => {
 
                     {/* Stats Card */}
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                        <div className="bg-white rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-4 md:p-5 border border-red-100">
+                        <div className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-4 md:p-5 border border-red-100 dark:border-red-900">
                             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1 sm:gap-0">
                                 <div className="flex-1 min-w-0">
-                                    <p className="text-xs sm:text-sm font-medium text-red-600 mb-1">Dropped Students</p>
-                                    <p className="text-2xl md:text-3xl font-bold text-red-700">{stats.dropped_students ?? 0}</p>
+                                    <p className="text-xs sm:text-sm font-medium text-red-600 dark:text-red-400 mb-1">Dropped Students</p>
+                                    <p className="text-2xl md:text-3xl font-bold text-red-700 dark:text-red-400">{stats.dropped_students ?? 0}</p>
                                 </div>
-                                <div className="bg-red-100 p-2 md:p-3 rounded-lg sm:rounded-xl">
-                                    <User className="h-6 w-6 md:h-7 md:w-7 text-red-600" />
+                                <div className="bg-red-100 dark:bg-red-900/30 p-2 md:p-3 rounded-lg sm:rounded-xl">
+                                    <User className="h-6 w-6 md:h-7 md:w-7 text-red-600 dark:text-red-400" />
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     {/* Search and Filters */}
-                    <div className="bg-white rounded-xl shadow-lg p-4 mb-6">
+                    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 mb-6 border border-gray-100 dark:border-gray-700">
                         <div className="flex flex-col md:flex-row gap-4">
                             <div className="flex-1">
                                 <div className="relative">
-                                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 h-5 w-5" />
                                     <input
                                         type="text"
                                         value={filters.search}
                                         onChange={(e) => setFilters({ ...filters, search: e.target.value, page: 1 })}
-                                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#003366] focus:border-transparent"
+                                        className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#003366] focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                                         placeholder="Search student name or ID..."
                                     />
                                 </div>
@@ -314,7 +314,7 @@ const DroppedStudents: React.FC = () => {
                                 <select
                                     value={filters.program}
                                     onChange={(e) => setFilters({ ...filters, program: e.target.value, page: 1 })}
-                                    className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#003366]"
+                                    className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#003366] bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                                 >
                                     <option value="">All Courses</option>
                                     {filterCourses.map(course => (
@@ -326,70 +326,70 @@ const DroppedStudents: React.FC = () => {
                     </div>
 
                     {/* Students Table */}
-                    <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+                    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700">
                         <div className="overflow-x-auto">
-                            <table className="min-w-full divide-y divide-gray-200">
-                                <thead className="bg-gray-50">
+                            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                <thead className="bg-gray-50 dark:bg-gray-700">
                                     <tr>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">STUDENT & ID</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">PARENT/GUARDIAN</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">LEVEL</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">PROGRAM</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">GRADE</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">STATUS</th>
-                                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">ACTIONS</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">STUDENT & ID</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">PARENT/GUARDIAN</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">LEVEL</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">PROGRAM</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">GRADE</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">STATUS</th>
+                                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">ACTIONS</th>
                                     </tr>
                                 </thead>
-                                <tbody className="bg-white divide-y divide-gray-200">
+                                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                     {loading ? (
                                         <tr>
                                             <td colSpan={7} className="px-6 py-12 text-center">
-                                                <RefreshCw className="h-8 w-8 animate-spin text-gray-400 mx-auto mb-2" />
-                                                <p className="text-gray-500">Loading dropped students...</p>
+                                                <RefreshCw className="h-8 w-8 animate-spin text-gray-400 dark:text-gray-500 mx-auto mb-2" />
+                                                <p className="text-gray-500 dark:text-gray-400">Loading dropped students...</p>
                                             </td>
                                         </tr>
                                     ) : students.length === 0 ? (
                                         <tr>
                                             <td colSpan={7} className="px-6 py-12 text-center">
-                                                <User className="h-12 w-12 text-gray-300 mx-auto mb-2" />
-                                                <p className="text-gray-500 font-medium">No dropped students found</p>
+                                                <User className="h-12 w-12 text-gray-300 dark:text-gray-600 mx-auto mb-2" />
+                                                <p className="text-gray-500 dark:text-gray-400 font-medium">No dropped students found</p>
                                             </td>
                                         </tr>
                                     ) : (
                                         students.map((student) => (
-                                            <tr key={student.id} className="hover:bg-gray-50">
+                                            <tr key={student.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                                                 <td className="px-6 py-4 whitespace-nowrap">
                                                     <div className="flex items-center">
-                                                        <User className="h-8 w-8 text-gray-400 mr-3" />
+                                                        <User className="h-8 w-8 text-gray-400 dark:text-gray-500 mr-3" />
                                                         <div>
-                                                            <div className="text-sm font-medium text-gray-900">{student.full_name}</div>
-                                                            <div className="text-sm text-gray-500">{student.student_id}</div>
+                                                            <div className="text-sm font-medium text-gray-900 dark:text-white">{student.full_name}</div>
+                                                            <div className="text-sm text-gray-500 dark:text-gray-400">{student.student_id}</div>
                                                         </div>
                                                     </div>
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap">
                                                     {student.parents && student.parents.length > 0 ? (
                                                         <div>
-                                                            <div className="text-sm font-medium text-gray-900">{student.parents[0].full_name}</div>
-                                                            <div className="text-sm text-gray-500">{student.parents[0].pivot?.relationship || 'Parent'}</div>
+                                                            <div className="text-sm font-medium text-gray-900 dark:text-white">{student.parents[0].full_name}</div>
+                                                            <div className="text-sm text-gray-500 dark:text-gray-400">{student.parents[0].pivot?.relationship || 'Parent'}</div>
                                                         </div>
                                                     ) : (
-                                                        <span className="text-sm text-gray-400">No parent linked</span>
+                                                        <span className="text-sm text-gray-400 dark:text-gray-500">No parent linked</span>
                                                     )}
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap">
-                                                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-800">
+                                                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300">
                                                         {student.year_level >= 13 ? 'College' : student.year_level >= 11 ? 'Senior High' : student.year_level >= 7 ? 'Junior High' : 'Elementary'}
                                                     </span>
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                                                     {student.program || '—'}
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                                                     {formatGradeLevel(student.year_level)}
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap">
-                                                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold uppercase bg-orange-100 text-orange-800">
+                                                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold uppercase bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300">
                                                         Dropped
                                                     </span>
                                                 </td>
@@ -397,14 +397,14 @@ const DroppedStudents: React.FC = () => {
                                                     <div className="flex items-center justify-center gap-2">
                                                         <button
                                                             onClick={() => handleView(student)}
-                                                            className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                                                            className="p-2 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-lg transition-colors"
                                                             title="View Details"
                                                         >
                                                             <Eye className="h-4 w-4" />
                                                         </button>
                                                         <button
                                                             onClick={() => handleDelete(student)}
-                                                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                                            className="p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
                                                             title="Delete Student"
                                                         >
                                                             <Trash2 className="h-4 w-4" />
@@ -420,8 +420,8 @@ const DroppedStudents: React.FC = () => {
 
                         {/* Pagination */}
                         {pagination.last_page > 1 && (
-                            <div className="flex justify-between items-center px-6 py-4 border-t border-gray-200">
-                                <p className="text-sm text-gray-600">
+                            <div className="flex justify-between items-center px-6 py-4 border-t border-gray-200 dark:border-gray-700">
+                                <p className="text-sm text-gray-600 dark:text-gray-400">
                                     Showing <span className="font-semibold">{(pagination.current_page - 1) * pagination.per_page + 1}</span> to{' '}
                                     <span className="font-semibold">{Math.min(pagination.current_page * pagination.per_page, pagination.total)}</span> of{' '}
                                     <span className="font-semibold">{pagination.total}</span> students

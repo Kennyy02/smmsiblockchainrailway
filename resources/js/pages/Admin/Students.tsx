@@ -354,17 +354,17 @@ const StudentModal: React.FC<{
 
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                                 <div>
-                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">First Name</label>
-                                    <input type="text" name="first_name" value={formData.first_name} onChange={handleChange} className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`} required/>
+                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1.5 sm:mb-2">First Name</label>
+                                    <input type="text" name="first_name" value={formData.first_name} onChange={handleChange} className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 dark:border-gray-600 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white`} required/>
                                     {errors.first_name && (<p className="text-red-500 text-xs mt-1">{errors.first_name[0]}</p>)}
                                 </div>
                                 <div>
-                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Middle Name</label>
-                                    <input type="text" name="middle_name" value={formData.middle_name} onChange={handleChange} className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`} />
+                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1.5 sm:mb-2">Middle Name</label>
+                                    <input type="text" name="middle_name" value={formData.middle_name} onChange={handleChange} className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 dark:border-gray-600 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white`} />
                                 </div>
                                 <div>
-                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Last Name</label>
-                                    <input type="text" name="last_name" value={formData.last_name} onChange={handleChange} className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`} required/>
+                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1.5 sm:mb-2">Last Name</label>
+                                    <input type="text" name="last_name" value={formData.last_name} onChange={handleChange} className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 dark:border-gray-600 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white`} required/>
                                     {errors.last_name && (<p className="text-red-500 text-xs mt-1">{errors.last_name[0]}</p>)}
                                 </div>
                             </div>
@@ -432,8 +432,8 @@ const StudentModal: React.FC<{
                             
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                                 <div>
-                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Phone</label>
-                                    <input type="text" name="phone" value={formData.phone} onChange={handleChange} className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`} placeholder="+63 XXX XXX XXXX"/>
+                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1.5 sm:mb-2">Phone</label>
+                                    <input type="text" name="phone" value={formData.phone} onChange={handleChange} className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 dark:border-gray-600 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white`} placeholder="+63 XXX XXX XXXX"/>
                                     {errors.phone && (<p className="text-red-500 text-xs mt-1">{errors.phone[0]}</p>)}
                                 </div>
                                 <div>
@@ -451,13 +451,13 @@ const StudentModal: React.FC<{
                             </div>
 
                             <div>
-                                <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Address</label>
+                                <label className="block text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1.5 sm:mb-2">Address</label>
                                 <input 
                                     type="text" 
                                     name="address" 
                                     value={formData.address || ''} 
                                     onChange={handleChange} 
-                                    className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
+                                    className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 dark:border-gray-600 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                                     placeholder="Complete address"
                                 />
                                 {errors.address && (<p className="text-red-500 text-xs mt-1">{errors.address[0]}</p>)}
@@ -466,45 +466,45 @@ const StudentModal: React.FC<{
                             <p className='text-xs sm:text-sm text-gray-500 dark:text-gray-400 pt-2'>{student ? "Leave password fields empty to keep current password." : "Set an initial password for the student."}</p>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                                 <div>
-                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Password</label>
+                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1.5 sm:mb-2">Password</label>
                                     <div className="relative">
                                         <input
                                             type={showPassword ? "text" : "password"}
                                             name="password"
                                             value={formData.password}
                                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e)}
-                                            className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all pr-10 sm:pr-12`}
+                                            className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 dark:border-gray-600 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all pr-10 sm:pr-12 bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                                             required={!student}
                                         />
                                         <button 
                                             type="button" 
                                             onClick={togglePasswordVisibility}
-                                            className="absolute inset-y-0 right-0 pr-2.5 sm:pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+                                            className="absolute inset-y-0 right-0 pr-2.5 sm:pr-3 flex items-center text-gray-400 dark:text-gray-300 hover:text-gray-600 dark:hover:text-gray-100 transition-colors"
                                         >
                                             {showPassword ? <EyeOff className="h-4 w-4 sm:h-5 sm:w-5" /> : <Eye className="h-4 w-4 sm:h-5 sm:w-5" />}
                                         </button>
                                     </div>
                                     {errors.password && (
-                                        <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded-lg">
-                                            <p className="text-red-600 text-sm font-medium">{formatErrorMessage(errors.password[0])}</p>
+                                        <div className="mt-2 p-2 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                                            <p className="text-red-600 dark:text-red-400 text-sm font-medium">{formatErrorMessage(errors.password[0])}</p>
                                         </div>
                                     )}
                                 </div>
                                 <div>
-                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Confirm Password</label>
+                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1.5 sm:mb-2">Confirm Password</label>
                                     <div className="relative">
                                         <input
                                             type={showPassword ? "text" : "password"}
                                             name="password_confirmation"
                                             value={formData.password_confirmation}
                                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e)}
-                                            className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all pr-10 sm:pr-12`}
+                                            className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 dark:border-gray-600 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all pr-10 sm:pr-12 bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                                             required={!student}
                                         />
                                         <button 
                                             type="button" 
                                             onClick={togglePasswordVisibility}
-                                            className="absolute inset-y-0 right-0 pr-2.5 sm:pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+                                            className="absolute inset-y-0 right-0 pr-2.5 sm:pr-3 flex items-center text-gray-400 dark:text-gray-300 hover:text-gray-600 dark:hover:text-gray-100 transition-colors"
                                         >
                                             {showPassword ? <EyeOff className="h-4 w-4 sm:h-5 sm:w-5" /> : <Eye className="h-4 w-4 sm:h-5 sm:w-5" />}
                                         </button>
@@ -512,15 +512,15 @@ const StudentModal: React.FC<{
                                     
                                     {/* Real-time password match feedback */}
                                     {passwordsDontMatch && (
-                                        <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2">
-                                            <AlertCircle className="h-4 w-4 text-red-600 flex-shrink-0" />
-                                            <p className="text-red-600 text-sm font-medium">Passwords do not match</p>
+                                        <div className="mt-2 p-2 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg flex items-center gap-2">
+                                            <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-400 flex-shrink-0" />
+                                            <p className="text-red-600 dark:text-red-400 text-sm font-medium">Passwords do not match</p>
                                         </div>
                                     )}
                                     {passwordsMatch && (
-                                        <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded-lg flex items-center gap-2">
-                                            <CheckCircle className="h-4 w-4 text-green-600 flex-shrink-0" />
-                                            <p className="text-green-600 text-sm font-medium">Passwords match</p>
+                                        <div className="mt-2 p-2 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg flex items-center gap-2">
+                                            <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400 flex-shrink-0" />
+                                            <p className="text-green-600 dark:text-green-400 text-sm font-medium">Passwords match</p>
                                         </div>
                                     )}
                                     
@@ -1402,8 +1402,8 @@ const Students: React.FC = () => {
                     </div>
 
                     {/* Education Level Tabs - Horizontal Scroll on Mobile */}
-                    <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-2 sm:p-3 mb-4 sm:mb-6 border border-gray-100">
-                        <p className="text-xs sm:text-sm text-gray-500 mb-2 sm:mb-3 px-1 sm:px-2">Select an education level to view students:</p>
+                    <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-lg p-2 sm:p-3 mb-4 sm:mb-6 border border-gray-100 dark:border-gray-700">
+                        <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mb-2 sm:mb-3 px-1 sm:px-2">Select an education level to view students:</p>
                         <div className="overflow-x-auto -mx-2 sm:mx-0 px-2 sm:px-0">
                             <div className="flex gap-1.5 sm:gap-2 min-w-max sm:min-w-0 sm:flex-wrap">
                                 {educationLevels.map((level) => {
@@ -1453,13 +1453,13 @@ const Students: React.FC = () => {
 
                     {/* Show content only when a level is selected */}
                     {!educationLevelFilter ? (
-                        <div className="bg-white rounded-2xl shadow-lg p-12 border border-gray-100 text-center">
+                        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-12 border border-gray-100 dark:border-gray-700 text-center">
                             <div className="flex flex-col items-center">
                                 <div className={`${LIGHT_BG_CLASS} p-6 rounded-full mb-6`}>
                                     <GraduationCap className={`h-16 w-16 ${TEXT_COLOR_CLASS}`} />
                                 </div>
-                                <h3 className="text-xl font-bold text-gray-900 mb-2">Select an Education Level</h3>
-                                <p className="text-gray-500 max-w-md">
+                                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Select an Education Level</h3>
+                                <p className="text-gray-500 dark:text-gray-400 max-w-md">
                                     Choose College, Senior High, Junior High, or Elementary from the tabs above to view and manage students in that level.
                                 </p>
                             </div>
@@ -1467,29 +1467,29 @@ const Students: React.FC = () => {
                     ) : (
                     <>
                     {/* Search and Filters - Compact on Mobile */}
-                    <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-3 sm:p-4 md:p-6 mb-4 sm:mb-6 border border-gray-100">
+                    <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-lg p-3 sm:p-4 md:p-6 mb-4 sm:mb-6 border border-gray-100 dark:border-gray-700">
                         <div className={`grid grid-cols-1 ${(educationLevelFilter === 'college' || educationLevelFilter === 'senior_high') ? 'sm:grid-cols-2 lg:grid-cols-4' : 'sm:grid-cols-2 lg:grid-cols-3'} gap-2 sm:gap-3 md:gap-4`}>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
-                                    <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
+                                    <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 dark:text-gray-500" />
                                 </div>
                                 <input
                                     type="text"
                                     value={filters.search}
                                     onChange={(e) => setFilters({...filters, search: e.target.value, page: 1})}
-                                    className={`pl-10 sm:pl-12 w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all text-sm sm:text-base`}
+                                    className={`pl-10 sm:pl-12 w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border border-gray-200 dark:border-gray-600 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all text-sm sm:text-base bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                                     placeholder="Search student name or ID..."
                                 />
                             </div>
                             {/* Program filter - only show for College and Senior High */}
                             {(educationLevelFilter === 'college' || educationLevelFilter === 'senior_high') && (
                                 <div className="flex items-center">
-                                    <Filter className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 mr-2 sm:mr-3 flex-shrink-0" />
+                                    <Filter className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 dark:text-gray-500 mr-2 sm:mr-3 flex-shrink-0" />
                                     <select
                                         name="program"
                                         value={filters.program} 
                                         onChange={(e) => setFilters({...filters, program: e.target.value, page: 1})} 
-                                        className={`w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white text-sm sm:text-base`}
+                                        className={`w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border border-gray-200 dark:border-gray-600 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm sm:text-base`}
                                     >
                                         <option value="">All {educationLevelFilter === 'college' ? 'Courses' : 'Programs'}</option>
                                         {filterCourses
@@ -1507,11 +1507,11 @@ const Students: React.FC = () => {
                             )}
                             {/* Grade Level filter */}
                             <div className="flex items-center">
-                                <BookOpen className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 mr-2 sm:mr-3 flex-shrink-0" />
+                                <BookOpen className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 dark:text-gray-500 mr-2 sm:mr-3 flex-shrink-0" />
                                 <select
                                     value={filters.year_level}
                                     onChange={(e) => setFilters({...filters, year_level: e.target.value, page: 1})}
-                                    className={`w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white text-sm sm:text-base`}
+                                    className={`w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border border-gray-200 dark:border-gray-600 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm sm:text-base`}
                                 >
                                     <option value="">All Grades</option>
                                     {getAllGradeLevelOptions()
@@ -1535,11 +1535,11 @@ const Students: React.FC = () => {
                             </div>
                             {/* Status filter - Active/Inactive */}
                             <div className="flex items-center">
-                                <Clock className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 mr-2 sm:mr-3 flex-shrink-0" />
+                                <Clock className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 dark:text-gray-500 mr-2 sm:mr-3 flex-shrink-0" />
                                 <select
                                     value={filters.status}
                                     onChange={(e) => setFilters({...filters, status: e.target.value, page: 1})}
-                                    className={`w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white text-sm sm:text-base`}
+                                    className={`w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border border-gray-200 dark:border-gray-600 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm sm:text-base`}
                                 >
                                     <option value="">All Status</option>
                                     <option value="active">Active (Enrolled)</option>
@@ -1550,10 +1550,10 @@ const Students: React.FC = () => {
                     </div>
 
                     {/* Table - Responsive: Mobile shows Student & ID + Actions, Desktop shows all columns */}
-                    <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden border border-gray-100">
+                    <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700">
                         <div className="overflow-x-auto">
-                            <table className="min-w-full divide-y divide-gray-200 dark:divide-white">
-                                <thead className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-900 dark:border-white">
+                            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                <thead className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-700">
                                     <tr>
                                         <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">Student & ID</th>
                                         <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">Parent/Guardian</th>
@@ -1564,7 +1564,7 @@ const Students: React.FC = () => {
                                         <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-right text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-white">
+                                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                     {loading ? (
                                         <tr>
                                             <td colSpan={7} className="px-3 sm:px-6 py-8 sm:py-12 text-center">
@@ -1605,11 +1605,11 @@ const Students: React.FC = () => {
                                                     <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap">
                                                         {primaryParent ? (
                                                             <div className="min-w-0">
-                                                                <div className="text-xs sm:text-sm font-medium text-gray-900 truncate">{primaryParent.full_name}</div>
-                                                                <div className="text-xs text-gray-500">{primaryParent.pivot?.relationship || 'Parent'}</div>
+                                                                <div className="text-xs sm:text-sm font-medium text-gray-900 dark:text-white truncate">{primaryParent.full_name}</div>
+                                                                <div className="text-xs text-gray-500 dark:text-gray-400">{primaryParent.pivot?.relationship || 'Parent'}</div>
                                                             </div>
                                                         ) : (
-                                                            <span className="text-xs sm:text-sm text-gray-400">—</span>
+                                                            <span className="text-xs sm:text-sm text-gray-400 dark:text-gray-500">—</span>
                                                         )}
                                                     </td>
                                                     <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap">
@@ -1618,10 +1618,10 @@ const Students: React.FC = () => {
                                                         </span>
                                                     </td>
                                                     <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap">
-                                                        <div className="text-xs sm:text-sm text-gray-900 truncate max-w-[120px]">{student.program || '-'}</div> 
+                                                        <div className="text-xs sm:text-sm text-gray-900 dark:text-white truncate max-w-[120px]">{student.program || '-'}</div> 
                                                     </td>
                                                     <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap">
-                                                        <div className="text-xs sm:text-sm font-semibold text-gray-900">{formatGradeLevel(student.year_level)}</div>
+                                                        <div className="text-xs sm:text-sm font-semibold text-gray-900 dark:text-white">{formatGradeLevel(student.year_level)}</div>
                                                     </td>
                                                     <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap">
                                                         {getActiveStatusTag(student.current_class_id)} 
@@ -1630,21 +1630,21 @@ const Students: React.FC = () => {
                                                         <div className="flex justify-end space-x-1 sm:space-x-2">
                                                             <button
                                                                 onClick={() => handleView(student)}
-                                                                className={`p-1.5 sm:p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors`}
+                                                                className={`p-1.5 sm:p-2 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-lg transition-colors`}
                                                                 title="View Details"
                                                             >
                                                                 <Eye className="h-4 w-4 sm:h-5 sm:w-5" />
                                                             </button>
                                                             <button
                                                                 onClick={() => handleEdit(student)}
-                                                                className={`p-1.5 sm:p-2 ${TEXT_COLOR_CLASS} ${LIGHT_HOVER_CLASS} rounded-lg transition-colors`}
+                                                                className={`p-1.5 sm:p-2 ${TEXT_COLOR_CLASS} ${LIGHT_HOVER_CLASS} dark:hover:bg-gray-700 rounded-lg transition-colors`}
                                                                 title="Edit Student"
                                                             >
                                                                 <Edit className="h-4 w-4 sm:h-5 sm:w-5" />
                                                             </button>
                                                             <button
                                                                 onClick={() => handleDelete(student)}
-                                                                className="p-1.5 sm:p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                                                className="p-1.5 sm:p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
                                                                 title="Drop Student"
                                                             >
                                                                 <Trash2 className="h-4 w-4 sm:h-5 sm:w-5" />

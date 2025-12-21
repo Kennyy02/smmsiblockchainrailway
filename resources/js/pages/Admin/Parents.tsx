@@ -308,7 +308,7 @@ const ParentModal: React.FC<{
             <div className="flex min-h-full items-center justify-center p-4">
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" onClick={onClose}></div>
                 
-                <div className="relative w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white shadow-2xl transition-all max-h-[90vh] overflow-y-auto">
+                <div className="relative w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 shadow-2xl transition-all max-h-[90vh] overflow-y-auto">
                     <div className={`${PRIMARY_COLOR_CLASS} px-6 py-4 sticky top-0 z-10`}>
                         <div className="flex items-center justify-between">
                             <h2 className="text-xl font-bold text-white">
@@ -320,39 +320,39 @@ const ParentModal: React.FC<{
                         </div>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="p-6 space-y-6">
+                    <form onSubmit={handleSubmit} className="p-6 space-y-6 dark:bg-gray-800">
                         <input type="hidden" name="user_id" value={formData.user_id} />
                         
                         <div className="space-y-4">
                             {/* Parent/Guardian Information */}
-                            <h3 className="text-lg font-bold text-gray-800 border-b pb-2">Parent/Guardian Information</h3>
+                            <h3 className="text-lg font-bold text-gray-800 dark:text-white border-b dark:border-gray-700 pb-2">Parent/Guardian Information</h3>
                             
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-2">First Name</label>
-                                    <input type="text" name="first_name" value={formData.first_name} onChange={handleChange} className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`} required/>
+                                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">First Name</label>
+                                    <input type="text" name="first_name" value={formData.first_name} onChange={handleChange} className={`w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white`} required/>
                                     {errors.first_name && (<p className="text-red-500 text-xs mt-1">{errors.first_name[0]}</p>)}
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Last Name</label>
-                                    <input type="text" name="last_name" value={formData.last_name} onChange={handleChange} className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`} required/>
+                                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Last Name</label>
+                                    <input type="text" name="last_name" value={formData.last_name} onChange={handleChange} className={`w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white`} required/>
                                     {errors.last_name && (<p className="text-red-500 text-xs mt-1">{errors.last_name[0]}</p>)}
                                 </div>
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Email</label>
-                                    <input type="email" name="email" value={formData.email} onChange={handleChange} className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`} placeholder="parent@example.com" required/>
+                                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Email</label>
+                                    <input type="email" name="email" value={formData.email} onChange={handleChange} className={`w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white`} placeholder="parent@example.com" required/>
                                     {errors.email && (<p className="text-red-500 text-xs mt-1">{errors.email[0]}</p>)}
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Relationship</label>
+                                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Relationship</label>
                                     <select
                                         name="relationship"
                                         value={relationship}
                                         onChange={(e) => setRelationship(e.target.value)}
-                                        className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white`}
+                                        className={`w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                                         required
                                     >
                                         <option value="">Select Relationship</option>
@@ -365,7 +365,7 @@ const ParentModal: React.FC<{
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
                                         Gender
                                         {isGenderRequired() && <span className="text-red-500 ml-1">*</span>}
                                     </label>
@@ -375,7 +375,7 @@ const ParentModal: React.FC<{
                                         onChange={handleChange}
                                         disabled={shouldDisableGender()}
                                         required={isGenderRequired()}
-                                        className={`w-full px-4 py-3 border ${isGenderRequired() && !formData.gender ? 'border-red-300' : 'border-gray-200'} rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none ${shouldDisableGender() ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'}`}
+                                        className={`w-full px-4 py-3 border ${isGenderRequired() && !formData.gender ? 'border-red-300 dark:border-red-600' : 'border-gray-200 dark:border-gray-600'} rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none ${shouldDisableGender() ? 'bg-gray-100 dark:bg-gray-600 cursor-not-allowed' : 'bg-white dark:bg-gray-700'} text-gray-900 dark:text-white`}
                                         title={shouldDisableGender() ? 'Gender is automatically set based on relationship' : isGenderRequired() ? 'Gender is required when relationship is Guardian' : ''}
                                     >
                                         <option value="">Select Gender</option>
@@ -388,19 +388,19 @@ const ParentModal: React.FC<{
                                     )}
                                 </div>
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">Phone</label>
-                                <input type="text" name="phone" value={formData.phone} onChange={handleChange} className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`} placeholder="+63 XXX XXX XXXX"/>
+                                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Phone</label>
+                                <input type="text" name="phone" value={formData.phone} onChange={handleChange} className={`w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white`} placeholder="+63 XXX XXX XXXX"/>
                                 {errors.phone && (<p className="text-red-500 text-xs mt-1">{errors.phone[0]}</p>)}
                                 </div>
                             </div>
 
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">Address</label>
-                                <input type="text" name="address" value={formData.address || ''} onChange={handleChange} className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`} placeholder="Complete address"/>
+                                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Address</label>
+                                <input type="text" name="address" value={formData.address || ''} onChange={handleChange} className={`w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white`} placeholder="Complete address"/>
                                 {errors.address && (<p className="text-red-500 text-xs mt-1">{errors.address[0]}</p>)}
                             </div>
 
-                            <p className='text-sm text-gray-500'>{parent ? "Leave password fields empty to keep current password." : "Set a login password for the parent/guardian."}</p>
+                            <p className='text-sm text-gray-500 dark:text-gray-400'>{parent ? "Leave password fields empty to keep current password." : "Set a login password for the parent/guardian."}</p>
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <label className="block text-sm font-semibold text-gray-700 mb-2">Password</label>

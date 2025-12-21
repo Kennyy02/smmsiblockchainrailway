@@ -114,8 +114,37 @@ class AdminAnnouncementService {
         return csrfToken;
     }
 
-    private async request<T>(url: string, options: RequestInit = {}): Promise<ApiResponse<T>> {
-        const csrfToken = this.getCsrfToken();
+    private async refreshCsrfToken(): Promise<string | null> {
+        try {
+            const absoluteUrl = window.location.origin + '/api/csrf-token';
+            const response = await fetch(absoluteUrl, {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                if (data.success && data.csrf_token) {
+                    // Update the meta tag with the new token
+                    const metaTag = document.querySelector('meta[name="csrf-token"]');
+                    if (metaTag) {
+                        metaTag.setAttribute('content', data.csrf_token);
+                    }
+                    return data.csrf_token;
+                }
+            }
+        } catch (error) {
+            console.warn('Failed to refresh CSRF token:', error);
+        }
+        return null;
+    }
+
+    private async request<T>(url: string, options: RequestInit = {}, retryOn419: boolean = true): Promise<ApiResponse<T>> {
+        let csrfToken = this.getCsrfToken();
         
         // Ensure URL is absolute - always use full URL to avoid redirects
         let absoluteUrl = url;
@@ -124,17 +153,17 @@ class AdminAnnouncementService {
             absoluteUrl = window.location.origin + (url.startsWith('/') ? url : '/' + url);
         }
         
-        const defaultOptions: RequestInit = {
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'X-CSRF-TOKEN': csrfToken,
-                'X-Requested-With': 'XMLHttpRequest',
-            },
-            credentials: 'include', // Changed from 'same-origin' to 'include' to ensure cookies are sent
-        };
+        const makeRequest = (token: string): Promise<Response> => {
+            const defaultOptions: RequestInit = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': token,
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+                credentials: 'include', // Changed from 'same-origin' to 'include' to ensure cookies are sent
+            };
 
-        try {
             // Merge options carefully - ensure headers are merged correctly
             const mergedOptions: RequestInit = {
                 ...defaultOptions,
@@ -145,25 +174,52 @@ class AdminAnnouncementService {
                 }
             };
             
-            const response = await fetch(absoluteUrl, mergedOptions);
+            return fetch(absoluteUrl, mergedOptions);
+        };
+
+        try {
+            let response = await makeRequest(csrfToken);
             const contentType = response.headers.get('content-type');
             let data: any;
-            
-            // Handle 419 CSRF token mismatch - Laravel returns HTML page, not JSON
-            if (response.status === 419) {
-                const text = await response.text();
-                console.error('CSRF token mismatch (419). Response:', text.substring(0, 200));
-                throw new Error('CSRF token mismatch. Your session may have expired. Please refresh the page (F5) and try again.');
-            }
             
             if (contentType && contentType.includes('application/json')) {
                 data = await response.json();
             } else {
                 const text = await response.text();
-                if (response.status >= 400) {
+                if (response.status >= 400 && response.status !== 419) {
                     throw new Error(`Server error (${response.status}): ${text.substring(0, 200)}`);
                 }
-                throw new Error('Unexpected response format from server');
+                // For 419, we'll handle it below
+                if (response.status !== 419) {
+                    throw new Error('Unexpected response format from server');
+                }
+            }
+
+            // Handle 419 CSRF token mismatch - retry with fresh token
+            if (response.status === 419 && retryOn419) {
+                console.warn('CSRF token mismatch detected. Attempting to refresh token...');
+                const freshToken = await this.refreshCsrfToken();
+                
+                if (freshToken) {
+                    // Retry the request with the fresh token (only once)
+                    response = await makeRequest(freshToken);
+                    
+                    if (response.headers.get('content-type')?.includes('application/json')) {
+                        data = await response.json();
+                    } else {
+                        const text = await response.text();
+                        if (response.status === 419) {
+                            throw new Error('CSRF token mismatch. Your session may have expired. Please refresh the page (F5) and try again.');
+                        }
+                        throw new Error('Unexpected response format from server');
+                    }
+                } else {
+                    console.error('CSRF token mismatch. Could not refresh token. Please refresh the page.');
+                    throw new Error('CSRF token mismatch. Your session may have expired. Please refresh the page (F5) and try again.');
+                }
+            } else if (response.status === 419) {
+                // 419 error but retry disabled or already retried
+                throw new Error('CSRF token mismatch. Your session may have expired. Please refresh the page (F5) and try again.');
             }
 
             if (!response.ok) {
