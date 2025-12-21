@@ -145,9 +145,9 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                                         tabIndex={-1}
                                     >
                                         {showPassword ? (
-                                            <EyeOff className="h-5 w-5" aria-hidden="true" />
-                                        ) : (
                                             <Eye className="h-5 w-5" aria-hidden="true" />
+                                        ) : (
+                                            <EyeOff className="h-5 w-5" aria-hidden="true" />
                                         )}
                                     </button>
                                 </div>

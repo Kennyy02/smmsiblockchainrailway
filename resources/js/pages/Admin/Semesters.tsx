@@ -111,7 +111,7 @@ const SemesterModal: React.FC<{
             <div className="flex min-h-full items-center justify-center p-4">
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" onClick={onClose}></div>
                 
-                <div className="relative w-full max-w-xl transform overflow-hidden rounded-2xl bg-white shadow-2xl transition-all">
+                <div className="relative w-full max-w-xl transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 shadow-2xl transition-all">
                     <div className={`${PRIMARY_COLOR_CLASS} px-6 py-4`}>
                         <div className="flex items-center justify-between">
                             <h2 className="text-xl font-bold text-white">
@@ -123,14 +123,14 @@ const SemesterModal: React.FC<{
                         </div>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="p-6 space-y-6">
+                    <form onSubmit={handleSubmit} className="p-6 space-y-6 dark:bg-gray-800">
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">Academic Year</label>
+                            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Academic Year</label>
                             <select
                                 name="academic_year_id"
                                 value={formData.academic_year_id}
                                 onChange={handleChange}
-                                className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white`}
+                                className={`w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                                 required
                             >
                                 {academicYears.map(year => (
@@ -141,12 +141,12 @@ const SemesterModal: React.FC<{
                         </div>
                         
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">Semester Name</label>
+                            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Semester Name</label>
                             <select
                                 name="semester_name"
                                 value={formData.semester_name}
                                 onChange={handleChange}
-                                className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white`}
+                                className={`w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                                 required
                             >
                                 {SEMESTER_OPTIONS.map(name => (
@@ -158,48 +158,48 @@ const SemesterModal: React.FC<{
 
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">Start Date</label>
+                                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Start Date</label>
                                 <input
                                     type="date"
                                     name="start_date"
                                     value={formData.start_date}
                                     onChange={handleChange}
-                                    className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
+                                    className={`w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                                     required
                                 />
                                 {errors.start_date && (<p className="text-red-500 text-xs mt-1">{errors.start_date[0]}</p>)}
                             </div>
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">End Date</label>
+                                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">End Date</label>
                                 <input
                                     type="date"
                                     name="end_date"
                                     value={formData.end_date}
                                     onChange={handleChange}
-                                    className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
+                                    className={`w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                                     required
                                 />
                                 {errors.end_date && (<p className="text-red-500 text-xs mt-1">{errors.end_date[0]}</p>)}
                             </div>
                         </div>
 
-                        <div className="flex items-center border-t pt-4">
+                        <div className="flex items-center border-t dark:border-gray-700 pt-4">
                             <input
                                 type="checkbox"
                                 name="is_current"
                                 id="is_current_semester"
                                 checked={formData.is_current}
                                 onChange={handleChange}
-                                className={`h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500`}
+                                className={`h-4 w-4 rounded border-gray-300 dark:border-gray-600 text-indigo-600 focus:ring-indigo-500 bg-white dark:bg-gray-700`}
                             />
-                            <label htmlFor="is_current_semester" className="ml-2 block text-sm font-medium text-gray-700">
+                            <label htmlFor="is_current_semester" className="ml-2 block text-sm font-medium text-gray-700 dark:text-gray-200">
                                 Set as Current Semester (This will deactivate all others)
                             </label>
                             {errors.is_current && (<p className="text-red-500 text-xs mt-1">{errors.is_current[0]}</p>)}
                         </div>
 
-                        <div className="flex justify-end space-x-3 pt-4 border-t">
-                            <button type="button" onClick={onClose} className="px-6 py-3 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors font-medium" disabled={loading}>
+                        <div className="flex justify-end space-x-3 pt-4 border-t dark:border-gray-700">
+                            <button type="button" onClick={onClose} className="px-6 py-3 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-medium" disabled={loading}>
                                 Cancel
                             </button>
                             <button type="submit" className={`px-6 py-3 ${PRIMARY_COLOR_CLASS} text-white rounded-xl ${HOVER_COLOR_CLASS} transition-all font-medium shadow-lg disabled:opacity-50`} disabled={loading}>
@@ -415,8 +415,8 @@ const Semesters: React.FC = () => {
                                 <Layers className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 text-white" />
                             </div>
                             <div>
-                                <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">Semester Management</h1>
-                                <p className="text-xs sm:text-sm text-gray-600 mt-0.5 sm:mt-1">Configure and manage academic semesters for each academic year</p>
+                                <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Semester Management</h1>
+                                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mt-0.5 sm:mt-1">Configure and manage academic semesters for each academic year</p>
                             </div>
                         </div>
                         <div className="flex space-x-2 sm:space-x-3">

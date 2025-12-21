@@ -403,68 +403,68 @@ const ParentModal: React.FC<{
                             <p className='text-sm text-gray-500 dark:text-gray-400'>{parent ? "Leave password fields empty to keep current password." : "Set a login password for the parent/guardian."}</p>
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Password</label>
+                                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Password</label>
                                     <div className="relative">
                                         <input
                                             type={showPassword ? "text" : "password"}
                                             name="password"
                                             value={formData.password}
                                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e)}
-                                            className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all pr-12`}
+                                            className={`w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all pr-12 bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                                             required={!parent}
                                         />
                                         <button 
                                             type="button" 
                                             onClick={togglePasswordVisibility}
-                                            className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+                                            className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
                                         >
-                                            {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                                            {showPassword ? <Eye className="h-5 w-5" /> : <EyeOff className="h-5 w-5" />}
                                         </button>
                                     </div>
                                     {errors.password && (
-                                        <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded-lg">
-                                            <p className="text-red-600 text-sm font-medium">{formatErrorMessage(errors.password[0])}</p>
+                                        <div className="mt-2 p-2 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
+                                            <p className="text-red-600 dark:text-red-400 text-sm font-medium">{formatErrorMessage(errors.password[0])}</p>
                                         </div>
                                     )}
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Confirm Password</label>
+                                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Confirm Password</label>
                                     <div className="relative">
                                         <input
                                             type={showPassword ? "text" : "password"}
                                             name="password_confirmation"
                                             value={formData.password_confirmation}
                                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e)}
-                                            className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all pr-12`}
+                                            className={`w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all pr-12 bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                                             required={!parent}
                                         />
                                         <button 
                                             type="button" 
                                             onClick={togglePasswordVisibility}
-                                            className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+                                            className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
                                         >
-                                            {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                                            {showPassword ? <Eye className="h-5 w-5" /> : <EyeOff className="h-5 w-5" />}
                                         </button>
                                     </div>
                                     
                                     {/* Real-time password match feedback */}
                                     {passwordsDontMatch && (
-                                        <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2">
-                                            <AlertCircle className="h-4 w-4 text-red-600 flex-shrink-0" />
-                                            <p className="text-red-600 text-sm font-medium">Passwords do not match</p>
+                                        <div className="mt-2 p-2 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg flex items-center gap-2">
+                                            <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-400 flex-shrink-0" />
+                                            <p className="text-red-600 dark:text-red-400 text-sm font-medium">Passwords do not match</p>
                                         </div>
                                     )}
                                     {passwordsMatch && (
-                                        <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded-lg flex items-center gap-2">
-                                            <CheckCircle className="h-4 w-4 text-green-600 flex-shrink-0" />
-                                            <p className="text-green-600 text-sm font-medium">Passwords match</p>
+                                        <div className="mt-2 p-2 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-lg flex items-center gap-2">
+                                            <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400 flex-shrink-0" />
+                                            <p className="text-green-600 dark:text-green-400 text-sm font-medium">Passwords match</p>
                                         </div>
                                     )}
                                     
                                     {/* Server-side validation errors */}
                                     {errors.password_confirmation && !passwordsMatch && !passwordsDontMatch && (
-                                        <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded-lg">
-                                            <p className="text-red-600 text-sm font-medium">{formatErrorMessage(errors.password_confirmation[0])}</p>
+                                        <div className="mt-2 p-2 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
+                                            <p className="text-red-600 dark:text-red-400 text-sm font-medium">{formatErrorMessage(errors.password_confirmation[0])}</p>
                                         </div>
                                     )}
                                 </div>
@@ -472,52 +472,52 @@ const ParentModal: React.FC<{
 
                             {/* Student/Child Link Section */}
                             <div className="pt-4">
-                                <h3 className="text-lg font-bold text-gray-800 border-b pb-2 mb-4">Link to Student(s)/Child(ren)</h3>
+                                <h3 className="text-lg font-bold text-gray-800 dark:text-white border-b dark:border-gray-700 pb-2 mb-4">Link to Student(s)/Child(ren)</h3>
                                 
                                 {/* Search Bar */}
                                 <div className="relative mb-4">
-                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Search Student</label>
+                                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Search Student</label>
                                     <div className="relative">
-                                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-500" />
                                         <input
                                             type="text"
                                             value={studentSearch}
                                             onChange={(e) => setStudentSearch(e.target.value)}
-                                            className={`w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
+                                            className={`w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                                             placeholder="Search by student name or ID..."
                                         />
                                         {searchLoading && (
-                                            <RefreshCw className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 animate-spin" />
+                                            <RefreshCw className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-500 animate-spin" />
                                         )}
                                     </div>
                                     
                                     {/* Search Results Dropdown */}
                                     {showSearchResults && searchResults.length > 0 && (
-                                        <div className="absolute z-20 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg max-h-60 overflow-y-auto">
+                                        <div className="absolute z-20 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg max-h-60 overflow-y-auto">
                                             {searchResults.map((student) => (
                                                 <button
                                                     key={student.id}
                                                     type="button"
                                                     onClick={() => addStudent(student)}
-                                                    className="w-full px-4 py-3 text-left hover:bg-gray-50 flex items-center justify-between border-b border-gray-100 last:border-b-0"
+                                                    className="w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center justify-between border-b border-gray-100 dark:border-gray-700 last:border-b-0"
                                                 >
                                                     <div className="flex items-center">
-                                                        <div className={`h-8 w-8 rounded-full ${LIGHT_BG_CLASS} flex items-center justify-center mr-3`}>
-                                                            <GraduationCap className={`h-4 w-4 ${TEXT_COLOR_CLASS}`} />
+                                                        <div className={`h-8 w-8 rounded-full ${LIGHT_BG_CLASS} dark:bg-gray-700 flex items-center justify-center mr-3`}>
+                                                            <GraduationCap className={`h-4 w-4 ${TEXT_COLOR_CLASS} dark:text-white`} />
                                                         </div>
                                                         <div>
-                                                            <div className="text-sm font-medium text-gray-900">{student.full_name}</div>
-                                                            <div className="text-xs text-gray-500">{student.student_id} • {student.program || 'N/A'} - {formatGradeLevelModal(student.year_level)}</div>
+                                                            <div className="text-sm font-medium text-gray-900 dark:text-white">{student.full_name}</div>
+                                                            <div className="text-xs text-gray-500 dark:text-gray-400">{student.student_id} • {student.program || 'N/A'} - {formatGradeLevelModal(student.year_level)}</div>
                                                         </div>
                                                     </div>
-                                                    <UserPlus className="h-5 w-5 text-green-500" />
+                                                    <UserPlus className="h-5 w-5 text-green-500 dark:text-green-400" />
                                                 </button>
                                             ))}
                                         </div>
                                     )}
                                     
                                     {showSearchResults && studentSearch.length >= 2 && searchResults.length === 0 && !searchLoading && (
-                                        <div className="absolute z-20 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg p-4 text-center text-gray-500">
+                                        <div className="absolute z-20 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg p-4 text-center text-gray-500 dark:text-gray-400">
                                             No students found matching "{studentSearch}"
                                         </div>
                                     )}
@@ -526,24 +526,24 @@ const ParentModal: React.FC<{
                                 {/* Selected Students List */}
                                 {selectedStudents.length > 0 && (
                                     <div className="space-y-2">
-                                        <label className="block text-sm font-semibold text-gray-700">Linked Students ({selectedStudents.length})</label>
-                                        <div className="border border-gray-200 rounded-xl divide-y divide-gray-100">
+                                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200">Linked Students ({selectedStudents.length})</label>
+                                        <div className="border border-gray-200 dark:border-gray-700 rounded-xl divide-y divide-gray-100 dark:divide-gray-700">
                                             {selectedStudents.map((student) => (
-                                                <div key={student.student_id} className="flex items-center justify-between p-3 hover:bg-gray-50">
+                                                <div key={student.student_id} className="flex items-center justify-between p-3 hover:bg-gray-50 dark:hover:bg-gray-700">
                                                     <div className="flex items-center flex-1">
-                                                        <div className={`h-8 w-8 rounded-full ${LIGHT_BG_CLASS} flex items-center justify-center mr-3`}>
-                                                            <GraduationCap className={`h-4 w-4 ${TEXT_COLOR_CLASS}`} />
+                                                        <div className={`h-8 w-8 rounded-full ${LIGHT_BG_CLASS} dark:bg-gray-700 flex items-center justify-center mr-3`}>
+                                                            <GraduationCap className={`h-4 w-4 ${TEXT_COLOR_CLASS} dark:text-white`} />
                                                         </div>
                                                         <div className="flex-1">
-                                                            <div className="text-sm font-medium text-gray-900">{student.student_name}</div>
-                                                            <div className="text-xs text-gray-500">{student.student_info}</div>
+                                                            <div className="text-sm font-medium text-gray-900 dark:text-white">{student.student_name}</div>
+                                                            <div className="text-xs text-gray-500 dark:text-gray-400">{student.student_info}</div>
                                                         </div>
                                                     </div>
                                                     <div className="flex items-center space-x-2">
                                                         <select
                                                             value={student.relationship}
                                                             onChange={(e) => updateRelationship(student.student_id, e.target.value)}
-                                                            className="text-sm border border-gray-200 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-[#003366] bg-white"
+                                                            className="text-sm border border-gray-200 dark:border-gray-600 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-[#003366] bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                                                         >
                                                             {RELATIONSHIP_OPTIONS.map(rel => (
                                                                 <option key={rel} value={rel}>{rel}</option>
@@ -552,7 +552,7 @@ const ParentModal: React.FC<{
                                                         <button
                                                             type="button"
                                                             onClick={() => removeStudent(student.student_id)}
-                                                            className="p-1.5 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                                                            className="p-1.5 text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-colors"
                                                             title="Remove student"
                                                         >
                                                             <X className="h-4 w-4" />
@@ -565,17 +565,17 @@ const ParentModal: React.FC<{
                                 )}
 
                                 {selectedStudents.length === 0 && (
-                                    <div className="text-center py-6 text-gray-400 border border-dashed border-gray-200 rounded-xl">
-                                        <Users className="h-8 w-8 mx-auto mb-2" />
-                                        <p className="text-sm">No students linked yet</p>
-                                        <p className="text-xs">Search and add students above</p>
+                                    <div className="text-center py-6 text-gray-400 dark:text-gray-500 border border-dashed border-gray-200 dark:border-gray-700 rounded-xl">
+                                        <Users className="h-8 w-8 mx-auto mb-2 dark:text-gray-600" />
+                                        <p className="text-sm dark:text-gray-400">No students linked yet</p>
+                                        <p className="text-xs dark:text-gray-500">Search and add students above</p>
                                     </div>
                                 )}
                             </div>
                         </div>
 
-                        <div className="flex justify-end space-x-3 pt-4 border-t">
-                            <button type="button" onClick={onClose} className="px-6 py-3 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors font-medium" disabled={loading}>
+                        <div className="flex justify-end space-x-3 pt-4 border-t dark:border-gray-700">
+                            <button type="button" onClick={onClose} className="px-6 py-3 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-medium" disabled={loading}>
                                 Cancel
                             </button>
                             <button type="submit" className={`px-6 py-3 ${PRIMARY_COLOR_CLASS} text-white rounded-xl ${HOVER_COLOR_CLASS} transition-all font-medium shadow-lg disabled:opacity-50`} disabled={loading}>
@@ -607,7 +607,7 @@ const ViewParentModal: React.FC<{
             <div className="flex min-h-full items-center justify-center p-4">
                 <div className="fixed inset-0 bg-black/30 backdrop-blur-sm transition-opacity" onClick={onClose}></div>
                 
-                <div className="relative w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white shadow-2xl transition-all">
+                <div className="relative w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 shadow-2xl transition-all">
                     <div className={`${PRIMARY_COLOR_CLASS} px-6 py-4`}>
                         <div className="flex items-center justify-between">
                             <h2 className="text-xl font-bold text-white">Parent/Guardian Details</h2>
@@ -617,71 +617,71 @@ const ViewParentModal: React.FC<{
                         </div>
                     </div>
                     
-                    <div className="p-6">
+                    <div className="p-6 dark:bg-gray-800">
                         {/* Header with Avatar */}
-                        <div className="flex items-center mb-6 pb-6 border-b">
-                            <div className={`${LIGHT_BG_CLASS} p-4 rounded-full mr-4`}>
-                                <Users className={`h-12 w-12 ${TEXT_COLOR_CLASS}`} />
+                        <div className="flex items-center mb-6 pb-6 border-b dark:border-gray-700">
+                            <div className={`${LIGHT_BG_CLASS} dark:bg-gray-700 p-4 rounded-full mr-4`}>
+                                <Users className={`h-12 w-12 ${TEXT_COLOR_CLASS} dark:text-white`} />
                             </div>
                             <div>
-                                <h3 className="text-2xl font-bold text-gray-900">{parent.full_name}</h3>
-                                <p className="text-gray-500">{parent.guardian_id || 'Parent/Guardian'}</p>
+                                <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{parent.full_name}</h3>
+                                <p className="text-gray-500 dark:text-gray-400">{parent.guardian_id || 'Parent/Guardian'}</p>
                             </div>
                         </div>
 
                         {/* Info Grid */}
                         <div className="grid grid-cols-2 gap-6">
                             <div>
-                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">First Name</label>
-                                <p className="text-gray-900 font-medium mt-1">{parent.first_name}</p>
+                                <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">First Name</label>
+                                <p className="text-gray-900 dark:text-white font-medium mt-1">{parent.first_name}</p>
                             </div>
                             <div>
-                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Last Name</label>
-                                <p className="text-gray-900 font-medium mt-1">{parent.last_name}</p>
+                                <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Last Name</label>
+                                <p className="text-gray-900 dark:text-white font-medium mt-1">{parent.last_name}</p>
                             </div>
                             <div>
-                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Middle Name</label>
-                                <p className="text-gray-900 font-medium mt-1">{parent.middle_name || '—'}</p>
+                                <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Middle Name</label>
+                                <p className="text-gray-900 dark:text-white font-medium mt-1">{parent.middle_name || '—'}</p>
                             </div>
                             <div>
-                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Relationship</label>
-                                <p className="text-gray-900 font-medium mt-1">{parent.relationship || 'Parent'}</p>
+                                <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Relationship</label>
+                                <p className="text-gray-900 dark:text-white font-medium mt-1">{parent.relationship || 'Parent'}</p>
                             </div>
                             <div>
-                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Email Address</label>
-                                <p className="text-gray-900 font-medium mt-1 flex items-center">
-                                    <Mail className="h-4 w-4 text-gray-400 mr-2" />
+                                <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Email Address</label>
+                                <p className="text-gray-900 dark:text-white font-medium mt-1 flex items-center">
+                                    <Mail className="h-4 w-4 text-gray-400 dark:text-gray-500 mr-2" />
                                     {parent.email}
                                 </p>
                             </div>
                             <div>
-                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Gender</label>
-                                <p className="text-gray-900 font-medium mt-1">{parent.gender || '—'}</p>
+                                <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Gender</label>
+                                <p className="text-gray-900 dark:text-white font-medium mt-1">{parent.gender || '—'}</p>
                             </div>
                             <div>
-                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Phone Number</label>
-                                <p className="text-gray-900 font-medium mt-1 flex items-center">
-                                    <Phone className="h-4 w-4 text-gray-400 mr-2" />
+                                <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Phone Number</label>
+                                <p className="text-gray-900 dark:text-white font-medium mt-1 flex items-center">
+                                    <Phone className="h-4 w-4 text-gray-400 dark:text-gray-500 mr-2" />
                                     {parent.phone || '—'}
                                 </p>
                             </div>
                             <div className="col-span-2">
-                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Address</label>
-                                <p className="text-gray-900 font-medium mt-1">{parent.address || '—'}</p>
+                                <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Address</label>
+                                <p className="text-gray-900 dark:text-white font-medium mt-1">{parent.address || '—'}</p>
                             </div>
                         </div>
 
                         {/* Children Info */}
                         {parent.students && parent.students.length > 0 && (
-                            <div className="mt-6 pt-6 border-t">
-                                <h4 className="text-sm font-semibold text-gray-700 mb-3">Children (Students)</h4>
+                            <div className="mt-6 pt-6 border-t dark:border-gray-700">
+                                <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Children (Students)</h4>
                                 <div className="space-y-2">
                                     {parent.students.map((student, idx) => (
-                                        <div key={idx} className="flex items-center justify-between bg-gray-50 px-4 py-2 rounded-lg">
-                                            <span className="font-medium text-gray-900">
+                                        <div key={idx} className="flex items-center justify-between bg-gray-50 dark:bg-gray-700 px-4 py-2 rounded-lg">
+                                            <span className="font-medium text-gray-900 dark:text-white">
                                                 {student.first_name} {student.middle_name ? `${student.middle_name.charAt(0)}.` : ''} {student.last_name}
                                             </span>
-                                            <span className="text-sm text-gray-500">{student.pivot?.relationship || 'Child'}</span>
+                                            <span className="text-sm text-gray-500 dark:text-gray-400">{student.pivot?.relationship || 'Child'}</span>
                                         </div>
                                     ))}
                                 </div>
@@ -689,7 +689,7 @@ const ViewParentModal: React.FC<{
                         )}
 
                         {/* Footer */}
-                        <div className="flex justify-end mt-6 pt-6 border-t">
+                        <div className="flex justify-end mt-6 pt-6 border-t dark:border-gray-700">
                             <button
                                 onClick={onClose}
                                 className={`px-6 py-3 ${PRIMARY_COLOR_CLASS} text-white rounded-xl ${HOVER_COLOR_CLASS} transition-all font-medium`}
@@ -725,18 +725,18 @@ const DeleteParentModal: React.FC<{
             <div className="flex min-h-full items-center justify-center p-4">
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" onClick={onClose}></div>
                 
-                <div className="relative w-full max-w-md transform overflow-hidden rounded-2xl bg-white shadow-2xl transition-all">
+                <div className="relative w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 shadow-2xl transition-all">
                     <div className={`${PRIMARY_COLOR_CLASS} px-6 py-4`}>
                         <h2 className="text-xl font-bold text-white">Delete Parent/Guardian</h2>
                     </div>
                     
-                    <div className="p-6">
-                        <p className="text-gray-600 mb-6">
-                            Are you sure you want to delete <strong className="text-gray-900">{parent.full_name}</strong>? This will unlink them from their associated students.
+                    <div className="p-6 dark:bg-gray-800">
+                        <p className="text-gray-600 dark:text-gray-300 mb-6">
+                            Are you sure you want to delete <strong className="text-gray-900 dark:text-white">{parent.full_name}</strong>? This will unlink them from their associated students.
                         </p>
                         
                         <div className="flex justify-end space-x-3">
-                            <button onClick={onClose} className="px-6 py-3 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors font-medium" disabled={loading}>
+                            <button onClick={onClose} className="px-6 py-3 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-medium" disabled={loading}>
                                 Cancel
                             </button>
                             <button onClick={handleDelete} className="px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl hover:from-red-600 hover:to-red-700 transition-all font-medium shadow-lg disabled:opacity-50" disabled={loading}>
@@ -976,7 +976,7 @@ const Parents: React.FC = () => {
                     className={`px-4 py-2 mx-1 rounded-lg font-medium transition-all ${
                         i === pagination.current_page ? 
                         `${PRIMARY_COLOR_CLASS} text-white shadow-lg` : 
-                        `bg-white text-gray-700 ${LIGHT_HOVER_CLASS} border border-gray-300`
+                        `bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 ${LIGHT_HOVER_CLASS} dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-600`
                     }`}
                 >
                     {i}
@@ -986,14 +986,14 @@ const Parents: React.FC = () => {
         
         return (
             <div className="flex justify-between items-center mt-6 px-6">
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-gray-600 dark:text-gray-400">
                     Showing <span className="font-semibold">{(pagination.current_page - 1) * pagination.per_page + 1}</span> to <span className="font-semibold">{Math.min(pagination.current_page * pagination.per_page, pagination.total)}</span> of <span className="font-semibold">{pagination.total}</span> guardians
                 </p>
                 <div className="flex justify-center items-center space-x-2">
                     <button 
                         onClick={() => handlePageChange(pagination.current_page - 1)}
                         disabled={pagination.current_page === 1}
-                        className={`px-4 py-2 rounded-lg bg-white text-gray-700 ${LIGHT_HOVER_CLASS} border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-medium`}
+                        className={`px-4 py-2 rounded-lg bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 ${LIGHT_HOVER_CLASS} dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-medium`}
                     >
                         Previous
                     </button>
@@ -1003,7 +1003,7 @@ const Parents: React.FC = () => {
                     <button 
                         onClick={() => handlePageChange(pagination.current_page + 1)}
                         disabled={pagination.current_page === pagination.last_page}
-                        className={`px-4 py-2 rounded-lg bg-white text-gray-700 ${LIGHT_HOVER_CLASS} border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-medium`}
+                        className={`px-4 py-2 rounded-lg bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 ${LIGHT_HOVER_CLASS} dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-medium`}
                     >
                         Next
                     </button>
@@ -1023,8 +1023,8 @@ const Parents: React.FC = () => {
                                 <Users className="h-8 w-8 text-white" />
                             </div>
                             <div>
-                                <h1 className="text-3xl font-bold text-gray-900">Parent/Guardian Management</h1>
-                                <p className="text-gray-600 mt-1">Manage contact and relationship details for student guardians</p>
+                                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Parent/Guardian Management</h1>
+                                <p className="text-gray-600 dark:text-gray-300 mt-1">Manage contact and relationship details for student guardians</p>
                             </div>
                         </div>
                         <div className="flex space-x-3">
@@ -1038,27 +1038,27 @@ const Parents: React.FC = () => {
                             
                             <button 
                                 onClick={() => loadParents()}
-                                className="inline-flex items-center px-4 py-3 bg-white border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all shadow-sm"
+                                className="inline-flex items-center px-4 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all shadow-sm"
                             >
-                                <RefreshCw className={`h-5 w-5 ${loading ? 'animate-spin' : ''}`} />
+                                <RefreshCw className={`h-5 w-5 ${loading ? 'animate-spin' : ''} dark:text-gray-300`} />
                             </button>
                             
                             {/* Export Dropdown */}
                             <div className="relative">
                                 <button
                                     onClick={() => setShowExportDropdown(!showExportDropdown)}
-                                    className="inline-flex items-center gap-2 px-4 py-3 bg-white border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all shadow-sm"
+                                    className="inline-flex items-center gap-2 px-4 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all shadow-sm"
                                     title="Export Parents Report"
                                 >
-                                    <Download className="h-5 w-5" />
+                                    <Download className="h-5 w-5 dark:text-gray-300" />
                                     <span className="text-sm font-medium">Export</span>
-                                    <ChevronDown className={`h-4 w-4 transition-transform ${showExportDropdown ? 'rotate-180' : ''}`} />
+                                    <ChevronDown className={`h-4 w-4 transition-transform dark:text-gray-300 ${showExportDropdown ? 'rotate-180' : ''}`} />
                                 </button>
                                 {showExportDropdown && (
                                     <>
                                         <div className="fixed inset-0 z-10" onClick={() => setShowExportDropdown(false)} />
-                                        <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-200 py-2 z-20">
-                                            <p className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase">Export Parents</p>
+                                        <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 py-2 z-20">
+                                            <p className="px-4 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Export Parents</p>
                                             {[
                                                 { id: '', label: '👨‍👩‍👧 All Parents/Guardians' },
                                                 { id: 'college', label: '🎓 College Only' },
@@ -1098,7 +1098,7 @@ const Parents: React.FC = () => {
                                                             setNotification({ type: 'error', message: 'Failed to export parents' });
                                                         }
                                                     }}
-                                                    className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
+                                                    className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2"
                                                 >
                                                     <span>{option.label}</span>
                                                 </button>
@@ -1112,46 +1112,46 @@ const Parents: React.FC = () => {
 
                     {/* Stats Cards - Compact on Mobile */}
                     <div className="grid grid-cols-3 gap-2 sm:gap-3 md:gap-4 mb-4 sm:mb-6">
-                        <div className="bg-white rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-2 sm:p-4 md:p-5 border border-gray-100">
+                        <div className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-2 sm:p-4 md:p-5 border border-gray-100 dark:border-gray-700">
                             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1 sm:gap-0">
                                 <div className="flex-1 min-w-0">
-                                    <p className="text-xs sm:text-sm font-medium text-gray-600 mb-0.5 sm:mb-1 truncate">Total</p>
-                                    <p className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 leading-tight">{stats.total_parents}</p>
+                                    <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-300 mb-0.5 sm:mb-1 truncate">Total</p>
+                                    <p className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 dark:text-white leading-tight">{stats.total_parents}</p>
                                 </div>
-                                <div className={`${LIGHT_BG_CLASS} p-1.5 sm:p-2 md:p-3 rounded-lg sm:rounded-xl flex-shrink-0`}>
-                                    <Users className={`h-4 w-4 sm:h-5 sm:w-5 md:h-7 md:w-7 ${TEXT_COLOR_CLASS}`} />
+                                <div className={`${LIGHT_BG_CLASS} dark:bg-gray-700 p-1.5 sm:p-2 md:p-3 rounded-lg sm:rounded-xl flex-shrink-0`}>
+                                    <Users className={`h-4 w-4 sm:h-5 sm:w-5 md:h-7 md:w-7 ${TEXT_COLOR_CLASS} dark:text-white`} />
                                 </div>
                             </div>
                         </div>
-                        <div className="bg-white rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-2 sm:p-4 md:p-5 border border-gray-100">
+                        <div className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-2 sm:p-4 md:p-5 border border-gray-100 dark:border-gray-700">
                             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1 sm:gap-0">
                                 <div className="flex-1 min-w-0">
-                                    <p className="text-xs sm:text-sm font-medium text-gray-600 mb-0.5 sm:mb-1 truncate">Verified</p>
-                                    <p className={`text-xl sm:text-2xl md:text-3xl font-bold ${TEXT_COLOR_CLASS} leading-tight`}>{stats.verified_parents}</p>
+                                    <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-300 mb-0.5 sm:mb-1 truncate">Verified</p>
+                                    <p className={`text-xl sm:text-2xl md:text-3xl font-bold ${TEXT_COLOR_CLASS} dark:text-white leading-tight`}>{stats.verified_parents}</p>
                                 </div>
-                                <div className={`${LIGHT_BG_CLASS} p-1.5 sm:p-2 md:p-3 rounded-lg sm:rounded-xl flex-shrink-0`}>
-                                    <Link className={`h-4 w-4 sm:h-5 sm:w-5 md:h-7 md:w-7 ${TEXT_COLOR_CLASS}`} />
+                                <div className={`${LIGHT_BG_CLASS} dark:bg-gray-700 p-1.5 sm:p-2 md:p-3 rounded-lg sm:rounded-xl flex-shrink-0`}>
+                                    <Link className={`h-4 w-4 sm:h-5 sm:w-5 md:h-7 md:w-7 ${TEXT_COLOR_CLASS} dark:text-white`} />
                                 </div>
                             </div>
                         </div>
-                        <div className="bg-white rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-2 sm:p-4 md:p-5 border border-gray-100">
+                        <div className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-2 sm:p-4 md:p-5 border border-gray-100 dark:border-gray-700">
                             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1 sm:gap-0">
                                 <div className="flex-1 min-w-0">
-                                    <p className="text-xs sm:text-sm font-medium text-gray-600 mb-0.5 sm:mb-1 truncate">Linked</p>
-                                    <p className={`text-xl sm:text-2xl md:text-3xl font-bold ${TEXT_COLOR_CLASS} leading-tight`}>
+                                    <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-300 mb-0.5 sm:mb-1 truncate">Linked</p>
+                                    <p className={`text-xl sm:text-2xl md:text-3xl font-bold ${TEXT_COLOR_CLASS} dark:text-white leading-tight`}>
                                         {stats.by_relationship?.reduce((sum, item) => sum + (item.count || 0), 0) || 0}
                                     </p>
                                 </div>
-                                <div className={`${LIGHT_BG_CLASS} p-1.5 sm:p-2 md:p-3 rounded-lg sm:rounded-xl flex-shrink-0`}>
-                                    <Link className={`h-4 w-4 sm:h-5 sm:w-5 md:h-7 md:w-7 ${TEXT_COLOR_CLASS}`} />
+                                <div className={`${LIGHT_BG_CLASS} dark:bg-gray-700 p-1.5 sm:p-2 md:p-3 rounded-lg sm:rounded-xl flex-shrink-0`}>
+                                    <Link className={`h-4 w-4 sm:h-5 sm:w-5 md:h-7 md:w-7 ${TEXT_COLOR_CLASS} dark:text-white`} />
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     {/* Education Level Tabs - Horizontal Scroll on Mobile */}
-                    <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-2 sm:p-3 mb-4 sm:mb-6 border border-gray-100">
-                        <p className="text-xs sm:text-sm text-gray-500 mb-2 sm:mb-3 px-1 sm:px-2">Select an education level to view parents/guardians:</p>
+                    <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-lg p-2 sm:p-3 mb-4 sm:mb-6 border border-gray-100 dark:border-gray-700">
+                        <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mb-2 sm:mb-3 px-1 sm:px-2">Select an education level to view parents/guardians:</p>
                         <div className="overflow-x-auto -mx-2 sm:mx-0 px-2 sm:px-0">
                             <div className="flex gap-1.5 sm:gap-2 min-w-max sm:min-w-0 sm:flex-wrap">
                                 {educationLevels.map((level) => {
@@ -1178,13 +1178,13 @@ const Parents: React.FC = () => {
                                             className={`flex items-center px-3 py-2 sm:px-4 sm:py-2.5 md:px-5 md:py-3 rounded-lg sm:rounded-xl font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                                                 isSelected
                                                     ? `${PRIMARY_COLOR_CLASS} text-white shadow-md sm:shadow-lg scale-105`
-                                                    : 'bg-gray-50 text-gray-700 hover:bg-gray-100 hover:scale-102'
+                                                    : 'bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 hover:scale-102'
                                             }`}
                                         >
                                             <span className="mr-1.5 sm:mr-2 text-base sm:text-lg">{level.icon}</span>
                                             <span className="text-xs sm:text-sm md:text-base">{level.label}</span>
                                             <span className={`ml-1.5 sm:ml-2 px-1.5 sm:px-2 md:px-2.5 py-0.5 rounded-full text-xs font-bold ${
-                                                isSelected ? 'bg-white/20 text-white' : 'bg-gray-200 text-gray-600'
+                                                isSelected ? 'bg-white/20 text-white' : 'bg-gray-200 dark:bg-gray-600 text-gray-600 dark:text-gray-300'
                                             }`}>
                                                 {count}
                                             </span>
@@ -1197,42 +1197,42 @@ const Parents: React.FC = () => {
 
                     {/* Show message if no tab selected */}
                     {!educationLevelFilter ? (
-                        <div className="bg-white rounded-2xl shadow-lg p-12 border border-gray-100 text-center">
-                            <Users className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                            <h3 className="text-lg font-semibold text-gray-700 mb-2">Select an Education Level</h3>
-                            <p className="text-gray-500">Click on one of the tabs above to view parents/guardians by their child's education level</p>
+                        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-12 border border-gray-100 dark:border-gray-700 text-center">
+                            <Users className="h-16 w-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
+                            <h3 className="text-lg font-semibold text-gray-700 dark:text-white mb-2">Select an Education Level</h3>
+                            <p className="text-gray-500 dark:text-gray-400">Click on one of the tabs above to view parents/guardians by their child's education level</p>
                         </div>
                     ) : (
                         <>
                             {/* Search and Filters - Compact on Mobile */}
-                            <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-3 sm:p-4 md:p-6 mb-4 sm:mb-6 border border-gray-100">
+                            <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-lg p-3 sm:p-4 md:p-6 mb-4 sm:mb-6 border border-gray-100 dark:border-gray-700">
                                 <div className="relative">
                                     <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
-                                        <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
+                                        <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 dark:text-gray-500" />
                                     </div>
                                     <input
                                         type="text"
                                         value={filters.search}
                                         onChange={(e) => setFilters({...filters, search: e.target.value, page: 1})}
-                                        className={`pl-10 sm:pl-12 w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all text-sm sm:text-base`}
+                                        className={`pl-10 sm:pl-12 w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border border-gray-200 dark:border-gray-600 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all text-sm sm:text-base bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                                         placeholder="Search guardian name or ID..."
                                     />
                                 </div>
                             </div>
 
                     {/* Table - Responsive: Mobile shows Parent/Guardian & Actions, Desktop shows all columns */}
-                    <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden border border-gray-100">
+                    <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700">
                         <div className="overflow-x-auto">
-                            <table className="min-w-full divide-y divide-gray-200">
-                                <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
+                            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                <thead className={`${PRIMARY_COLOR_CLASS}`}>
                                     <tr>
-                                        <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Parent/Guardian</th>
-                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Contact Info</th>
-                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Children (Students)</th>
-                                        <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-right text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Actions</th>
+                                        <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">Parent/Guardian</th>
+                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">Contact Info</th>
+                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">Children (Students)</th>
+                                        <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-right text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody className="bg-white divide-y divide-gray-200">
+                                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                     {loading ? (
                                         <tr>
                                             <td colSpan={4} className="px-3 sm:px-6 py-8 sm:py-12 text-center">
@@ -1243,38 +1243,38 @@ const Parents: React.FC = () => {
                                         </tr>
                                     ) : parents.length === 0 ? (
                                         <tr>
-                                            <td colSpan={4} className="px-3 sm:px-6 py-8 sm:py-12 text-center text-gray-500">
+                                            <td colSpan={4} className="px-3 sm:px-6 py-8 sm:py-12 text-center text-gray-500 dark:text-gray-400">
                                                 <div className="flex flex-col items-center">
-                                                    <Users className="h-10 w-10 sm:h-12 sm:w-12 text-gray-300 mb-3 sm:mb-4" />
-                                                    <p className="text-base sm:text-lg font-medium">No parent/guardian accounts found</p>
-                                                    <p className="text-xs sm:text-sm">Add a new guardian or adjust filters</p>
+                                                    <Users className="h-10 w-10 sm:h-12 sm:w-12 text-gray-300 dark:text-gray-600 mb-3 sm:mb-4" />
+                                                    <p className="text-base sm:text-lg font-medium dark:text-white">No parent/guardian accounts found</p>
+                                                    <p className="text-xs sm:text-sm dark:text-gray-400">Add a new guardian or adjust filters</p>
                                                 </div>
                                             </td>
                                         </tr>
                                     ) : (
                                         parents.map((parent) => (
-                                            <tr key={parent.id} className="hover:bg-gray-50 transition-colors">
+                                            <tr key={parent.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                                                 <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
                                                     <div className="flex items-center">
                                                         <div className={`flex-shrink-0 h-8 w-8 sm:h-10 sm:w-10 rounded-full ${LIGHT_BG_CLASS} flex items-center justify-center border border-[#003366]`}>
                                                             <Users className={`h-4 w-4 sm:h-5 sm:w-5 ${TEXT_COLOR_CLASS}`} />
                                                         </div>
                                                         <div className="ml-2 sm:ml-4 min-w-0 flex-1">
-                                                            <div className="text-xs sm:text-sm font-semibold text-gray-900 truncate">
+                                                            <div className="text-xs sm:text-sm font-semibold text-gray-900 dark:text-white truncate">
                                                                 {parent.full_name}
                                                             </div>
-                                                            <div className="text-xs text-gray-500 truncate">{parent.relationship_to_student || 'Parent'}</div>
+                                                            <div className="text-xs text-gray-500 dark:text-gray-400 truncate">{parent.relationship_to_student || 'Parent'}</div>
                                                         </div>
                                                     </div>
                                                 </td>
                                                 <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4">
                                                     <div className="flex flex-col space-y-1">
-                                                        <div className="flex items-center text-xs sm:text-sm text-gray-900">
-                                                            <Mail className="h-3 w-3 sm:h-4 sm:w-4 text-gray-400 mr-2" />
+                                                        <div className="flex items-center text-xs sm:text-sm text-gray-900 dark:text-white">
+                                                            <Mail className="h-3 w-3 sm:h-4 sm:w-4 text-gray-400 dark:text-gray-500 mr-2" />
                                                             <span className="truncate">{parent.email}</span>
                                                         </div>
-                                                        <div className="flex items-center text-xs sm:text-sm text-gray-500">
-                                                            <Phone className="h-3 w-3 sm:h-4 sm:w-4 text-gray-400 mr-2" />
+                                                        <div className="flex items-center text-xs sm:text-sm text-gray-500 dark:text-gray-400">
+                                                            <Phone className="h-3 w-3 sm:h-4 sm:w-4 text-gray-400 dark:text-gray-500 mr-2" />
                                                             <span className="truncate">{parent.phone || 'N/A'}</span>
                                                         </div>
                                                     </div>
@@ -1284,22 +1284,22 @@ const Parents: React.FC = () => {
                                                         {parent.students && parent.students.length > 0 ? (
                                                             parent.students.map((child: any) => (
                                                                 <div key={child.id} className="flex items-center gap-2 text-xs sm:text-sm">
-                                                                    <span className="font-medium text-gray-900 truncate">{child.full_name}</span>
+                                                                    <span className="font-medium text-gray-900 dark:text-white truncate">{child.full_name}</span>
                                                                     <span className={`px-2 py-0.5 rounded-full text-xs font-medium flex-shrink-0 ${
-                                                                        child.year_level >= 13 ? 'bg-purple-100 text-purple-800' :
-                                                                        child.year_level >= 11 ? 'bg-blue-100 text-blue-800' :
-                                                                        child.year_level >= 7 ? 'bg-green-100 text-green-800' :
-                                                                        'bg-orange-100 text-orange-800'
+                                                                        child.year_level >= 13 ? 'bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-300' :
+                                                                        child.year_level >= 11 ? 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-300' :
+                                                                        child.year_level >= 7 ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-300' :
+                                                                        'bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-300'
                                                                     }`}>
                                                                         {formatGradeLevelModal(child.year_level)}
                                                                     </span>
                                                                     {child.program && (
-                                                                        <span className="text-xs text-gray-500 truncate">({child.program})</span>
+                                                                        <span className="text-xs text-gray-500 dark:text-gray-400 truncate">({child.program})</span>
                                                                     )}
                                                                 </div>
                                                             ))
                                                         ) : (
-                                                            <span className="text-xs sm:text-sm text-gray-500">No linked students</span>
+                                                            <span className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">No linked students</span>
                                                         )}
                                                     </div>
                                                 </td>
