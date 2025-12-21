@@ -287,20 +287,6 @@ const ViewSemesterModal: React.FC<{
                                     )}
                                 </p>
                             </div>
-                            <div>
-                                <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</label>
-                                <p className="text-gray-900 dark:text-white font-medium mt-1">
-                                    {semesterItem.status ? (
-                                        <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold ${
-                                            semesterItem.status === 'current' ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-300' :
-                                            semesterItem.status === 'active' ? 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-300' :
-                                            'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-300'
-                                        }`}>
-                                            {semesterItem.status.charAt(0).toUpperCase() + semesterItem.status.slice(1)}
-                                        </span>
-                                    ) : 'N/A'}
-                                </p>
-                            </div>
                         </div>
 
                         <div className="flex justify-end mt-6 pt-6 border-t dark:border-gray-700">
@@ -621,11 +607,11 @@ const Semesters: React.FC = () => {
                                 <select
                                     value={filters.academic_year_id}
                                     onChange={(e) => setFilters({...filters, academic_year_id: e.target.value, page: 1})}
-                                    className={`w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border border-gray-200 dark:border-white dark:bg-transparent dark:text-white rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none text-sm sm:text-base`}
+                                    className={`w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border border-gray-200 dark:border-white dark:bg-gray-700 dark:text-white rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none text-sm sm:text-base bg-white`}
                                 >
                                     <option value="">Filter by Academic Year</option>
                                     {academicYears.map(year => (
-                                        <option key={year.id} value={year.id}>{year.year_name}</option>
+                                        <option key={year.id} value={year.id} className="dark:bg-gray-700 dark:text-white">{year.year_name}</option>
                                     ))}
                                 </select>
                             </div>
@@ -634,12 +620,12 @@ const Semesters: React.FC = () => {
                                 <select
                                     value={filters.status}
                                     onChange={(e) => setFilters({...filters, status: e.target.value, page: 1})}
-                                    className={`w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border border-gray-200 dark:border-white dark:bg-transparent dark:text-white rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none text-sm sm:text-base`}
+                                    className={`w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border border-gray-200 dark:border-white dark:bg-gray-700 dark:text-white rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none text-sm sm:text-base bg-white`}
                                 >
-                                    <option value="">Filter by Status</option>
-                                    <option value="current">Current</option>
-                                    <option value="active">Active</option>
-                                    <option value="past">Past</option>
+                                    <option value="" className="dark:bg-gray-700 dark:text-white">Filter by Status</option>
+                                    <option value="current" className="dark:bg-gray-700 dark:text-white">Current</option>
+                                    <option value="active" className="dark:bg-gray-700 dark:text-white">Active</option>
+                                    <option value="past" className="dark:bg-gray-700 dark:text-white">Past</option>
                                 </select>
                             </div>
                         </div>

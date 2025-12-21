@@ -444,7 +444,7 @@ const ClassModal: React.FC<{
             <div className="flex min-h-full items-center justify-center p-2 sm:p-4">
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" onClick={onClose}></div>
                 
-                <div className="relative w-full max-w-2xl transform overflow-hidden rounded-xl sm:rounded-2xl bg-white shadow-2xl transition-all">
+                <div className="relative w-full max-w-2xl transform overflow-hidden rounded-xl sm:rounded-2xl bg-white dark:bg-gray-800 shadow-2xl transition-all">
                     <div className={`${PRIMARY_COLOR_CLASS} px-4 py-3 sm:px-6 sm:py-4`}>
                         <div className="flex items-center justify-between">
                             <h2 className="text-lg sm:text-xl font-bold text-white">
@@ -457,22 +457,22 @@ const ClassModal: React.FC<{
                     </div>
 
                     {loadingOptions ? (
-                        <div className="p-8 sm:p-12 flex flex-col items-center justify-center">
-                            <RefreshCw className={`h-6 w-6 sm:h-8 sm:w-8 ${TEXT_COLOR_CLASS} animate-spin mb-3 sm:mb-4`} />
-                            <p className="text-sm sm:text-base text-gray-600">Loading form options...</p>
+                        <div className="p-8 sm:p-12 flex flex-col items-center justify-center dark:bg-gray-800">
+                            <RefreshCw className={`h-6 w-6 sm:h-8 sm:w-8 ${TEXT_COLOR_CLASS} dark:text-white animate-spin mb-3 sm:mb-4`} />
+                            <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">Loading form options...</p>
                         </div>
                     ) : (
-                        <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+                        <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4 sm:space-y-6 dark:bg-gray-800">
                             {/* Row 1: Grade Level (First - determines available courses) */}
                             <div>
-                                <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
+                                <label className="block text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1.5 sm:mb-2">
                                     Grade Level <span className="text-red-500">*</span>
                                 </label>
                                 <select 
                                     name="year_level" 
                                     value={formData.year_level} 
                                     onChange={handleChange} 
-                                    className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white`}
+                                    className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 dark:border-gray-600 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                                     required
                                 >
                                     <optgroup label="Elementary">
@@ -496,7 +496,7 @@ const ClassModal: React.FC<{
                                         ))}
                                     </optgroup>
                                 </select>
-                                <p className="text-gray-500 text-xs mt-1">
+                                <p className="text-gray-500 dark:text-gray-400 text-xs mt-1">
                                     Selected: {getGradeLevelCategory(formData.year_level)} level - Courses will be filtered accordingly
                                 </p>
                                 {errors.year_level && (<p className="text-red-500 text-xs mt-1">{errors.year_level[0]}</p>)}
@@ -504,14 +504,14 @@ const ClassModal: React.FC<{
 
                             {/* Row 2: Course/Program Dropdown (Filtered by Grade Level) */}
                             <div>
-                                <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
+                                <label className="block text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1.5 sm:mb-2">
                                     Course/Program {formData.year_level >= 11 && <span className="text-red-500">*</span>}
                                 </label>
                                 <select
                                     name="course_id"
                                     value={formData.course_id || ''}
                                     onChange={handleChange}
-                                    className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white`}
+                                    className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 dark:border-gray-600 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                                     required={formData.year_level >= 11}
                                 >
                                     <option value="">Select Course/Program</option>
@@ -526,7 +526,7 @@ const ClassModal: React.FC<{
                                     )}
                                 </select>
                                 {courses.length === 0 && formData.year_level >= 11 && (
-                                    <p className="text-amber-600 text-xs mt-1">
+                                    <p className="text-amber-600 dark:text-amber-400 text-xs mt-1">
                                         No courses found for {getGradeLevelCategory(formData.year_level)} level. Please add courses first.
                                     </p>
                                 )}
@@ -536,7 +536,7 @@ const ClassModal: React.FC<{
                             
                             {/* Row 3: Section */}
                             <div>
-                                <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
+                                <label className="block text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1.5 sm:mb-2">
                                     Section <span className="text-red-500">*</span>
                                 </label>
                                 <input
@@ -544,27 +544,27 @@ const ClassModal: React.FC<{
                                     name="section"
                                     value={formData.section}
                                     onChange={handleChange}
-                                    className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
+                                    className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 dark:border-gray-600 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                                     placeholder="e.g., A, B, C"
                                     required
                                 />
-                                <p className="text-gray-500 text-xs mt-1">Enter section letter (e.g., A, B, C)</p>
+                                <p className="text-gray-500 dark:text-gray-400 text-xs mt-1">Enter section letter (e.g., A, B, C)</p>
                                 {errors.section && (<p className="text-red-500 text-xs mt-1">{errors.section[0]}</p>)}
                             </div>
 
                             {/* Row 4: Class Code & Class Name (Auto-generated) */}
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                                 <div>
-                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
+                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1.5 sm:mb-2">
                                         Class Code <span className="text-red-500">*</span>
-                                        <span className="text-xs font-normal text-gray-500 ml-1 sm:ml-2">(Auto-generated)</span>
+                                        <span className="text-xs font-normal text-gray-500 dark:text-gray-400 ml-1 sm:ml-2">(Auto-generated)</span>
                                     </label>
                                     <input
                                         type="text"
                                         name="class_code"
                                         value={formData.class_code}
                                         onChange={handleChange}
-                                        className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-gray-50`}
+                                        className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 dark:border-gray-600 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white`}
                                         placeholder={formData.year_level >= 13 ? "e.g., BSIT-1A" : "e.g., Grade7-A"}
                                         readOnly
                                         required
@@ -572,16 +572,16 @@ const ClassModal: React.FC<{
                                     {errors.class_code && (<p className="text-red-500 text-xs mt-1">{errors.class_code[0]}</p>)}
                                 </div>
                                 <div>
-                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
+                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1.5 sm:mb-2">
                                         Class Name <span className="text-red-500">*</span>
-                                        <span className="text-xs font-normal text-gray-500 ml-1 sm:ml-2">(Auto-generated)</span>
+                                        <span className="text-xs font-normal text-gray-500 dark:text-gray-400 ml-1 sm:ml-2">(Auto-generated)</span>
                                     </label>
                                     <input
                                         type="text"
                                         name="class_name"
                                         value={formData.class_name}
                                         onChange={handleChange}
-                                        className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-gray-50`}
+                                        className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 dark:border-gray-600 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white`}
                                         placeholder={formData.year_level >= 13 ? "e.g., BSIT-1A" : "e.g., Grade 7 - Section A"}
                                         readOnly
                                         required
@@ -594,14 +594,14 @@ const ClassModal: React.FC<{
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                                 {/* Academic Year Dropdown */}
                                 <div>
-                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
+                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1.5 sm:mb-2">
                                         Academic Year <span className="text-red-500">*</span>
                                     </label>
                                     <select
                                         name="academic_year_id"
                                         value={formData.academic_year_id}
                                         onChange={handleChange}
-                                        className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white`}
+                                        className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 dark:border-gray-600 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                                         required
                                     >
                                         <option value="">Select Academic Year</option>
@@ -616,14 +616,14 @@ const ClassModal: React.FC<{
 
                                 {/* Semester Dropdown - Filtered by Academic Year */}
                                 <div>
-                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
+                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1.5 sm:mb-2">
                                         Semester <span className="text-red-500">*</span>
                                     </label>
                                     <select
                                         name="semester_id"
                                         value={formData.semester_id}
                                         onChange={handleChange}
-                                        className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white`}
+                                        className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 dark:border-gray-600 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed`}
                                         required
                                         disabled={!formData.academic_year_id}
                                     >
@@ -635,21 +635,21 @@ const ClassModal: React.FC<{
                                         ))}
                                     </select>
                                     {!formData.academic_year_id && (
-                                        <p className="text-gray-500 text-xs mt-1">Select academic year first</p>
+                                        <p className="text-gray-500 dark:text-gray-400 text-xs mt-1">Select academic year first</p>
                                     )}
                                     {errors.semester_id && (<p className="text-red-500 text-xs mt-1">{errors.semester_id[0]}</p>)}
                                 </div>
 
                                 {/* Adviser Dropdown - Optional */}
                                 <div>
-                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
+                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1.5 sm:mb-2">
                                         Class Adviser (Optional)
                                     </label>
                                     <select
                                         name="adviser_id"
                                         value={formData.adviser_id || ''}
                                         onChange={handleChange}
-                                        className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white`}
+                                        className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 dark:border-gray-600 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                                     >
                                         <option value="">No Adviser Assigned</option>
                                         {teachers.map(teacher => (
@@ -663,11 +663,11 @@ const ClassModal: React.FC<{
                             </div>
 
                             {/* Action Buttons */}
-                            <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-3 pt-3 sm:pt-4 border-t">
+                            <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-3 pt-3 sm:pt-4 border-t dark:border-gray-700">
                                 <button 
                                     type="button" 
                                     onClick={onClose} 
-                                    className="w-full sm:w-auto px-4 py-2.5 sm:px-6 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg sm:rounded-xl text-gray-700 hover:bg-gray-50 transition-colors font-medium" 
+                                    className="w-full sm:w-auto px-4 py-2.5 sm:px-6 sm:py-3 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg sm:rounded-xl text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-medium" 
                                     disabled={loading}
                                 >
                                     Cancel
@@ -758,7 +758,7 @@ const ClassStudentsModal: React.FC<{
             <div className="flex min-h-full items-center justify-center p-4">
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose}></div>
                 
-                <div className="relative w-full max-w-4xl transform overflow-hidden rounded-2xl bg-white shadow-2xl">
+                <div className="relative w-full max-w-4xl transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 shadow-2xl">
                     {/* Header */}
                     <div className={`${PRIMARY_COLOR_CLASS} px-6 py-4`}>
                         <div className="flex items-center justify-between">
@@ -777,15 +777,15 @@ const ClassStudentsModal: React.FC<{
                     </div>
 
                     {/* Toolbar */}
-                    <div className="p-4 bg-gray-50 border-b flex flex-col sm:flex-row gap-3 justify-between items-start sm:items-center">
+                    <div className="p-4 bg-gray-50 dark:bg-gray-700 border-b dark:border-gray-600 flex flex-col sm:flex-row gap-3 justify-between items-start sm:items-center">
                         <div className="relative flex-1 max-w-md">
-                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500" />
                             <input
                                 type="text"
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
                                 placeholder="Search students..."
-                                className={`pl-10 w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 ${RING_COLOR_CLASS}`}
+                                className={`pl-10 w-full px-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} bg-white dark:bg-gray-800 text-gray-900 dark:text-white`}
                             />
                         </div>
                         <button
@@ -798,16 +798,16 @@ const ClassStudentsModal: React.FC<{
                     </div>
 
                     {/* Student List */}
-                    <div className="max-h-[60vh] overflow-y-auto">
+                    <div className="max-h-[60vh] overflow-y-auto dark:bg-gray-800">
                         {loading ? (
                             <div className="flex flex-col items-center justify-center py-12">
-                                <RefreshCw className={`h-8 w-8 ${TEXT_COLOR_CLASS} animate-spin mb-2`} />
-                                <p className="text-gray-500">Loading students...</p>
+                                <RefreshCw className={`h-8 w-8 ${TEXT_COLOR_CLASS} dark:text-white animate-spin mb-2`} />
+                                <p className="text-gray-500 dark:text-gray-400">Loading students...</p>
                             </div>
                         ) : students.length === 0 ? (
                             <div className="flex flex-col items-center justify-center py-12">
-                                <Users className="h-12 w-12 text-gray-300 mb-3" />
-                                <p className="text-gray-500 mb-2">No students enrolled in this class</p>
+                                <Users className="h-12 w-12 text-gray-300 dark:text-gray-600 mb-3" />
+                                <p className="text-gray-500 dark:text-gray-400 mb-2">No students enrolled in this class</p>
                                 <button
                                     onClick={onAddStudents}
                                     className={`inline-flex items-center px-4 py-2 ${PRIMARY_COLOR_CLASS} text-white rounded-lg ${HOVER_COLOR_CLASS}`}
@@ -817,37 +817,37 @@ const ClassStudentsModal: React.FC<{
                                 </button>
                             </div>
                         ) : (
-                            <table className="min-w-full divide-y divide-gray-200">
-                                <thead className="bg-gray-50 sticky top-0">
+                            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                <thead className={`${PRIMARY_COLOR_CLASS} sticky top-0`}>
                                     <tr>
-                                        <th className="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase">Student</th>
-                                        <th className="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase">ID</th>
-                                        <th className="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase">Grade Level</th>
-                                        <th className="px-6 py-3 text-right text-xs font-bold text-gray-600 uppercase">Actions</th>
+                                        <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase">Student</th>
+                                        <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase">ID</th>
+                                        <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase">Grade Level</th>
+                                        <th className="px-6 py-3 text-right text-xs font-bold text-white uppercase">Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody className="bg-white divide-y divide-gray-200">
+                                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                     {students.map((student) => (
-                                        <tr key={student.id} className="hover:bg-gray-50">
+                                        <tr key={student.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <div className="flex items-center">
-                                                    <div className={`h-10 w-10 rounded-full ${LIGHT_BG_CLASS} flex items-center justify-center mr-3`}>
-                                                        <span className={`text-sm font-semibold ${TEXT_COLOR_CLASS}`}>
+                                                    <div className={`h-10 w-10 rounded-full ${LIGHT_BG_CLASS} dark:bg-gray-700 flex items-center justify-center mr-3`}>
+                                                        <span className={`text-sm font-semibold ${TEXT_COLOR_CLASS} dark:text-white`}>
                                                             {student.first_name?.[0]}{student.last_name?.[0]}
                                                         </span>
                                                     </div>
                                                     <div>
-                                                        <div className="text-sm font-semibold text-gray-900">{student.full_name}</div>
-                                                        <div className="text-xs text-gray-500">{student.email}</div>
+                                                        <div className="text-sm font-semibold text-gray-900 dark:text-white">{student.full_name}</div>
+                                                        <div className="text-xs text-gray-500 dark:text-gray-400">{student.email}</div>
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{student.student_id}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{formatGradeLevel(student.year_level)}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-white">{student.student_id}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-white">{formatGradeLevel(student.year_level)}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-right">
                                                 <button
                                                     onClick={() => handleRemoveStudent(student.id, student.full_name)}
-                                                    className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                                    className="p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-colors"
                                                     title="Remove from Class"
                                                 >
                                                     <UserMinus className="h-4 w-4" />
@@ -861,13 +861,13 @@ const ClassStudentsModal: React.FC<{
                     </div>
 
                     {/* Footer */}
-                    <div className="px-6 py-4 bg-gray-50 border-t flex justify-between items-center">
-                        <span className="text-sm text-gray-600">
+                    <div className="px-6 py-4 bg-gray-50 dark:bg-gray-700 border-t dark:border-gray-600 flex justify-between items-center">
+                        <span className="text-sm text-gray-600 dark:text-gray-300">
                             {pagination.total} student{pagination.total !== 1 ? 's' : ''} in class
                         </span>
                         <button
                             onClick={onClose}
-                            className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
+                            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
                         >
                             Close
                         </button>
@@ -977,7 +977,7 @@ const AddStudentsModal: React.FC<{
             <div className="flex min-h-full items-center justify-center p-4">
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose}></div>
                 
-                <div className="relative w-full max-w-4xl transform overflow-hidden rounded-2xl bg-white shadow-2xl">
+                <div className="relative w-full max-w-4xl transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 shadow-2xl">
                     {/* Header */}
                     <div className="bg-gradient-to-r from-green-600 to-green-700 px-6 py-4">
                         <div className="flex items-center justify-between">
@@ -996,11 +996,11 @@ const AddStudentsModal: React.FC<{
                     </div>
 
                     {/* Filters */}
-                    <div className="p-4 bg-gray-50 border-b">
+                    <div className="p-4 bg-gray-50 dark:bg-gray-700 border-b dark:border-gray-600">
                         {/* Auto-filter Info */}
                         {classRequirements && (
-                            <div className="mb-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                                <div className="flex items-center text-sm text-blue-800">
+                            <div className="mb-3 p-3 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-lg">
+                                <div className="flex items-center text-sm text-blue-800 dark:text-blue-300">
                                     <AlertCircle className="h-4 w-4 mr-2 flex-shrink-0" />
                                     <span>
                                         Showing only <strong>{classRequirements.course_code}</strong> students in <strong>{formatGradeLevel(classRequirements.year_level)}</strong>
@@ -1009,26 +1009,26 @@ const AddStudentsModal: React.FC<{
                             </div>
                         )}
                         <div className="relative">
-                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500" />
                             <input
                                 type="text"
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
                                 placeholder="Search by name or ID..."
-                                className="pl-10 w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                                className="pl-10 w-full px-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                             />
                         </div>
                     </div>
 
                     {/* Selection Info */}
                     {selectedStudents.size > 0 && (
-                        <div className="px-6 py-3 bg-green-50 border-b border-green-100 flex items-center justify-between">
-                            <span className="text-sm font-medium text-green-800">
+                        <div className="px-6 py-3 bg-green-50 dark:bg-green-900/30 border-b border-green-100 dark:border-green-800 flex items-center justify-between">
+                            <span className="text-sm font-medium text-green-800 dark:text-green-300">
                                 {selectedStudents.size} student{selectedStudents.size !== 1 ? 's' : ''} selected
                             </span>
                             <button
                                 onClick={() => setSelectedStudents(new Set())}
-                                className="text-sm text-green-600 hover:text-green-800"
+                                className="text-sm text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300"
                             >
                                 Clear selection
                             </button>
@@ -1036,75 +1036,75 @@ const AddStudentsModal: React.FC<{
                     )}
 
                     {/* Student List */}
-                    <div className="max-h-[50vh] overflow-y-auto">
+                    <div className="max-h-[50vh] overflow-y-auto dark:bg-gray-800">
                         {loading ? (
                             <div className="flex flex-col items-center justify-center py-12">
-                                <RefreshCw className="h-8 w-8 text-green-600 animate-spin mb-2" />
-                                <p className="text-gray-500">Loading available students...</p>
+                                <RefreshCw className="h-8 w-8 text-green-600 dark:text-green-400 animate-spin mb-2" />
+                                <p className="text-gray-500 dark:text-gray-400">Loading available students...</p>
                             </div>
                         ) : availableStudents.length === 0 ? (
                             <div className="flex flex-col items-center justify-center py-12">
-                                <AlertCircle className="h-12 w-12 text-gray-300 mb-3" />
-                                <p className="text-gray-500">No available students found</p>
-                                <p className="text-gray-400 text-sm">All students may already be enrolled or try different filters</p>
+                                <AlertCircle className="h-12 w-12 text-gray-300 dark:text-gray-600 mb-3" />
+                                <p className="text-gray-500 dark:text-gray-400">No available students found</p>
+                                <p className="text-gray-400 dark:text-gray-500 text-sm">All students may already be enrolled or try different filters</p>
                             </div>
                         ) : (
-                            <table className="min-w-full divide-y divide-gray-200">
-                                <thead className="bg-gray-50 sticky top-0">
+                            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                <thead className="bg-gray-50 dark:bg-gray-700 sticky top-0">
                                     <tr>
                                         <th className="px-6 py-3 text-left">
                                             <button
                                                 onClick={toggleAll}
-                                                className="flex items-center text-xs font-bold text-gray-600 uppercase hover:text-gray-900"
+                                                className="flex items-center text-xs font-bold text-gray-600 dark:text-gray-300 uppercase hover:text-gray-900 dark:hover:text-white"
                                             >
                                                 {selectedStudents.size === availableStudents.length ? (
-                                                    <CheckSquare className="h-4 w-4 mr-2 text-green-600" />
+                                                    <CheckSquare className="h-4 w-4 mr-2 text-green-600 dark:text-green-400" />
                                                 ) : (
                                                     <Square className="h-4 w-4 mr-2" />
                                                 )}
                                                 Select All
                                             </button>
                                         </th>
-                                        <th className="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase">Student</th>
-                                        <th className="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase">ID</th>
-                                        <th className="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase">Program</th>
-                                        <th className="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase">Year</th>
+                                        <th className="px-6 py-3 text-left text-xs font-bold text-gray-600 dark:text-gray-300 uppercase">Student</th>
+                                        <th className="px-6 py-3 text-left text-xs font-bold text-gray-600 dark:text-gray-300 uppercase">ID</th>
+                                        <th className="px-6 py-3 text-left text-xs font-bold text-gray-600 dark:text-gray-300 uppercase">Program</th>
+                                        <th className="px-6 py-3 text-left text-xs font-bold text-gray-600 dark:text-gray-300 uppercase">Year</th>
                                     </tr>
                                 </thead>
-                                <tbody className="bg-white divide-y divide-gray-200">
+                                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                     {availableStudents.map((student) => (
                                         <tr
                                             key={student.id}
                                             onClick={() => toggleStudent(student.id)}
                                             className={`cursor-pointer transition-colors ${
                                                 selectedStudents.has(student.id)
-                                                    ? 'bg-green-50 hover:bg-green-100'
-                                                    : 'hover:bg-gray-50'
+                                                    ? 'bg-green-50 dark:bg-green-900/30 hover:bg-green-100 dark:hover:bg-green-900/40'
+                                                    : 'hover:bg-gray-50 dark:hover:bg-gray-700'
                                             }`}
                                         >
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 {selectedStudents.has(student.id) ? (
-                                                    <CheckSquare className="h-5 w-5 text-green-600" />
+                                                    <CheckSquare className="h-5 w-5 text-green-600 dark:text-green-400" />
                                                 ) : (
-                                                    <Square className="h-5 w-5 text-gray-400" />
+                                                    <Square className="h-5 w-5 text-gray-400 dark:text-gray-500" />
                                                 )}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <div className="flex items-center">
-                                                    <div className={`h-10 w-10 rounded-full ${selectedStudents.has(student.id) ? 'bg-green-100' : 'bg-gray-100'} flex items-center justify-center mr-3`}>
-                                                        <span className={`text-sm font-semibold ${selectedStudents.has(student.id) ? 'text-green-600' : 'text-gray-600'}`}>
+                                                    <div className={`h-10 w-10 rounded-full ${selectedStudents.has(student.id) ? 'bg-green-100 dark:bg-green-800' : 'bg-gray-100 dark:bg-gray-700'} flex items-center justify-center mr-3`}>
+                                                        <span className={`text-sm font-semibold ${selectedStudents.has(student.id) ? 'text-green-600 dark:text-green-300' : 'text-gray-600 dark:text-gray-300'}`}>
                                                             {student.first_name?.[0]}{student.last_name?.[0]}
                                                         </span>
                                                     </div>
                                                     <div>
-                                                        <div className="text-sm font-semibold text-gray-900">{student.full_name}</div>
-                                                        <div className="text-xs text-gray-500">{student.email}</div>
+                                                        <div className="text-sm font-semibold text-gray-900 dark:text-white">{student.full_name}</div>
+                                                        <div className="text-xs text-gray-500 dark:text-gray-400">{student.email}</div>
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{student.student_id}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{student.program || '-'}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{formatGradeLevel(student.year_level)}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-white">{student.student_id}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-white">{student.program || '-'}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-white">{formatGradeLevel(student.year_level)}</td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -1113,14 +1113,14 @@ const AddStudentsModal: React.FC<{
                     </div>
 
                     {/* Footer */}
-                    <div className="px-6 py-4 bg-gray-50 border-t flex justify-between items-center">
-                        <span className="text-sm text-gray-600">
+                    <div className="px-6 py-4 bg-gray-50 dark:bg-gray-700 border-t dark:border-gray-600 flex justify-between items-center">
+                        <span className="text-sm text-gray-600 dark:text-gray-300">
                             {availableStudents.length} student{availableStudents.length !== 1 ? 's' : ''} available
                         </span>
                         <div className="flex space-x-3">
                             <button
                                 onClick={onClose}
-                                className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
+                                className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
                                 disabled={enrolling}
                             >
                                 Cancel
@@ -1164,7 +1164,7 @@ const ViewClassModal: React.FC<{
             <div className="flex min-h-full items-center justify-center p-4">
                 <div className="fixed inset-0 bg-black/30 backdrop-blur-sm transition-opacity" onClick={onClose}></div>
                 
-                <div className="relative w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white shadow-2xl transition-all">
+                <div className="relative w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 shadow-2xl transition-all">
                     <div className={`${PRIMARY_COLOR_CLASS} px-6 py-4`}>
                         <div className="flex items-center justify-between">
                             <h2 className="text-xl font-bold text-white">Class Details</h2>
@@ -1174,52 +1174,52 @@ const ViewClassModal: React.FC<{
                         </div>
                     </div>
                     
-                    <div className="p-6">
+                    <div className="p-6 dark:bg-gray-800">
                         {/* Header with Icon */}
-                        <div className="flex items-center mb-6 pb-6 border-b">
-                            <div className={`${LIGHT_BG_CLASS} p-4 rounded-full mr-4`}>
-                                <LayoutGrid className={`h-12 w-12 ${TEXT_COLOR_CLASS}`} />
+                        <div className="flex items-center mb-6 pb-6 border-b dark:border-gray-700">
+                            <div className={`${LIGHT_BG_CLASS} dark:bg-gray-700 p-4 rounded-full mr-4`}>
+                                <LayoutGrid className={`h-12 w-12 ${TEXT_COLOR_CLASS} dark:text-white`} />
                             </div>
                             <div>
-                                <h3 className="text-2xl font-bold text-gray-900">{classItem.class_name}</h3>
-                                <p className="text-gray-500">{classItem.class_code}</p>
+                                <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{classItem.class_name}</h3>
+                                <p className="text-gray-500 dark:text-gray-400">{classItem.class_code}</p>
                             </div>
                         </div>
 
                         {/* Info Grid */}
                         <div className="grid grid-cols-2 gap-6">
                             <div>
-                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Class Code</label>
-                                <p className="text-gray-900 font-medium mt-1">{classItem.class_code}</p>
+                                <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Class Code</label>
+                                <p className="text-gray-900 dark:text-white font-medium mt-1">{classItem.class_code}</p>
                             </div>
                             <div>
-                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Class Name</label>
-                                <p className="text-gray-900 font-medium mt-1">{classItem.class_name}</p>
+                                <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Class Name</label>
+                                <p className="text-gray-900 dark:text-white font-medium mt-1">{classItem.class_name}</p>
                             </div>
                             <div>
-                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Program</label>
-                                <p className="text-gray-900 font-medium mt-1">{classItem.program}</p>
+                                <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Program</label>
+                                <p className="text-gray-900 dark:text-white font-medium mt-1">{classItem.program}</p>
                             </div>
                             <div>
-                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Section</label>
-                                <p className="text-gray-900 font-medium mt-1">{classItem.section}</p>
+                                <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Section</label>
+                                <p className="text-gray-900 dark:text-white font-medium mt-1">{classItem.section}</p>
                             </div>
                             <div>
-                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Year Level</label>
-                                <p className="text-gray-900 font-medium mt-1">{formatGradeLevel(classItem.year_level)}</p>
+                                <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Year Level</label>
+                                <p className="text-gray-900 dark:text-white font-medium mt-1">{formatGradeLevel(classItem.year_level)}</p>
                             </div>
                             <div>
-                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Adviser</label>
-                                <p className="text-gray-900 font-medium mt-1">{classItem.adviser_name || 'Unassigned'}</p>
+                                <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Adviser</label>
+                                <p className="text-gray-900 dark:text-white font-medium mt-1">{classItem.adviser_name || 'Unassigned'}</p>
                             </div>
                             <div>
-                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Students Enrolled</label>
-                                <p className="text-gray-900 font-medium mt-1">{classItem.student_count || 0}</p>
+                                <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Students Enrolled</label>
+                                <p className="text-gray-900 dark:text-white font-medium mt-1">{classItem.student_count || 0}</p>
                             </div>
                         </div>
 
                         {/* Footer */}
-                        <div className="flex justify-end mt-6 pt-6 border-t">
+                        <div className="flex justify-end mt-6 pt-6 border-t dark:border-gray-700">
                             <button
                                 onClick={onClose}
                                 className={`px-6 py-3 ${PRIMARY_COLOR_CLASS} text-white rounded-xl ${HOVER_COLOR_CLASS} transition-all font-medium`}
@@ -1443,8 +1443,8 @@ const Classes: React.FC = () => {
                                 <LayoutGrid className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 text-white" />
                             </div>
                             <div>
-                                <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">Class & Section Management</h1>
-                                <p className="text-xs sm:text-sm text-gray-600 mt-0.5 sm:mt-1">Organize student sections, assign advisers, and manage enrollment capacity</p>
+                                <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Class & Section Management</h1>
+                                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mt-0.5 sm:mt-1">Organize student sections, assign advisers, and manage enrollment capacity</p>
                             </div>
                         </div>
                         <div className="flex space-x-2 sm:space-x-3">
@@ -1459,129 +1459,129 @@ const Classes: React.FC = () => {
                             
                             <button 
                                 onClick={() => loadClasses()}
-                                className="inline-flex items-center px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 bg-white border border-gray-300 text-gray-700 rounded-lg sm:rounded-xl hover:bg-gray-50 transition-all shadow-sm"
+                                className="inline-flex items-center px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 rounded-lg sm:rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all shadow-sm"
                             >
-                                <RefreshCw className={`h-4 w-4 sm:h-5 sm:w-5 ${loading ? 'animate-spin' : ''}`} />
+                                <RefreshCw className={`h-4 w-4 sm:h-5 sm:w-5 ${loading ? 'animate-spin' : ''} dark:text-gray-300`} />
                             </button>
                         </div>
                     </div>
 
                     {/* Stats Cards - Mobile: Centered with icon below, Desktop: Icon on right */}
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-6 mb-4 sm:mb-6">
-                        <div className="bg-white rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 lg:p-6 border border-gray-100">
+                        <div className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 lg:p-6 border border-gray-100 dark:border-gray-700">
                             {/* Mobile: Centered layout */}
                             <div className="flex flex-col items-center text-center md:hidden">
-                                <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1 sm:mb-2">Total</p>
-                                <p className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 sm:mb-3">{stats.total_classes}</p>
-                                <div className={`${LIGHT_BG_CLASS} p-2 sm:p-3 rounded-full`}>
-                                    <LayoutGrid className={`h-5 w-5 sm:h-6 sm:w-6 ${TEXT_COLOR_CLASS}`} />
+                                <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-300 mb-1 sm:mb-2">Total</p>
+                                <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-2 sm:mb-3">{stats.total_classes}</p>
+                                <div className={`${LIGHT_BG_CLASS} dark:bg-gray-700 p-2 sm:p-3 rounded-full`}>
+                                    <LayoutGrid className={`h-5 w-5 sm:h-6 sm:w-6 ${TEXT_COLOR_CLASS} dark:text-white`} />
                                 </div>
                             </div>
                             {/* Desktop: Original layout with icon on right */}
                             <div className="hidden md:flex items-center justify-between">
                                 <div>
-                                    <p className="text-sm font-medium text-gray-600 mb-1">Total Classes</p>
-                                    <p className="text-3xl font-bold text-gray-900">{stats.total_classes}</p>
+                                    <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Total Classes</p>
+                                    <p className="text-3xl font-bold text-gray-900 dark:text-white">{stats.total_classes}</p>
                                 </div>
-                                <div className={`${LIGHT_BG_CLASS} p-3 rounded-xl`}>
-                                    <LayoutGrid className={`h-8 w-8 ${TEXT_COLOR_CLASS}`} />
+                                <div className={`${LIGHT_BG_CLASS} dark:bg-gray-700 p-3 rounded-xl`}>
+                                    <LayoutGrid className={`h-8 w-8 ${TEXT_COLOR_CLASS} dark:text-white`} />
                                 </div>
                             </div>
                         </div>
-                        <div className="bg-white rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 lg:p-6 border border-gray-100">
+                        <div className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 lg:p-6 border border-gray-100 dark:border-gray-700">
                             {/* Mobile: Centered layout */}
                             <div className="flex flex-col items-center text-center md:hidden">
-                                <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1 sm:mb-2">Students</p>
-                                <p className={`text-2xl sm:text-3xl font-bold ${TEXT_COLOR_CLASS} mb-2 sm:mb-3`}>{stats.total_students_enrolled}</p>
-                                <div className={`${LIGHT_BG_CLASS} p-2 sm:p-3 rounded-full`}>
-                                    <Users className={`h-5 w-5 sm:h-6 sm:w-6 ${TEXT_COLOR_CLASS}`} />
+                                <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-300 mb-1 sm:mb-2">Students</p>
+                                <p className={`text-2xl sm:text-3xl font-bold ${TEXT_COLOR_CLASS} dark:text-white mb-2 sm:mb-3`}>{stats.total_students_enrolled}</p>
+                                <div className={`${LIGHT_BG_CLASS} dark:bg-gray-700 p-2 sm:p-3 rounded-full`}>
+                                    <Users className={`h-5 w-5 sm:h-6 sm:w-6 ${TEXT_COLOR_CLASS} dark:text-white`} />
                                 </div>
                             </div>
                             {/* Desktop: Original layout with icon on right */}
                             <div className="hidden md:flex items-center justify-between">
                                 <div>
-                                    <p className="text-sm font-medium text-gray-600 mb-1">Total Students Enrolled</p>
-                                    <p className={`text-3xl font-bold ${TEXT_COLOR_CLASS}`}>{stats.total_students_enrolled}</p>
+                                    <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Total Students Enrolled</p>
+                                    <p className={`text-3xl font-bold ${TEXT_COLOR_CLASS} dark:text-white`}>{stats.total_students_enrolled}</p>
                                 </div>
-                                <div className={`${LIGHT_BG_CLASS} p-3 rounded-xl`}>
-                                    <Users className={`h-8 w-8 ${TEXT_COLOR_CLASS}`} />
+                                <div className={`${LIGHT_BG_CLASS} dark:bg-gray-700 p-3 rounded-xl`}>
+                                    <Users className={`h-8 w-8 ${TEXT_COLOR_CLASS} dark:text-white`} />
                                 </div>
                             </div>
                         </div>
-                        <div className="bg-white rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 lg:p-6 border border-gray-100">
+                        <div className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 lg:p-6 border border-gray-100 dark:border-gray-700">
                             {/* Mobile: Centered layout */}
                             <div className="flex flex-col items-center text-center md:hidden">
-                                <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1 sm:mb-2">Advisers</p>
-                                <p className={`text-2xl sm:text-3xl font-bold ${TEXT_COLOR_CLASS} mb-2 sm:mb-3`}>{stats.total_advisers_assigned}</p>
-                                <div className={`${LIGHT_BG_CLASS} p-2 sm:p-3 rounded-full`}>
-                                    <UserCheck className={`h-5 w-5 sm:h-6 sm:w-6 ${TEXT_COLOR_CLASS}`} />
+                                <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-300 mb-1 sm:mb-2">Advisers</p>
+                                <p className={`text-2xl sm:text-3xl font-bold ${TEXT_COLOR_CLASS} dark:text-white mb-2 sm:mb-3`}>{stats.total_advisers_assigned}</p>
+                                <div className={`${LIGHT_BG_CLASS} dark:bg-gray-700 p-2 sm:p-3 rounded-full`}>
+                                    <UserCheck className={`h-5 w-5 sm:h-6 sm:w-6 ${TEXT_COLOR_CLASS} dark:text-white`} />
                                 </div>
                             </div>
                             {/* Desktop: Original layout with icon on right */}
                             <div className="hidden md:flex items-center justify-between">
                                 <div>
-                                    <p className="text-sm font-medium text-gray-600 mb-1">Advisers Assigned</p>
-                                    <p className={`text-3xl font-bold ${TEXT_COLOR_CLASS}`}>{stats.total_advisers_assigned}</p>
+                                    <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Advisers Assigned</p>
+                                    <p className={`text-3xl font-bold ${TEXT_COLOR_CLASS} dark:text-white`}>{stats.total_advisers_assigned}</p>
                                 </div>
-                                <div className={`${LIGHT_BG_CLASS} p-3 rounded-xl`}>
-                                    <UserCheck className={`h-8 w-8 ${TEXT_COLOR_CLASS}`} />
+                                <div className={`${LIGHT_BG_CLASS} dark:bg-gray-700 p-3 rounded-xl`}>
+                                    <UserCheck className={`h-8 w-8 ${TEXT_COLOR_CLASS} dark:text-white`} />
                                 </div>
                             </div>
                         </div>
-                        <div className="bg-white rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 lg:p-6 border border-gray-100">
+                        <div className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 lg:p-6 border border-gray-100 dark:border-gray-700">
                             {/* Mobile: Centered layout */}
                             <div className="flex flex-col items-center text-center md:hidden">
-                                <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1 sm:mb-2">Courses</p>
-                                <p className={`text-2xl sm:text-3xl font-bold ${TEXT_COLOR_CLASS} mb-2 sm:mb-3`}>{stats.total_courses}</p>
-                                <div className={`${LIGHT_BG_CLASS} p-2 sm:p-3 rounded-full`}>
-                                    <BookOpen className={`h-5 w-5 sm:h-6 sm:w-6 ${TEXT_COLOR_CLASS}`} />
+                                <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-300 mb-1 sm:mb-2">Courses</p>
+                                <p className={`text-2xl sm:text-3xl font-bold ${TEXT_COLOR_CLASS} dark:text-white mb-2 sm:mb-3`}>{stats.total_courses}</p>
+                                <div className={`${LIGHT_BG_CLASS} dark:bg-gray-700 p-2 sm:p-3 rounded-full`}>
+                                    <BookOpen className={`h-5 w-5 sm:h-6 sm:w-6 ${TEXT_COLOR_CLASS} dark:text-white`} />
                                 </div>
                             </div>
                             {/* Desktop: Original layout with icon on right */}
                             <div className="hidden md:flex items-center justify-between">
                                 <div>
-                                    <p className="text-sm font-medium text-gray-600 mb-1">Total Courses</p>
-                                    <p className={`text-3xl font-bold ${TEXT_COLOR_CLASS}`}>{stats.total_courses}</p>
+                                    <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Total Courses</p>
+                                    <p className={`text-3xl font-bold ${TEXT_COLOR_CLASS} dark:text-white`}>{stats.total_courses}</p>
                                 </div>
-                                <div className={`${LIGHT_BG_CLASS} p-3 rounded-xl`}>
-                                    <BookOpen className={`h-8 w-8 ${TEXT_COLOR_CLASS}`} />
+                                <div className={`${LIGHT_BG_CLASS} dark:bg-gray-700 p-3 rounded-xl`}>
+                                    <BookOpen className={`h-8 w-8 ${TEXT_COLOR_CLASS} dark:text-white`} />
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     {/* Filters - Compact on Mobile */}
-                    <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-3 sm:p-4 md:p-6 mb-4 sm:mb-6 border border-gray-100">
+                    <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-lg p-3 sm:p-4 md:p-6 mb-4 sm:mb-6 border border-gray-100 dark:border-gray-700">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
-                                    <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
+                                    <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 dark:text-gray-500" />
                                 </div>
                                 <input
                                     type="text"
                                     value={filters.search}
                                     onChange={(e) => setFilters({...filters, search: e.target.value, page: 1})}
-                                    className={`pl-10 sm:pl-12 w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all text-sm sm:text-base`}
+                                    className={`pl-10 sm:pl-12 w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border border-gray-200 dark:border-gray-600 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all text-sm sm:text-base bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                                     placeholder="Search code, name, or program..."
                                 />
                             </div>
                             <div className="flex items-center">
-                                <Filter className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 mr-2 sm:mr-3" />
+                                <Filter className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 dark:text-gray-500 mr-2 sm:mr-3" />
                                 <input
                                     type="text"
                                     value={filters.program}
                                     onChange={(e) => setFilters({...filters, program: e.target.value, page: 1})}
-                                    className={`w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all text-sm sm:text-base`}
+                                    className={`w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border border-gray-200 dark:border-gray-600 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all text-sm sm:text-base bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                                     placeholder="Filter by Program..."
                                 />
                             </div>
                             <div className="flex items-center">
-                                <Filter className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 mr-2 sm:mr-3" />
+                                <Filter className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 dark:text-gray-500 mr-2 sm:mr-3" />
                                 <input
                                     type="number"
                                     value={filters.year_level}
                                     onChange={(e) => setFilters({...filters, year_level: e.target.value, page: 1})}
-                                    className={`w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all text-sm sm:text-base`}
+                                    className={`w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border border-gray-200 dark:border-gray-600 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all text-sm sm:text-base bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                                     placeholder="Filter by Grade Level..."
                                 />
                             </div>
@@ -1589,36 +1589,36 @@ const Classes: React.FC = () => {
                     </div>
 
                     {/* Table - Responsive: Mobile shows Class Code & Name + Actions, Desktop shows all columns */}
-                    <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden border border-gray-100">
+                    <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700">
                         <div className="overflow-x-auto">
-                            <table className="min-w-full divide-y divide-gray-200">
-                                <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
+                            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                <thead className={`${PRIMARY_COLOR_CLASS}`}>
                                     <tr>
-                                        <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Class Code & Name</th>
-                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Program & Section</th>
-                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Year</th>
-                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Adviser</th> 
-                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Students</th>
-                                        <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-right text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Actions</th>
+                                        <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">Class Code & Name</th>
+                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">Program & Section</th>
+                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">Year</th>
+                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">Adviser</th> 
+                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">Students</th>
+                                        <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-right text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody className="bg-white divide-y divide-gray-200">
+                                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                     {loading ? (
                                         <tr>
                                             <td colSpan={6} className="px-3 sm:px-6 py-8 sm:py-12 text-center">
                                             <div className="flex flex-col items-center justify-center">
-                                                    <RefreshCw className={`h-6 w-6 sm:h-8 sm:w-8 ${TEXT_COLOR_CLASS} animate-spin mb-2`} />
-                                                    <p className="text-sm sm:text-base text-gray-500">Loading classes...</p>
+                                                    <RefreshCw className={`h-6 w-6 sm:h-8 sm:w-8 ${TEXT_COLOR_CLASS} dark:text-white animate-spin mb-2`} />
+                                                    <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400">Loading classes...</p>
                                             </div>
                                             </td>
                                         </tr>
                                     ) : classes.length === 0 ? (
                                         <tr>
-                                            <td colSpan={6} className="px-3 sm:px-6 py-8 sm:py-12 text-center text-gray-500">
+                                            <td colSpan={6} className="px-3 sm:px-6 py-8 sm:py-12 text-center text-gray-500 dark:text-gray-400">
                                                 <div className="flex flex-col items-center">
-                                                    <LayoutGrid className="h-10 w-10 sm:h-12 sm:w-12 text-gray-300 mb-3 sm:mb-4" />
-                                                    <p className="text-base sm:text-lg font-medium">No classes found</p>
-                                                    <p className="text-xs sm:text-sm">Create a new class or adjust filters</p>
+                                                    <LayoutGrid className="h-10 w-10 sm:h-12 sm:w-12 text-gray-300 dark:text-gray-600 mb-3 sm:mb-4" />
+                                                    <p className="text-base sm:text-lg font-medium dark:text-white">No classes found</p>
+                                                    <p className="text-xs sm:text-sm dark:text-gray-400">Create a new class or adjust filters</p>
                                                 </div>
                                             </td>
                                         </tr>
@@ -1626,41 +1626,41 @@ const Classes: React.FC = () => {
                                         classes.map((classItem) => (
                                             <tr 
                                                 key={classItem.id} 
-                                                className="hover:bg-gray-50 transition-colors cursor-pointer"
+                                                className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer"
                                                 onClick={(e) => handleRowClick(classItem, e)}
                                             >
                                                 <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
-                                                    <div className="text-xs sm:text-sm font-semibold text-gray-900 truncate">{classItem.class_code}</div>
-                                                    <div className="text-xs text-gray-500 truncate">{classItem.class_name}</div>
+                                                    <div className="text-xs sm:text-sm font-semibold text-gray-900 dark:text-white truncate">{classItem.class_code}</div>
+                                                    <div className="text-xs text-gray-500 dark:text-gray-400 truncate">{classItem.class_name}</div>
                                                     {/* Show additional info on mobile */}
                                                     <div className="md:hidden mt-1 space-y-1">
                                                         <div className="flex items-center gap-2 flex-wrap">
-                                                            <span className="text-xs text-gray-600">{classItem.program} - Section {classItem.section}</span>
-                                                            <span className="text-xs text-gray-600">{formatGradeLevel(classItem.year_level)}</span>
+                                                            <span className="text-xs text-gray-600 dark:text-gray-300">{classItem.program} - Section {classItem.section}</span>
+                                                            <span className="text-xs text-gray-600 dark:text-gray-300">{formatGradeLevel(classItem.year_level)}</span>
                                                         </div>
                                                         <div className="flex items-center gap-2">
-                                                            <UserCheck className='h-3 w-3 text-gray-400' />
-                                                            <span className="text-xs text-gray-600">{classItem.adviser_name || 'Unassigned'}</span>
+                                                            <UserCheck className='h-3 w-3 text-gray-400 dark:text-gray-500' />
+                                                            <span className="text-xs text-gray-600 dark:text-gray-300">{classItem.adviser_name || 'Unassigned'}</span>
                                                         </div>
                                                         <button
                                                             onClick={(e) => {
                                                                 e.stopPropagation();
                                                                 handleViewStudents(classItem);
                                                             }}
-                                                            className="text-xs text-gray-900 hover:text-blue-600 transition-colors font-medium"
+                                                            className="text-xs text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium"
                                                         >
                                                             {classItem.student_count || 0} {classItem.student_count === 1 ? 'student' : 'students'}
                                                         </button>
                                                     </div>
                                                 </td>
                                                 <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap">
-                                                    <div className="text-xs sm:text-sm font-semibold text-gray-900">{classItem.program}</div>
-                                                    <div className="text-xs text-gray-500">Section {classItem.section}</div>
+                                                    <div className="text-xs sm:text-sm font-semibold text-gray-900 dark:text-white">{classItem.program}</div>
+                                                    <div className="text-xs text-gray-500 dark:text-gray-400">Section {classItem.section}</div>
                                                 </td>
-                                                <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">{formatGradeLevel(classItem.year_level)}</td>
+                                                <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700 dark:text-white">{formatGradeLevel(classItem.year_level)}</td>
                                                 <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap">
-                                                    <div className='flex items-center text-xs sm:text-sm text-gray-900'>
-                                                        <UserCheck className='h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 text-gray-400' />
+                                                    <div className='flex items-center text-xs sm:text-sm text-gray-900 dark:text-white'>
+                                                        <UserCheck className='h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 text-gray-400 dark:text-gray-500' />
                                                         {classItem.adviser_name || 'Unassigned'}
                                                     </div>
                                                 </td>
@@ -1670,7 +1670,7 @@ const Classes: React.FC = () => {
                                                             e.stopPropagation();
                                                             handleViewStudents(classItem);
                                                         }}
-                                                        className="text-xs sm:text-sm text-gray-900 hover:text-blue-600 transition-colors font-medium"
+                                                        className="text-xs sm:text-sm text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium"
                                                         title="Click to view students"
                                                     >
                                                         {classItem.student_count || 0} {classItem.student_count === 1 ? 'student' : 'students'}
@@ -1683,7 +1683,7 @@ const Classes: React.FC = () => {
                                                                 e.stopPropagation();
                                                                 handleView(classItem);
                                                             }}
-                                                            className="p-1.5 sm:p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                                                            className="p-1.5 sm:p-2 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/30 rounded-lg transition-colors"
                                                             title="View Details"
                                                         >
                                                             <Eye className="h-4 w-4 sm:h-5 sm:w-5" />
@@ -1693,7 +1693,7 @@ const Classes: React.FC = () => {
                                                                 e.stopPropagation();
                                                                 handleEdit(classItem);
                                                             }}
-                                                            className={`p-1.5 sm:p-2 ${TEXT_COLOR_CLASS} ${LIGHT_HOVER_CLASS} rounded-lg transition-colors`}
+                                                            className={`p-1.5 sm:p-2 ${TEXT_COLOR_CLASS} dark:text-blue-400 ${LIGHT_HOVER_CLASS} dark:hover:bg-blue-900/30 rounded-lg transition-colors`}
                                                             title="Edit Class"
                                                         >
                                                             <Edit className="h-4 w-4 sm:h-5 sm:w-5" />
@@ -1703,7 +1703,7 @@ const Classes: React.FC = () => {
                                                                 e.stopPropagation();
                                                                 handleDelete(classItem);
                                                             }}
-                                                            className="p-1.5 sm:p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                                            className="p-1.5 sm:p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-colors"
                                                             title="Delete Class"
                                                         >
                                                             <Trash2 className="h-4 w-4 sm:h-5 sm:w-5" />

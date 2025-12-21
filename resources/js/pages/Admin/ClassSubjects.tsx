@@ -221,7 +221,7 @@ const ClassSubjectModal: React.FC<{
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" onClick={onClose}></div>
                 
                 {/* Modal content */}
-                <div className="relative w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white shadow-2xl transition-all">
+                <div className="relative w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 shadow-2xl transition-all">
                     {/* Modal header */}
                     <div className={`${PRIMARY_COLOR_CLASS} px-6 py-4`}>
                         <div className="flex items-center justify-between">
@@ -238,23 +238,23 @@ const ClassSubjectModal: React.FC<{
                     </div>
 
                     {/* Modal body */}
-                    <div className="p-6 space-y-6">
+                    <div className="p-6 space-y-6 dark:bg-gray-800">
                         {loadingOptions ? (
                             <div className="flex justify-center py-8">
-                                <RefreshCw className={`h-8 w-8 ${TEXT_COLOR_CLASS} animate-spin`} />
+                                <RefreshCw className={`h-8 w-8 ${TEXT_COLOR_CLASS} dark:text-white animate-spin`} />
                             </div>
                         ) : (
                             <>
                                 {/* Class Selection */}
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
                                         Class <span className="text-red-500">*</span>
                                     </label>
                                     <select
                                         name="class_id"
                                         value={formData.class_id}
                                         onChange={handleChange}
-                                        className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
+                                        className={`w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                                         required
                                     >
                                         <option value="">Select a class...</option>
@@ -271,14 +271,14 @@ const ClassSubjectModal: React.FC<{
 
                                 {/* Subject Selection */}
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
                                         Subject <span className="text-red-500">*</span>
                                     </label>
                                     <select
                                         name="subject_id"
                                         value={formData.subject_id}
                                         onChange={handleChange}
-                                        className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
+                                        className={`w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                                         required
                                     >
                                         <option value="">Select a subject...</option>
@@ -295,14 +295,14 @@ const ClassSubjectModal: React.FC<{
 
                                 {/* Teacher Selection */}
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
                                         Teacher
                                     </label>
                                     <select
                                         name="teacher_id"
                                         value={formData.teacher_id || ''}
                                         onChange={handleChange}
-                                        className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
+                                        className={`w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                                     >
                                         <option value="">No teacher assigned</option>
                                         {teachers.map(teacher => (
@@ -318,14 +318,14 @@ const ClassSubjectModal: React.FC<{
 
                                 {/* Academic Year Selection */}
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
                                         Academic Year <span className="text-red-500">*</span>
                                     </label>
                                     <select
                                         name="academic_year_id"
                                         value={formData.academic_year_id}
                                         onChange={handleChange}
-                                        className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
+                                        className={`w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                                         required
                                     >
                                         <option value="">Select academic year...</option>
@@ -342,14 +342,14 @@ const ClassSubjectModal: React.FC<{
 
                                 {/* Semester Selection */}
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
                                         Semester <span className="text-red-500">*</span>
                                     </label>
                                     <select
                                         name="semester_id"
                                         value={formData.semester_id}
                                         onChange={handleChange}
-                                        className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all`}
+                                        className={`w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                                         required
                                     >
                                         <option value="">Select semester...</option>
@@ -368,11 +368,11 @@ const ClassSubjectModal: React.FC<{
                     </div>
 
                     {/* Modal footer */}
-                    <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-end space-x-3">
+                    <div className="px-6 py-4 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600 flex justify-end space-x-3">
                         <button
                             onClick={onClose}
                             disabled={loading}
-                            className="px-6 py-3 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-100 transition-colors disabled:opacity-50"
+                            className="px-6 py-3 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors disabled:opacity-50 bg-white dark:bg-gray-800"
                         >
                             Cancel
                         </button>
@@ -410,7 +410,7 @@ const ViewClassSubjectModal: React.FC<{
             <div className="flex min-h-full items-center justify-center p-4">
                 <div className="fixed inset-0 bg-black/30 backdrop-blur-sm transition-opacity" onClick={onClose}></div>
                 
-                <div className="relative w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white shadow-2xl transition-all">
+                <div className="relative w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 shadow-2xl transition-all">
                     <div className={`${PRIMARY_COLOR_CLASS} px-6 py-4`}>
                         <div className="flex items-center justify-between">
                             <h2 className="text-xl font-bold text-white">Class-Subject Link Details</h2>
@@ -420,45 +420,45 @@ const ViewClassSubjectModal: React.FC<{
                         </div>
                     </div>
                     
-                    <div className="p-6">
+                    <div className="p-6 dark:bg-gray-800">
                         {/* Header with Icon */}
-                        <div className="flex items-center mb-6 pb-6 border-b">
-                            <div className={`${LIGHT_BG_CLASS} p-4 rounded-full mr-4`}>
-                                <Link className={`h-12 w-12 ${TEXT_COLOR_CLASS}`} />
+                        <div className="flex items-center mb-6 pb-6 border-b dark:border-gray-700">
+                            <div className={`${LIGHT_BG_CLASS} dark:bg-gray-700 p-4 rounded-full mr-4`}>
+                                <Link className={`h-12 w-12 ${TEXT_COLOR_CLASS} dark:text-white`} />
                             </div>
                             <div>
-                                <h3 className="text-2xl font-bold text-gray-900">{classSubject.class_name} - {classSubject.subject_name}</h3>
-                                <p className="text-gray-500">{classSubject.subject_code}</p>
+                                <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{classSubject.class_name} - {classSubject.subject_name}</h3>
+                                <p className="text-gray-500 dark:text-gray-400">{classSubject.subject_code}</p>
                             </div>
                         </div>
 
                         {/* Info Grid */}
                         <div className="grid grid-cols-2 gap-6">
                             <div>
-                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Class</label>
-                                <p className="text-gray-900 font-medium mt-1">{classSubject.class_name || 'N/A'}</p>
+                                <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Class</label>
+                                <p className="text-gray-900 dark:text-white font-medium mt-1">{classSubject.class_name || 'N/A'}</p>
                             </div>
                             <div>
-                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Subject</label>
-                                <p className="text-gray-900 font-medium mt-1">{classSubject.subject_name || 'N/A'}</p>
-                                <p className="text-sm text-gray-500">{classSubject.subject_code}</p>
+                                <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Subject</label>
+                                <p className="text-gray-900 dark:text-white font-medium mt-1">{classSubject.subject_name || 'N/A'}</p>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">{classSubject.subject_code}</p>
                             </div>
                             <div>
-                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Teacher</label>
-                                <p className="text-gray-900 font-medium mt-1">{classSubject.teacher_name || 'Unassigned'}</p>
+                                <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Teacher</label>
+                                <p className="text-gray-900 dark:text-white font-medium mt-1">{classSubject.teacher_name || 'Unassigned'}</p>
                             </div>
                             <div>
-                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Academic Year</label>
-                                <p className="text-gray-900 font-medium mt-1">{classSubject.academic_year_name || `AY ID: ${classSubject.academic_year_id}`}</p>
+                                <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Academic Year</label>
+                                <p className="text-gray-900 dark:text-white font-medium mt-1">{classSubject.academic_year_name || `AY ID: ${classSubject.academic_year_id}`}</p>
                             </div>
                             <div>
-                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Semester</label>
-                                <p className="text-gray-900 font-medium mt-1">{classSubject.semester_name || `Semester ID: ${classSubject.semester_id}`}</p>
+                                <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Semester</label>
+                                <p className="text-gray-900 dark:text-white font-medium mt-1">{classSubject.semester_name || `Semester ID: ${classSubject.semester_id}`}</p>
                             </div>
                         </div>
 
                         {/* Footer */}
-                        <div className="flex justify-end mt-6 pt-6 border-t">
+                        <div className="flex justify-end mt-6 pt-6 border-t dark:border-gray-700">
                             <button
                                 onClick={onClose}
                                 className={`px-6 py-3 ${PRIMARY_COLOR_CLASS} text-white rounded-xl ${HOVER_COLOR_CLASS} transition-all font-medium`}
@@ -597,22 +597,22 @@ const ClassSubjects: React.FC = () => {
         if (pagination.last_page <= 1) return null;
 
         return (
-            <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
-                <div className="text-sm text-gray-700">
+            <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between bg-white dark:bg-gray-800">
+                <div className="text-sm text-gray-700 dark:text-gray-300">
                     Showing {((pagination.current_page - 1) * pagination.per_page) + 1} to {Math.min(pagination.current_page * pagination.per_page, pagination.total)} of {pagination.total} results
                 </div>
                 <div className="flex space-x-2">
                     <button
                         onClick={() => setFilters({...filters, page: filters.page - 1})}
                         disabled={pagination.current_page === 1}
-                        className={`px-4 py-2 border border-gray-300 rounded-lg ${TEXT_COLOR_CLASS} hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed`}
+                        className={`px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg ${TEXT_COLOR_CLASS} dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-white dark:bg-gray-800`}
                     >
                         Previous
                     </button>
                     <button
                         onClick={() => setFilters({...filters, page: filters.page + 1})}
                         disabled={pagination.current_page === pagination.last_page}
-                        className={`px-4 py-2 border border-gray-300 rounded-lg ${TEXT_COLOR_CLASS} hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed`}
+                        className={`px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg ${TEXT_COLOR_CLASS} dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-white dark:bg-gray-800`}
                     >
                         Next
                     </button>
@@ -628,8 +628,8 @@ const ClassSubjects: React.FC = () => {
                 {/* Header */}
                     <div className="mb-4 sm:mb-6 md:mb-8 flex flex-col md:flex-row md:items-center md:justify-between">
                         <div className="mb-4 sm:mb-6 md:mb-0">
-                            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">Class-Subject Links</h1>
-                            <p className="text-xs sm:text-sm text-gray-600 mt-0.5 sm:mt-1 md:mt-2">Manage class-subject assignments and schedules</p>
+                            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Class-Subject Links</h1>
+                            <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mt-0.5 sm:mt-1 md:mt-2">Manage class-subject assignments and schedules</p>
                     </div>
                     <button
                         onClick={() => {
@@ -646,44 +646,44 @@ const ClassSubjects: React.FC = () => {
                 </div>
 
                     {/* Filters - Compact on Mobile */}
-                    <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-3 sm:p-4 md:p-6 mb-4 sm:mb-6 border border-gray-100">
+                    <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-lg p-3 sm:p-4 md:p-6 mb-4 sm:mb-6 border border-gray-100 dark:border-gray-700">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
                         {/* Class filter */}
                         <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
-                                    <Layers className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
+                                    <Layers className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 dark:text-gray-500" />
                             </div>
                             <input
                                 type="text"
                                 value={filters.class_id}
                                 onChange={(e) => setFilters({...filters, class_id: e.target.value, page: 1})}
-                                    className={`pl-10 sm:pl-12 w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all text-sm sm:text-base`}
+                                    className={`pl-10 sm:pl-12 w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border border-gray-200 dark:border-gray-600 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all text-sm sm:text-base bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                                 placeholder="Filter by Class Code or Name..."
                             />
                         </div>
                         {/* Teacher filter */}
                         <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
-                                    <UserCheck className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
+                                    <UserCheck className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 dark:text-gray-500" />
                             </div>
                             <input
                                 type="text"
                                 value={filters.teacher_id}
                                 onChange={(e) => setFilters({...filters, teacher_id: e.target.value, page: 1})}
-                                    className={`pl-10 sm:pl-12 w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all text-sm sm:text-base`}
+                                    className={`pl-10 sm:pl-12 w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border border-gray-200 dark:border-gray-600 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all text-sm sm:text-base bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                                 placeholder="Filter by Teacher Name or ID..."
                             />
                         </div>
                         {/* Subject search */}
                         <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
-                                    <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
+                                    <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 dark:text-gray-500" />
                             </div>
                             <input
                                 type="text"
                                 value={filters.search}
                                 onChange={(e) => setFilters({...filters, search: e.target.value, page: 1})}
-                                    className={`pl-10 sm:pl-12 w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all text-sm sm:text-base`}
+                                    className={`pl-10 sm:pl-12 w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border border-gray-200 dark:border-gray-600 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all text-sm sm:text-base bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                                 placeholder="Search Subject..."
                             />
                         </div>
@@ -691,67 +691,67 @@ const ClassSubjects: React.FC = () => {
                 </div>
 
                     {/* Class Subjects table - Responsive: Mobile shows Class & Subject + Actions, Desktop shows all columns */}
-                    <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden border border-gray-100">
+                    <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700">
                     <div className="overflow-x-auto">
-                        <table className="min-w-full divide-y divide-gray-200">
-                            <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
+                        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                            <thead className={`${PRIMARY_COLOR_CLASS}`}>
                                 <tr>
-                                        <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Class</th>
-                                        <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Subject</th>
-                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Teacher</th>
-                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Academic Period</th>
-                                        <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-right text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Actions</th>
+                                        <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">Class</th>
+                                        <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">Subject</th>
+                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">Teacher</th>
+                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">Academic Period</th>
+                                        <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-right text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody className="bg-white divide-y divide-gray-200">
+                            <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                 {loading ? (
                                     <tr>
                                             <td colSpan={5} className="px-3 sm:px-6 py-8 sm:py-12 text-center">
                                             <div className="flex justify-center">
-                                                    <RefreshCw className={`h-6 w-6 sm:h-8 sm:w-8 ${TEXT_COLOR_CLASS} animate-spin`} />
+                                                    <RefreshCw className={`h-6 w-6 sm:h-8 sm:w-8 ${TEXT_COLOR_CLASS} dark:text-white animate-spin`} />
                                             </div>
                                         </td>
                                     </tr>
                                 ) : classSubjects.length === 0 ? (
                                     <tr>
-                                            <td colSpan={5} className="px-3 sm:px-6 py-8 sm:py-12 text-center text-gray-500">
+                                            <td colSpan={5} className="px-3 sm:px-6 py-8 sm:py-12 text-center text-gray-500 dark:text-gray-400">
                                                 <div className="flex flex-col items-center">
-                                                    <Link className="h-10 w-10 sm:h-12 sm:w-12 text-gray-300 mb-3 sm:mb-4" />
-                                                    <p className="text-base sm:text-lg font-medium">No class-subject links found</p>
-                                                    <p className="text-xs sm:text-sm">Create a new link or adjust filters</p>
+                                                    <Link className="h-10 w-10 sm:h-12 sm:w-12 text-gray-300 dark:text-gray-600 mb-3 sm:mb-4" />
+                                                    <p className="text-base sm:text-lg font-medium dark:text-white">No class-subject links found</p>
+                                                    <p className="text-xs sm:text-sm dark:text-gray-400">Create a new link or adjust filters</p>
                                                 </div>
                                         </td>
                                     </tr>
                                 ) : (
                                     classSubjects.map((cs) => (
-                                        <tr key={cs.id} className="hover:bg-gray-50 transition-colors">
+                                        <tr key={cs.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                                             {/* Class info */}
                                                 <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
                                                 <div className="flex items-center">
-                                                        <div className={`p-1.5 sm:p-2 rounded-lg mr-2 sm:mr-3 ${LIGHT_BG_CLASS}`}>
-                                                            <Layers className={`h-4 w-4 sm:h-5 sm:w-5 ${TEXT_COLOR_CLASS}`} />
+                                                        <div className={`p-1.5 sm:p-2 rounded-lg mr-2 sm:mr-3 ${LIGHT_BG_CLASS} dark:bg-gray-700`}>
+                                                            <Layers className={`h-4 w-4 sm:h-5 sm:w-5 ${TEXT_COLOR_CLASS} dark:text-white`} />
                                                     </div>
                                                     <div>
-                                                            <div className="text-xs sm:text-sm font-semibold text-gray-900 truncate">{cs.class_name || 'N/A'}</div>
+                                                            <div className="text-xs sm:text-sm font-semibold text-gray-900 dark:text-white truncate">{cs.class_name || 'N/A'}</div>
                                                     </div>
                                                 </div>
                                             </td>
                                             {/* Subject info */}
                                                 <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
                                                 <div className="flex items-center">
-                                                        <div className={`p-1.5 sm:p-2 rounded-lg mr-2 sm:mr-3 ${LIGHT_BG_CLASS}`}>
-                                                            <BookOpen className={`h-4 w-4 sm:h-5 sm:w-5 ${TEXT_COLOR_CLASS}`} />
+                                                        <div className={`p-1.5 sm:p-2 rounded-lg mr-2 sm:mr-3 ${LIGHT_BG_CLASS} dark:bg-gray-700`}>
+                                                            <BookOpen className={`h-4 w-4 sm:h-5 sm:w-5 ${TEXT_COLOR_CLASS} dark:text-white`} />
                                                     </div>
                                                     <div>
-                                                            <div className="text-xs sm:text-sm font-semibold text-gray-900 truncate">{cs.subject_name || 'N/A'}</div>
-                                                            <div className="text-xs text-gray-500 truncate">{cs.subject_code}</div>
+                                                            <div className="text-xs sm:text-sm font-semibold text-gray-900 dark:text-white truncate">{cs.subject_name || 'N/A'}</div>
+                                                            <div className="text-xs text-gray-500 dark:text-gray-400 truncate">{cs.subject_code}</div>
                                                             {/* Show additional info on mobile */}
                                                             <div className="md:hidden mt-1 space-y-1">
                                                                 <div className="flex items-center gap-2">
-                                                                    <UserCheck className={`h-3 w-3 ${TEXT_COLOR_CLASS}`} />
-                                                                    <span className="text-xs text-gray-600">{cs.teacher_name || 'Unassigned'}</span>
+                                                                    <UserCheck className={`h-3 w-3 ${TEXT_COLOR_CLASS} dark:text-white`} />
+                                                                    <span className="text-xs text-gray-600 dark:text-gray-300">{cs.teacher_name || 'Unassigned'}</span>
                                                                 </div>
-                                                                <div className="text-xs text-gray-600">
+                                                                <div className="text-xs text-gray-600 dark:text-gray-300">
                                                                     {cs.academic_year_name || `AY ID: ${cs.academic_year_id}`} - {cs.semester_name || `Semester ID: ${cs.semester_id}`}
                                                                 </div>
                                                             </div>
@@ -761,17 +761,17 @@ const ClassSubjects: React.FC = () => {
                                             {/* Teacher */}
                                                 <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap">
                                                 <div className="flex items-center">
-                                                        <div className={`p-1.5 sm:p-2 rounded-lg mr-2 sm:mr-3 ${LIGHT_BG_CLASS}`}>
-                                                            <UserCheck className={`h-3 w-3 sm:h-4 sm:w-4 ${TEXT_COLOR_CLASS}`} />
+                                                        <div className={`p-1.5 sm:p-2 rounded-lg mr-2 sm:mr-3 ${LIGHT_BG_CLASS} dark:bg-gray-700`}>
+                                                            <UserCheck className={`h-3 w-3 sm:h-4 sm:w-4 ${TEXT_COLOR_CLASS} dark:text-white`} />
                                                     </div>
-                                                        <div className="text-xs sm:text-sm text-gray-900">{cs.teacher_name || 'Unassigned'}</div>
+                                                        <div className="text-xs sm:text-sm text-gray-900 dark:text-white">{cs.teacher_name || 'Unassigned'}</div>
                                                 </div>
                                             </td>
                                             {/* Academic Period */}
                                                 <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap">
-                                                    <div className="text-xs sm:text-sm text-gray-700">
+                                                    <div className="text-xs sm:text-sm text-gray-700 dark:text-white">
                                                     <div className="font-medium">{cs.academic_year_name || `AY ID: ${cs.academic_year_id}`}</div>
-                                                    <div className="text-xs text-gray-500">{cs.semester_name || `Semester ID: ${cs.semester_id}`}</div>
+                                                    <div className="text-xs text-gray-500 dark:text-gray-400">{cs.semester_name || `Semester ID: ${cs.semester_id}`}</div>
                                                 </div>
                                             </td>
                                             {/* Action buttons */}
@@ -779,21 +779,21 @@ const ClassSubjects: React.FC = () => {
                                                     <div className="flex justify-end space-x-1 sm:space-x-2">
                                                         <button
                                                             onClick={() => handleView(cs)}
-                                                            className="p-1.5 sm:p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                                                            className="p-1.5 sm:p-2 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/30 rounded-lg transition-colors"
                                                             title="View Details"
                                                         >
                                                             <Eye className="h-4 w-4 sm:h-5 sm:w-5" />
                                                         </button>
                                                     <button
                                                         onClick={() => handleEdit(cs)}
-                                                            className={`p-1.5 sm:p-2 ${TEXT_COLOR_CLASS} ${LIGHT_HOVER_CLASS} rounded-lg transition-colors`}
+                                                            className={`p-1.5 sm:p-2 ${TEXT_COLOR_CLASS} dark:text-blue-400 ${LIGHT_HOVER_CLASS} dark:hover:bg-blue-900/30 rounded-lg transition-colors`}
                                                         title="Edit Link"
                                                     >
                                                             <Edit className="h-4 w-4 sm:h-5 sm:w-5" />
                                                     </button>
                                                     <button
                                                         onClick={() => handleDelete(cs)}
-                                                            className="p-1.5 sm:p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                                            className="p-1.5 sm:p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-colors"
                                                         title="Unlink Subject"
                                                     >
                                                             <Trash2 className="h-4 w-4 sm:h-5 sm:w-5" />
