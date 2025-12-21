@@ -183,7 +183,7 @@ const SubjectDetailsModal: React.FC<SubjectDetailsModalProps> = ({ subject, clas
 
                     {/* Quick Access */}
                     <div className="pt-4">
-                        <h3 className={`text-lg font-bold mb-3 ${TEXT_COLOR_CLASS}`}>Quick Access</h3>
+                        <h3 className={`text-lg font-bold mb-3 ${TEXT_COLOR_CLASS} dark:text-white`}>Quick Access</h3>
                         <div className="grid grid-cols-1 gap-4">
                             <a 
                                 href={`/student/course-materials?subject_id=${subject.subject_id}`} 
@@ -272,7 +272,7 @@ const MySubjects: React.FC = () => {
                 <div className="flex items-center justify-between">
                     <div>
                         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">My Enrolled Subjects</h1>
-                        <p className="mt-2 text-gray-600 dark:text-white">
+                        <p className="mt-2 text-gray-600 dark:text-gray-300">
                             Subjects you are currently taking based on your program curriculum.
                         </p>
                     </div>
@@ -292,18 +292,18 @@ const MySubjects: React.FC = () => {
                         <div className="flex items-center justify-between">
                             <div className="flex items-center space-x-4">
                                 <div className={`p-3 rounded-xl ${LIGHT_BG_CLASS}`}>
-                                    <GraduationCap className={`h-8 w-8 ${TEXT_COLOR_CLASS}`} />
+                                    <GraduationCap className={`h-8 w-8 ${TEXT_COLOR_CLASS} dark:text-white`} />
                                 </div>
                                 <div>
                                     <h3 className="text-lg font-bold text-gray-900 dark:text-white">{classInfo.course_name}</h3>
-                                    <p className="text-sm text-gray-500 dark:text-white">
+                                    <p className="text-sm text-gray-500 dark:text-gray-300">
                                         {formatGradeLevel(classInfo.year_level)} • {classInfo.semester} Semester • Section {classInfo.section}
                                     </p>
                                 </div>
                             </div>
                             <div className="text-right">
                                 <div className="text-2xl font-bold text-gray-900 dark:text-white">{subjects.length}</div>
-                                <div className="text-sm text-gray-500 dark:text-white">Subjects ({totalUnits} units)</div>
+                                <div className="text-sm text-gray-500 dark:text-gray-300">Subjects ({totalUnits} units)</div>
                             </div>
                         </div>
                     </div>
@@ -313,7 +313,7 @@ const MySubjects: React.FC = () => {
                 <div className="bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-white">
                     <div className="relative max-w-lg">
                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                            <Search className="h-5 w-5 text-gray-400 dark:text-white" />
+                            <Search className="h-5 w-5 text-gray-400 dark:text-gray-300" />
                         </div>
                         <input
                             type="text"
@@ -343,20 +343,20 @@ const MySubjects: React.FC = () => {
                                     <tr>
                                         <td colSpan={5} className="px-6 py-12 text-center">
                                             <div className="flex justify-center">
-                                                <RefreshCw className={`h-8 w-8 ${TEXT_COLOR_CLASS} animate-spin`} />
+                                                <RefreshCw className={`h-8 w-8 ${TEXT_COLOR_CLASS} dark:text-white animate-spin`} />
                                             </div>
-                                            <p className="mt-2 text-sm text-gray-600 dark:text-white">Loading your subjects...</p>
+                                            <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">Loading your subjects...</p>
                                         </td>
                                     </tr>
                                 ) : !studentId ? (
                                     <tr>
-                                        <td colSpan={5} className="px-6 py-12 text-center text-gray-500 dark:text-white">
+                                        <td colSpan={5} className="px-6 py-12 text-center text-gray-500 dark:text-gray-300">
                                             Student profile not found. Please contact the administrator.
                                         </td>
                                     </tr>
                                 ) : filteredSubjects.length === 0 ? (
                                     <tr>
-                                        <td colSpan={5} className="px-6 py-12 text-center text-gray-500 dark:text-white">
+                                        <td colSpan={5} className="px-6 py-12 text-center text-gray-500 dark:text-gray-300">
                                             {searchTerm 
                                                 ? 'No subjects match your search.'
                                                 : 'You are not currently enrolled in any subjects. Please ensure you are enrolled in a class.'
@@ -370,11 +370,11 @@ const MySubjects: React.FC = () => {
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <div className="flex items-center">
                                                     <div className={`p-2 rounded-lg mr-3 ${LIGHT_BG_CLASS}`}>
-                                                        <BookOpen className={`h-5 w-5 ${TEXT_COLOR_CLASS}`} />
+                                                        <BookOpen className={`h-5 w-5 ${TEXT_COLOR_CLASS} dark:text-white`} />
                                                     </div>
                                                     <div>
                                                         <div className="text-sm font-semibold text-gray-900 dark:text-white">{subject.subject_name}</div>
-                                                        <div className="text-xs text-gray-500 dark:text-white">{subject.subject_code}</div>
+                                                        <div className="text-xs text-gray-500 dark:text-gray-300">{subject.subject_code}</div>
                                                     </div>
                                                 </div>
                                             </td>
@@ -383,13 +383,13 @@ const MySubjects: React.FC = () => {
                                                 <div className="text-sm text-gray-700 dark:text-white">
                                                     {classInfo?.class_code || subject.class_code || 'N/A'}
                                                 </div>
-                                                <div className="text-xs text-gray-500 dark:text-white">
+                                                <div className="text-xs text-gray-500 dark:text-gray-300">
                                                     Section {classInfo?.section || subject.section || 'N/A'}
                                                 </div>
                                             </td>
                                             {/* Units */}
                                             <td className="px-6 py-4 whitespace-nowrap">
-                                                <span className={`inline-flex px-3 py-1 text-sm font-medium rounded-full ${LIGHT_BG_CLASS} ${TEXT_COLOR_CLASS}`}>
+                                                <span className={`inline-flex px-3 py-1 text-sm font-medium rounded-full ${LIGHT_BG_CLASS} ${TEXT_COLOR_CLASS} dark:text-white`}>
                                                     {subject.units} units
                                                 </span>
                                             </td>
@@ -419,7 +419,7 @@ const MySubjects: React.FC = () => {
                     {/* Footer with summary */}
                     {!loading && filteredSubjects.length > 0 && (
                         <div className="px-6 py-4 border-t border-gray-200 dark:border-white bg-gray-50 dark:bg-gray-900">
-                            <div className="flex justify-between items-center text-sm text-gray-600 dark:text-white">
+                            <div className="flex justify-between items-center text-sm text-gray-600 dark:text-gray-300">
                                 <span>Showing {filteredSubjects.length} of {subjects.length} subjects</span>
                                 <span className="font-medium">Total: {totalUnits} units</span>
                             </div>

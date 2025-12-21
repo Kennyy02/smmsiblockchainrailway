@@ -102,7 +102,7 @@ const ChildCard: React.FC<{
                         <h3 className="text-xl font-bold text-gray-900 dark:text-white">
                             {student.full_name || `${student.first_name} ${student.last_name}`}
                         </h3>
-                        <p className="text-sm text-gray-500 mt-1">Student ID: {student.student_id}</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Student ID: {student.student_id}</p>
                     </div>
                 </div>
                 <button
@@ -116,7 +116,7 @@ const ChildCard: React.FC<{
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                 <div>
-                    <p className="text-xs text-gray-400 uppercase tracking-wide mb-1">Program</p>
+                    <p className="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-wide mb-1">Program</p>
                     <p className="text-sm font-medium text-gray-900 dark:text-white">
                         {student.course?.course_name || student.program || 'N/A'}
                     </p>
@@ -145,7 +145,7 @@ const ChildCard: React.FC<{
                 <div className="flex items-center">
                     <Award className="h-5 w-5 text-indigo-600 mr-2" />
                     <div>
-                        <p className="text-xs text-gray-400">Average Grade</p>
+                        <p className="text-xs text-gray-400 dark:text-gray-500">Average Grade</p>
                         <p className="text-lg font-bold text-indigo-600">
                             {overallAvgGrade.toFixed(2)}%
                         </p>
@@ -299,7 +299,7 @@ const ParentChildrenPage: React.FC = () => {
                 {/* Loading State */}
                 {loading ? (
                     <div className="py-20 text-center text-gray-500">
-                        <RefreshCw className={`h-12 w-12 mx-auto ${TEXT_COLOR_CLASS} animate-spin`} />
+                        <RefreshCw className={`h-12 w-12 mx-auto ${TEXT_COLOR_CLASS} dark:text-white animate-spin`} />
                         <p className="mt-4 text-lg">Loading your children's information...</p>
                     </div>
                 ) : childrenInfo.length === 0 ? (

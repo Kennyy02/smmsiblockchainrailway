@@ -104,7 +104,7 @@ const StatCard: React.FC<{ title: string; value: string | number; icon: React.El
         <div className="bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-white">
             <div className="flex items-center justify-between">
                 <div>
-                    <p className="text-sm font-medium text-gray-600 dark:text-white mb-1">{title}</p>
+                    <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">{title}</p>
                     <p className={`text-3xl font-bold ${color}`}>{displayValue}</p>
                 </div>
                 <div className={`${bgColor} p-3 rounded-xl`}>
@@ -1412,7 +1412,7 @@ const fetchDropdownLists = async () => {
 
         return (
             <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 dark:border-gray-700">
-                <div className="text-sm text-gray-600 dark:text-white">
+                <div className="text-sm text-gray-600 dark:text-gray-300">
                     Showing {((pagination.current_page - 1) * pagination.per_page) + 1} to {Math.min(pagination.current_page * pagination.per_page, pagination.total)} of {pagination.total} results
                 </div>
                 <div className="flex items-center space-x-2">
@@ -1465,10 +1465,10 @@ const fetchDropdownLists = async () => {
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
                         <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white flex items-center">
-                            <Award className={`h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8 mr-2 sm:mr-3 ${TEXT_COLOR_CLASS}`} />
+                            <Award className={`h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8 mr-2 sm:mr-3 ${TEXT_COLOR_CLASS} dark:text-white`} />
                             <span className="break-words">Student Grades Management</span>
                         </h1>
-                        <p className="mt-2 text-sm sm:text-base text-gray-600 dark:text-white">Manage grades for your students</p>
+                        <p className="mt-2 text-sm sm:text-base text-gray-600 dark:text-gray-300">Manage grades for your students</p>
                     </div>
                     <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:space-x-3">
                         <button
@@ -1535,7 +1535,7 @@ const fetchDropdownLists = async () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                         <div className="relative sm:col-span-2 lg:col-span-2">
                             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <Search className="h-5 w-5 text-gray-400 dark:text-white" />
+                                <Search className="h-5 w-5 text-gray-400 dark:text-gray-300" />
                             </div>
                             <input
                                 type="text"
@@ -1582,11 +1582,11 @@ const fetchDropdownLists = async () => {
                             <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-4">Select a Class</h3>
                             {loadingLists ? (
                                 <div className="text-center py-8">
-                                    <RefreshCw className={`h-8 w-8 ${TEXT_COLOR_CLASS} animate-spin mx-auto`} />
-                                    <p className="mt-2 text-sm text-gray-600 dark:text-white">Loading classes...</p>
+                                    <RefreshCw className={`h-8 w-8 ${TEXT_COLOR_CLASS} dark:text-white animate-spin mx-auto`} />
+                                    <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">Loading classes...</p>
                                 </div>
                             ) : classes.length === 0 ? (
-                                <div className="text-center py-8 text-gray-500 dark:text-white">
+                                <div className="text-center py-8 text-gray-500 dark:text-gray-300">
                                     No classes found. Please ensure you are assigned to classes.
                                 </div>
                             ) : (
@@ -1601,10 +1601,10 @@ const fetchDropdownLists = async () => {
                                                 <h4 className="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-[#003366] dark:group-hover:text-white">
                                                     {classItem.class_code}
                                                 </h4>
-                                                <Award className="w-5 h-5 text-gray-400 group-hover:text-[#003366]" />
+                                                <Award className="w-5 h-5 text-gray-400 dark:text-gray-300 group-hover:text-[#003366] dark:group-hover:text-white" />
                                             </div>
-                                            <p className="text-sm text-gray-600 dark:text-white mb-2">{classItem.class_name}</p>
-                                            <p className="text-xs text-gray-500 dark:text-white">
+                                            <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">{classItem.class_name}</p>
+                                            <p className="text-xs text-gray-500 dark:text-gray-400">
                                                 {classItem.subjectCount} {classItem.subjectCount === 1 ? 'subject' : 'subjects'}
                                             </p>
                                         </button>
@@ -1634,7 +1634,7 @@ const fetchDropdownLists = async () => {
                                         <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white break-words">
                                             {classes.find(c => c.id === selectedClassId)?.class_code || 'Manage Grades'}
                                         </h3>
-                                        <p className="text-xs sm:text-sm text-gray-600 dark:text-white break-words">
+                                        <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 break-words">
                                             {classes.find(c => c.id === selectedClassId)?.class_name || ''}
                                         </p>
                                     </div>
@@ -1690,8 +1690,8 @@ const fetchDropdownLists = async () => {
                                 <div className="mt-6">
                                     {loadingClassStudents ? (
                                         <div className="text-center py-8">
-                                            <RefreshCw className={`h-8 w-8 ${TEXT_COLOR_CLASS} animate-spin mx-auto`} />
-                                            <p className="mt-2 text-sm text-gray-600 dark:text-white">Loading students...</p>
+                                            <RefreshCw className={`h-8 w-8 ${TEXT_COLOR_CLASS} dark:text-white animate-spin mx-auto`} />
+                                            <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">Loading students...</p>
                                         </div>
                                     ) : (() => {
                                         // Apply filters to students
@@ -1727,7 +1727,7 @@ const fetchDropdownLists = async () => {
                                         });
                                         
                                         return filteredStudents.length === 0 ? (
-                                            <div className="text-center py-8 text-gray-500 dark:text-white text-sm sm:text-base">
+                                            <div className="text-center py-8 text-gray-500 dark:text-gray-300 text-sm sm:text-base">
                                                 No students found matching the current filters.
                                             </div>
                                         ) : (
@@ -1765,7 +1765,7 @@ const fetchDropdownLists = async () => {
                                                                 <tr key={student.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                                                                     <td className="px-2 sm:px-4 py-2 sm:py-3 sticky left-0 bg-white dark:bg-gray-800 z-10 border-r border-gray-200 dark:border-white min-w-[120px]">
                                                                         <div className="text-xs sm:text-sm font-semibold text-gray-900 dark:text-white break-words">{student.student_id}</div>
-                                                                        <div className="text-[10px] sm:text-xs text-gray-600 dark:text-white break-words">{student.full_name}</div>
+                                                                        <div className="text-[10px] sm:text-xs text-gray-600 dark:text-gray-300 break-words">{student.full_name}</div>
                                                                     </td>
                                                                     <td className="px-2 sm:px-4 py-2">
                                                                         <input

@@ -203,7 +203,7 @@ const AdvisoryStudents: React.FC<Props> = ({ classId: propClassId }) => {
                             </a>
                         </div>
                         <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center">
-                            <Users className={`h-8 w-8 mr-3 ${TEXT_COLOR_CLASS}`} />
+                            <Users className={`h-8 w-8 mr-3 ${TEXT_COLOR_CLASS} dark:text-white`} />
                             {isAdvisoryClass ? 'Advisory Class Students' : 'Class Students'}
                         </h1>
                         <p className="mt-2 text-gray-600 dark:text-white">
@@ -247,7 +247,7 @@ const AdvisoryStudents: React.FC<Props> = ({ classId: propClassId }) => {
                             </div>
                             <div className="text-right">
                                 <div className={`${isAdvisoryClass ? 'bg-white/20 backdrop-blur-sm' : LIGHT_BG_CLASS} p-4 rounded-xl inline-flex flex-col items-center`}>
-                                    <School className={`h-8 w-8 mb-1 ${isAdvisoryClass ? 'text-white' : TEXT_COLOR_CLASS}`} />
+                                    <School className={`h-8 w-8 mb-1 ${isAdvisoryClass ? 'text-white' : `${TEXT_COLOR_CLASS} dark:text-white`}`} />
                                     <span className={`text-2xl font-bold ${isAdvisoryClass ? '' : TEXT_COLOR_CLASS}`}>{filteredStudents.length}</span>
                                     <span className={`text-xs ${isAdvisoryClass ? 'text-white/80' : 'text-gray-500'}`}>Students</span>
                                 </div>
@@ -260,7 +260,7 @@ const AdvisoryStudents: React.FC<Props> = ({ classId: propClassId }) => {
                 <div className="bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-white">
                     <div className="relative">
                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                            <Search className="h-5 w-5 text-gray-400 dark:text-white" />
+                            <Search className="h-5 w-5 text-gray-400 dark:text-gray-300" />
                         </div>
                         <input
                             type="text"
@@ -285,8 +285,8 @@ const AdvisoryStudents: React.FC<Props> = ({ classId: propClassId }) => {
                 {/* Loading State */}
                 {loading ? (
                     <div className="flex items-center justify-center py-12">
-                        <RefreshCw className={`h-12 w-12 ${TEXT_COLOR_CLASS} animate-spin`} />
-                        <p className="ml-4 text-lg text-gray-600 dark:text-white">Loading students...</p>
+                        <RefreshCw className={`h-12 w-12 ${TEXT_COLOR_CLASS} dark:text-white animate-spin`} />
+                        <p className="ml-4 text-lg text-gray-600 dark:text-gray-300">Loading students...</p>
                     </div>
                 ) : !currentClassId ? (
                     // No Class Selected
@@ -295,7 +295,7 @@ const AdvisoryStudents: React.FC<Props> = ({ classId: propClassId }) => {
                         <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
                             No Class Selected
                         </h3>
-                        <p className="text-gray-600 dark:text-white">
+                        <p className="text-gray-600 dark:text-gray-300">
                             Please select a class to view its students.
                         </p>
                     </div>
@@ -306,7 +306,7 @@ const AdvisoryStudents: React.FC<Props> = ({ classId: propClassId }) => {
                         <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
                             {searchTerm ? 'No students match your search' : 'No students enrolled'}
                         </h3>
-                        <p className="text-gray-600 dark:text-white">
+                        <p className="text-gray-600 dark:text-gray-300">
                             {searchTerm 
                                 ? 'Try adjusting your search criteria' 
                                 : 'There are no students enrolled in this class yet'}
@@ -341,18 +341,18 @@ const AdvisoryStudents: React.FC<Props> = ({ classId: propClassId }) => {
                                             key={student.id}
                                             className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                                         >
-                                            <td className="px-6 py-4 text-sm text-gray-600 dark:text-white">
+                                            <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
                                                 {index + 1}
                                             </td>
                                             <td className="px-6 py-4">
-                                                <span className={`text-sm font-mono font-medium ${TEXT_COLOR_CLASS}`}>
+                                                <span className={`text-sm font-mono font-medium ${TEXT_COLOR_CLASS} dark:text-white`}>
                                                     {student.student_id}
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4">
                                                 <div className="flex items-center">
                                                     <div className={`${LIGHT_BG_CLASS} p-2 rounded-full mr-3`}>
-                                                        <User className={`h-5 w-5 ${TEXT_COLOR_CLASS}`} />
+                                                        <User className={`h-5 w-5 ${TEXT_COLOR_CLASS} dark:text-white`} />
                                                     </div>
                                                     <div>
                                                         <p className="text-sm font-semibold text-gray-900 dark:text-white">
@@ -366,17 +366,17 @@ const AdvisoryStudents: React.FC<Props> = ({ classId: propClassId }) => {
                                                 {student.email ? (
                                                     <a 
                                                         href={`mailto:${student.email}`}
-                                                        className="flex items-center text-sm text-gray-600 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                                                        className="flex items-center text-sm text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                                                     >
                                                         <Mail className="h-4 w-4 mr-2" />
                                                         {student.email}
                                                     </a>
                                                 ) : (
-                                                    <span className="text-sm text-gray-400 dark:text-white">-</span>
+                                                    <span className="text-sm text-gray-400 dark:text-gray-400">-</span>
                                                 )}
                                             </td>
                                             <td className="px-6 py-4">
-                                                <span className="text-sm text-gray-600 dark:text-white capitalize">
+                                                <span className="text-sm text-gray-600 dark:text-gray-300 capitalize">
                                                     {student.gender || '-'}
                                                 </span>
                                             </td>

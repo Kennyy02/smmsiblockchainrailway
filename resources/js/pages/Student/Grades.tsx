@@ -124,7 +124,7 @@ const StatCard: React.FC<{ title: string; value: string | number; icon: React.El
         <div className="bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-white">
             <div className="flex items-center justify-between">
                 <div>
-                    <p className="text-sm font-medium text-gray-600 dark:text-white mb-1">{title}</p>
+                    <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">{title}</p>
                     <p className={`text-3xl font-bold ${color}`}>{displayValue}</p>
                 </div>
                 <div className={`${bgColor} p-3 rounded-xl`}>
@@ -403,7 +403,7 @@ const MyGrades: React.FC = () => {
                             </h1>
                             <div className="mb-4">
                                 <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-3 break-words">{studentName || user?.name || 'Student'}</h2>
-                                <div className="flex flex-wrap gap-2 sm:gap-4 text-xs sm:text-sm text-gray-600 dark:text-white">
+                                <div className="flex flex-wrap gap-2 sm:gap-4 text-xs sm:text-sm text-gray-600 dark:text-gray-300">
                                     {className && (
                                         <div>
                                             <span className="font-semibold">Class:</span> {className}
@@ -461,12 +461,12 @@ const MyGrades: React.FC = () => {
                     {loading ? (
                         <div className="bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-white p-4 sm:p-6">
                             <div className="flex items-center justify-center py-12">
-                                <RefreshCw className={`h-8 w-8 ${TEXT_COLOR_CLASS} animate-spin`} />
+                                <RefreshCw className={`h-8 w-8 ${TEXT_COLOR_CLASS} dark:text-white animate-spin`} />
                             </div>
                         </div>
                     ) : groupedGrades.length === 0 ? (
                         <div className="bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-white p-4 sm:p-6">
-                            <div className="text-center py-12 text-gray-500 dark:text-white">
+                            <div className="text-center py-12 text-gray-500 dark:text-gray-300">
                                 No grades found for this student
                             </div>
                         </div>
@@ -503,7 +503,7 @@ const MyGrades: React.FC = () => {
                                                 <tbody>
                                                     {group.grades.length === 0 ? (
                                                         <tr>
-                                                            <td colSpan={7} className="border border-gray-300 dark:border-white px-2 sm:px-4 py-6 sm:py-8 text-center text-xs sm:text-sm text-gray-500 dark:text-white">
+                                                            <td colSpan={7} className="border border-gray-300 dark:border-white px-2 sm:px-4 py-6 sm:py-8 text-center text-xs sm:text-sm text-gray-500 dark:text-gray-300">
                                                                 No subjects found for this period
                                                             </td>
                                                         </tr>
@@ -513,7 +513,7 @@ const MyGrades: React.FC = () => {
                                                                 <td className="border border-gray-300 dark:border-white px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm">
                                                                     <div>
                                                                         <div className="font-medium break-words dark:text-white">{grade.subject.subject_code}</div>
-                                                                        <div className="text-[10px] sm:text-xs text-gray-600 dark:text-white break-words">{grade.subject.subject_name}</div>
+                                                                        <div className="text-[10px] sm:text-xs text-gray-600 dark:text-gray-300 break-words">{grade.subject.subject_name}</div>
                                                                     </div>
                                                                 </td>
                                                                 <td className="border border-gray-300 dark:border-white px-2 sm:px-4 py-2 sm:py-3 text-center text-xs sm:text-sm dark:text-white">

@@ -16,7 +16,17 @@ class CheckRole
     public function handle(Request $request, Closure $next, ...$roles): Response
     {
         if (!$request->user() || !in_array($request->user()->role, $roles)) {
-            return redirect()->route('dashboard');
+            // Redirect to user's own dashboard based on their role
+            $userRole = $request->user()->role ?? 'student';
+            $dashboardRoute = match($userRole) {
+                'admin' => 'admin.dashboard',
+                'teacher' => 'teacher.dashboard',
+                'student' => 'student.dashboard',
+                'parent' => 'parent.dashboard',
+                default => 'student.dashboard',
+            };
+            
+            return redirect()->route($dashboardRoute);
         }
 
         return $next($request);

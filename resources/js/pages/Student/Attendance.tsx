@@ -111,7 +111,7 @@ const StatCard: React.FC<{ title: string; value: string | number; icon: React.El
         <div className="bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-white">
             <div className="flex items-center justify-between">
                 <div>
-                    <p className="text-sm font-medium text-gray-600 dark:text-white mb-1">{title}</p>
+                    <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">{title}</p>
                     <p className={`text-3xl font-bold ${color}`}>{displayValue}</p>
                 </div>
                 <div className={`${bgColor} p-3 rounded-xl`}>
@@ -352,7 +352,7 @@ const MyAttendance: React.FC = () => {
                             </h1>
                             <div className="mb-4">
                                 <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-3">{studentName || user?.name || 'Student'}</h2>
-                                <div className="flex flex-wrap gap-4 text-sm text-gray-600 dark:text-white">
+                                <div className="flex flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-300">
                                     {className && (
                                         <div>
                                             <span className="font-semibold">Class:</span> {className}
@@ -398,7 +398,7 @@ const MyAttendance: React.FC = () => {
                     {loading ? (
                         <div className="bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-white p-6">
                             <div className="flex items-center justify-center py-12">
-                                <RefreshCw className={`h-8 w-8 ${TEXT_COLOR_CLASS} animate-spin`} />
+                                <RefreshCw className={`h-8 w-8 ${TEXT_COLOR_CLASS} dark:text-white animate-spin`} />
                             </div>
                         </div>
                     ) : (
@@ -435,7 +435,7 @@ const MyAttendance: React.FC = () => {
                             {/* Attendance Grid */}
                             <div className="p-6 overflow-x-auto">
                                 {classSubjects.length === 0 ? (
-                                    <div className="text-center py-12 text-gray-500 dark:text-white">
+                                    <div className="text-center py-12 text-gray-500 dark:text-gray-300">
                                         No subjects found for this class
                                     </div>
                                 ) : (
@@ -457,14 +457,14 @@ const MyAttendance: React.FC = () => {
                                                     ))}
                                                 </tr>
                                                 <tr className="bg-gray-50 dark:bg-gray-800 dark:border-white">
-                                                    <th className="border border-gray-300 dark:border-white px-4 py-1 text-left text-xs text-gray-600 dark:text-white sticky left-0 bg-gray-50 dark:bg-gray-800 z-10">
+                                                    <th className="border border-gray-300 dark:border-white px-4 py-1 text-left text-xs text-gray-600 dark:text-gray-300 sticky left-0 bg-gray-50 dark:bg-gray-800 z-10">
                                                         Subject
                                                     </th>
                                                     {/* Day of week headers - aligned with calendar */}
                                                     {calendarDays.map((day, index) => (
                                                         <th
                                                             key={index}
-                                                            className="border border-gray-300 dark:border-white px-2 py-1 text-center text-xs text-gray-600 dark:text-white min-w-[40px]"
+                                                                className="border border-gray-300 dark:border-white px-2 py-1 text-center text-xs text-gray-600 dark:text-gray-300 min-w-[40px]"
                                                         >
                                                             {getDayAbbr(new Date(currentYear, currentMonth, day).getDay())}
                                                         </th>
@@ -481,7 +481,7 @@ const MyAttendance: React.FC = () => {
                                                         <tr key={subjectId} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                                                             <td className="border border-gray-300 dark:border-white px-4 py-3 sticky left-0 bg-white dark:bg-gray-800 dark:border-white z-10">
                                                                 <div className="font-semibold text-gray-900 dark:text-white">{subjectCode}</div>
-                                                                <div className="text-xs text-gray-600 dark:text-white">{subjectName}</div>
+                                                                <div className="text-xs text-gray-600 dark:text-gray-300">{subjectName}</div>
                                                             </td>
                                                             {/* Attendance cells - aligned with calendar */}
                                                             {calendarDays.map((day, index) => {
@@ -519,19 +519,19 @@ const MyAttendance: React.FC = () => {
                                     <span className="font-semibold text-gray-700 dark:text-white">Legend:</span>
                                     <span className="flex items-center gap-2">
                                         <span className="inline-block px-2 py-1 rounded bg-green-100 text-green-800 dark:bg-green-900 dark:text-white dark:border-white text-xs font-medium border dark:border-white">P</span>
-                                        <span className="text-gray-600 dark:text-white">Present</span>
+                                        <span className="text-gray-600 dark:text-gray-300">Present</span>
                                     </span>
                                     <span className="flex items-center gap-2">
-                                        <span className="inline-block px-2 py-1 rounded bg-red-100 text-red-800 dark:bg-red-900 dark:text-white dark:border-white text-xs font-medium border dark:border-white">A</span>
-                                        <span className="text-gray-600 dark:text-white">Absent</span>
+                                        <span className="inline-block px-2 py-1 rounded bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300 dark:border-red-800 text-xs font-medium border dark:border-red-800">A</span>
+                                        <span className="text-gray-600 dark:text-gray-300">Absent</span>
                                     </span>
                                     <span className="flex items-center gap-2">
-                                        <span className="inline-block px-2 py-1 rounded bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-white dark:border-white text-xs font-medium border dark:border-white">L</span>
-                                        <span className="text-gray-600 dark:text-white">Late</span>
+                                        <span className="inline-block px-2 py-1 rounded bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300 dark:border-yellow-800 text-xs font-medium border dark:border-yellow-800">L</span>
+                                        <span className="text-gray-600 dark:text-gray-300">Late</span>
                                     </span>
                                     <span className="flex items-center gap-2">
-                                        <span className="inline-block px-2 py-1 rounded bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-white dark:border-white text-xs font-medium border dark:border-white">E</span>
-                                        <span className="text-gray-600 dark:text-white">Excused</span>
+                                        <span className="inline-block px-2 py-1 rounded bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800 text-xs font-medium border dark:border-blue-800">E</span>
+                                        <span className="text-gray-600 dark:text-gray-300">Excused</span>
                                     </span>
                                 </div>
                             </div>

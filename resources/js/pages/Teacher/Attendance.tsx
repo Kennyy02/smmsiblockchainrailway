@@ -336,7 +336,7 @@ const StatCard: React.FC<{ title: string; value: string | number; icon: React.El
         <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
             <div className="flex items-center justify-between">
                 <div>
-                    <p className="text-sm font-medium text-gray-600 mb-1">{title}</p>
+                    <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">{title}</p>
                     <p className={`text-3xl font-bold ${color}`}>{displayValue}</p>
                 </div>
                 <div className={`${bgColor} p-3 rounded-xl`}>
@@ -984,7 +984,7 @@ const AttendancePage: React.FC = () => {
 
         return (
             <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200">
-                <div className="text-sm text-gray-600">
+                <div className="text-sm text-gray-600 dark:text-gray-300">
                     Showing {((pagination.current_page - 1) * pagination.per_page) + 1} to {Math.min(pagination.current_page * pagination.per_page, pagination.total)} of {pagination.total} results
                 </div>
                 <div className="flex items-center space-x-2">
@@ -1092,10 +1092,10 @@ const AttendancePage: React.FC = () => {
                             {loadingLists ? (
                                 <div className="text-center py-8">
                                     <RefreshCw className={`h-8 w-8 ${TEXT_COLOR_CLASS} animate-spin mx-auto`} />
-                                    <p className="mt-2 text-sm text-gray-600">Loading classes...</p>
+                                    <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">Loading classes...</p>
                                 </div>
                             ) : classes.length === 0 ? (
-                                <div className="text-center py-8 text-gray-500 text-sm sm:text-base">
+                                <div className="text-center py-8 text-gray-500 dark:text-gray-400 text-sm sm:text-base">
                                     No classes found. Please ensure you are assigned to classes.
                                 </div>
                             ) : (
@@ -1110,10 +1110,10 @@ const AttendancePage: React.FC = () => {
                                                 <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white group-hover:text-[#003366] dark:group-hover:text-white break-words">
                                                     {classItem.class_code}
                                                 </h4>
-                                                <Users className="w-5 h-5 text-gray-400 group-hover:text-[#003366] flex-shrink-0" />
+                                                <Users className="w-5 h-5 text-gray-400 dark:text-gray-300 group-hover:text-[#003366] dark:group-hover:text-white flex-shrink-0" />
                                             </div>
-                                            <p className="text-sm text-gray-600 mb-2">{classItem.class_name}</p>
-                                            <p className="text-xs text-gray-500">
+                                            <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">{classItem.class_name}</p>
+                                            <p className="text-xs text-gray-500 dark:text-gray-400">
                                                 {classItem.subjectCount} {classItem.subjectCount === 1 ? 'subject' : 'subjects'}
                                             </p>
                                         </button>
@@ -1150,7 +1150,7 @@ const AttendancePage: React.FC = () => {
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                                 <div className="relative col-span-2">
                                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                        <Search className="h-5 w-5 text-gray-400" />
+                                        <Search className="h-5 w-5 text-gray-400 dark:text-gray-300" />
                                     </div>
                                     <input
                                         type="text"
@@ -1187,10 +1187,10 @@ const AttendancePage: React.FC = () => {
                                     {loadingClassStudents ? (
                                         <div className="text-center py-8">
                                             <RefreshCw className={`h-8 w-8 ${TEXT_COLOR_CLASS} animate-spin mx-auto`} />
-                                            <p className="mt-2 text-sm text-gray-600">Loading students...</p>
+                                            <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">Loading students...</p>
                                         </div>
                                     ) : classStudents.length === 0 ? (
-                                        <div className="text-center py-8 text-gray-500">
+                                        <div className="text-center py-8 text-gray-500 dark:text-gray-400">
                                             No students enrolled in this class.
                                         </div>
                                     ) : (
@@ -1221,19 +1221,19 @@ const AttendancePage: React.FC = () => {
                                                     <span className="font-semibold text-gray-700 dark:text-white">Legend:</span>
                                                     <span className="flex items-center gap-1.5">
                                                         <span className="inline-block px-2 py-1 rounded bg-green-100 text-green-800 text-xs font-medium">P</span>
-                                                        <span className="text-gray-600 text-xs">Present</span>
+                                                        <span className="text-gray-600 dark:text-gray-300 text-xs">Present</span>
                                                     </span>
                                                     <span className="flex items-center gap-1.5">
-                                                        <span className="inline-block px-2 py-1 rounded bg-red-100 text-red-800 text-xs font-medium">A</span>
-                                                        <span className="text-gray-600 text-xs">Absent</span>
+                                                        <span className="inline-block px-2 py-1 rounded bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300 text-xs font-medium">A</span>
+                                                        <span className="text-gray-600 dark:text-gray-300 text-xs">Absent</span>
                                                     </span>
                                                     <span className="flex items-center gap-1.5">
-                                                        <span className="inline-block px-2 py-1 rounded bg-yellow-100 text-yellow-800 text-xs font-medium">L</span>
-                                                        <span className="text-gray-600 text-xs">Late</span>
+                                                        <span className="inline-block px-2 py-1 rounded bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300 text-xs font-medium">L</span>
+                                                        <span className="text-gray-600 dark:text-gray-300 text-xs">Late</span>
                                                     </span>
                                                     <span className="flex items-center gap-1.5">
-                                                        <span className="inline-block px-2 py-1 rounded bg-blue-100 text-blue-800 text-xs font-medium">E</span>
-                                                        <span className="text-gray-600 text-xs">Excused</span>
+                                                        <span className="inline-block px-2 py-1 rounded bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300 text-xs font-medium">E</span>
+                                                        <span className="text-gray-600 dark:text-gray-300 text-xs">Excused</span>
                                                     </span>
                                                 </div>
                                                 <button
@@ -1266,14 +1266,14 @@ const AttendancePage: React.FC = () => {
                                                         ))}
                                                     </tr>
                                                     <tr className="bg-gray-50">
-                                                        <th className="border border-gray-300 px-4 py-1 text-left text-xs text-gray-600 sticky left-0 bg-gray-50 z-10">
+                                                        <th className="border border-gray-300 dark:border-gray-700 px-4 py-1 text-left text-xs text-gray-600 dark:text-gray-300 sticky left-0 bg-gray-50 dark:bg-gray-800 z-10">
                                                             Student
                                                         </th>
                                                         {/* Day of week headers */}
                                                         {calendarDays.map((day) => (
                                                             <th
                                                                 key={day}
-                                                                className="border border-gray-300 px-2 py-1 text-center text-xs text-gray-600 min-w-[40px]"
+                                                                className="border border-gray-300 dark:border-gray-700 px-2 py-1 text-center text-xs text-gray-600 dark:text-gray-300 min-w-[40px]"
                                                             >
                                                                 {getDayAbbr(new Date(currentYear, currentMonth, day).getDay())}
                                                             </th>

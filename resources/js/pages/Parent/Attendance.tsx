@@ -379,14 +379,14 @@ const ParentAttendance: React.FC = () => {
                 <div className="container mx-auto px-4 py-8">
                     <div className="mb-6">
                         <div>
-                            <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent mb-4">
+                            <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-400 dark:to-indigo-400 bg-clip-text text-transparent mb-4">
                                 Child's Attendance
                             </h1>
                             <div className="mb-4">
                                 <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-3">
                                     {studentName || (selectedChild ? (selectedChild.full_name || `${selectedChild.first_name} ${selectedChild.last_name}`) : 'Student')}
                                 </h2>
-                                <div className="flex flex-wrap gap-4 text-sm text-gray-600 dark:text-white">
+                                <div className="flex flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-300">
                                     {selectedChild && (
                                         <div>
                                             <span className="font-semibold">Student ID:</span> {selectedChild.student_id}
@@ -414,7 +414,7 @@ const ParentAttendance: React.FC = () => {
                     {children.length > 1 && (
                         <div className="bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-white mb-6">
                             <div className="flex items-center">
-                                <Users className="h-5 w-5 text-gray-400 dark:text-white mr-3" />
+                                <Users className="h-5 w-5 text-gray-400 dark:text-gray-300 mr-3" />
                                 <label className="text-sm font-medium text-gray-700 dark:text-white mr-3">Select Child:</label>
                                 <select
                                     value={selectedStudentId || ''}
@@ -462,7 +462,7 @@ const ParentAttendance: React.FC = () => {
                     {loading ? (
                         <div className="bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-white p-6">
                             <div className="flex items-center justify-center py-12">
-                                <RefreshCw className={`h-8 w-8 ${TEXT_COLOR_CLASS} animate-spin`} />
+                                <RefreshCw className={`h-8 w-8 ${TEXT_COLOR_CLASS} dark:text-white animate-spin`} />
                             </div>
                         </div>
                     ) : (

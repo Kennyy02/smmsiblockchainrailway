@@ -37,7 +37,7 @@ Route::get('/verify', function () {
 })->name('verify');
 
 // ==================== ADMIN ROUTES ====================
-Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'verified', 'checkRole:admin'])->prefix('admin')->name('admin.')->group(function () {
     
     // Dashboard
     Route::get('/dashboard', function () {
@@ -239,7 +239,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
 });
 
 // ==================== TEACHER ROUTES ====================
-Route::middleware(['auth', 'verified'])->prefix('teacher')->name('teacher.')->group(function () {
+Route::middleware(['auth', 'verified', 'checkRole:teacher'])->prefix('teacher')->name('teacher.')->group(function () {
     
     // Teacher Dashboard
     Route::get('/dashboard', function () {
@@ -303,7 +303,7 @@ Route::middleware(['auth', 'verified'])->prefix('teacher')->name('teacher.')->gr
 });
 
 // ==================== STUDENT ROUTES ====================
-Route::middleware(['auth', 'verified'])->prefix('student')->name('student.')->group(function () {
+Route::middleware(['auth', 'verified', 'checkRole:student'])->prefix('student')->name('student.')->group(function () {
     
     // Student Dashboard
     Route::get('/dashboard', function () {
@@ -362,7 +362,7 @@ Route::middleware(['auth', 'verified'])->prefix('student')->name('student.')->gr
 });
 
 // ==================== PARENT ROUTES ====================
-Route::middleware(['auth', 'verified'])->prefix('parent')->name('parent.')->group(function () {
+Route::middleware(['auth', 'verified', 'checkRole:parent'])->prefix('parent')->name('parent.')->group(function () {
     
     // Parent Dashboard
     Route::get('/dashboard', function () {

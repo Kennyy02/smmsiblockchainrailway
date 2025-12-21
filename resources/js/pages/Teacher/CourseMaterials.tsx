@@ -350,7 +350,7 @@ const TeacherCourseMaterials: React.FC = () => {
                             </div>
                             <div>
                                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Course Materials</h1>
-                                <p className="text-gray-600 dark:text-white mt-1">Upload and manage learning resources by subject</p>
+                                <p className="text-gray-600 dark:text-gray-300 mt-1">Upload and manage learning resources by subject</p>
                             </div>
                         </div>
                         <div className="flex space-x-3">
@@ -368,7 +368,7 @@ const TeacherCourseMaterials: React.FC = () => {
                     <div className="bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg p-6 mb-6 border dark:border-white">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div className="relative col-span-2">
-                                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-white" />
+                                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-300" />
                                 <input
                                     type="text"
                                     value={filters.search}
