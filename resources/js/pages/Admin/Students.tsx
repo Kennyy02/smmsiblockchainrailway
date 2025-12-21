@@ -1282,11 +1282,11 @@ const Students: React.FC = () => {
                                 <div className="relative flex-shrink-0">
                                     <button 
                                         onClick={() => setShowExportDropdown(!showExportDropdown)}
-                                        className="inline-flex items-center gap-2 px-4 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all shadow-sm whitespace-nowrap"
+                                        className="inline-flex items-center gap-2 px-4 sm:px-6 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all shadow-sm whitespace-nowrap font-medium text-sm sm:text-base"
                                         title="Download Students Report"
                                     >
                                         <Download className="h-5 w-5" />
-                                        <span className="text-sm font-medium">Export</span>
+                                        <span>Export</span>
                                         <ChevronDown className={`h-4 w-4 transition-transform ${showExportDropdown ? 'rotate-180' : ''}`} />
                                     </button>
                                     
@@ -1297,8 +1297,8 @@ const Students: React.FC = () => {
                                                 className="fixed inset-0 z-10" 
                                                 onClick={() => setShowExportDropdown(false)}
                                             />
-                                            <div className="absolute right-0 sm:right-0 left-0 sm:left-auto mt-2 w-full sm:w-56 bg-white rounded-xl shadow-xl border border-gray-200 py-2 z-20">
-                                                <p className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase">Export Students</p>
+                                            <div className="absolute right-0 sm:right-0 left-0 sm:left-auto mt-2 w-full sm:w-56 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 py-2 z-20">
+                                                <p className="px-4 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Export Students</p>
                                                 {[
                                                     { id: '', label: '📚 All Students', icon: '📚' },
                                                     { id: 'college', label: '🎓 College Only', icon: '🎓' },
@@ -1348,7 +1348,7 @@ const Students: React.FC = () => {
                                                                 setNotification({ type: 'error', message: 'Failed to export students' });
                                                             }
                                                         }}
-                                                        className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2"
+                                                        className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2"
                                                     >
                                                         <span>{option.label}</span>
                                                     </button>
