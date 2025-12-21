@@ -548,9 +548,9 @@ const ParentGrades: React.FC = () => {
                                                                 <td className="border border-gray-300 dark:border-white px-4 py-3 text-center text-sm">
                                                                     {grade.remarks ? (
                                                                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border dark:border-white ${
-                                                                            grade.remarks === 'Passed' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-white' :
-                                                                            grade.remarks === 'Failed' ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-white' :
-                                                                            'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-white'
+                                                                            grade.remarks === 'Passed' ? 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900 dark:text-white dark:border-white' :
+                                                                            grade.remarks === 'Failed' ? 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900 dark:text-white dark:border-white' :
+                                                                            'bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900 dark:text-white dark:border-white'
                                                                         }`}>
                                                                             {grade.remarks}
                                                                         </span>

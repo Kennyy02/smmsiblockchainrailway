@@ -431,7 +431,7 @@ const MyClasses: React.FC = () => {
 
     return (
         <AppLayout>
-            <div className="p-8 space-y-6 min-h-screen bg-[#f3f4f6] dark:bg-gray-900">
+            <div className="p-8 space-y-6 min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-900">
                 {/* Header */}
                 <div className="flex items-center justify-between">
                     <div>

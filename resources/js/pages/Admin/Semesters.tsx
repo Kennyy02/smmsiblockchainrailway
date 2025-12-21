@@ -407,7 +407,7 @@ const Semesters: React.FC = () => {
 
     return (
         <AppLayout>
-            <div className="min-h-screen bg-[#f3f4f6] dark:bg-gray-900">
+            <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-900">
                 <div className="container mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8">
                     <div className="mb-4 sm:mb-6 md:mb-8 flex flex-col md:flex-row md:items-center md:justify-between">
                         <div className="flex items-center mb-4 sm:mb-6 md:mb-0">

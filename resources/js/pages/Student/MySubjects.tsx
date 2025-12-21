@@ -267,7 +267,7 @@ const MySubjects: React.FC = () => {
 
     return (
         <AppLayout>
-            <div className="p-8 space-y-6 min-h-screen bg-[#f3f4f6] dark:bg-gray-900">
+            <div className="p-8 space-y-6 min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-900">
                 {/* Header */}
                 <div className="flex items-center justify-between">
                     <div>
@@ -328,8 +328,8 @@ const MySubjects: React.FC = () => {
                 {/* Subjects Table */}
                 <div className="bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-white">
                     <div className="overflow-x-auto">
-                        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                            <thead className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-800">
+                        <table className="min-w-full divide-y divide-gray-200 dark:divide-white">
+                            <thead className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-900 dark:border-white">
                                 <tr>
                                     <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-white uppercase tracking-wider">Subject</th>
                                     <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-white uppercase tracking-wider">Class/Section</th>
@@ -338,7 +338,7 @@ const MySubjects: React.FC = () => {
                                     <th className="px-6 py-4 text-right text-xs font-bold text-gray-700 dark:text-white uppercase tracking-wider">Details</th>
                                 </tr>
                             </thead>
-                            <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                            <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-white">
                                 {loading ? (
                                     <tr>
                                         <td colSpan={5} className="px-6 py-12 text-center">

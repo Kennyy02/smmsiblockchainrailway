@@ -136,7 +136,7 @@ const CourseMaterials: React.FC = () => {
     return (
         <AppLayout>
             <Head title="Course Materials" />
-            <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
+            <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-900">
                 <div className="container mx-auto px-6 py-8">
                     {/* Header */}
                     <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between">

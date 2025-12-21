@@ -1027,7 +1027,7 @@ const AttendancePage: React.FC = () => {
 
     return (
         <AppLayout>
-            <div className="p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6 min-h-screen bg-[#f3f4f6] dark:bg-gray-900">
+            <div className="p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6 min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-900">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
                         <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 flex items-center">

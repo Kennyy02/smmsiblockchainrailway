@@ -1460,7 +1460,7 @@ const fetchDropdownLists = async () => {
 
     return (
         <AppLayout>
-            <div className="p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6 min-h-screen bg-[#f3f4f6] dark:bg-gray-900">
+            <div className="p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6 min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-900">
                 {/* Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
@@ -1733,8 +1733,8 @@ const fetchDropdownLists = async () => {
                                         ) : (
                                             <div className="overflow-x-auto -mx-4 sm:mx-0">
                                             <div className="bg-white dark:bg-gray-800 dark:border-white rounded-xl shadow-sm border border-gray-200 dark:border-white overflow-hidden min-w-full">
-                                                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                                                    <thead className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-800">
+                                                <table className="min-w-full divide-y divide-gray-200 dark:divide-white">
+                                                    <thead className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-900 dark:border-white">
                                                         <tr>
                                                             <th className="px-2 sm:px-4 py-2 sm:py-3 text-left text-[10px] sm:text-xs font-bold text-gray-700 dark:text-white uppercase tracking-wider sticky left-0 bg-gray-50 dark:bg-gray-900 z-10 border-r border-gray-200 dark:border-white min-w-[120px]">
                                                                 Student
@@ -1756,7 +1756,7 @@ const fetchDropdownLists = async () => {
                                                             </th>
                                                         </tr>
                                                     </thead>
-                                                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-white">
                                                         {filteredStudents.map((student) => {
                                                             const key = `${student.id}_${selectedSubjectId}`;
                                                             const gradeData = gridData[key] || {};
