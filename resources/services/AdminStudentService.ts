@@ -204,15 +204,45 @@ class AdminStudentService {
             
             const response = await fetch(absoluteUrl, mergedOptions);
             const contentType = response.headers.get('content-type');
-            let data;
             
-            // Handle 419 CSRF token mismatch - Laravel returns HTML page, not JSON
+            // Handle 419 CSRF token mismatch BEFORE reading response body
+            // This allows us to retry with a fresh token
             if (response.status === 419) {
+                console.error('CSRF token mismatch (419). Current token:', csrfToken ? csrfToken.substring(0, 10) + '...' : 'missing');
+                
+                if (retryOn419) {
+                    // Try to get a fresh token from the server and retry once
+                    try {
+                        console.log('Attempting to refresh CSRF token and retry request...');
+                        const freshToken = await this.getFreshCsrfToken();
+                        if (freshToken) {
+                            console.log('Token refreshed, retrying request with new token...');
+                            // Retry with fresh token
+                            const retryOptions = {
+                                ...options,
+                                headers: {
+                                    ...defaultOptions.headers,
+                                    ...options.headers,
+                                    'X-CSRF-TOKEN': freshToken,
+                                }
+                            };
+                            return this.request<T>(url, retryOptions, false); // Don't retry again
+                        } else {
+                            console.warn('Could not get a fresh token, refresh failed');
+                        }
+                    } catch (e) {
+                        console.error('Could not refresh CSRF token:', e);
+                    }
+                }
+                
+                // If we still get 419 or retry failed, read response and show error
                 const text = await response.text();
                 console.error('CSRF token mismatch (419). Response:', text.substring(0, 200));
-                throw new Error('CSRF token mismatch. Your session may have expired. Please refresh the page (F5) and try again.');
+                const errorMsg = 'Your session has expired. Please refresh the page and try again.';
+                throw new Error(errorMsg);
             }
             
+            let data;
             if (contentType && contentType.includes('application/json')) {
                 data = await response.json();
             } else {
@@ -236,41 +266,6 @@ class AdminStudentService {
                 if (response.status === 405) {
                     console.error('Method Not Allowed (405). URL:', url, 'Method:', options.method || 'GET');
                     throw new Error(`Invalid request: The URL '${url}' does not support ${options.method || 'GET'} method. Please check the route configuration.`);
-                }
-                
-                // Handle 419 CSRF token mismatch
-                if (response.status === 419) {
-                    console.error('CSRF token mismatch (419). Current token:', csrfToken ? csrfToken.substring(0, 10) + '...' : 'missing');
-                    
-                    if (retryOn419) {
-                        // Try to get a fresh token from the server and retry once
-                        try {
-                            console.log('Attempting to refresh CSRF token and retry request...');
-                            const freshToken = await this.getFreshCsrfToken();
-                            if (freshToken && freshToken !== csrfToken) {
-                                console.log('Token refreshed, retrying request with new token...');
-                                // Retry with fresh token
-                                const retryOptions = {
-                                    ...options,
-                                    headers: {
-                                        ...defaultOptions.headers,
-                                        ...options.headers,
-                                        'X-CSRF-TOKEN': freshToken,
-                                    }
-                                };
-                                return this.request<T>(url, retryOptions, false); // Don't retry again
-                            } else {
-                                console.warn('Could not get a different token, token may be the same or refresh failed');
-                            }
-                        } catch (e) {
-                            console.error('Could not refresh CSRF token:', e);
-                        }
-                    }
-                    
-                    // If we still get 419, show user-friendly error
-                    const errorMsg = 'Your session has expired. Please refresh the page and try again.';
-                    console.error(errorMsg);
-                    throw new Error(errorMsg);
                 }
                 
                 if (data.errors) {
