@@ -77,30 +77,93 @@ export interface AnnouncementsResponse extends ApiResponse<Announcement[]> {
 class AdminAnnouncementService {
     private baseURL = '/api'; 
 
+    private getCsrfToken(): string {
+        // Try multiple sources for CSRF token
+        let csrfToken: string | null = null;
+        
+        // 1. Try meta tag first
+        csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || null;
+        
+        // 2. Try Inertia page props
+        if (!csrfToken && typeof window !== 'undefined') {
+            try {
+                const inertiaData = (window as any).__INERTIA_DATA__;
+                if (inertiaData?.page?.props?.csrf_token) {
+                    csrfToken = inertiaData.page.props.csrf_token;
+                } else if ((window as any).Inertia?.page?.props?.csrf_token) {
+                    csrfToken = (window as any).Inertia.page.props.csrf_token;
+                }
+            } catch (e) {
+                console.warn('Could not retrieve CSRF token from Inertia props:', e);
+            }
+        }
+        
+        // 3. Try Laravel's default token name
+        if (!csrfToken) {
+            const tokenInput = document.querySelector('input[name="_token"]') as HTMLInputElement;
+            if (tokenInput) {
+                csrfToken = tokenInput.value;
+            }
+        }
+        
+        if (!csrfToken) {
+            console.error('CSRF token not found. Please refresh the page.');
+            throw new Error('CSRF token not found. Please refresh the page.');
+        }
+        
+        return csrfToken;
+    }
+
     private async request<T>(url: string, options: RequestInit = {}): Promise<ApiResponse<T>> {
-        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+        const csrfToken = this.getCsrfToken();
+        
+        // Ensure URL is absolute - always use full URL to avoid redirects
+        let absoluteUrl = url;
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+            // Use window.location.origin to create absolute URL
+            absoluteUrl = window.location.origin + (url.startsWith('/') ? url : '/' + url);
+        }
         
         const defaultOptions: RequestInit = {
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                'X-CSRF-TOKEN': csrfToken || '',
+                'X-CSRF-TOKEN': csrfToken,
                 'X-Requested-With': 'XMLHttpRequest',
-                ...options.headers,
             },
-            credentials: 'same-origin',
+            credentials: 'include', // Changed from 'same-origin' to 'include' to ensure cookies are sent
         };
 
         try {
-            const response = await fetch(url, { ...defaultOptions, ...options });
+            // Merge options carefully - ensure headers are merged correctly
+            const mergedOptions: RequestInit = {
+                ...defaultOptions,
+                ...options,
+                headers: {
+                    ...defaultOptions.headers,
+                    ...(options.headers || {}),
+                }
+            };
+            
+            const response = await fetch(absoluteUrl, mergedOptions);
             const contentType = response.headers.get('content-type');
             let data: any;
+            
+            // Handle 419 CSRF token mismatch - Laravel returns HTML page, not JSON
+            if (response.status === 419) {
+                const text = await response.text();
+                console.error('CSRF token mismatch (419). Response:', text.substring(0, 200));
+                throw new Error('CSRF token mismatch. Your session may have expired. Please refresh the page (F5) and try again.');
+            }
             
             if (contentType && contentType.includes('application/json')) {
                 data = await response.json();
             } else {
                 const text = await response.text();
-                throw new Error(text || 'Unexpected response format from server');
+                if (response.status >= 400) {
+                    throw new Error(`Server error (${response.status}): ${text.substring(0, 200)}`);
+                }
+                throw new Error('Unexpected response format from server');
             }
 
             if (!response.ok) {

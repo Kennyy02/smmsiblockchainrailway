@@ -94,93 +94,93 @@ const MessageDetailModal: React.FC<MessageDetailModalProps> = ({ message, onClos
 
     const getStatusBadge = (status: string) => {
         const styles: Record<string, string> = {
-            unread: 'bg-red-100 text-red-800',
-            read: 'bg-yellow-100 text-yellow-800',
-            replied: 'bg-green-100 text-green-800',
-            archived: 'bg-gray-100 text-gray-800',
+            unread: 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300',
+            read: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300',
+            replied: 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300',
+            archived: 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300',
         };
-        return styles[status] || 'bg-gray-100 text-gray-800';
+        return styles[status] || 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300';
     };
 
     return (
         <div className="fixed inset-0 z-50 overflow-y-auto">
             <div className="flex min-h-screen items-center justify-center p-4">
                 <div className="fixed inset-0 bg-black/50" onClick={onClose} />
-                <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto">
+                <div className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto">
                     {/* Header */}
-                    <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 rounded-t-2xl">
+                    <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4 rounded-t-2xl">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center space-x-3">
-                                <div className={`p-2 rounded-lg ${message.status === 'unread' ? 'bg-red-100' : LIGHT_BG_CLASS}`}>
+                                <div className={`p-2 rounded-lg ${message.status === 'unread' ? 'bg-red-100 dark:bg-red-900/30' : LIGHT_BG_CLASS + ' dark:bg-gray-700'}`}>
                                     {message.status === 'unread' ? (
-                                        <Mail className="w-6 h-6 text-red-600" />
+                                        <Mail className="w-6 h-6 text-red-600 dark:text-red-400" />
                                     ) : (
-                                        <MailOpen className={`w-6 h-6 ${TEXT_COLOR_CLASS}`} />
+                                        <MailOpen className={`w-6 h-6 ${TEXT_COLOR_CLASS} dark:text-blue-400`} />
                                     )}
                                 </div>
                                 <div>
-                                    <h2 className="text-xl font-bold text-gray-900">{message.subject}</h2>
+                                    <h2 className="text-xl font-bold text-gray-900 dark:text-white">{message.subject}</h2>
                                     <span className={`inline-flex px-2 py-0.5 text-xs font-medium rounded-full ${getStatusBadge(message.status)}`}>
                                         {message.status.charAt(0).toUpperCase() + message.status.slice(1)}
                                     </span>
                                 </div>
                             </div>
-                            <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-lg">
-                                <X className="w-5 h-5 text-gray-500" />
+                            <button onClick={onClose} className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
+                                <X className="w-5 h-5 text-gray-500 dark:text-gray-400" />
                             </button>
                         </div>
                     </div>
 
                     {/* Content */}
-                    <div className="px-6 py-6 space-y-6">
+                    <div className="px-6 py-6 space-y-6 dark:bg-gray-800">
                         {/* Sender Info */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div className="flex items-center space-x-3 p-4 bg-gray-50 rounded-xl">
-                                <User className="w-5 h-5 text-gray-500" />
+                            <div className="flex items-center space-x-3 p-4 bg-gray-50 dark:bg-gray-700 rounded-xl">
+                                <User className="w-5 h-5 text-gray-500 dark:text-gray-400" />
                                 <div>
-                                    <p className="text-sm text-gray-500">From</p>
-                                    <p className="font-semibold text-gray-900">{message.name}</p>
+                                    <p className="text-sm text-gray-500 dark:text-gray-400">From</p>
+                                    <p className="font-semibold text-gray-900 dark:text-white">{message.name}</p>
                                 </div>
                             </div>
-                            <div className="flex items-center space-x-3 p-4 bg-gray-50 rounded-xl">
-                                <Mail className="w-5 h-5 text-gray-500" />
+                            <div className="flex items-center space-x-3 p-4 bg-gray-50 dark:bg-gray-700 rounded-xl">
+                                <Mail className="w-5 h-5 text-gray-500 dark:text-gray-400" />
                                 <div>
-                                    <p className="text-sm text-gray-500">Email</p>
-                                    <a href={`mailto:${message.email}`} className="font-semibold text-blue-600 hover:underline">
+                                    <p className="text-sm text-gray-500 dark:text-gray-400">Email</p>
+                                    <a href={`mailto:${message.email}`} className="font-semibold text-blue-600 dark:text-blue-400 hover:underline">
                                         {message.email}
                                     </a>
                                 </div>
                             </div>
-                            <div className="flex items-center space-x-3 p-4 bg-gray-50 rounded-xl">
-                                <Calendar className="w-5 h-5 text-gray-500" />
+                            <div className="flex items-center space-x-3 p-4 bg-gray-50 dark:bg-gray-700 rounded-xl">
+                                <Calendar className="w-5 h-5 text-gray-500 dark:text-gray-400" />
                                 <div>
-                                    <p className="text-sm text-gray-500">Received</p>
-                                    <p className="font-semibold text-gray-900">
+                                    <p className="text-sm text-gray-500 dark:text-gray-400">Received</p>
+                                    <p className="font-semibold text-gray-900 dark:text-white">
                                         {new Date(message.created_at).toLocaleString()}
                                     </p>
                                 </div>
                             </div>
-                            <div className="flex items-center space-x-3 p-4 bg-gray-50 rounded-xl">
-                                <Tag className="w-5 h-5 text-gray-500" />
+                            <div className="flex items-center space-x-3 p-4 bg-gray-50 dark:bg-gray-700 rounded-xl">
+                                <Tag className="w-5 h-5 text-gray-500 dark:text-gray-400" />
                                 <div>
-                                    <p className="text-sm text-gray-500">Subject Category</p>
-                                    <p className="font-semibold text-gray-900">{message.subject}</p>
+                                    <p className="text-sm text-gray-500 dark:text-gray-400">Subject Category</p>
+                                    <p className="font-semibold text-gray-900 dark:text-white">{message.subject}</p>
                                 </div>
                             </div>
                         </div>
 
                         {/* Message Content */}
                         <div>
-                            <h3 className="text-sm font-semibold text-gray-700 mb-2">Message</h3>
-                            <div className="p-4 bg-gray-50 rounded-xl">
-                                <p className="text-gray-800 whitespace-pre-wrap">{message.message}</p>
+                            <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Message</h3>
+                            <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded-xl">
+                                <p className="text-gray-800 dark:text-gray-200 whitespace-pre-wrap">{message.message}</p>
                             </div>
                         </div>
 
                         {/* Reply Info */}
                         {message.replied_at && (
-                            <div className="p-4 bg-green-50 rounded-xl border border-green-200">
-                                <div className="flex items-center space-x-2 text-green-700">
+                            <div className="p-4 bg-green-50 dark:bg-green-900/30 rounded-xl border border-green-200 dark:border-green-800">
+                                <div className="flex items-center space-x-2 text-green-700 dark:text-green-300">
                                     <MailCheck className="w-5 h-5" />
                                     <span className="font-medium">
                                         Replied by {message.replied_by_user?.name || 'Admin'} on{' '}
@@ -192,12 +192,12 @@ const MessageDetailModal: React.FC<MessageDetailModalProps> = ({ message, onClos
 
                         {/* Admin Notes */}
                         <div>
-                            <h3 className="text-sm font-semibold text-gray-700 mb-2">Admin Notes</h3>
+                            <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Admin Notes</h3>
                             <textarea
                                 value={notes}
                                 onChange={(e) => setNotes(e.target.value)}
                                 rows={3}
-                                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                                 placeholder="Add internal notes about this message..."
                             />
                             <button
@@ -211,7 +211,7 @@ const MessageDetailModal: React.FC<MessageDetailModalProps> = ({ message, onClos
                     </div>
 
                     {/* Footer Actions */}
-                    <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 px-6 py-4 rounded-b-2xl">
+                    <div className="sticky bottom-0 bg-gray-50 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 px-6 py-4 rounded-b-2xl">
                         <div className="flex flex-wrap gap-3 justify-between">
                             <div className="flex flex-wrap gap-2">
                                 {message.status !== 'replied' && message.status !== 'archived' && (
@@ -395,12 +395,12 @@ const ContactMessages: React.FC = () => {
     // Get status badge
     const getStatusBadge = (status: string) => {
         const styles: Record<string, string> = {
-            unread: 'bg-red-100 text-red-800',
-            read: 'bg-yellow-100 text-yellow-800',
-            replied: 'bg-green-100 text-green-800',
-            archived: 'bg-gray-100 text-gray-800',
+            unread: 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300',
+            read: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300',
+            replied: 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300',
+            archived: 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300',
         };
-        return styles[status] || 'bg-gray-100 text-gray-800';
+        return styles[status] || 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300';
     };
 
     // Format date
@@ -432,15 +432,15 @@ const ContactMessages: React.FC = () => {
                 />
             )}
 
-            <div className="p-6 space-y-6">
+            <div className="p-6 space-y-6 dark:bg-gray-900 min-h-screen">
                 {/* Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-900 flex items-center">
-                            <Inbox className={`w-8 h-8 mr-3 ${TEXT_COLOR_CLASS}`} />
+                        <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center">
+                            <Inbox className={`w-8 h-8 mr-3 ${TEXT_COLOR_CLASS} dark:text-blue-400`} />
                             Contact Messages
                         </h1>
-                        <p className="text-gray-600 mt-1">Manage messages from the contact form</p>
+                        <p className="text-gray-600 dark:text-gray-300 mt-1">Manage messages from the contact form</p>
                     </div>
                     <button
                         onClick={() => { loadMessages(); loadStats(); }}
@@ -454,67 +454,67 @@ const ContactMessages: React.FC = () => {
                 {/* Stats Cards */}
                 {stats && (
                     <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
-                        <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+                        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 border border-gray-100 dark:border-gray-700">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-sm text-gray-600">Total</p>
-                                    <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
+                                    <p className="text-sm text-gray-600 dark:text-gray-300">Total</p>
+                                    <p className="text-2xl font-bold text-gray-900 dark:text-white">{stats.total}</p>
                                 </div>
-                                <MessageSquare className="w-8 h-8 text-gray-400" />
+                                <MessageSquare className="w-8 h-8 text-gray-400 dark:text-gray-500" />
                             </div>
                         </div>
-                        <div className="bg-white rounded-xl shadow-sm p-4 border border-red-100">
+                        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 border border-red-100 dark:border-red-900/30">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-sm text-gray-600">Unread</p>
-                                    <p className="text-2xl font-bold text-red-600">{stats.unread}</p>
+                                    <p className="text-sm text-gray-600 dark:text-gray-300">Unread</p>
+                                    <p className="text-2xl font-bold text-red-600 dark:text-red-400">{stats.unread}</p>
                                 </div>
-                                <Mail className="w-8 h-8 text-red-400" />
+                                <Mail className="w-8 h-8 text-red-400 dark:text-red-500" />
                             </div>
                         </div>
-                        <div className="bg-white rounded-xl shadow-sm p-4 border border-yellow-100">
+                        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 border border-yellow-100 dark:border-yellow-900/30">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-sm text-gray-600">Read</p>
-                                    <p className="text-2xl font-bold text-yellow-600">{stats.read}</p>
+                                    <p className="text-sm text-gray-600 dark:text-gray-300">Read</p>
+                                    <p className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">{stats.read}</p>
                                 </div>
-                                <MailOpen className="w-8 h-8 text-yellow-400" />
+                                <MailOpen className="w-8 h-8 text-yellow-400 dark:text-yellow-500" />
                             </div>
                         </div>
-                        <div className="bg-white rounded-xl shadow-sm p-4 border border-green-100">
+                        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 border border-green-100 dark:border-green-900/30">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-sm text-gray-600">Replied</p>
-                                    <p className="text-2xl font-bold text-green-600">{stats.replied}</p>
+                                    <p className="text-sm text-gray-600 dark:text-gray-300">Replied</p>
+                                    <p className="text-2xl font-bold text-green-600 dark:text-green-400">{stats.replied}</p>
                                 </div>
-                                <MailCheck className="w-8 h-8 text-green-400" />
+                                <MailCheck className="w-8 h-8 text-green-400 dark:text-green-500" />
                             </div>
                         </div>
-                        <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+                        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 border border-gray-100 dark:border-gray-700">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-sm text-gray-600">Archived</p>
-                                    <p className="text-2xl font-bold text-gray-600">{stats.archived}</p>
+                                    <p className="text-sm text-gray-600 dark:text-gray-300">Archived</p>
+                                    <p className="text-2xl font-bold text-gray-600 dark:text-gray-300">{stats.archived}</p>
                                 </div>
-                                <Archive className="w-8 h-8 text-gray-400" />
+                                <Archive className="w-8 h-8 text-gray-400 dark:text-gray-500" />
                             </div>
                         </div>
-                        <div className="bg-white rounded-xl shadow-sm p-4 border border-blue-100">
+                        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 border border-blue-100 dark:border-blue-900/30">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-sm text-gray-600">Today</p>
-                                    <p className="text-2xl font-bold text-blue-600">{stats.today}</p>
+                                    <p className="text-sm text-gray-600 dark:text-gray-300">Today</p>
+                                    <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{stats.today}</p>
                                 </div>
-                                <Calendar className="w-8 h-8 text-blue-400" />
+                                <Calendar className="w-8 h-8 text-blue-400 dark:text-blue-500" />
                             </div>
                         </div>
-                        <div className="bg-white rounded-xl shadow-sm p-4 border border-purple-100">
+                        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 border border-purple-100 dark:border-purple-900/30">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-sm text-gray-600">This Week</p>
-                                    <p className="text-2xl font-bold text-purple-600">{stats.this_week}</p>
+                                    <p className="text-sm text-gray-600 dark:text-gray-300">This Week</p>
+                                    <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">{stats.this_week}</p>
                                 </div>
-                                <Clock className="w-8 h-8 text-purple-400" />
+                                <Clock className="w-8 h-8 text-purple-400 dark:text-purple-500" />
                             </div>
                         </div>
                     </div>
@@ -527,7 +527,7 @@ const ContactMessages: React.FC = () => {
                         className={`flex items-center px-6 py-3 rounded-xl font-semibold transition-all ${
                             viewMode === 'messages'
                                 ? 'bg-blue-600 text-white shadow-md'
-                                : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
+                                : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'
                         }`}
                     >
                         <MessageSquare className="w-5 h-5 mr-2" />
@@ -538,13 +538,13 @@ const ContactMessages: React.FC = () => {
                         className={`flex items-center px-6 py-3 rounded-xl font-semibold transition-all ${
                             viewMode === 'archived'
                                 ? 'bg-gray-600 text-white shadow-md'
-                                : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
+                                : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'
                         }`}
                     >
                         <Archive className="w-5 h-5 mr-2" />
                         Archived
                         {stats && stats.archived > 0 && (
-                            <span className="ml-2 px-2 py-0.5 bg-white/20 rounded-full text-xs">
+                            <span className="ml-2 px-2 py-0.5 bg-white/20 dark:bg-gray-700/50 rounded-full text-xs">
                                 {stats.archived}
                             </span>
                         )}
@@ -552,17 +552,17 @@ const ContactMessages: React.FC = () => {
                 </div>
 
                 {/* Filters */}
-                <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 border border-gray-100 dark:border-gray-700">
                     <div className="flex flex-col sm:flex-row gap-4">
                         {/* Search */}
                         <div className="flex-1 relative">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500" />
                             <input
                                 type="text"
                                 placeholder="Search by name, email, or message..."
                                 value={filters.search}
                                 onChange={(e) => setFilters({ ...filters, search: e.target.value, page: 1 })}
-                                className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                             />
                         </div>
                         
@@ -571,11 +571,11 @@ const ContactMessages: React.FC = () => {
                             {/* Status Filter - Only show if not in archived view */}
                             {viewMode === 'messages' ? (
                                 <>
-                                    <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                    <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500" />
                                     <select
                                         value={filters.status}
                                         onChange={(e) => setFilters({ ...filters, status: e.target.value, page: 1 })}
-                                        className="pl-10 pr-8 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none bg-white"
+                                        className="pl-10 pr-8 py-2 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                                     >
                                         <option value="">All Status</option>
                                         <option value="unread">Unread</option>
@@ -584,7 +584,7 @@ const ContactMessages: React.FC = () => {
                                     </select>
                                 </>
                             ) : (
-                                <div className="px-4 py-2 border border-gray-200 rounded-xl bg-gray-50 text-gray-700 font-medium">
+                                <div className="px-4 py-2 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium">
                                     <Archive className="inline w-4 h-4 mr-2" />
                                     Archived Messages
                                 </div>
@@ -594,61 +594,61 @@ const ContactMessages: React.FC = () => {
                 </div>
 
                 {/* Messages List */}
-                <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
                     {loading ? (
                         <div className="flex items-center justify-center py-12">
-                            <RefreshCw className="w-8 h-8 text-gray-400 animate-spin" />
+                            <RefreshCw className="w-8 h-8 text-gray-400 dark:text-gray-500 animate-spin" />
                         </div>
                     ) : messages.length === 0 ? (
                         <div className="text-center py-12">
-                            <Inbox className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                            <p className="text-gray-500 text-lg">No messages found</p>
-                            <p className="text-gray-400 text-sm">Messages from the contact form will appear here</p>
+                            <Inbox className="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
+                            <p className="text-gray-500 dark:text-gray-300 text-lg">No messages found</p>
+                            <p className="text-gray-400 dark:text-gray-500 text-sm">Messages from the contact form will appear here</p>
                         </div>
                     ) : (
-                        <div className="divide-y divide-gray-100">
+                        <div className="divide-y divide-gray-100 dark:divide-gray-700">
                             {messages.map((message) => (
                                 <div
                                     key={message.id}
                                     onClick={() => handleViewMessage(message)}
-                                    className={`flex items-center p-4 hover:bg-gray-50 cursor-pointer transition-colors ${
-                                        message.status === 'unread' ? 'bg-blue-50/50' : ''
+                                    className={`flex items-center p-4 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors ${
+                                        message.status === 'unread' ? 'bg-blue-50/50 dark:bg-blue-900/20' : ''
                                     }`}
                                 >
                                     {/* Icon */}
-                                    <div className={`p-2 rounded-lg mr-4 ${message.status === 'unread' ? 'bg-red-100' : 'bg-gray-100'}`}>
+                                    <div className={`p-2 rounded-lg mr-4 ${message.status === 'unread' ? 'bg-red-100 dark:bg-red-900/30' : 'bg-gray-100 dark:bg-gray-700'}`}>
                                         {message.status === 'unread' ? (
-                                            <Mail className="w-5 h-5 text-red-600" />
+                                            <Mail className="w-5 h-5 text-red-600 dark:text-red-400" />
                                         ) : (
-                                            <MailOpen className="w-5 h-5 text-gray-500" />
+                                            <MailOpen className="w-5 h-5 text-gray-500 dark:text-gray-400" />
                                         )}
                                     </div>
 
                                     {/* Content */}
                                     <div className="flex-1 min-w-0">
                                         <div className="flex items-center gap-2">
-                                            <p className={`font-semibold truncate ${message.status === 'unread' ? 'text-gray-900' : 'text-gray-700'}`}>
+                                            <p className={`font-semibold truncate ${message.status === 'unread' ? 'text-gray-900 dark:text-white' : 'text-gray-700 dark:text-gray-300'}`}>
                                                 {message.name}
                                             </p>
                                             <span className={`flex-shrink-0 px-2 py-0.5 text-xs font-medium rounded-full ${getStatusBadge(message.status)}`}>
                                                 {message.status}
                                             </span>
                                         </div>
-                                        <p className={`text-sm truncate ${message.status === 'unread' ? 'text-gray-800 font-medium' : 'text-gray-600'}`}>
+                                        <p className={`text-sm truncate ${message.status === 'unread' ? 'text-gray-800 dark:text-gray-200 font-medium' : 'text-gray-600 dark:text-gray-400'}`}>
                                             {message.subject}
                                         </p>
-                                        <p className="text-sm text-gray-500 truncate">{message.message}</p>
+                                        <p className="text-sm text-gray-500 dark:text-gray-400 truncate">{message.message}</p>
                                     </div>
 
                                     {/* Meta */}
                                     <div className="flex-shrink-0 text-right ml-4">
-                                        <p className="text-sm text-gray-500">{formatDate(message.created_at)}</p>
-                                        <p className="text-xs text-gray-400">{message.email}</p>
+                                        <p className="text-sm text-gray-500 dark:text-gray-400">{formatDate(message.created_at)}</p>
+                                        <p className="text-xs text-gray-400 dark:text-gray-500">{message.email}</p>
                                     </div>
 
                                     {/* Action */}
                                     <div className="ml-4">
-                                        <Eye className="w-5 h-5 text-gray-400" />
+                                        <Eye className="w-5 h-5 text-gray-400 dark:text-gray-500" />
                                     </div>
                                 </div>
                             ))}
@@ -657,8 +657,8 @@ const ContactMessages: React.FC = () => {
 
                     {/* Pagination */}
                     {pagination.total > pagination.per_page && (
-                        <div className="flex items-center justify-between px-4 py-3 border-t border-gray-100 bg-gray-50">
-                            <p className="text-sm text-gray-600">
+                        <div className="flex items-center justify-between px-4 py-3 border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+                            <p className="text-sm text-gray-600 dark:text-gray-300">
                                 Showing {((pagination.current_page - 1) * pagination.per_page) + 1} to{' '}
                                 {Math.min(pagination.current_page * pagination.per_page, pagination.total)} of{' '}
                                 {pagination.total} messages
@@ -667,17 +667,17 @@ const ContactMessages: React.FC = () => {
                                 <button
                                     onClick={() => setFilters({ ...filters, page: filters.page! - 1 })}
                                     disabled={pagination.current_page === 1}
-                                    className="p-2 rounded-lg border border-gray-200 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="p-2 rounded-lg border border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed text-gray-700 dark:text-gray-200"
                                 >
                                     <ChevronLeft className="w-5 h-5" />
                                 </button>
-                                <span className="px-3 py-1 text-sm font-medium">
+                                <span className="px-3 py-1 text-sm font-medium text-gray-700 dark:text-gray-300">
                                     {pagination.current_page} / {pagination.last_page}
                                 </span>
                                 <button
                                     onClick={() => setFilters({ ...filters, page: filters.page! + 1 })}
                                     disabled={pagination.current_page === pagination.last_page}
-                                    className="p-2 rounded-lg border border-gray-200 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="p-2 rounded-lg border border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed text-gray-700 dark:text-gray-200"
                                 >
                                     <ChevronRight className="w-5 h-5" />
                                 </button>

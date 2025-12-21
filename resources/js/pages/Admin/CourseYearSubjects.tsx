@@ -133,7 +133,7 @@ const ViewCurriculumModal: React.FC<{
 
     return (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-6xl max-h-[90vh] overflow-hidden flex flex-col">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-6xl max-h-[90vh] overflow-hidden flex flex-col">
                 {/* Header */}
                 <div className={`${PRIMARY_COLOR_CLASS} text-white p-4 sm:p-6`}>
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
@@ -165,11 +165,11 @@ const ViewCurriculumModal: React.FC<{
                 </div>
 
                 {/* Curriculum Content */}
-                <div className="flex-1 overflow-y-auto p-6">
+                <div className="flex-1 overflow-y-auto p-6 dark:bg-gray-800">
                     {yearLevels.length === 0 ? (
                         <div className="text-center py-12">
-                            <BookOpen className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                            <p className="text-gray-500 text-lg">No subjects added to this curriculum yet</p>
+                            <BookOpen className="h-16 w-16 text-gray-300 dark:text-gray-500 mx-auto mb-4" />
+                            <p className="text-gray-500 dark:text-gray-300 text-lg">No subjects added to this curriculum yet</p>
                             <button 
                                 onClick={() => onAdd(course.id)}
                                 className={`mt-4 inline-flex items-center gap-2 px-6 py-3 ${PRIMARY_COLOR_CLASS} text-white rounded-xl ${HOVER_COLOR_CLASS}`}
@@ -181,16 +181,16 @@ const ViewCurriculumModal: React.FC<{
                     ) : (
                         <div className="space-y-8">
                             {yearLevels.map(yearLevel => (
-                                <div key={yearLevel} className="border border-gray-200 rounded-2xl overflow-hidden">
+                                <div key={yearLevel} className="border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden bg-white dark:bg-gray-800">
                                     {/* Year Header */}
-                                    <div className={`${LIGHT_BG_CLASS} px-6 py-4 border-b border-gray-200`}>
-                                        <h3 className={`text-xl font-bold ${TEXT_COLOR_CLASS}`}>
+                                    <div className={`${LIGHT_BG_CLASS} dark:bg-gray-700 px-6 py-4 border-b border-gray-200 dark:border-gray-600`}>
+                                        <h3 className={`text-xl font-bold ${TEXT_COLOR_CLASS} dark:text-white`}>
                                             {formatYearLevel(yearLevel)}
                                         </h3>
                                     </div>
 
                                     {/* Semesters */}
-                                    <div className="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-gray-200">
+                                    <div className="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-gray-200 dark:divide-gray-700">
                                         {['1st', '2nd'].map(semester => {
                                             const key = `${yearLevel}-${semester}`;
                                             const subjects = groupedSubjects[key] || [];
@@ -200,42 +200,42 @@ const ViewCurriculumModal: React.FC<{
                                                 <div key={semester} className="p-4">
                                                     {/* Semester Header */}
                                                     <div className="flex items-center justify-between mb-4">
-                                                        <h4 className="font-semibold text-gray-700">{semester} Semester</h4>
-                                                        <span className={`text-sm font-medium ${TEXT_COLOR_CLASS}`}>
+                                                        <h4 className="font-semibold text-gray-700 dark:text-gray-200">{semester} Semester</h4>
+                                                        <span className={`text-sm font-medium ${TEXT_COLOR_CLASS} dark:text-white`}>
                                                             {subjects.length} subjects • {totalUnits} units
                                                         </span>
                                                     </div>
 
                                                     {/* Subjects Table */}
                                                     {subjects.length === 0 ? (
-                                                        <div className="text-center py-6 bg-gray-50 rounded-xl">
-                                                            <p className="text-gray-400 text-sm">No subjects</p>
+                                                        <div className="text-center py-6 bg-gray-50 dark:bg-gray-700 rounded-xl">
+                                                            <p className="text-gray-400 dark:text-gray-400 text-sm">No subjects</p>
                                                         </div>
                                                     ) : (
                                                         <table className="w-full">
                                                             <thead>
-                                                                <tr className="border-b border-gray-200">
-                                                                    <th className="text-left py-2 text-xs font-semibold text-gray-500 uppercase">Subject</th>
-                                                                    <th className="text-center py-2 text-xs font-semibold text-gray-500 uppercase w-16">Units</th>
-                                                                    <th className="text-center py-2 text-xs font-semibold text-gray-500 uppercase w-20">Type</th>
-                                                                    <th className="text-center py-2 text-xs font-semibold text-gray-500 uppercase w-20">Actions</th>
+                                                                <tr className="border-b border-gray-200 dark:border-gray-600">
+                                                                    <th className="text-left py-2 text-xs font-semibold text-gray-500 dark:text-gray-300 uppercase">Subject</th>
+                                                                    <th className="text-center py-2 text-xs font-semibold text-gray-500 dark:text-gray-300 uppercase w-16">Units</th>
+                                                                    <th className="text-center py-2 text-xs font-semibold text-gray-500 dark:text-gray-300 uppercase w-20">Type</th>
+                                                                    <th className="text-center py-2 text-xs font-semibold text-gray-500 dark:text-gray-300 uppercase w-20">Actions</th>
                                                                 </tr>
                                                             </thead>
-                                                            <tbody className="divide-y divide-gray-100">
+                                                            <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
                                                                 {subjects.map(subject => (
-                                                                    <tr key={subject.id} className="hover:bg-gray-50">
+                                                                    <tr key={subject.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                                                                         <td className="py-3">
-                                                                            <div className="font-medium text-gray-900">{subject.subject?.subject_code}</div>
-                                                                            <div className="text-xs text-gray-500">{subject.subject?.subject_name}</div>
+                                                                            <div className="font-medium text-gray-900 dark:text-white">{subject.subject?.subject_code}</div>
+                                                                            <div className="text-xs text-gray-500 dark:text-gray-400">{subject.subject?.subject_name}</div>
                                                                         </td>
-                                                                        <td className="py-3 text-center font-semibold text-gray-700">
+                                                                        <td className="py-3 text-center font-semibold text-gray-700 dark:text-gray-200">
                                                                             {subject.units}
                                                                         </td>
                                                                         <td className="py-3 text-center">
                                                                             <span className={`inline-flex px-2 py-0.5 text-xs font-medium rounded-full ${
                                                                                 subject.is_required 
-                                                                                    ? 'bg-green-100 text-green-700' 
-                                                                                    : 'bg-amber-100 text-amber-700'
+                                                                                    ? 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300' 
+                                                                                    : 'bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300'
                                                                             }`}>
                                                                                 {subject.is_required ? 'Req' : 'Elec'}
                                                                             </span>
@@ -244,14 +244,14 @@ const ViewCurriculumModal: React.FC<{
                                                                             <div className="flex items-center justify-center gap-1">
                                                                                 <button
                                                                                     onClick={() => onEdit(subject)}
-                                                                                    className="p-1.5 text-gray-500 hover:text-[#003366] hover:bg-gray-100 rounded-lg transition-colors"
+                                                                                    className="p-1.5 text-gray-500 dark:text-gray-400 hover:text-[#003366] dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
                                                                                     title="Edit"
                                                                                 >
                                                                                     <Edit className="h-3.5 w-3.5" />
                                                                                 </button>
                                                                                 <button
                                                                                     onClick={() => onDelete(subject)}
-                                                                                    className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                                                                    className="p-1.5 text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-colors"
                                                                                     title="Remove"
                                                                                 >
                                                                                     <Trash2 className="h-3.5 w-3.5" />
@@ -274,10 +274,10 @@ const ViewCurriculumModal: React.FC<{
                 </div>
 
                 {/* Footer */}
-                <div className="p-6 border-t border-gray-200 bg-gray-50">
+                <div className="p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
                     <button 
                         onClick={onClose} 
-                        className="w-full px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-white transition-colors font-medium"
+                        className="w-full px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 rounded-xl hover:bg-white dark:hover:bg-gray-700 transition-colors font-medium"
                     >
                         Close
                     </button>
@@ -380,7 +380,7 @@ const LinkModal: React.FC<{
 
     return (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-[60] p-4">
-            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
                 <div className={`${PRIMARY_COLOR_CLASS} text-white p-6 rounded-t-2xl`}>
                     <div className="flex items-center justify-between">
                         <h2 className="text-xl font-bold flex items-center gap-2">
@@ -393,16 +393,16 @@ const LinkModal: React.FC<{
                     </div>
                 </div>
 
-                <form onSubmit={handleSubmit} className="p-6 space-y-4">
+                <form onSubmit={handleSubmit} className="p-6 space-y-4 dark:bg-gray-800">
                     {/* Course */}
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
                             Course/Program <span className="text-red-500">*</span>
                         </label>
                         <select
                             value={formData.course_id}
                             onChange={(e) => setFormData({...formData, course_id: parseInt(e.target.value)})}
-                            className={`w-full px-4 py-3 border rounded-xl focus:ring-2 ${RING_COLOR_CLASS} ${errors.course_id ? 'border-red-500' : 'border-gray-200'}`}
+                            className={`w-full px-4 py-3 border rounded-xl focus:ring-2 ${RING_COLOR_CLASS} ${errors.course_id ? 'border-red-500' : 'border-gray-200 dark:border-gray-600'} bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                             required
                             disabled={!!preSelectedCourseId}
                         >
@@ -419,13 +419,13 @@ const LinkModal: React.FC<{
                     {/* Year Level & Semester Row */}
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
                                 Year Level <span className="text-red-500">*</span>
                             </label>
                             <select
                                 value={formData.year_level}
                                 onChange={(e) => setFormData({...formData, year_level: parseInt(e.target.value)})}
-                                className={`w-full px-4 py-3 border rounded-xl focus:ring-2 ${RING_COLOR_CLASS} border-gray-200`}
+                                className={`w-full px-4 py-3 border rounded-xl focus:ring-2 ${RING_COLOR_CLASS} border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                                 required
                             >
                                 <optgroup label="Senior High">
@@ -441,13 +441,13 @@ const LinkModal: React.FC<{
                             </select>
                         </div>
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
                                 Semester <span className="text-red-500">*</span>
                             </label>
                             <select
                                 value={formData.semester}
                                 onChange={(e) => setFormData({...formData, semester: e.target.value as '1st' | '2nd' | 'summer'})}
-                                className={`w-full px-4 py-3 border rounded-xl focus:ring-2 ${RING_COLOR_CLASS} border-gray-200`}
+                                className={`w-full px-4 py-3 border rounded-xl focus:ring-2 ${RING_COLOR_CLASS} border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                                 required
                             >
                                 <option value="1st">1st Semester</option>
@@ -459,7 +459,7 @@ const LinkModal: React.FC<{
 
                     {/* Subject Selection */}
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
                             {link ? 'Subject' : 'Select Subjects'} <span className="text-red-500">*</span>
                         </label>
                         
@@ -468,7 +468,7 @@ const LinkModal: React.FC<{
                             <select
                                 value={formData.subject_id}
                                 disabled
-                                className={`w-full px-4 py-3 border rounded-xl bg-gray-100 border-gray-200`}
+                                className={`w-full px-4 py-3 border rounded-xl bg-gray-100 dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white`}
                             >
                                 <option value={link.subject_id}>
                                     {link.subject?.subject_code} - {link.subject?.subject_name}
@@ -476,43 +476,43 @@ const LinkModal: React.FC<{
                             </select>
                         ) : (
                             // Creating: Show checkbox list
-                            <div className="border border-gray-200 rounded-xl max-h-64 overflow-y-auto">
+                            <div className="border border-gray-200 dark:border-gray-600 rounded-xl max-h-64 overflow-y-auto bg-white dark:bg-gray-700">
                                 {loadingSubjects ? (
                                     <div className="flex items-center justify-center py-8">
-                                        <RefreshCw className="h-5 w-5 animate-spin text-gray-400 mr-2" />
-                                        <span className="text-gray-500">Loading available subjects...</span>
+                                        <RefreshCw className="h-5 w-5 animate-spin text-gray-400 dark:text-gray-500 mr-2" />
+                                        <span className="text-gray-500 dark:text-gray-300">Loading available subjects...</span>
                                     </div>
                                 ) : availableSubjects.length === 0 ? (
-                                    <div className="text-center py-8 text-gray-500">
-                                        <BookOpen className="h-12 w-12 text-gray-300 mx-auto mb-2" />
+                                    <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                                        <BookOpen className="h-12 w-12 text-gray-300 dark:text-gray-600 mx-auto mb-2" />
                                         <p>No available subjects</p>
-                                        <p className="text-xs text-gray-400 mt-1">
+                                        <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
                                             All subjects are already linked to this course/year/semester
                                         </p>
                                     </div>
                                 ) : (
-                                    <div className="divide-y divide-gray-100">
+                                    <div className="divide-y divide-gray-100 dark:divide-gray-600">
                                         {availableSubjects.map(subject => (
                                             <label
                                                 key={subject.id}
-                                                className="flex items-center p-4 hover:bg-gray-50 cursor-pointer transition-colors"
+                                                className="flex items-center p-4 hover:bg-gray-50 dark:hover:bg-gray-600 cursor-pointer transition-colors"
                                             >
                                                 <input
                                                     type="checkbox"
                                                     checked={selectedSubjectIds.includes(subject.id)}
                                                     onChange={() => toggleSubjectSelection(subject.id)}
-                                                    className="w-5 h-5 rounded border-gray-300 text-[#003366] focus:ring-[#003366] mr-3"
+                                                    className="w-5 h-5 rounded border-gray-300 dark:border-gray-500 text-[#003366] focus:ring-[#003366] mr-3 bg-white dark:bg-gray-700"
                                                 />
                                                 <div className="flex-1">
-                                                    <div className="font-medium text-gray-900">
+                                                    <div className="font-medium text-gray-900 dark:text-white">
                                                         {subject.subject_code}
                                                     </div>
-                                                    <div className="text-sm text-gray-500">
+                                                    <div className="text-sm text-gray-500 dark:text-gray-400">
                                                         {subject.subject_name}
                                                     </div>
                                                 </div>
                                                 {subject.units && (
-                                                    <div className="text-sm font-semibold text-gray-700">
+                                                    <div className="text-sm font-semibold text-gray-700 dark:text-gray-300">
                                                         {subject.units} units
                                                     </div>
                                                 )}
@@ -524,7 +524,7 @@ const LinkModal: React.FC<{
                         )}
                         
                         {!link && selectedSubjectIds.length > 0 && (
-                            <p className="text-sm text-gray-600 mt-2">
+                            <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">
                                 {selectedSubjectIds.length} subject{selectedSubjectIds.length !== 1 ? 's' : ''} selected
                             </p>
                         )}
@@ -535,14 +535,14 @@ const LinkModal: React.FC<{
                     {link && (
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">Units</label>
+                                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Units</label>
                                 <input
                                     type="number"
                                     min={1}
                                     max={9}
                                     value={formData.units}
                                     onChange={(e) => setFormData({...formData, units: parseInt(e.target.value) || 3})}
-                                    className={`w-full px-4 py-3 border rounded-xl focus:ring-2 ${RING_COLOR_CLASS} border-gray-200`}
+                                    className={`w-full px-4 py-3 border rounded-xl focus:ring-2 ${RING_COLOR_CLASS} border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                                 />
                             </div>
                             <div className="flex items-end pb-3">
@@ -551,9 +551,9 @@ const LinkModal: React.FC<{
                                         type="checkbox"
                                         checked={formData.is_required}
                                         onChange={(e) => setFormData({...formData, is_required: e.target.checked})}
-                                        className="w-5 h-5 rounded border-gray-300 text-[#003366] focus:ring-[#003366]"
+                                        className="w-5 h-5 rounded border-gray-300 dark:border-gray-500 text-[#003366] focus:ring-[#003366] bg-white dark:bg-gray-700"
                                     />
-                                    <span className="text-sm font-medium text-gray-700">Required Subject</span>
+                                    <span className="text-sm font-medium text-gray-700 dark:text-gray-200">Required Subject</span>
                                 </label>
                             </div>
                         </div>
@@ -561,7 +561,7 @@ const LinkModal: React.FC<{
 
                     {/* Buttons */}
                     <div className="flex gap-3 pt-4">
-                        <button type="button" onClick={onClose} className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50">
+                        <button type="button" onClick={onClose} className="flex-1 px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700">
                             Cancel
                         </button>
                         <button 
@@ -600,18 +600,18 @@ const DeleteModal: React.FC<{
 
     return (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-[70] p-4">
-            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md p-6">
                 <div className="text-center">
-                    <div className="mx-auto w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
-                        <Trash2 className="h-8 w-8 text-red-600" />
+                    <div className="mx-auto w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mb-4">
+                        <Trash2 className="h-8 w-8 text-red-600 dark:text-red-400" />
                     </div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">Remove Subject?</h3>
-                    <p className="text-gray-600 mb-6">
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Remove Subject?</h3>
+                    <p className="text-gray-600 dark:text-gray-300 mb-6">
                         Remove <strong>{link.subject?.subject_code} - {link.subject?.subject_name}</strong> from 
                         <strong> {link.course?.course_code} {formatYearLevel(link.year_level)}</strong>?
                     </p>
                     <div className="flex gap-3">
-                        <button onClick={onClose} className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50">
+                        <button onClick={onClose} className="flex-1 px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700">
                             Cancel
                         </button>
                         <button 
@@ -875,8 +875,8 @@ const CourseYearSubjects: React.FC = () => {
                             <Layers className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 text-white" />
                         </div>
                         <div>
-                            <h1 className={`text-xl sm:text-2xl md:text-3xl font-bold ${TEXT_COLOR_CLASS}`}>Curriculum / Prospectus</h1>
-                            <p className="text-xs sm:text-sm text-gray-600">View and manage curriculum for each course</p>
+                            <h1 className={`text-xl sm:text-2xl md:text-3xl font-bold ${TEXT_COLOR_CLASS} dark:text-white`}>Curriculum / Prospectus</h1>
+                            <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">View and manage curriculum for each course</p>
                         </div>
                     </div>
                     <div className="flex gap-2 sm:gap-3">
