@@ -243,10 +243,10 @@ class AdminStudentService {
                     console.error('CSRF token mismatch (419). Current token:', csrfToken ? csrfToken.substring(0, 10) + '...' : 'missing');
                     
                     if (retryOn419) {
-                        // Try to get a fresh token and retry once
+                        // Try to get a fresh token from the server and retry once
                         try {
-                            // Force re-read the token from all sources
-                            const freshToken = this.getCsrfToken();
+                            console.log('Attempting to refresh CSRF token and retry request...');
+                            const freshToken = await this.getFreshCsrfToken();
                             if (freshToken && freshToken !== csrfToken) {
                                 console.log('Token refreshed, retrying request with new token...');
                                 // Retry with fresh token
@@ -259,6 +259,8 @@ class AdminStudentService {
                                     }
                                 };
                                 return this.request<T>(url, retryOptions, false); // Don't retry again
+                            } else {
+                                console.warn('Could not get a different token, token may be the same or refresh failed');
                             }
                         } catch (e) {
                             console.error('Could not refresh CSRF token:', e);
@@ -358,7 +360,9 @@ class AdminStudentService {
      */
     private async getFreshCsrfToken(): Promise<string> {
         try {
-            const response = await fetch('/api/csrf-token', {
+            const absoluteUrl = window.location.origin + '/api/csrf-token';
+            console.log('Fetching fresh CSRF token from /api/csrf-token...');
+            const response = await fetch(absoluteUrl, {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
@@ -370,8 +374,18 @@ class AdminStudentService {
             if (response.ok) {
                 const data = await response.json();
                 if (data.success && data.csrf_token) {
+                    console.log('Successfully retrieved fresh CSRF token');
+                    // Update the meta tag with the new token
+                    const metaTag = document.querySelector('meta[name="csrf-token"]');
+                    if (metaTag) {
+                        metaTag.setAttribute('content', data.csrf_token);
+                        console.log('Updated meta tag with new CSRF token');
+                    }
                     return data.csrf_token;
                 }
+                console.error('Invalid CSRF token response:', data);
+            } else {
+                console.error(`Failed to fetch CSRF token: ${response.status} ${response.statusText}`);
             }
         } catch (e) {
             console.warn('Could not fetch fresh CSRF token from server:', e);
