@@ -440,57 +440,57 @@ const Semesters: React.FC = () => {
 
                     {/* Stats Cards - Mobile: Centered with icon below, Desktop: Icon on right */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-2 sm:gap-3 md:gap-4 lg:gap-6 mb-4 sm:mb-6">
-                        <div className="bg-white rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 lg:p-6 border border-gray-100 md:col-span-2">
+                        <div className="bg-white dark:bg-transparent rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 lg:p-6 border border-gray-100 dark:border-white md:col-span-2">
                             {/* Mobile: Centered layout */}
                             <div className="flex flex-col items-center text-center md:hidden">
-                                <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1 sm:mb-2">Current Semester</p>
-                                <p className="text-xl sm:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">
+                                <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-white mb-1 sm:mb-2">Current Semester</p>
+                                <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-1 sm:mb-2">
                                     {stats.current_semester ? stats.current_semester.semester_name : 'N/A'}
                                 </p>
                                 {stats.current_semester && (
-                                    <p className={`text-xs sm:text-sm font-medium text-green-600 mb-2 sm:mb-3`}>
+                                    <p className={`text-xs sm:text-sm font-medium text-green-600 dark:text-white mb-2 sm:mb-3`}>
                                         {stats.current_semester.academic_year.year_name}
                                     </p>
                                 )}
                                 <div className={`${LIGHT_BG_CLASS} p-2 sm:p-3 rounded-full`}>
-                                    <Calendar className={`h-5 w-5 sm:h-6 sm:w-6 ${TEXT_COLOR_CLASS}`} />
+                                    <Calendar className={`h-5 w-5 sm:h-6 sm:w-6 ${TEXT_COLOR_CLASS} dark:text-white`} />
                                 </div>
                             </div>
                             {/* Desktop: Original layout with icon on right */}
                             <div className="hidden md:flex items-center justify-between">
                                 <div>
-                                    <p className="text-sm font-medium text-gray-600 mb-1">Current Semester</p>
-                                    <p className="text-3xl font-bold text-gray-900">
+                                    <p className="text-sm font-medium text-gray-600 dark:text-white mb-1">Current Semester</p>
+                                    <p className="text-3xl font-bold text-gray-900 dark:text-white">
                                         {stats.current_semester ? stats.current_semester.semester_name : 'N/A'}
                                     </p>
                                     {stats.current_semester && (
-                                        <p className={`text-sm font-medium text-green-600 mt-1`}>
+                                        <p className={`text-sm font-medium text-green-600 dark:text-white mt-1`}>
                                             {stats.current_semester.academic_year.year_name}
                                         </p>
                                     )}
                                 </div>
                                 <div className={`${LIGHT_BG_CLASS} p-3 rounded-xl`}>
-                                    <Calendar className={`h-8 w-8 ${TEXT_COLOR_CLASS}`} />
+                                    <Calendar className={`h-8 w-8 ${TEXT_COLOR_CLASS} dark:text-white`} />
                                 </div>
                             </div>
                         </div>
-                        <div className="bg-white rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 lg:p-6 border border-gray-100">
+                        <div className="bg-white dark:bg-transparent rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 lg:p-6 border border-gray-100 dark:border-white">
                             {/* Mobile: Centered layout */}
                             <div className="flex flex-col items-center text-center md:hidden">
-                                <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1 sm:mb-2">Total</p>
-                                <p className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 sm:mb-3">{pagination.total}</p>
+                                <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-white mb-1 sm:mb-2">Total</p>
+                                <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-2 sm:mb-3">{pagination.total}</p>
                                 <div className={`${LIGHT_BG_CLASS} p-2 sm:p-3 rounded-full`}>
-                                    <Layers className={`h-5 w-5 sm:h-6 sm:w-6 ${TEXT_COLOR_CLASS}`} />
+                                    <Layers className={`h-5 w-5 sm:h-6 sm:w-6 ${TEXT_COLOR_CLASS} dark:text-white`} />
                                 </div>
                             </div>
                             {/* Desktop: Original layout with icon on right */}
                             <div className="hidden md:flex items-center justify-between">
                                 <div>
-                                    <p className="text-sm font-medium text-gray-600 mb-1">Total Semesters</p>
-                                    <p className="text-3xl font-bold text-gray-900">{pagination.total}</p>
+                                    <p className="text-sm font-medium text-gray-600 dark:text-white mb-1">Total Semesters</p>
+                                    <p className="text-3xl font-bold text-gray-900 dark:text-white">{pagination.total}</p>
                                 </div>
                                 <div className={`${LIGHT_BG_CLASS} p-3 rounded-xl`}>
-                                    <Layers className={`h-8 w-8 ${TEXT_COLOR_CLASS}`} />
+                                    <Layers className={`h-8 w-8 ${TEXT_COLOR_CLASS} dark:text-white`} />
                                 </div>
                             </div>
                         </div>
