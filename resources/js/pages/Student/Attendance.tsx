@@ -108,8 +108,17 @@ const StatCard: React.FC<{ title: string; value: string | number; icon: React.El
     const bgColor = color.replace('text-', 'bg-').replace('-600', '-100');
     
     return (
-        <div className="bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-white">
-            <div className="flex items-center justify-between">
+        <div className="bg-white dark:bg-gray-800 dark:border-white rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 lg:p-6 border border-gray-100 dark:border-white">
+            {/* Mobile: Centered layout */}
+            <div className="flex flex-col items-center text-center md:hidden">
+                <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-white mb-1 sm:mb-2">{title}</p>
+                <p className={`text-2xl sm:text-3xl font-bold ${color} dark:text-white mb-2 sm:mb-3`}>{displayValue}</p>
+                <div className={`${bgColor} dark:bg-gray-700 p-2 sm:p-3 rounded-full`}>
+                    <Icon className={`h-5 w-5 sm:h-6 sm:w-6 ${color} dark:text-white`} />
+                </div>
+            </div>
+            {/* Desktop: Original layout with icon on right */}
+            <div className="hidden md:flex items-center justify-between">
                 <div>
                     <p className="text-sm font-medium text-gray-600 dark:text-white mb-1">{title}</p>
                     <p className={`text-3xl font-bold ${color} dark:text-white`}>{displayValue}</p>
@@ -371,9 +380,9 @@ const MyAttendance: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* Analytics Cards */}
+                    {/* Analytics Cards - Mobile: Centered with icon below, Desktop: Icon on right */}
                     {!loading && (
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3 md:gap-4 lg:gap-6 mb-4 sm:mb-6">
                             <StatCard 
                                 title="Attendance Rate" 
                                 value={`${attendanceStats.attendanceRate}%`} 
