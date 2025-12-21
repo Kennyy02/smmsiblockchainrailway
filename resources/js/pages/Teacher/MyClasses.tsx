@@ -12,7 +12,14 @@ import {
     Award,
     AlertCircle,
     Star,
-    School
+    School,
+    LayoutGrid,
+    Search,
+    Filter,
+    Eye,
+    Edit,
+    Trash2,
+    UserCheck
 } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
 import { useTeacherAuth } from '../../../services/useTeacherAuth';
@@ -431,248 +438,295 @@ const MyClasses: React.FC = () => {
 
     return (
         <AppLayout>
-            <div className="p-8 space-y-6 min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-900">
-                {/* Header */}
-                <div className="flex items-center justify-between">
-                    <div>
-                        <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center">
-                            <GraduationCap className={`h-8 w-8 mr-3 ${TEXT_COLOR_CLASS}`} />
-                            My Assigned Classes & Subjects
-                        </h1>
-                        <p className="mt-2 text-gray-600 dark:text-white">
-                            View and manage all classes assigned to you
-                        </p>
-                    </div>
-                    <button
-                        onClick={fetchMyClasses}
-                        className={`flex items-center px-4 py-2 border border-gray-300 dark:border-white rounded-xl text-sm font-medium ${TEXT_COLOR_CLASS} hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors`}
-                    >
-                        <RefreshCw className="h-4 w-4 mr-2" />
-                        Refresh
-                    </button>
-                </div>
-
-                {/* Advisory Class Card */}
-                {teacherInfo?.advisory_class && (
-                    <div className={`${PRIMARY_COLOR_CLASS} rounded-2xl shadow-lg p-6 text-white`}>
-                        <div className="flex items-center justify-between">
+            <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-900">
+                <div className="container mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8">
+                    {/* Header */}
+                    <div className="mb-4 sm:mb-6 md:mb-8 flex flex-col md:flex-row md:items-center md:justify-between">
+                        <div className="flex items-center mb-4 sm:mb-6 md:mb-0">
+                            <div className={`${PRIMARY_COLOR_CLASS} p-2 sm:p-3 rounded-lg sm:rounded-xl mr-2 sm:mr-3 md:mr-4`}>
+                                <LayoutGrid className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 text-white" />
+                            </div>
                             <div>
-                                <div className="flex items-center gap-2 mb-2">
-                                    <Star className="h-5 w-5 fill-white" />
-                                    <span className="text-sm font-semibold uppercase tracking-wider opacity-90">Advisory Class</span>
-                                </div>
-                                <h2 className="text-2xl font-bold">{teacherInfo.advisory_class.class_code}</h2>
-                                <p className="text-white/80">{teacherInfo.advisory_class.class_name}</p>
-                                {teacherInfo.advisory_class.program && (
-                                    <p className="text-sm text-white/70 mt-1">{teacherInfo.advisory_class.program}</p>
-                                )}
-                            </div>
-                            <div className="bg-white/20 backdrop-blur-sm p-4 rounded-xl">
-                                <School className="h-10 w-10 text-white" />
+                                <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">My Assigned Classes</h1>
+                                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mt-0.5 sm:mt-1">View and manage all classes and subjects assigned to you</p>
                             </div>
                         </div>
-                        <div className="mt-4 pt-4 border-t border-white/20">
-                            <a 
-                                href={`/teacher/advisory-students/${teacherInfo.advisory_class.id}`}
-                                className="inline-flex items-center px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-medium transition-colors"
+                        <div className="flex space-x-2 sm:space-x-3">
+                            <button 
+                                onClick={fetchMyClasses}
+                                className="inline-flex items-center px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 rounded-lg sm:rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all shadow-sm"
                             >
-                                <Users className="h-4 w-4 mr-2" />
-                                View Students
-                            </a>
-                        </div>
-                    </div>
-                )}
-
-                {/* Stats Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <StatCard 
-                        title="Classes Assigned" 
-                        value={stats.totalClasses} 
-                        icon={BookOpen} 
-                        color={TEXT_COLOR_CLASS}
-                        subtitle="Different classes"
-                    />
-                    <StatCard 
-                        title="Subjects Teaching" 
-                        value={stats.totalSubjects} 
-                        icon={FileText} 
-                        color="text-blue-600"
-                        subtitle="Unique subjects assigned"
-                    />
-                    <StatCard 
-                        title="Current Semester" 
-                        value={stats.currentSemesterClasses} 
-                        icon={Calendar} 
-                        color="text-green-600"
-                        subtitle="Active this semester"
-                    />
-                </div>
-
-                {/* Search and Filters */}
-                <div className="bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-white">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div className="relative col-span-2">
-                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <BookOpen className="h-5 w-5 text-gray-400 dark:text-white" />
-                            </div>
-                            <input
-                                type="text"
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                className="pl-12 w-full px-4 py-3 border border-gray-200 dark:border-white dark:bg-gray-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent transition-all"
-                                placeholder="Search by class or subject name..."
-                            />
-                        </div>
-
-                        <select
-                            value={filterSemester}
-                            onChange={(e) => setFilterSemester(e.target.value)}
-                            className="px-4 py-3 border border-gray-200 dark:border-white dark:bg-gray-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent transition-all appearance-none bg-white dark:bg-gray-900"
-                        >
-                            <option value="">All Semesters</option>
-                            {uniqueSemesters.map((semester, idx) => (
-                                <option key={idx} value={semester}>{semester}</option>
-                            ))}
-                        </select>
-                    </div>
-                </div>
-
-
-                {/* My Classes Grid */}
-                {loading ? (
-                    <div className="flex items-center justify-center py-12">
-                        <RefreshCw className={`h-12 w-12 ${TEXT_COLOR_CLASS} animate-spin`} />
-                        <p className="ml-4 text-lg text-gray-600 dark:text-white">Loading your classes...</p>
-                    </div>
-                ) : classesWithSubjects.length === 0 && !teacherInfo?.advisory_class ? (
-                    <div className="bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg p-12 text-center border border-gray-100 dark:border-white">
-                        <GraduationCap className="h-16 w-16 text-gray-300 dark:text-white mx-auto mb-4" />
-                        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                            {searchTerm || filterSemester ? 'No classes match your filters' : 'No classes assigned yet'}
-                        </h3>
-                        <p className="text-gray-600 dark:text-white">
-                            {searchTerm || filterSemester 
-                                ? 'Try adjusting your search or filter criteria'
-                                : 'You will see your assigned classes here once they are set up'}
-                        </p>
-                        {(searchTerm || filterSemester) && (
-                            <button
-                                onClick={() => {
-                                    setSearchTerm('');
-                                    setFilterSemester('');
-                                    setFilterYear('');
-                                }}
-                                className={`mt-4 px-6 py-2 ${PRIMARY_COLOR_CLASS} text-white rounded-lg ${HOVER_COLOR_CLASS} transition-all font-medium`}
-                            >
-                                Clear Filters
+                                <RefreshCw className={`h-4 w-4 sm:h-5 sm:w-5 ${loading ? 'animate-spin' : ''} dark:text-gray-300`} />
                             </button>
-                        )}
+                        </div>
                     </div>
-                ) : filteredClasses.length > 0 && (
-                    <>
-                        <h2 className={`text-xl font-bold ${TEXT_COLOR_CLASS} mb-4`}>My Classes</h2>
-                        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
-                            <div className="overflow-x-auto">
-                                <table className="w-full">
-                                    <thead className={`${PRIMARY_COLOR_CLASS} text-white`}>
+
+                    {/* Stats Cards - Mobile: Centered with icon below, Desktop: Icon on right */}
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-6 mb-4 sm:mb-6">
+                        <div className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 lg:p-6 border border-gray-100 dark:border-gray-700">
+                            {/* Mobile: Centered layout */}
+                            <div className="flex flex-col items-center text-center md:hidden">
+                                <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-300 mb-1 sm:mb-2">Total</p>
+                                <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-2 sm:mb-3">{stats.totalClasses}</p>
+                                <div className={`${LIGHT_BG_CLASS} dark:bg-gray-700 p-2 sm:p-3 rounded-full`}>
+                                    <LayoutGrid className={`h-5 w-5 sm:h-6 sm:w-6 ${TEXT_COLOR_CLASS} dark:text-white`} />
+                                </div>
+                            </div>
+                            {/* Desktop: Original layout with icon on right */}
+                            <div className="hidden md:flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Total Classes</p>
+                                    <p className="text-3xl font-bold text-gray-900 dark:text-white">{stats.totalClasses}</p>
+                                </div>
+                                <div className={`${LIGHT_BG_CLASS} dark:bg-gray-700 p-3 rounded-xl`}>
+                                    <LayoutGrid className={`h-8 w-8 ${TEXT_COLOR_CLASS} dark:text-white`} />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 lg:p-6 border border-gray-100 dark:border-gray-700">
+                            {/* Mobile: Centered layout */}
+                            <div className="flex flex-col items-center text-center md:hidden">
+                                <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-300 mb-1 sm:mb-2">Subjects</p>
+                                <p className={`text-2xl sm:text-3xl font-bold ${TEXT_COLOR_CLASS} dark:text-white mb-2 sm:mb-3`}>{stats.totalSubjects}</p>
+                                <div className={`${LIGHT_BG_CLASS} dark:bg-gray-700 p-2 sm:p-3 rounded-full`}>
+                                    <BookOpen className={`h-5 w-5 sm:h-6 sm:w-6 ${TEXT_COLOR_CLASS} dark:text-white`} />
+                                </div>
+                            </div>
+                            {/* Desktop: Original layout with icon on right */}
+                            <div className="hidden md:flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Subjects Teaching</p>
+                                    <p className={`text-3xl font-bold ${TEXT_COLOR_CLASS} dark:text-white`}>{stats.totalSubjects}</p>
+                                </div>
+                                <div className={`${LIGHT_BG_CLASS} dark:bg-gray-700 p-3 rounded-xl`}>
+                                    <BookOpen className={`h-8 w-8 ${TEXT_COLOR_CLASS} dark:text-white`} />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 lg:p-6 border border-gray-100 dark:border-gray-700">
+                            {/* Mobile: Centered layout */}
+                            <div className="flex flex-col items-center text-center md:hidden">
+                                <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-300 mb-1 sm:mb-2">Current</p>
+                                <p className={`text-2xl sm:text-3xl font-bold ${TEXT_COLOR_CLASS} dark:text-white mb-2 sm:mb-3`}>{stats.currentSemesterClasses}</p>
+                                <div className={`${LIGHT_BG_CLASS} dark:bg-gray-700 p-2 sm:p-3 rounded-full`}>
+                                    <Calendar className={`h-5 w-5 sm:h-6 sm:w-6 ${TEXT_COLOR_CLASS} dark:text-white`} />
+                                </div>
+                            </div>
+                            {/* Desktop: Original layout with icon on right */}
+                            <div className="hidden md:flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Current Semester</p>
+                                    <p className={`text-3xl font-bold ${TEXT_COLOR_CLASS} dark:text-white`}>{stats.currentSemesterClasses}</p>
+                                </div>
+                                <div className={`${LIGHT_BG_CLASS} dark:bg-gray-700 p-3 rounded-xl`}>
+                                    <Calendar className={`h-8 w-8 ${TEXT_COLOR_CLASS} dark:text-white`} />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 lg:p-6 border border-gray-100 dark:border-gray-700">
+                            {/* Mobile: Centered layout */}
+                            <div className="flex flex-col items-center text-center md:hidden">
+                                <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-300 mb-1 sm:mb-2">Advisory</p>
+                                <p className={`text-2xl sm:text-3xl font-bold ${TEXT_COLOR_CLASS} dark:text-white mb-2 sm:mb-3`}>{stats.hasAdvisoryClass ? '1' : '0'}</p>
+                                <div className={`${LIGHT_BG_CLASS} dark:bg-gray-700 p-2 sm:p-3 rounded-full`}>
+                                    <UserCheck className={`h-5 w-5 sm:h-6 sm:w-6 ${TEXT_COLOR_CLASS} dark:text-white`} />
+                                </div>
+                            </div>
+                            {/* Desktop: Original layout with icon on right */}
+                            <div className="hidden md:flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Advisory Class</p>
+                                    <p className={`text-3xl font-bold ${TEXT_COLOR_CLASS} dark:text-white`}>{stats.hasAdvisoryClass ? '1' : '0'}</p>
+                                </div>
+                                <div className={`${LIGHT_BG_CLASS} dark:bg-gray-700 p-3 rounded-xl`}>
+                                    <UserCheck className={`h-8 w-8 ${TEXT_COLOR_CLASS} dark:text-white`} />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Filters - Compact on Mobile */}
+                    <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-lg p-3 sm:p-4 md:p-6 mb-4 sm:mb-6 border border-gray-100 dark:border-gray-700">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
+                            <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
+                                    <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 dark:text-gray-500" />
+                                </div>
+                                <input
+                                    type="text"
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    className={`pl-10 sm:pl-12 w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border border-gray-200 dark:border-gray-600 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent transition-all text-sm sm:text-base bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
+                                    placeholder="Search code, name, or program..."
+                                />
+                            </div>
+                            <div className="flex items-center">
+                                <Filter className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 dark:text-gray-500 mr-2 sm:mr-3" />
+                                <select
+                                    value={filterSemester}
+                                    onChange={(e) => setFilterSemester(e.target.value)}
+                                    className={`w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border border-gray-200 dark:border-gray-600 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent transition-all text-sm sm:text-base bg-white dark:bg-gray-700 text-gray-900 dark:text-white appearance-none`}
+                                >
+                                    <option value="">Filter by Semester...</option>
+                                    {uniqueSemesters.map((semester, idx) => (
+                                        <option key={idx} value={semester}>{semester}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className="flex items-center">
+                                <Filter className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 dark:text-gray-500 mr-2 sm:mr-3" />
+                                <select
+                                    value={filterYear}
+                                    onChange={(e) => setFilterYear(e.target.value)}
+                                    className={`w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 border border-gray-200 dark:border-gray-600 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent transition-all text-sm sm:text-base bg-white dark:bg-gray-700 text-gray-900 dark:text-white appearance-none`}
+                                >
+                                    <option value="">Filter by Academic Year...</option>
+                                    {uniqueYears.map((year, idx) => (
+                                        <option key={idx} value={year}>{year}</option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    {/* Table - Responsive: Mobile shows Class Code & Name + Actions, Desktop shows all columns */}
+                    <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700">
+                        <div className="overflow-x-auto">
+                            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                <thead className={`${PRIMARY_COLOR_CLASS}`}>
+                                    <tr>
+                                        <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">Class Code & Name</th>
+                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">Subject</th>
+                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">Program & Year</th>
+                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">Semester</th>
+                                        <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-right text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                    {loading ? (
                                         <tr>
-                                            <th className="px-6 py-4 text-left text-sm font-semibold">#</th>
-                                            <th className="px-6 py-4 text-left text-sm font-semibold">Class</th>
-                                            <th className="px-6 py-4 text-left text-sm font-semibold">Subject</th>
-                                            <th className="px-6 py-4 text-left text-sm font-semibold">Program</th>
-                                            <th className="px-6 py-4 text-left text-sm font-semibold">Semester</th>
-                                            <th className="px-6 py-4 text-center text-sm font-semibold">Actions</th>
+                                            <td colSpan={5} className="px-3 sm:px-6 py-8 sm:py-12 text-center">
+                                                <div className="flex flex-col items-center justify-center">
+                                                    <RefreshCw className={`h-6 w-6 sm:h-8 sm:w-8 ${TEXT_COLOR_CLASS} dark:text-white animate-spin mb-2`} />
+                                                    <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400">Loading classes...</p>
+                                                </div>
+                                            </td>
                                         </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-gray-100">
-                                        {filteredClasses.map((classSubject, index) => (
+                                    ) : filteredClasses.length === 0 ? (
+                                        <tr>
+                                            <td colSpan={5} className="px-3 sm:px-6 py-8 sm:py-12 text-center text-gray-500 dark:text-gray-400">
+                                                <div className="flex flex-col items-center">
+                                                    <LayoutGrid className="h-10 w-10 sm:h-12 sm:w-12 text-gray-300 dark:text-gray-600 mb-3 sm:mb-4" />
+                                                    <p className="text-base sm:text-lg font-medium dark:text-white">
+                                                        {searchTerm || filterSemester || filterYear ? 'No classes match your filters' : 'No classes assigned yet'}
+                                                    </p>
+                                                    <p className="text-xs sm:text-sm dark:text-gray-400">
+                                                        {searchTerm || filterSemester || filterYear 
+                                                            ? 'Try adjusting your search or filter criteria'
+                                                            : 'You will see your assigned classes here once they are set up'}
+                                                    </p>
+                                                    {(searchTerm || filterSemester || filterYear) && (
+                                                        <button
+                                                            onClick={() => {
+                                                                setSearchTerm('');
+                                                                setFilterSemester('');
+                                                                setFilterYear('');
+                                                            }}
+                                                            className={`mt-4 px-4 py-2 ${PRIMARY_COLOR_CLASS} text-white rounded-lg ${HOVER_COLOR_CLASS} transition-all font-medium text-sm`}
+                                                        >
+                                                            Clear Filters
+                                                        </button>
+                                                    )}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ) : (
+                                        filteredClasses.map((classSubject) => (
                                             <tr 
                                                 key={classSubject.id}
-                                                className="hover:bg-gray-50 transition-colors"
+                                                className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                                             >
-                                                <td className="px-6 py-4 text-sm text-gray-600">
-                                                    {index + 1}
-                                                </td>
-                                                <td className="px-6 py-4">
-                                                    <div>
-                                                        <p className={`text-sm font-semibold ${TEXT_COLOR_CLASS}`}>
-                                                            {classSubject.class?.class_code || 'N/A'}
-                                                        </p>
-                                                        <p className="text-xs text-gray-500">
-                                                            {classSubject.class?.class_name}
-                                                        </p>
+                                                <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
+                                                    <div className="text-xs sm:text-sm font-semibold text-gray-900 dark:text-white truncate">{classSubject.class?.class_code || 'N/A'}</div>
+                                                    <div className="text-xs text-gray-500 dark:text-gray-400 truncate">{classSubject.class?.class_name || 'Unknown Class'}</div>
+                                                    {/* Show additional info on mobile */}
+                                                    <div className="md:hidden mt-1 space-y-1">
+                                                        <div className="text-xs text-gray-600 dark:text-gray-300">
+                                                            <span className="font-medium">{classSubject.subject?.subject_name || 'N/A'}</span>
+                                                            <span className="text-gray-500 dark:text-gray-400"> ({classSubject.subject?.subject_code})</span>
+                                                        </div>
+                                                        <div className="text-xs text-gray-600 dark:text-gray-300">
+                                                            {classSubject.class?.program ? `${classSubject.class.program} - ${formatYearLevel(classSubject.class.year_level)}` : '-'}
+                                                        </div>
+                                                        <div className="text-xs text-gray-600 dark:text-gray-300">
+                                                            {classSubject.semester?.semester_name || '-'}
+                                                        </div>
                                                     </div>
                                                 </td>
-                                                <td className="px-6 py-4">
-                                                    <div>
-                                                        <p className="text-sm font-medium text-gray-900 dark:text-white">
-                                                            {classSubject.subject?.subject_name || 'N/A'}
-                                                        </p>
-                                                        <p className="text-xs text-gray-500 dark:text-gray-400">
-                                                            {classSubject.subject?.subject_code}
-                                                        </p>
-                                                    </div>
+                                                <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap">
+                                                    <div className="text-xs sm:text-sm font-semibold text-gray-900 dark:text-white">{classSubject.subject?.subject_name || 'N/A'}</div>
+                                                    <div className="text-xs text-gray-500 dark:text-gray-400">{classSubject.subject?.subject_code || ''}</div>
                                                 </td>
-                                                <td className="px-6 py-4">
-                                                    <span className="text-sm text-gray-600">
-                                                        {classSubject.class?.program ? `${classSubject.class.program} - ${formatYearLevel(classSubject.class.year_level)}` : '-'}
-                                                    </span>
+                                                <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap">
+                                                    <div className="text-xs sm:text-sm font-semibold text-gray-900 dark:text-white">{classSubject.class?.program || '-'}</div>
+                                                    <div className="text-xs text-gray-500 dark:text-gray-400">{classSubject.class?.year_level ? formatYearLevel(classSubject.class.year_level) : '-'}</div>
                                                 </td>
-                                                <td className="px-6 py-4">
-                                                    <span className="text-sm text-gray-600">
-                                                        {classSubject.semester?.semester_name || '-'}
-                                                    </span>
-                                                </td>
-                                                <td className="px-6 py-4">
-                                                    <div className="flex items-center justify-center gap-2">
-                                                        <a
-                                                            href={`/teacher/advisory-students/${classSubject.class?.id}`}
-                                                            className={`inline-flex items-center px-3 py-1.5 text-xs font-medium ${LIGHT_BG_CLASS} ${TEXT_COLOR_CLASS} rounded-lg hover:bg-[#003366]/20 transition-colors`}
-                                                        >
-                                                            <Users className="h-3.5 w-3.5 mr-1" />
-                                                            Students
-                                                        </a>
+                                                <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700 dark:text-white">{classSubject.semester?.semester_name || '-'}</td>
+                                                <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap text-right">
+                                                    <div className="flex justify-end space-x-1 sm:space-x-2">
                                                         <a
                                                             href={`/teacher/grades?class_subject_id=${classSubject.id}`}
-                                                            className={`inline-flex items-center px-3 py-1.5 text-xs font-medium bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition-colors`}
+                                                            className="p-1.5 sm:p-2 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/30 rounded-lg transition-colors"
+                                                            title="View Grades"
                                                         >
-                                                            <Award className="h-3.5 w-3.5 mr-1" />
-                                                            Grades
+                                                            <Award className="h-4 w-4 sm:h-5 sm:w-5" />
                                                         </a>
                                                         <a
                                                             href={`/teacher/attendance?class_subject_id=${classSubject.id}`}
-                                                            className={`inline-flex items-center px-3 py-1.5 text-xs font-medium bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-colors`}
+                                                            className={`p-1.5 sm:p-2 ${TEXT_COLOR_CLASS} dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-colors`}
+                                                            title="View Attendance"
                                                         >
-                                                            <ClipboardCheck className="h-3.5 w-3.5 mr-1" />
-                                                            Attendance
+                                                            <ClipboardCheck className="h-4 w-4 sm:h-5 sm:w-5" />
+                                                        </a>
+                                                        <a
+                                                            href={`/teacher/advisory-students/${classSubject.class?.id}`}
+                                                            className="p-1.5 sm:p-2 text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/30 rounded-lg transition-colors"
+                                                            title="View Students"
+                                                        >
+                                                            <Users className="h-4 w-4 sm:h-5 sm:w-5" />
                                                         </a>
                                                     </div>
                                                 </td>
                                             </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                            
-                            {/* Results count */}
-                            <div className="px-6 py-4 bg-gray-50 border-t border-gray-100">
-                                <p className="text-sm text-gray-600">
-                                    Showing {filteredClasses.length} of {classSubjects.length} classes
+                                        ))
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        {/* Results count */}
+                        {!loading && filteredClasses.length > 0 && (
+                            <div className="px-3 sm:px-6 py-3 sm:py-4 bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
+                                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
+                                    Showing {filteredClasses.length} of {classSubjects.length} class-subject assignments
                                 </p>
                             </div>
-                        </div>
-                    </>
-                )}
+                        )}
+                    </div>
+                </div>
 
-                {notification && (
-                    <Notification
-                        notification={notification}
-                        onClose={() => setNotification(null)}
-                    />
-                )}
+                    {notification && (
+                        <Notification
+                            notification={notification}
+                            onClose={() => setNotification(null)}
+                        />
+                    )}
+                </div>
             </div>
         </AppLayout>
     );
 };
 
+export default MyClasses;
 export default MyClasses;

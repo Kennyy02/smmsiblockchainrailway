@@ -29,6 +29,11 @@ return Application::configure(basePath: dirname(__DIR__))
 
         // Trust Railway proxy for HTTPS detection
         $middleware->trustProxies(at: '*');
+
+        // Register middleware aliases
+        $middleware->alias([
+            'checkRole' => \App\Http\Middleware\CheckRole::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
