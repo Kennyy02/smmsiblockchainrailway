@@ -1003,7 +1003,7 @@ const CourseYearSubjects: React.FC = () => {
                             <thead className={`${PRIMARY_COLOR_CLASS}`}>
                                 <tr>
                                     <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">Course Code</th>
-                                    <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">Course Name</th>
+                                    <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">Course Name</th>
                                     <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-center text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">Subjects</th>
                                     <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-center text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">Total Units</th>
                                     <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-center text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">Actions</th>
@@ -1036,18 +1036,18 @@ const CourseYearSubjects: React.FC = () => {
                                                 <span className={`inline-flex px-2 sm:px-3 py-0.5 sm:py-1 text-xs sm:text-sm font-bold rounded-lg ${LIGHT_BG_CLASS} ${TEXT_COLOR_CLASS} dark:bg-gray-700 dark:text-white dark:border-gray-600 border`}>
                                                     {course.course_code}
                                                 </span>
-                                            </td>
-                                            <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
-                                                <div className="text-xs sm:text-sm font-medium text-gray-900 dark:text-white truncate">{course.course_name}</div>
-                                                <div className="text-xs text-gray-500 dark:text-gray-400 truncate">{course.level}</div>
                                                 {/* Show additional info on mobile */}
-                                                <div className="md:hidden mt-1 space-y-1">
+                                                <div className="md:hidden mt-1">
                                                     <div className="flex items-center gap-2">
                                                         <span className="text-xs text-gray-600 dark:text-gray-300">{course.total_subjects} subjects</span>
                                                         <span className="text-xs text-gray-600 dark:text-gray-300">•</span>
                                                         <span className="text-xs text-gray-600 dark:text-gray-300">{course.total_units} units</span>
                                                     </div>
                                                 </div>
+                                            </td>
+                                            <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4">
+                                                <div className="text-xs sm:text-sm font-medium text-gray-900 dark:text-white truncate">{course.course_name}</div>
+                                                <div className="text-xs text-gray-500 dark:text-gray-400 truncate">{course.level}</div>
                                             </td>
                                             <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap text-center">
                                                 <span className="text-xs sm:text-sm font-semibold text-gray-900 dark:text-white">{course.total_subjects}</span>
