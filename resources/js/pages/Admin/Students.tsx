@@ -1328,7 +1328,7 @@ const Students: React.FC = () => {
                                                                 if (option.id) {
                                                                     exportStudents = exportStudents.filter(s => {
                                                                         const level = getEducationLevel(s.year_level);
-                                                                        return level.toLowerCase().replace(' ', '_') === option.id;
+                                                                        return level.toLowerCase().replace(/\s+/g, '_') === option.id;
                                                                     });
                                                                 }
                                                                 

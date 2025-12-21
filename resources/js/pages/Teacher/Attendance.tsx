@@ -331,16 +331,33 @@ const AttendanceModal: React.FC<{
 const StatCard: React.FC<{ title: string; value: string | number; icon: React.ElementType; color: string }> = ({ title, value, icon: Icon, color }) => {
     const displayValue = (typeof value === 'number' && isNaN(value)) ? 'N/A' : value;
     const bgColor = color.replace('text-', 'bg-').replace('-600', '-100').replace('[#003366]', '[#003366]/10');
+    const darkBgColor = color.includes('green') ? 'dark:bg-green-900/30' : 
+                        color.includes('red') ? 'dark:bg-red-900/30' : 
+                        color.includes('blue') ? 'dark:bg-blue-900/30' : 
+                        'dark:bg-gray-700';
+    const darkColor = color.includes('green') ? 'dark:text-green-400' : 
+                     color.includes('red') ? 'dark:text-red-400' : 
+                     color.includes('blue') ? 'dark:text-blue-400' : 
+                     'dark:text-white';
     
     return (
-        <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-            <div className="flex items-center justify-between">
-                <div>
-                    <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">{title}</p>
-                    <p className={`text-3xl font-bold ${color}`}>{displayValue}</p>
+        <div className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 lg:p-6 border border-gray-100 dark:border-gray-700">
+            {/* Mobile: Centered layout */}
+            <div className="flex flex-col items-center text-center md:hidden">
+                <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-white mb-1 sm:mb-2">{title}</p>
+                <p className={`text-2xl sm:text-3xl font-bold ${color} ${darkColor} mb-2 sm:mb-3`}>{displayValue}</p>
+                <div className={`${bgColor} ${darkBgColor} p-2 sm:p-3 rounded-full`}>
+                    <Icon className={`w-5 h-5 sm:w-6 sm:h-6 ${color} ${darkColor}`} />
                 </div>
-                <div className={`${bgColor} p-3 rounded-xl`}>
-                    <Icon className={`h-8 w-8 ${color}`} />
+            </div>
+            {/* Desktop: Original layout with icon on right */}
+            <div className="hidden md:flex items-center justify-between">
+                <div>
+                    <p className="text-sm font-medium text-gray-600 dark:text-white mb-1">{title}</p>
+                    <p className={`text-3xl font-bold ${color} ${darkColor}`}>{displayValue}</p>
+                </div>
+                <div className={`${bgColor} ${darkBgColor} p-3 rounded-xl`}>
+                    <Icon className={`w-6 h-6 ${color} ${darkColor}`} />
                 </div>
             </div>
         </div>
@@ -1056,7 +1073,7 @@ const AttendancePage: React.FC = () => {
                 </div>
 
                 {stats && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+                    <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-6">
                         <StatCard 
                             title="Total Students" 
                             value={filters.class_subject_id ? classStudents.length : 0} 
@@ -1084,7 +1101,7 @@ const AttendancePage: React.FC = () => {
                     </div>
                 )}
 
-                <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 border border-gray-100">
+                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-4 sm:p-6 border border-gray-100 dark:border-gray-700">
                     {!selectedClassId ? (
                         // Class Selection View
                         <div>
@@ -1104,7 +1121,7 @@ const AttendancePage: React.FC = () => {
                                         <button
                                             key={classItem.id}
                                             onClick={() => setSelectedClassId(classItem.id)}
-                                            className="p-4 sm:p-6 bg-white border-2 border-gray-200 rounded-xl hover:border-[#003366] hover:shadow-lg transition-all text-left cursor-pointer group"
+                                            className="p-4 sm:p-6 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-xl hover:border-[#003366] dark:hover:border-blue-500 hover:shadow-lg transition-all text-left cursor-pointer group"
                                         >
                                             <div className="flex items-center justify-between mb-2">
                                                 <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white group-hover:text-[#003366] dark:group-hover:text-white break-words">

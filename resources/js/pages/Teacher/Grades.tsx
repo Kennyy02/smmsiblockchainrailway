@@ -99,16 +99,35 @@ const Notification: React.FC<{ notification: Notification; onClose: () => void }
 const StatCard: React.FC<{ title: string; value: string | number; icon: React.ElementType; color: string }> = ({ title, value, icon: Icon, color }) => {
     const displayValue = (typeof value === 'number' && isNaN(value)) ? 'N/A' : value;
     const bgColor = color.replace('text-', 'bg-').replace('-600', '-100').replace('[#003366]', '[#003366]/10');
+    const darkBgColor = color.includes('green') ? 'dark:bg-green-900/30' : 
+                        color.includes('red') ? 'dark:bg-red-900/30' : 
+                        color.includes('blue') ? 'dark:bg-blue-900/30' : 
+                        color.includes('indigo') ? 'dark:bg-indigo-900/30' : 
+                        'dark:bg-gray-700';
+    const darkColor = color.includes('green') ? 'dark:text-green-400' : 
+                     color.includes('red') ? 'dark:text-red-400' : 
+                     color.includes('blue') ? 'dark:text-blue-400' : 
+                     color.includes('indigo') ? 'dark:text-indigo-400' : 
+                     'dark:text-white';
     
     return (
-        <div className="bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-white">
-            <div className="flex items-center justify-between">
-                <div>
-                    <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">{title}</p>
-                    <p className={`text-3xl font-bold ${color}`}>{displayValue}</p>
+        <div className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4 md:p-5 lg:p-6 border border-gray-100 dark:border-gray-700">
+            {/* Mobile: Centered layout */}
+            <div className="flex flex-col items-center text-center md:hidden">
+                <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-white mb-1 sm:mb-2">{title}</p>
+                <p className={`text-2xl sm:text-3xl font-bold ${color} ${darkColor} mb-2 sm:mb-3`}>{displayValue}</p>
+                <div className={`${bgColor} ${darkBgColor} p-2 sm:p-3 rounded-full`}>
+                    <Icon className={`w-5 h-5 sm:w-6 sm:h-6 ${color} ${darkColor}`} />
                 </div>
-                <div className={`${bgColor} p-3 rounded-xl`}>
-                    <Icon className={`h-8 w-8 ${color}`} />
+            </div>
+            {/* Desktop: Original layout with icon on right */}
+            <div className="hidden md:flex items-center justify-between">
+                <div>
+                    <p className="text-sm font-medium text-gray-600 dark:text-white mb-1">{title}</p>
+                    <p className={`text-3xl font-bold ${color} ${darkColor}`}>{displayValue}</p>
+                </div>
+                <div className={`${bgColor} ${darkBgColor} p-3 rounded-xl`}>
+                    <Icon className={`w-6 h-6 ${color} ${darkColor}`} />
                 </div>
             </div>
         </div>
@@ -1483,20 +1502,12 @@ const fetchDropdownLists = async () => {
                             <RefreshCw className="h-4 w-4 mr-2" />
                             Refresh
                         </button>
-                        <button
-                            onClick={handleAdd}
-                            className={`flex items-center justify-center px-4 sm:px-6 py-2 sm:py-3 ${PRIMARY_COLOR_CLASS} text-white rounded-xl ${HOVER_COLOR_CLASS} transition-all shadow-lg font-medium text-sm sm:text-base`}
-                        >
-                            <Plus className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
-                            <span className="hidden sm:inline">Add Grade</span>
-                            <span className="sm:hidden">Add</span>
-                        </button>
                     </div>
                 </div>
 
                 {/* Stats Cards */}
                 {stats && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 sm:gap-6">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3 md:gap-4 lg:gap-6">
                         <StatCard 
                             title="Total Grades" 
                             value={stats.total_grades} 
@@ -1731,9 +1742,9 @@ const fetchDropdownLists = async () => {
                                                 No students found matching the current filters.
                                             </div>
                                         ) : (
-                                            <div className="overflow-x-auto -mx-4 sm:mx-0">
-                                            <div className="bg-white dark:bg-gray-800 dark:border-white rounded-xl shadow-sm border border-gray-200 dark:border-white overflow-hidden min-w-full">
-                                                <table className="min-w-full divide-y divide-gray-200 dark:divide-white">
+                                            <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
+                                            <div className="bg-white dark:bg-gray-800 dark:border-white rounded-xl shadow-sm border border-gray-200 dark:border-white overflow-hidden">
+                                                <table className="min-w-full divide-y divide-gray-200 dark:divide-white" style={{ minWidth: '600px' }}>
                                                     <thead className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-900 dark:border-white">
                                                         <tr>
                                                             <th className="px-2 sm:px-4 py-2 sm:py-3 text-left text-[10px] sm:text-xs font-bold text-gray-700 dark:text-white uppercase tracking-wider sticky left-0 bg-gray-50 dark:bg-gray-900 z-10 border-r border-gray-200 dark:border-white min-w-[120px]">
