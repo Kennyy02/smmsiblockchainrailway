@@ -125,7 +125,7 @@ const StatCard: React.FC<{ title: string; value: string | number; icon: React.El
             {/* Mobile: Centered layout */}
             <div className="flex flex-col items-center text-center md:hidden">
                 <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-white mb-1 sm:mb-2">{title}</p>
-                <p className={`text-2xl sm:text-3xl font-bold ${color} dark:text-white mb-2 sm:mb-3`}>{displayValue}</p>
+                <p className={`text-2xl sm:text-3xl font-bold ${color} mb-2 sm:mb-3`}>{displayValue}</p>
                 <div className={`${bgColor} dark:bg-gray-700 p-2 sm:p-3 rounded-full`}>
                     <Icon className={`h-5 w-5 sm:h-6 sm:w-6 ${color} dark:text-white`} />
                 </div>
@@ -134,7 +134,7 @@ const StatCard: React.FC<{ title: string; value: string | number; icon: React.El
             <div className="hidden md:flex items-center justify-between">
                 <div>
                     <p className="text-sm font-medium text-gray-600 dark:text-white mb-1">{title}</p>
-                    <p className={`text-3xl font-bold ${color} dark:text-white`}>{displayValue}</p>
+                    <p className={`text-3xl font-bold ${color}`}>{displayValue}</p>
                 </div>
                 <div className={`${bgColor} dark:bg-gray-700 p-3 rounded-xl`}>
                     <Icon className={`h-8 w-8 ${color} dark:text-white`} />
