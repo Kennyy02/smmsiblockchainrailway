@@ -231,6 +231,7 @@ const TeacherCourseMaterials: React.FC = () => {
     const [selectedMaterial, setSelectedMaterial] = useState<CourseMaterial | null>(null);
     const [notification, setNotification] = useState<NotificationData | null>(null);
     const [validationErrors, setValidationErrors] = useState<Record<string, string[]>>({});
+    const [downloadingId, setDownloadingId] = useState<number | null>(null);
     
     const [filters, setFilters] = useState({
         subject_id: '',
@@ -308,13 +309,16 @@ const TeacherCourseMaterials: React.FC = () => {
     };
 
     const handleDownload = async (material: CourseMaterial) => {
+        setDownloadingId(material.id);
         try {
             const extension = material.file_path?.split('.').pop() || '';
             const filename = extension ? `${material.title}.${extension}` : material.title;
             await adminCourseMaterialService.downloadMaterial(material.id, filename);
-            setNotification({ type: 'success', message: 'Download started' });
+            setNotification({ type: 'success', message: `Downloading "${material.title}"...` });
         } catch (error: any) {
-            setNotification({ type: 'error', message: error.message || 'Download failed' });
+            setNotification({ type: 'error', message: error.message || 'Download failed. Please try again.' });
+        } finally {
+            setDownloadingId(null);
         }
     };
 
@@ -436,8 +440,17 @@ const TeacherCourseMaterials: React.FC = () => {
                                                 <td className="px-6 py-4 text-sm text-gray-600 dark:text-white">{new Date(material.created_at).toLocaleDateString()}</td>
                                                 <td className="px-6 py-4 text-right">
                                                     <div className="flex justify-end space-x-2">
-                                                        <button onClick={() => handleDownload(material)} className="p-2 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/30 rounded-lg" title="Download">
-                                                            <Download className="h-5 w-5" />
+                                                        <button 
+                                                            onClick={() => handleDownload(material)} 
+                                                            disabled={downloadingId === material.id}
+                                                            className={`p-2 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/30 rounded-lg transition-colors ${downloadingId === material.id ? 'opacity-50 cursor-not-allowed' : ''}`} 
+                                                            title="Download Material"
+                                                        >
+                                                            {downloadingId === material.id ? (
+                                                                <RefreshCw className="h-5 w-5 animate-spin" />
+                                                            ) : (
+                                                                <Download className="h-5 w-5" />
+                                                            )}
                                                         </button>
                                                         <button onClick={() => handleEdit(material)} className={`p-2 ${TEXT_COLOR_CLASS} dark:text-white ${LIGHT_HOVER_CLASS} dark:hover:bg-gray-700 rounded-lg`} title="Edit">
                                                             <Edit className="h-5 w-5" />
