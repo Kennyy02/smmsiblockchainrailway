@@ -238,7 +238,7 @@ const MySubjects: React.FC = () => {
                             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0">
                                 <div className="flex-1 min-w-0">
                                     <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-white mb-0.5 sm:mb-1">Total Units</p>
-                                    <p className="text-xl sm:text-2xl md:text-3xl font-bold text-blue-600 dark:text-white leading-tight">{totalUnits}</p>
+                                    <p className="text-xl sm:text-2xl md:text-3xl font-bold text-blue-600 dark:text-white leading-tight">{totalUnits.toFixed(2)}</p>
                                     <p className="text-xs text-gray-500 dark:text-white mt-0.5 sm:mt-1">Combined teaching load</p>
                                 </div>
                                 <div className="bg-blue-100 dark:bg-gray-700 p-2 sm:p-3 rounded-lg sm:rounded-xl flex-shrink-0">
