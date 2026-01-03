@@ -50,7 +50,7 @@ const Notification: React.FC<{ notification: Notification; onClose: () => void }
 
     const bgColor = notification.type === 'success' 
         ? PRIMARY_COLOR_CLASS
-        : 'bg-gradient-to-r from-red-500 to-red-600';
+        : 'bg-gradient-to-r from-green-500 to-green-600';
 
     return (
         <div className="fixed top-4 right-4 z-50 animate-in slide-in-from-right-full duration-300">
