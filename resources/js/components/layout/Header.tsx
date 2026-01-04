@@ -1,7 +1,24 @@
 import React, { useState } from 'react';
-import { Home, Menu, X, Info, HelpCircle, Phone, Anchor } from 'lucide-react';
+import { Home, Menu, X, Info, HelpCircle, Phone, Anchor, LogOut, LayoutDashboard } from 'lucide-react';
+import { usePage, router } from '@inertiajs/react';
+import { route } from 'ziggy-js';
+
+interface AuthUser {
+    id: number;
+    name: string;
+    email: string;
+    role: string;
+}
+
+interface PageProps {
+    auth: {
+        user: AuthUser | null;
+    };
+}
 
 const Header = () => {
+    const { auth } = usePage<PageProps>().props;
+    const user = auth?.user;
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     const toggleMobileMenu = () => {
@@ -18,6 +35,27 @@ const Header = () => {
             element.scrollIntoView({ behavior: 'smooth' });
             closeMobileMenu();
         }
+    };
+
+    const getDashboardRoute = () => {
+        if (!user) return '/login';
+        switch (user.role) {
+            case 'admin':
+                return route('admin.dashboard');
+            case 'student':
+                return route('student.dashboard');
+            case 'teacher':
+                return route('teacher.dashboard');
+            case 'parent':
+                return route('parent.dashboard');
+            default:
+                return '/login';
+        }
+    };
+
+    const handleLogout = (e: React.MouseEvent) => {
+        e.preventDefault();
+        router.post(route('logout'));
     };
 
     return (
@@ -90,14 +128,31 @@ const Header = () => {
                         <div className="flex items-center space-x-2 sm:space-x-3">
                             {/* Desktop Auth Buttons */}
                             <div className="hidden md:flex items-center space-x-2 lg:space-x-3">
-                                <a
-                                    href="/login"
-                                    className="px-3 sm:px-4 lg:px-5 py-2 rounded-full bg-blue-900 text-white font-medium hover:bg-blue-800 transition-all duration-300 shadow-sm text-xs sm:text-sm lg:text-base whitespace-nowrap"
-                                >
-                                    Login
-                                </a>
-
-                              
+                                {user ? (
+                                    <>
+                                        <a
+                                            href={getDashboardRoute()}
+                                            className="px-3 sm:px-4 lg:px-5 py-2 rounded-full bg-blue-900 text-white font-medium hover:bg-blue-800 transition-all duration-300 shadow-sm text-xs sm:text-sm lg:text-base whitespace-nowrap flex items-center space-x-1"
+                                        >
+                                            <LayoutDashboard size={16} />
+                                            <span>Dashboard</span>
+                                        </a>
+                                        <button
+                                            onClick={handleLogout}
+                                            className="px-3 sm:px-4 lg:px-5 py-2 rounded-full bg-gray-600 text-white font-medium hover:bg-gray-700 transition-all duration-300 shadow-sm text-xs sm:text-sm lg:text-base whitespace-nowrap flex items-center space-x-1"
+                                        >
+                                            <LogOut size={16} />
+                                            <span>Logout</span>
+                                        </button>
+                                    </>
+                                ) : (
+                                    <a
+                                        href="/login"
+                                        className="px-3 sm:px-4 lg:px-5 py-2 rounded-full bg-blue-900 text-white font-medium hover:bg-blue-800 transition-all duration-300 shadow-sm text-xs sm:text-sm lg:text-base whitespace-nowrap"
+                                    >
+                                        Login
+                                    </a>
+                                )}
                             </div>
 
                             {/* Mobile Menu Button */}
@@ -180,14 +235,33 @@ const Header = () => {
                             {/* Divider */}
                             <div className="border-t border-gray-200 my-4"></div>
 
-                            {/* Mobile Auth Button */}
+                            {/* Mobile Auth Buttons */}
                             <div className="space-y-3 pt-2">
-                                <a
-                                    href="/login"
-                                    className="block w-full px-6 py-4 text-center rounded-xl bg-blue-900 text-white font-semibold hover:bg-blue-800 transition-all duration-300 shadow-lg text-base touch-manipulation"
-                                >
-                                    Login to System
-                                </a>
+                                {user ? (
+                                    <>
+                                        <a
+                                            href={getDashboardRoute()}
+                                            className="block w-full px-6 py-4 text-center rounded-xl bg-blue-900 text-white font-semibold hover:bg-blue-800 transition-all duration-300 shadow-lg text-base touch-manipulation flex items-center justify-center space-x-2"
+                                        >
+                                            <LayoutDashboard size={20} />
+                                            <span>Dashboard</span>
+                                        </a>
+                                        <button
+                                            onClick={handleLogout}
+                                            className="block w-full px-6 py-4 text-center rounded-xl bg-gray-600 text-white font-semibold hover:bg-gray-700 transition-all duration-300 shadow-lg text-base touch-manipulation flex items-center justify-center space-x-2"
+                                        >
+                                            <LogOut size={20} />
+                                            <span>Logout</span>
+                                        </button>
+                                    </>
+                                ) : (
+                                    <a
+                                        href="/login"
+                                        className="block w-full px-6 py-4 text-center rounded-xl bg-blue-900 text-white font-semibold hover:bg-blue-800 transition-all duration-300 shadow-lg text-base touch-manipulation"
+                                    >
+                                        Login to System
+                                    </a>
+                                )}
                             </div>
 
                             {/* Mobile Footer Info */}

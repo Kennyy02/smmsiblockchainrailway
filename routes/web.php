@@ -5,7 +5,23 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 // ==================== PUBLIC ROUTES ====================
-Route::get('/', function () {
+Route::get('/', function (Request $request) {
+    // Redirect authenticated users to their dashboard
+    if ($request->user()) {
+        $user = $request->user();
+        switch ($user->role) {
+            case 'admin':
+                return redirect()->route('admin.dashboard');
+            case 'student':
+                return redirect()->route('student.dashboard');
+            case 'teacher':
+                return redirect()->route('teacher.dashboard');
+            case 'parent':
+                return redirect()->route('parent.dashboard');
+            default:
+                return redirect()->route('login');
+        }
+    }
     return Inertia::render('welcome');
 })->name('home');
 
