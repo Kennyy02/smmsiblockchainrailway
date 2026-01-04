@@ -44,13 +44,18 @@ Railway databases are private by default. You have two options:
 3. Connect your GitHub repository
 4. Select your repository
 
-### 2.2 Configure Build Settings
+### 2.2 ⚠️ CRITICAL: Select PHP Runtime
 
-**Important:** Make sure Render detects this as a PHP application, not Node.js!
+**IMPORTANT:** When creating the service, Render will ask you to select the runtime/environment. You MUST select **"PHP"** (NOT Node.js)!
 
-Render will detect the `render.yaml` file automatically. If you need to configure manually:
+**Why this matters:**
+- If you select Node.js, Composer won't be available → Build will fail
+- PHP runtime includes both PHP/Composer AND Node.js/npm (which you need for building assets)
+- Node.js runtime only includes Node.js, not PHP
 
-**Runtime/Environment:** Select **"PHP"** (not Node.js!)
+### 2.3 Configure Build Settings
+
+After selecting PHP runtime, Render may auto-detect settings from `render.yaml`. If not, configure manually:
 
 **Build Command:**
 ```bash
@@ -62,7 +67,7 @@ composer install --no-dev --optimize-autoloader --no-scripts && npm install && n
 php artisan migrate --force && php artisan storage:link && php -S 0.0.0.0:$PORT -t public
 ```
 
-**Note:** The `render.yaml` file already specifies `runtime: php`, which should set this correctly. If Render still detects Node.js, manually select "PHP" in the dashboard.
+**Note:** The `render.yaml` file exists and specifies `runtime: php`, but if the service was created before this file existed, you may need to delete and recreate the service for it to be recognized.
 
 ### 2.3 Configure Environment Variables
 

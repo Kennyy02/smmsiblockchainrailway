@@ -1,44 +1,55 @@
 # Render Deployment Troubleshooting
 
-## Issue: "composer: command not found"
+## Issue: "composer: command not found" - Render Detecting Node.js Instead of PHP
 
 ### Problem
-Render is detecting your app as Node.js instead of PHP, so Composer isn't available.
+Render is detecting your app as Node.js instead of PHP, so Composer isn't available. The logs show "Using Node.js version..." instead of PHP.
 
-### Solution 1: Use render.yaml (Recommended)
+### ⚠️ IMPORTANT: render.yaml May Not Work for Existing Services
 
-Make sure your `render.yaml` file is in the root directory and uses `runtime: php`:
+If you created the service BEFORE adding `render.yaml`, Render won't automatically use it. You need to either:
+1. Manually change runtime in dashboard, OR
+2. Delete and recreate the service
 
-```yaml
-services:
-  - type: web
-    name: grading-management-system
-    runtime: php  # This tells Render to use PHP environment
-    plan: free
-    # ... rest of config
-```
+### Solution 1: Delete and Recreate Service (RECOMMENDED)
 
-### Solution 2: Manual Configuration in Render Dashboard
+**This is the most reliable method:**
 
-If `render.yaml` isn't being detected:
+1. **In Render Dashboard:**
+   - Go to your service
+   - Click "Settings" → Scroll down → Click "Delete Service"
+   - Confirm deletion
+
+2. **Create New Service:**
+   - Click "New +" → "Web Service"
+   - Connect your GitHub repository
+   - **IMPORTANT:** When you see "Environment" or "Runtime" selection, choose **"PHP"** (NOT Node.js!)
+   - Render should automatically detect `render.yaml` if it exists
+
+3. **If render.yaml is detected:**
+   - Build and start commands will be auto-filled from `render.yaml`
+   - Just set your environment variables
+
+4. **If render.yaml is NOT detected (or you want to set manually):**
+   - **Build Command:**
+     ```bash
+     composer install --no-dev --optimize-autoloader --no-scripts && npm install && npm run build && php artisan config:clear && php artisan cache:clear
+     ```
+   - **Start Command:**
+     ```bash
+     php artisan migrate --force && php artisan storage:link && php -S 0.0.0.0:$PORT -t public
+     ```
+
+### Solution 2: Manual Runtime Change (If Available)
+
+**Note:** This option may not be available in all Render dashboards. If you don't see it, use Solution 1.
 
 1. Go to your Render service dashboard
 2. Click "Settings"
-3. Scroll down to "Environment"
-4. Look for "Runtime" or "Environment" setting
-5. Change it from "Node" to "PHP"
-6. Save changes
-7. Trigger a new deployment
-
-### Solution 3: Delete and Recreate Service
-
-If the above doesn't work:
-
-1. Delete the current service in Render
-2. Create a new Web Service
-3. When prompted for environment/runtime, select **"PHP"** (not Node.js)
-4. Connect your GitHub repository
-5. Render should detect PHP and make Composer available
+3. Look for "Environment" or "Runtime" dropdown
+4. Change from "Node" to "PHP"
+5. Save changes
+6. Click "Manual Deploy" → "Deploy latest commit"
 
 ### Verification
 
