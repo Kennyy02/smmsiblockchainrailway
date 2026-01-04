@@ -84,6 +84,8 @@ EXPOSE 8080
 # Create start script
 RUN echo '#!/bin/sh' > /start.sh && \
     echo 'set -e' >> /start.sh && \
+    echo 'php artisan config:clear || true' >> /start.sh && \
+    echo 'php artisan cache:clear || true' >> /start.sh && \
     echo 'php artisan migrate --force || true' >> /start.sh && \
     echo 'php artisan storage:link || true' >> /start.sh && \
     echo 'PORT=${PORT:-8080}' >> /start.sh && \
