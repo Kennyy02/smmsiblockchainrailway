@@ -193,7 +193,8 @@ const CertificateTemplate: React.FC<CertificateTemplateProps> = ({
                 }
                 
                 .certificate-footer {
-                    margin-top: 60px;
+                    margin-top: 50px;
+                    margin-bottom: 20px;
                     display: flex;
                     justify-content: space-between;
                     align-items: flex-end;
@@ -225,7 +226,9 @@ const CertificateTemplate: React.FC<CertificateTemplateProps> = ({
                 .certificate-number {
                     text-align: center;
                     margin-top: 40px;
+                    margin-bottom: 20px;
                     padding-top: 30px;
+                    padding-bottom: 20px;
                     border-top: 1px solid #e2e8f0;
                 }
                 
