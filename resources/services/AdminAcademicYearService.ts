@@ -95,13 +95,19 @@ class AdminAcademicYearService {
     private async refreshCsrfToken(): Promise<string> {
         try {
             console.log('Fetching fresh CSRF token from /api/csrf-token...');
-            const response = await fetch(`${this.baseURL}/csrf-token`, {
+            // Ensure URL is absolute for cross-origin requests
+            let csrfUrl = `${this.baseURL}/csrf-token`;
+            if (!csrfUrl.startsWith('http://') && !csrfUrl.startsWith('https://')) {
+                csrfUrl = window.location.origin + (csrfUrl.startsWith('/') ? csrfUrl : '/' + csrfUrl);
+            }
+            
+            const response = await fetch(csrfUrl, {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
                     'X-Requested-With': 'XMLHttpRequest',
                 },
-                credentials: 'same-origin',
+                credentials: 'include', // Changed to 'include' for cross-origin support
             });
             
             if (!response.ok) {
@@ -130,6 +136,13 @@ class AdminAcademicYearService {
     private async request<T>(url: string, options: RequestInit = {}, retryOn419: boolean = true): Promise<ApiResponse<T>> {
         let csrfToken = this.getCsrfToken();
         
+        // Ensure URL is absolute - always use full URL to avoid redirects
+        let absoluteUrl = url;
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+            // Use window.location.origin to create absolute URL
+            absoluteUrl = window.location.origin + (url.startsWith('/') ? url : '/' + url);
+        }
+        
         const defaultOptions: RequestInit = {
             headers: {
                 'Content-Type': 'application/json',
@@ -138,11 +151,21 @@ class AdminAcademicYearService {
                 'X-Requested-With': 'XMLHttpRequest',
                 ...options.headers,
             },
-            credentials: 'same-origin',
+            credentials: 'include', // Changed to 'include' for cross-origin cookie support
+        };
+
+        // Merge options carefully - ensure headers are merged correctly
+        const mergedOptions: RequestInit = {
+            ...defaultOptions,
+            ...options,
+            headers: {
+                ...defaultOptions.headers,
+                ...(options.headers || {}),
+            }
         };
 
         try {
-            const response = await fetch(url, { ...defaultOptions, ...options });
+            const response = await fetch(absoluteUrl, mergedOptions);
             const contentType = response.headers.get('content-type');
             let data;
             
@@ -178,13 +201,15 @@ class AdminAcademicYearService {
                 throw new Error('Unexpected response format from server');
             }
 
+            // Handle 401 Unauthorized - check if it's a real auth failure
+            if (response.status === 401) {
+                // Don't immediately redirect - let the component handle the error
+                // This prevents automatic logout on temporary network issues
+                console.warn('⚠️ Authentication error (401). This may be a temporary issue.');
+                throw new Error('Unauthenticated. Please check your login status.');
+            }
+
             if (!response.ok) {
-                // Handle 401 Unauthorized - redirect to login
-                if (response.status === 401) {
-                    console.warn('Unauthorized request, redirecting to login...');
-                    window.location.href = '/login';
-                    throw new Error('Unauthorized. Please log in again.');
-                }
                 
                 // Handle 419 again (in case retryOn419 was false)
                 if (response.status === 419) {

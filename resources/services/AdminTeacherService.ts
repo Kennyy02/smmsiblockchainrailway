@@ -286,14 +286,12 @@ class AdminTeacherService {
                 throw new Error('CSRF token mismatch. Your session may have expired. Please refresh the page (F5) and try again.');
             }
             
-            // Handle 401 Unauthorized - redirect to login
+            // Handle 401 Unauthorized - check if it's a real auth failure
             if (response.status === 401) {
-                console.error('❌ Authentication failed. Redirecting to login...');
-                // Redirect to login page
-                if (typeof window !== 'undefined') {
-                    window.location.href = '/login';
-                }
-                throw new Error('Unauthenticated. Please log in again.');
+                // Don't immediately redirect - let the component handle the error
+                // This prevents automatic logout on temporary network issues
+                console.warn('⚠️ Authentication error (401). This may be a temporary issue.');
+                throw new Error('Unauthenticated. Please check your login status.');
             }
 
             if (!response.ok) {

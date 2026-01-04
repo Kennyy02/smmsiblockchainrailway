@@ -163,13 +163,19 @@ class AdminGradeService {
 
     private async refreshCsrfToken(): Promise<string> {
         try {
-            const response = await fetch(`${this.baseURL}/csrf-token`, {
+            // Ensure URL is absolute for cross-origin requests
+            let csrfUrl = `${this.baseURL}/csrf-token`;
+            if (!csrfUrl.startsWith('http://') && !csrfUrl.startsWith('https://')) {
+                csrfUrl = window.location.origin + (csrfUrl.startsWith('/') ? csrfUrl : '/' + csrfUrl);
+            }
+            
+            const response = await fetch(csrfUrl, {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
                     'X-Requested-With': 'XMLHttpRequest',
                 },
-                credentials: 'same-origin',
+                credentials: 'include', // Changed to 'include' for cross-origin support
             });
             if (!response.ok) {
                 throw new Error('Failed to fetch new CSRF token');
@@ -192,6 +198,13 @@ class AdminGradeService {
     private async request<T>(url: string, options: RequestInit = {}, retryOn419: boolean = true): Promise<ApiResponse<T>> {
         let csrfToken = this.getCsrfToken();
         
+        // Ensure URL is absolute - always use full URL to avoid redirects
+        let absoluteUrl = url;
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+            // Use window.location.origin to create absolute URL
+            absoluteUrl = window.location.origin + (url.startsWith('/') ? url : '/' + url);
+        }
+        
         const makeRequest = async (token: string): Promise<Response> => {
             const defaultOptions: RequestInit = {
                 headers: {
@@ -201,10 +214,20 @@ class AdminGradeService {
                     'X-Requested-With': 'XMLHttpRequest',
                     ...options.headers,
                 },
-                credentials: 'same-origin',
+                credentials: 'include', // Changed to 'include' for cross-origin cookie support
             };
 
-            return fetch(url, { ...defaultOptions, ...options });
+            // Merge options carefully - ensure headers are merged correctly
+            const mergedOptions: RequestInit = {
+                ...defaultOptions,
+                ...options,
+                headers: {
+                    ...defaultOptions.headers,
+                    ...(options.headers || {}),
+                }
+            };
+
+            return fetch(absoluteUrl, mergedOptions);
         };
 
         try {
@@ -238,6 +261,14 @@ class AdminGradeService {
                     console.error('CSRF token mismatch. Could not refresh token. Please refresh the page.');
                     throw new Error('Session expired. Please refresh the page and try again.');
                 }
+            }
+
+            // Handle 401 Unauthorized - check if it's a real auth failure
+            if (response.status === 401) {
+                // Don't immediately redirect - let the component handle the error
+                // This prevents automatic logout on temporary network issues
+                console.warn('⚠️ Authentication error (401). This may be a temporary issue.');
+                throw new Error('Unauthenticated. Please check your login status.');
             }
 
             if (!response.ok) {

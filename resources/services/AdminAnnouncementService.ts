@@ -224,6 +224,14 @@ class AdminAnnouncementService {
                 throw new Error('CSRF token mismatch. Your session may have expired. Please refresh the page (F5) and try again.');
             }
 
+            // Handle 401 Unauthorized - check if it's a real auth failure
+            if (response.status === 401) {
+                // Don't immediately redirect - let the component handle the error
+                // This prevents automatic logout on temporary network issues
+                console.warn('⚠️ Authentication error (401). This may be a temporary issue.');
+                throw new Error('Unauthenticated. Please check your login status.');
+            }
+
             if (!response.ok) {
                 if (data.errors) {
                     const errorMessages = Object.entries(data.errors)
