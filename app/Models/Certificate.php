@@ -139,7 +139,6 @@ class Certificate extends Model
             'student_id' => $this->student_id,
             'title' => $this->title,
             'date_issued' => $this->date_issued->format('Y-m-d'),
-            'timestamp' => now()->timestamp,
         ];
 
         // Sort data to ensure consistent hashing
