@@ -46,9 +46,8 @@ RUN php artisan key:generate --ansi || true
 # Build frontend assets
 RUN npm run build
 
-# Clear and cache config
-RUN php artisan config:clear \
-    && php artisan cache:clear
+# Clear config (cache:clear requires database, skip it in build)
+RUN php artisan config:clear || true
 
 # Stage 2: Production stage
 FROM php:8.2-cli-alpine
