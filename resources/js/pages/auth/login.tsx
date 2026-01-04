@@ -2,9 +2,9 @@
 // FILE: pages/Auth/Login.tsx
 // Southern Mindoro Maritime School - Login
 // ============================================
-import { Head, useForm } from '@inertiajs/react';
+import { Head, useForm, usePage, router } from '@inertiajs/react';
 import { LoaderCircle, Eye, EyeOff, ArrowLeft } from 'lucide-react';
-import { FormEventHandler, useState } from 'react';
+import { FormEventHandler, useState, useEffect } from 'react';
 
 import InputError from '@/components/input-error';
 import TextLink from '@/components/text-link';
@@ -25,12 +25,36 @@ interface LoginProps {
 }
 
 export default function Login({ status, canResetPassword }: LoginProps) {
+    const { auth } = usePage().props as any;
     const [showPassword, setShowPassword] = useState(false);
     const { data, setData, post, processing, errors, reset } = useForm<Required<LoginForm>>({
         email: '',
         password: '',
         remember: false,
     });
+
+    // Redirect if already authenticated (handles stale auth state)
+    useEffect(() => {
+        if (auth?.user) {
+            const userRole = auth.user.role;
+            switch (userRole) {
+                case 'admin':
+                    router.visit(route('admin.dashboard'));
+                    break;
+                case 'student':
+                    router.visit(route('student.dashboard'));
+                    break;
+                case 'parent':
+                    router.visit(route('parent.dashboard'));
+                    break;
+                case 'teacher':
+                    router.visit(route('teacher.dashboard'));
+                    break;
+                default:
+                    router.visit(route('dashboard'));
+            }
+        }
+    }, [auth?.user]);
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();

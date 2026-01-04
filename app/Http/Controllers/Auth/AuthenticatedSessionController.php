@@ -15,8 +15,25 @@ class AuthenticatedSessionController extends Controller
     /**
      * Show the login page.
      */
-    public function create(Request $request): Response
+    public function create(Request $request): Response|RedirectResponse
     {
+        // Redirect authenticated users to their dashboard
+        if (Auth::check()) {
+            $user = Auth::user();
+            switch ($user->role) {
+                case 'admin':
+                    return redirect()->route('admin.dashboard');
+                case 'student':
+                    return redirect()->route('student.dashboard');
+                case 'parent':
+                    return redirect()->route('parent.dashboard');
+                case 'teacher':
+                    return redirect()->route('teacher.dashboard');
+                default:
+                    return redirect()->route('dashboard');
+            }
+        }
+
         return Inertia::render('auth/login');
     }
 
