@@ -401,9 +401,6 @@ Route::prefix('blockchain')->group(function () {
         Route::post('/{id}/register', [BlockchainController::class, 'registerCertificateOnBlockchain']);
         Route::delete('/{id}', [BlockchainController::class, 'deleteCertificate']);
     });
-
-    // Certificate Verification (Public - No Auth Required)
-    Route::post('/verify', [BlockchainController::class, 'verifyCertificate']);
     
     // Verification History
     Route::prefix('verifications')->group(function () {
@@ -411,6 +408,13 @@ Route::prefix('blockchain')->group(function () {
         Route::delete('/{id}', [BlockchainController::class, 'deleteVerificationRecord']);
     });
 });
+
+// ========================================================================
+// 🌐 PUBLIC API ROUTES
+// ========================================================================
+
+// Certificate Verification (Public - No Auth Required)
+Route::post('/blockchain/verify', [BlockchainController::class, 'verifyCertificate']);
 
 // ========================================================================
 // 📊 ANALYTICS & REPORTING
