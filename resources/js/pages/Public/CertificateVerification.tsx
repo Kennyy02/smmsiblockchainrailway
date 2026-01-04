@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Shield, CheckCircle, XCircle, Search, Award, User, Calendar, Hash, Download, Copy, ArrowLeft } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
+import CertificateTemplate from '@/components/CertificateTemplate';
 import { router } from '@inertiajs/react';
 
 const PRIMARY_COLOR_CLASS = 'bg-gradient-to-r from-purple-600 to-indigo-600';
@@ -40,6 +41,7 @@ const CertificateVerification: React.FC = () => {
     const [result, setResult] = useState<VerificationResult | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [copied, setCopied] = useState(false);
+    const [showCertificate, setShowCertificate] = useState(false);
 
     const handleVerify = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -88,6 +90,26 @@ const CertificateVerification: React.FC = () => {
             day: 'numeric'
         });
     };
+
+    // If showing certificate template, render it
+    if (showCertificate && result && result.integrity_verified) {
+        return (
+            <CertificateTemplate 
+                certificate={{
+                    title: result.certificate.title,
+                    certificate_number: result.certificate.certificate_number,
+                    certificate_type: result.certificate.certificate_type,
+                    student: result.certificate.student,
+                    date_issued: result.certificate.date_issued,
+                    issuer: result.certificate.issuer,
+                    blockchain_hash: result.certificate.blockchain_hash || undefined,
+                    blockchain_tx_hash: (result.certificate as any).blockchainTransaction?.transaction_hash || undefined,
+                }}
+                showActions={true}
+                onClose={() => setShowCertificate(false)}
+            />
+        );
+    }
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-indigo-50">
@@ -309,7 +331,7 @@ const CertificateVerification: React.FC = () => {
                                                 </p>
                                             </div>
                                             <button
-                                                onClick={() => window.print()}
+                                                onClick={() => setShowCertificate(true)}
                                                 className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                                             >
                                                 <Download className="w-4 h-4" />
