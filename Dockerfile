@@ -40,9 +40,6 @@ RUN npm install --prefer-offline --no-audit
 # Copy application files
 COPY . .
 
-# Generate application key (will be overridden by env var in production)
-RUN php artisan key:generate --ansi || true
-
 # Build frontend assets
 RUN npm run build
 
