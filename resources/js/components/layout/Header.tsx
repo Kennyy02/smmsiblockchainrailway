@@ -92,13 +92,6 @@ const Header = () => {
                             <div className="hidden md:flex items-center space-x-2 lg:space-x-3">
                                 <a
                                     href="/login"
-                                    onClick={(e) => {
-                                        // Force full page navigation to refresh auth state
-                                        if (window.location.pathname === '/login') {
-                                            e.preventDefault();
-                                            window.location.reload();
-                                        }
-                                    }}
                                     className="px-3 sm:px-4 lg:px-5 py-2 rounded-full bg-blue-900 text-white font-medium hover:bg-blue-800 transition-all duration-300 shadow-sm text-xs sm:text-sm lg:text-base whitespace-nowrap"
                                 >
                                     Login
@@ -191,13 +184,6 @@ const Header = () => {
                             <div className="space-y-3 pt-2">
                                 <a
                                     href="/login"
-                                    onClick={(e) => {
-                                        // Force full page navigation to refresh auth state
-                                        if (window.location.pathname === '/login') {
-                                            e.preventDefault();
-                                            window.location.reload();
-                                        }
-                                    }}
                                     className="block w-full px-6 py-4 text-center rounded-xl bg-blue-900 text-white font-semibold hover:bg-blue-800 transition-all duration-300 shadow-lg text-base touch-manipulation"
                                 >
                                     Login to System
