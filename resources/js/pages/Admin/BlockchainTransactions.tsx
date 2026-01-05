@@ -326,23 +326,23 @@ const VerificationUtility: React.FC<{
     };
 
     return (
-        <div className="bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-white">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center">
-                <Shield className={`w-5 h-5 mr-2 ${TEXT_COLOR_CLASS}`} />
+        <div className="bg-white dark:bg-gray-800 dark:border-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 border border-gray-100 dark:border-white">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4 flex items-center">
+                <Shield className={`w-4 h-4 sm:w-5 sm:h-5 mr-2 ${TEXT_COLOR_CLASS}`} />
                 Certificate Verification
             </h2>
-            <form onSubmit={handleVerify} className="flex space-x-4 mb-4">
+            <form onSubmit={handleVerify} className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-4">
                 <input
                     type="text"
                     value={verificationCode}
                     onChange={(e) => setVerificationCode(e.target.value)}
-                    className={`flex-1 px-4 py-3 border border-gray-200 dark:border-white dark:bg-gray-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS}`}
+                    className={`flex-1 px-3 sm:px-4 py-2 sm:py-3 border border-gray-200 dark:border-white dark:bg-gray-900 dark:text-white rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} text-sm sm:text-base`}
                     placeholder="Enter Certificate Number (e.g., CERT-2024-ABC123)"
                     required
                 />
                 <button
                     type="submit"
-                    className={`px-6 py-3 ${PRIMARY_COLOR_CLASS} text-white rounded-xl ${HOVER_COLOR_CLASS} font-medium disabled:opacity-50`}
+                    className={`px-4 sm:px-6 py-2 sm:py-3 ${PRIMARY_COLOR_CLASS} text-white rounded-lg sm:rounded-xl ${HOVER_COLOR_CLASS} font-medium disabled:opacity-50 text-sm sm:text-base whitespace-nowrap`}
                     disabled={loading || !verificationCode.trim()}
                 >
                     {loading ? 'Verifying...' : 'Verify'}
@@ -350,16 +350,16 @@ const VerificationUtility: React.FC<{
             </form>
             
             {result && (
-                <div className="bg-green-50 dark:bg-green-900 dark:border-white border-l-4 border-green-500 dark:border-white p-4 rounded-lg">
+                <div className="bg-green-50 dark:bg-green-900 dark:border-white border-l-4 border-green-500 dark:border-white p-3 sm:p-4 rounded-lg">
                     <div className="flex items-start">
-                        <CheckCircle className="w-5 h-5 text-green-600 dark:text-white mt-0.5 mr-3" />
-                        <div>
-                            <p className="font-bold text-green-900 dark:text-white">Certificate Valid ✓</p>
-                            <ul className="mt-2 text-sm text-green-800 dark:text-white space-y-1">
-                                <li><strong>Title:</strong> {result.title}</li>
+                        <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-600 dark:text-white mt-0.5 mr-2 sm:mr-3 flex-shrink-0" />
+                        <div className="min-w-0 flex-1">
+                            <p className="font-bold text-sm sm:text-base text-green-900 dark:text-white">Certificate Valid ✓</p>
+                            <ul className="mt-2 text-xs sm:text-sm text-green-800 dark:text-white space-y-1">
+                                <li className="break-words"><strong>Title:</strong> {result.title}</li>
                                 <li><strong>Student:</strong> {result.student?.full_name}</li>
                                 <li><strong>Issued:</strong> {new Date(result.date_issued).toLocaleDateString()}</li>
-                                <li><strong>Certificate #:</strong> {result.certificate_number}</li>
+                                <li className="break-all"><strong>Certificate #:</strong> {result.certificate_number}</li>
                             </ul>
                         </div>
                     </div>
@@ -436,6 +436,10 @@ const BlockchainManagement: React.FC = () => {
 
     // Verification history state
     const [verifications, setVerifications] = useState<CertificateVerification[]>([]);
+    const [verificationFilters, setVerificationFilters] = useState({
+        page: 1,
+        per_page: 10,
+    });
     const [verificationPagination, setVerificationPagination] = useState<PaginationData>({
         current_page: 1,
         last_page: 1,
@@ -489,7 +493,7 @@ const BlockchainManagement: React.FC = () => {
     const loadVerifications = async () => {
         setLoading(true);
         try {
-            const response = await adminBlockchainService.getVerificationHistory({ page: 1, per_page: 10 });
+            const response = await adminBlockchainService.getVerificationHistory(verificationFilters);
             setVerifications(response.data);
             if (response.pagination) {
                 setVerificationPagination(response.pagination);
@@ -517,7 +521,7 @@ const BlockchainManagement: React.FC = () => {
         } else if (activeTab === 'verify') {
             loadVerifications();
         }
-    }, [activeTab, transactionFilters.page, certificateFilters.page]);
+    }, [activeTab, transactionFilters.page, certificateFilters.page, verificationFilters.page]);
 
     // Handlers
     const handleRetryTransaction = async (id: number) => {
@@ -627,8 +631,8 @@ const BlockchainManagement: React.FC = () => {
         if (pagination.last_page <= 1) return null;
 
         return (
-            <div className="bg-gray-50 dark:bg-gray-800 dark:border-white px-6 py-4 border-t border-gray-200 dark:border-white flex items-center justify-between">
-                <div className="text-sm text-gray-700 dark:text-white">
+            <div className="bg-gray-50 dark:bg-gray-800 dark:border-white px-3 sm:px-6 py-3 sm:py-4 border-t border-gray-200 dark:border-white flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-0">
+                <div className="text-xs sm:text-sm text-gray-700 dark:text-white text-center sm:text-left">
                     Showing <span className="font-semibold">{((pagination.current_page - 1) * pagination.per_page) + 1}</span> to{' '}
                     <span className="font-semibold">{Math.min(pagination.current_page * pagination.per_page, pagination.total)}</span> of{' '}
                     <span className="font-semibold">{pagination.total}</span> results
@@ -637,14 +641,14 @@ const BlockchainManagement: React.FC = () => {
                     <button
                         onClick={() => onPageChange(pagination.current_page - 1)}
                         disabled={pagination.current_page === 1}
-                        className="px-4 py-2 border border-gray-300 dark:border-white dark:text-white dark:bg-gray-900 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 dark:hover:bg-gray-700"
+                        className="px-3 sm:px-4 py-2 text-xs sm:text-sm border border-gray-300 dark:border-white dark:text-white dark:bg-gray-900 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                     >
                         Previous
                     </button>
                     <button
                         onClick={() => onPageChange(pagination.current_page + 1)}
                         disabled={pagination.current_page === pagination.last_page}
-                        className="px-4 py-2 border border-gray-300 dark:border-white dark:text-white dark:bg-gray-900 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 dark:hover:bg-gray-700"
+                        className="px-3 sm:px-4 py-2 text-xs sm:text-sm border border-gray-300 dark:border-white dark:text-white dark:bg-gray-900 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                     >
                         Next
                     </button>
@@ -983,32 +987,38 @@ const BlockchainManagement: React.FC = () => {
                             />
 
                             {/* Verification History */}
-                            <div className="mt-6 bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-white">
-                                <div className="px-6 py-4 border-b border-gray-200 dark:border-white">
-                                    <h2 className="text-xl font-bold text-gray-900 dark:text-white">Verification History</h2>
+                            <div className="mt-4 sm:mt-6 bg-white dark:bg-gray-800 dark:border-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-white">
+                                <div className="px-3 sm:px-6 py-3 sm:py-4 border-b border-gray-200 dark:border-white">
+                                    <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">Verification History</h2>
                                 </div>
                                 <div className="overflow-x-auto">
                                     <table className="min-w-full divide-y divide-gray-200 dark:divide-white">
                                         <thead className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-900 dark:border-white">
                                             <tr>
-                                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-white uppercase">ID</th>
-                                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-white uppercase">Certificate</th>
-                                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-white uppercase">Verified By</th>
-                                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-white uppercase">Verified At</th>
+                                                <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 dark:text-white uppercase whitespace-nowrap">ID</th>
+                                                <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 dark:text-white uppercase">Certificate</th>
+                                                <th className="hidden sm:table-cell px-3 sm:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 dark:text-white uppercase whitespace-nowrap">Verified By</th>
+                                                <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 dark:text-white uppercase whitespace-nowrap">Verified At</th>
                                             </tr>
                                         </thead>
                                         <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-white">
                                             {loading ? (
-                                                <tr><td colSpan={4} className="px-6 py-12 text-center"><RefreshCw className={`h-8 w-8 ${TEXT_COLOR_CLASS} animate-spin mx-auto`} /></td></tr>
+                                                <tr><td colSpan={4} className="px-3 sm:px-6 py-8 sm:py-12 text-center"><RefreshCw className={`h-6 w-6 sm:h-8 sm:w-8 ${TEXT_COLOR_CLASS} animate-spin mx-auto`} /></td></tr>
                                             ) : verifications.length === 0 ? (
-                                                <tr><td colSpan={4} className="px-6 py-12 text-center text-gray-500 dark:text-white">No verification history</td></tr>
+                                                <tr><td colSpan={4} className="px-3 sm:px-6 py-8 sm:py-12 text-center text-gray-500 dark:text-white text-sm sm:text-base">No verification history</td></tr>
                                             ) : (
                                                 verifications.map((ver) => (
                                                     <tr key={ver.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                                        <td className="px-6 py-4 whitespace-nowrap font-mono text-sm dark:text-white">#{ver.id}</td>
-                                                        <td className="px-6 py-4 text-sm dark:text-white">{ver.certificate?.title || 'N/A'}</td>
-                                                        <td className="px-6 py-4 text-sm dark:text-white">{ver.verified_by_name || 'Public Lookup'}</td>
-                                                        <td className="px-6 py-4 whitespace-nowrap text-sm dark:text-white">
+                                                        <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap font-mono text-xs sm:text-sm dark:text-white">#{ver.id}</td>
+                                                        <td className="px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm dark:text-white break-words">
+                                                            {ver.certificate?.title || 'N/A'}
+                                                            {/* Show verified by on mobile */}
+                                                            <div className="sm:hidden mt-1 text-xs text-gray-500 dark:text-gray-400">
+                                                                {ver.verified_by_name || 'Public Lookup'}
+                                                            </div>
+                                                        </td>
+                                                        <td className="hidden sm:table-cell px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm dark:text-white">{ver.verified_by_name || 'Public Lookup'}</td>
+                                                        <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm dark:text-white">
                                                             {new Date(ver.verified_at).toLocaleString()}
                                                         </td>
                                                     </tr>
@@ -1019,7 +1029,9 @@ const BlockchainManagement: React.FC = () => {
                                 </div>
                                 <Pagination 
                                     pagination={verificationPagination} 
-                                    onPageChange={(page) => {/* Implement pagination for verifications */}} 
+                                    onPageChange={(page) => {
+                                        setVerificationFilters({...verificationFilters, page});
+                                    }} 
                                 />
                             </div>
                         </>
