@@ -898,69 +898,69 @@ const BlockchainManagement: React.FC = () => {
                             </div>
 
                             {/* Certificates Table */}
-                            <div className="bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-white">
+                            <div className="bg-white dark:bg-gray-800 dark:border-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-white">
                                 <div className="overflow-x-auto">
                                     <table className="min-w-full divide-y divide-gray-200 dark:divide-white">
                                         <thead className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-900 dark:border-white">
                                             <tr>
-                                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-white uppercase">Certificate #</th>
-                                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-white uppercase">Title</th>
-                                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-white uppercase">Student</th>
-                                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-white uppercase">Type</th>
-                                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-white uppercase">Date Issued</th>
-                                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-white uppercase">Blockchain</th>
-                                                <th className="px-6 py-4 text-right text-xs font-bold text-gray-700 dark:text-white uppercase">Actions</th>
+                                                <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 dark:text-white uppercase">Certificate #</th>
+                                                <th className="hidden md:table-cell px-3 sm:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 dark:text-white uppercase">Title</th>
+                                                <th className="hidden md:table-cell px-3 sm:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 dark:text-white uppercase">Student</th>
+                                                <th className="hidden md:table-cell px-3 sm:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 dark:text-white uppercase">Type</th>
+                                                <th className="hidden md:table-cell px-3 sm:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 dark:text-white uppercase">Date Issued</th>
+                                                <th className="hidden md:table-cell px-3 sm:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 dark:text-white uppercase">Blockchain</th>
+                                                <th className="px-3 sm:px-6 py-3 sm:py-4 text-right text-xs font-bold text-gray-700 dark:text-white uppercase">Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-white">
                                             {loading ? (
-                                                <tr><td colSpan={7} className="px-6 py-12 text-center"><RefreshCw className={`h-8 w-8 ${TEXT_COLOR_CLASS} animate-spin mx-auto`} /></td></tr>
+                                                <tr><td colSpan={7} className="px-3 sm:px-6 py-8 sm:py-12 text-center"><RefreshCw className={`h-6 w-6 sm:h-8 sm:w-8 ${TEXT_COLOR_CLASS} animate-spin mx-auto`} /></td></tr>
                                             ) : certificates.length === 0 ? (
-                                                <tr><td colSpan={7} className="px-6 py-12 text-center text-gray-500 dark:text-white">No certificates found</td></tr>
+                                                <tr><td colSpan={7} className="px-3 sm:px-6 py-8 sm:py-12 text-center text-gray-500 dark:text-white text-sm sm:text-base">No certificates found</td></tr>
                                             ) : (
                                                 certificates.map((cert) => (
                                                     <tr key={cert.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                                        <td className="px-6 py-4 whitespace-nowrap font-mono text-sm dark:text-white">{cert.certificate_number}</td>
-                                                        <td className="px-6 py-4 font-semibold text-sm dark:text-white">{cert.title}</td>
-                                                        <td className="px-6 py-4 text-sm dark:text-white">{cert.student?.full_name}</td>
-                                                        <td className="px-6 py-4 whitespace-nowrap text-sm dark:text-white">{cert.certificate_type}</td>
-                                                        <td className="px-6 py-4 whitespace-nowrap text-sm dark:text-white">
+                                                        <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap font-mono text-xs sm:text-sm dark:text-white">{cert.certificate_number}</td>
+                                                        <td className="hidden md:table-cell px-3 sm:px-6 py-3 sm:py-4 font-semibold text-xs sm:text-sm dark:text-white">{cert.title}</td>
+                                                        <td className="hidden md:table-cell px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm dark:text-white">{cert.student?.full_name}</td>
+                                                        <td className="hidden md:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm dark:text-white">{cert.certificate_type}</td>
+                                                        <td className="hidden md:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm dark:text-white">
                                                             {new Date(cert.date_issued).toLocaleDateString()}
                                                         </td>
-                                                        <td className="px-6 py-4 whitespace-nowrap">
+                                                        <td className="hidden md:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                                                             {cert.blockchain_hash ? (
-                                                                <span className="flex items-center text-green-600 dark:text-white text-sm">
+                                                                <span className="flex items-center text-green-600 dark:text-white text-xs sm:text-sm">
                                                                     <CheckCircle className="w-4 h-4 mr-1" />
                                                                     Verified
                                                                 </span>
                                                             ) : (
                                                                 <button
                                                                     onClick={() => handleRegisterOnBlockchain(cert.id)}
-                                                                    className="text-orange-600 dark:text-white text-sm hover:underline flex items-center border dark:border-white px-2 py-1 rounded"
+                                                                    className="text-orange-600 dark:text-white text-xs sm:text-sm hover:underline flex items-center border dark:border-white px-2 py-1 rounded"
                                                                 >
                                                                     <Clock className="w-4 h-4 mr-1" />
                                                                     Register
                                                                 </button>
                                                             )}
                                                         </td>
-                                                        <td className="px-6 py-4 whitespace-nowrap text-right">
-                                                            <div className="flex justify-end space-x-2">
+                                                        <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-right">
+                                                            <div className="flex justify-end space-x-1 sm:space-x-2">
                                                                 <button
                                                                     onClick={() => {
                                                                         setSelectedCertificate(cert);
                                                                         setShowCertificateModal(true);
                                                                     }}
-                                                                    className="p-2 text-blue-600 dark:text-white hover:bg-blue-50 dark:hover:bg-gray-700 rounded-lg border dark:border-white"
+                                                                    className="p-1.5 sm:p-2 text-blue-600 dark:text-white hover:bg-blue-50 dark:hover:bg-gray-700 rounded-lg border dark:border-white transition-colors"
                                                                     title="View Details"
                                                                 >
-                                                                    <Eye className="h-5 w-5" />
+                                                                    <Eye className="h-4 w-4 sm:h-5 sm:w-5" />
                                                                 </button>
                                                                 <button
                                                                     onClick={() => handleDeleteCertificate(cert.id)}
-                                                                    className="p-2 text-red-600 dark:text-white hover:bg-red-50 dark:hover:bg-gray-700 rounded-lg border dark:border-white"
+                                                                    className="p-1.5 sm:p-2 text-red-600 dark:text-white hover:bg-red-50 dark:hover:bg-gray-700 rounded-lg border dark:border-white transition-colors"
                                                                     title="Delete"
                                                                 >
-                                                                    <Trash2 className="h-5 w-5" />
+                                                                    <Trash2 className="h-4 w-4 sm:h-5 sm:w-5" />
                                                                 </button>
                                                             </div>
                                                         </td>
