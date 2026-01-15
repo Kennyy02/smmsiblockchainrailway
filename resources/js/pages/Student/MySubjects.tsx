@@ -253,8 +253,14 @@ const MySubjects: React.FC = () => {
         subject.subject_code.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    // Calculate total units
-    const totalUnits = subjects.reduce((sum, s) => sum + (s.units || 0), 0);
+    // Calculate total units (ensure proper number parsing and sum)
+    const totalUnits = subjects.reduce((sum, s) => {
+        const units = parseFloat(s.units?.toString() || '0') || 0;
+        return sum + units;
+    }, 0);
+    
+    // Format total units to 2 decimal places
+    const formattedTotalUnits = totalUnits.toFixed(2);
 
     // Format grade level display
     const formatGradeLevel = (grade: number): string => {
@@ -303,7 +309,7 @@ const MySubjects: React.FC = () => {
                             </div>
                             <div className="text-right">
                                 <div className="text-2xl font-bold text-gray-900 dark:text-white">{subjects.length}</div>
-                                <div className="text-sm text-gray-500 dark:text-gray-300">Subjects ({totalUnits} units)</div>
+                                <div className="text-sm text-gray-500 dark:text-gray-300">Subjects ({formattedTotalUnits} units)</div>
                             </div>
                         </div>
                     </div>
@@ -422,7 +428,7 @@ const MySubjects: React.FC = () => {
                         <div className="px-3 sm:px-6 py-4 border-t border-gray-200 dark:border-white bg-gray-50 dark:bg-gray-900">
                             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0 text-sm text-gray-600 dark:text-gray-300">
                                 <span>Showing {filteredSubjects.length} of {subjects.length} subjects</span>
-                                <span className="font-medium">Total: {totalUnits} units</span>
+                                <span className="font-medium">Total: {formattedTotalUnits} units</span>
                             </div>
                         </div>
                     )}
