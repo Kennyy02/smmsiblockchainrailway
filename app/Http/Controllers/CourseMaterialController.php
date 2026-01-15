@@ -125,12 +125,12 @@ class CourseMaterialController extends Controller
                 if (!empty($filesDirectInfo['error_message'])) {
                     $uploadError = $filesDirectInfo['error_message'];
                     if (str_contains($uploadError, 'upload_max_filesize')) {
-                        $fileSizeMB = isset($_FILES['file']['size']) ? round($_FILES['file']['size'] / 1024 / 1024, 2) : 'unknown';
+                        $fileSizeMB = isset($_FILES['file']['size']) ? round($_FILES['file']['size'] / 1024 / 1024, 10) : 'unknown';
                         $currentLimit = ini_get('upload_max_filesize');
-                        $errorMessage = "File size ({$fileSizeMB} MB) exceeds server limit. Current PHP limit: {$currentLimit}. Please redeploy to apply 10MB limit.";
+                        $errorMessage = "File size ({$fileSizeMB} MB) exceeds server limit. Current PHP limit: {$currentLimit}.";
                     } elseif (str_contains($uploadError, 'post_max_size')) {
                         $currentLimit = ini_get('post_max_size');
-                        $errorMessage = "File size exceeds server limit. Current PHP limit: {$currentLimit}. Please redeploy to apply 10MB limit.";
+                        $errorMessage = "File size exceeds server limit. Current PHP limit: {$currentLimit}.";
                     } else {
                         $errorMessage = $uploadError;
                     }
