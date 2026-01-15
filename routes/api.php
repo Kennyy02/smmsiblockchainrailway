@@ -63,6 +63,32 @@ Route::middleware('auth:sanctum')->get('/csrf-token', function (Request $request
     ]);
 });
 
+// Diagnostic endpoint for file upload testing (temporary - remove after debugging)
+Route::middleware('auth:sanctum')->post('/test-file-upload', function (Request $request) {
+    \Log::info('Test File Upload - Raw Request', [
+        'has_file' => $request->hasFile('file'),
+        'all_files' => $request->allFiles(),
+        'all_input' => $request->all(),
+        'content_type' => $request->header('Content-Type'),
+        'content_length' => $request->header('Content-Length'),
+        'files_direct' => $_FILES ?? [],
+        'server_vars' => [
+            'REQUEST_METHOD' => $_SERVER['REQUEST_METHOD'] ?? 'unknown',
+            'CONTENT_TYPE' => $_SERVER['CONTENT_TYPE'] ?? 'unknown',
+            'CONTENT_LENGTH' => $_SERVER['CONTENT_LENGTH'] ?? 'unknown',
+        ],
+    ]);
+    
+    return response()->json([
+        'success' => true,
+        'has_file' => $request->hasFile('file'),
+        'all_files' => array_keys($request->allFiles()),
+        'files_direct' => array_keys($_FILES ?? []),
+        'content_type' => $request->header('Content-Type'),
+        'message' => 'Check Laravel logs for full details',
+    ]);
+});
+
 // ========================================================================
 // 🔐 PROTECTED API ROUTES - REQUIRE AUTHENTICATION
 // ========================================================================
