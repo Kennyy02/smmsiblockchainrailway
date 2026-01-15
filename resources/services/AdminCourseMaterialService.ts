@@ -349,6 +349,12 @@ class AdminCourseMaterialService {
                         files_direct_keys: data.debug.files_direct_keys,
                         upload_error: data.debug.upload_error,
                     });
+                    
+                    // Provide helpful error message for PHP upload limits
+                    if (data.debug.upload_error && data.debug.upload_error.includes('upload_max_filesize')) {
+                        const fileSizeMB = uploadData ? (uploadData.file.size / 1024 / 1024).toFixed(2) : 'unknown';
+                        throw new Error(`File size (${fileSizeMB} MB) exceeds the server's PHP upload_max_filesize limit. Please reduce the file size or contact the administrator to increase the PHP upload limits.`);
+                    }
                 }
                 
                 // Enhanced error handling for validation errors
@@ -406,6 +412,12 @@ class AdminCourseMaterialService {
         const maxSizeBytes = 10 * 1024 * 1024; // 10MB in bytes
         if (data.file.size > maxSizeBytes) {
             throw new Error(`File size (${(data.file.size / 1024 / 1024).toFixed(2)} MB) exceeds the maximum allowed size of 10 MB`);
+        }
+
+        // Warn if file is larger than 2MB (common PHP default limit)
+        const phpDefaultLimit = 2 * 1024 * 1024; // 2MB
+        if (data.file.size > phpDefaultLimit) {
+            console.warn(`⚠️ File size (${(data.file.size / 1024 / 1024).toFixed(2)} MB) may exceed server PHP upload_max_filesize limit. If upload fails, contact administrator to increase PHP limits.`);
         }
 
         // Fetch fresh CSRF token before upload to prevent 419 errors
