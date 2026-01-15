@@ -119,23 +119,45 @@ class AdminCourseMaterialService {
         }
     }
 
-    // Standard JSON Request Handler
-    private async request<T>(url: string, options: RequestInit = {}): Promise<ApiResponse<T>> {
-        const csrfToken = this.getCsrfToken();
+    // Standard JSON Request Handler with CSRF retry logic
+    private async request<T>(url: string, options: RequestInit = {}, retry: boolean = true): Promise<ApiResponse<T>> {
+        let csrfToken = this.getCsrfToken();
         
-        const defaultOptions: RequestInit = {
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'X-CSRF-TOKEN': csrfToken,
-                'X-Requested-With': 'XMLHttpRequest',
-                ...options.headers,
-            },
-            credentials: 'same-origin',
+        // Ensure URL is absolute
+        let absoluteUrl = url;
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+            absoluteUrl = window.location.origin + (url.startsWith('/') ? url : '/' + url);
+        }
+        
+        const makeRequest = (token: string): Promise<Response> => {
+            const defaultOptions: RequestInit = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': token,
+                    'X-Requested-With': 'XMLHttpRequest',
+                    ...options.headers,
+                },
+                credentials: 'same-origin',
+            };
+
+            return fetch(absoluteUrl, { ...defaultOptions, ...options });
         };
 
         try {
-            const response = await fetch(url, { ...defaultOptions, ...options });
+            let response = await makeRequest(csrfToken);
+            
+            // Handle CSRF token expiration (419)
+            if (response.status === 419 && retry) {
+                console.log('🔄 CSRF token expired, fetching fresh token and retrying...');
+                try {
+                    csrfToken = await this.fetchFreshCsrfToken();
+                    response = await makeRequest(csrfToken);
+                } catch (refreshError) {
+                    throw new Error(`Session expired. Please refresh the page and try again.`);
+                }
+            }
+            
             const contentType = response.headers.get('content-type');
             let data;
             
@@ -143,10 +165,18 @@ class AdminCourseMaterialService {
                 data = await response.json();
             } else {
                 const text = await response.text();
+                if (response.status === 419 || response.status === 401 || response.status === 403) {
+                    throw new Error(`Authentication/CSRF Error: Server returned status ${response.status}. Your session may have expired. Please refresh the page.`);
+                }
                 throw new Error(`Unexpected non-JSON response from server: Status ${response.status}`);
             }
 
             if (!response.ok) {
+                // Handle CSRF errors even after retry
+                if (response.status === 419) {
+                    throw new Error(`CSRF token mismatch. Please refresh the page and try again.`);
+                }
+                
                 const errorMessages = data.errors 
                     ? Object.entries(data.errors).map(([field, msgs]) => `${field}: ${Array.isArray(msgs) ? msgs.join(', ') : msgs}`).join('; ')
                     : data.message;
