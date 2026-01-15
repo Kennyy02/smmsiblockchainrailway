@@ -217,6 +217,17 @@ class AdminCourseMaterialService {
             // IMPORTANT: Do NOT set Content-Type header - browser will set it automatically with boundary
             // When using FormData, the browser automatically sets Content-Type to multipart/form-data with boundary
             // Manually setting it would break the file upload
+            
+            // Verify file is still in FormData right before sending
+            if (!formDataToSend.has('file')) {
+                console.error('❌ CRITICAL: File missing from FormData right before sending!');
+                if (uploadData) {
+                    // Recreate FormData if file is missing
+                    console.log('🔄 Recreating FormData...');
+                    formDataToSend = this.createFormData(uploadData);
+                }
+            }
+            
             const fetchOptions: RequestInit = {
                 method: 'POST',
                 body: formDataToSend,
@@ -224,12 +235,22 @@ class AdminCourseMaterialService {
             };
             
             // Only set custom headers (NOT Content-Type - browser handles that)
+            // Note: When using FormData, fetch() will automatically set Content-Type with boundary
             const headers: HeadersInit = {
                 'X-CSRF-TOKEN': token,
                 'X-Requested-With': 'XMLHttpRequest',
             };
             
             fetchOptions.headers = headers;
+            
+            // Log the actual request details
+            console.log('🚀 Making fetch request:', {
+                url: url,
+                method: 'POST',
+                hasBody: !!fetchOptions.body,
+                headers: Object.keys(headers),
+                credentials: fetchOptions.credentials,
+            });
             
             return fetch(url, fetchOptions);
         };
