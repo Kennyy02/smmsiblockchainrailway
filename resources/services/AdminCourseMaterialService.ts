@@ -76,15 +76,58 @@ export interface CourseMaterialsResponse extends ApiResponse<CourseMaterial[]> {
 class AdminCourseMaterialService {
     private baseURL = '/api';
 
+    // Helper method to get CSRF token from meta tag
+    private getCsrfToken(): string {
+        const metaTag = document.querySelector('meta[name="csrf-token"]');
+        return metaTag?.getAttribute('content') || '';
+    }
+
+    // Helper method to update CSRF token in meta tag
+    private updateCsrfToken(token: string): void {
+        const metaTag = document.querySelector('meta[name="csrf-token"]');
+        if (metaTag) {
+            metaTag.setAttribute('content', token);
+        }
+    }
+
+    // Fetch fresh CSRF token from API
+    private async fetchFreshCsrfToken(): Promise<string> {
+        try {
+            const response = await fetch(`${this.baseURL}/csrf-token`, {
+                method: 'GET',
+                credentials: 'same-origin',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to fetch CSRF token: ${response.status}`);
+            }
+
+            const data = await response.json();
+            if (data.success && data.csrf_token) {
+                this.updateCsrfToken(data.csrf_token);
+                return data.csrf_token;
+            }
+
+            throw new Error('Invalid CSRF token response');
+        } catch (error) {
+            console.error('❌ CSRF TOKEN FETCH ERROR:', error);
+            throw error;
+        }
+    }
+
     // Standard JSON Request Handler
     private async request<T>(url: string, options: RequestInit = {}): Promise<ApiResponse<T>> {
-        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+        const csrfToken = this.getCsrfToken();
         
         const defaultOptions: RequestInit = {
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                'X-CSRF-TOKEN': csrfToken || '',
+                'X-CSRF-TOKEN': csrfToken,
                 'X-Requested-With': 'XMLHttpRequest',
                 ...options.headers,
             },
@@ -117,15 +160,16 @@ class AdminCourseMaterialService {
         }
     }
     
-    // FormData Request Handler (For file uploads)
-    private async formDataRequest<T>(url: string, formData: FormData): Promise<ApiResponse<T>> {
-        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    // FormData Request Handler (For file uploads) with CSRF token refresh on 419
+    private async formDataRequest<T>(url: string, formData: FormData, retry: boolean = true): Promise<ApiResponse<T>> {
+        let csrfToken = this.getCsrfToken();
         
         const options: RequestInit = {
             method: 'POST',
             body: formData,
             headers: {
-                'X-CSRF-TOKEN': csrfToken || '',
+                'X-CSRF-TOKEN': csrfToken,
+                'X-Requested-With': 'XMLHttpRequest',
             },
             credentials: 'same-origin',
         };
@@ -135,11 +179,46 @@ class AdminCourseMaterialService {
             
             const contentType = response.headers.get('content-type');
             
+            // Handle 419 CSRF token mismatch - try refreshing token and retry once
+            if (response.status === 419 && retry) {
+                console.log('🔄 CSRF token expired, fetching fresh token and retrying...');
+                try {
+                    csrfToken = await this.fetchFreshCsrfToken();
+                    // Retry with fresh token
+                    options.headers = {
+                        'X-CSRF-TOKEN': csrfToken,
+                        'X-Requested-With': 'XMLHttpRequest',
+                    };
+                    const retryResponse = await fetch(url, options);
+                    
+                    if (!retryResponse.headers.get('content-type')?.includes('application/json')) {
+                        const responseText = await retryResponse.text();
+                        if (retryResponse.status === 419 || retryResponse.status === 401 || retryResponse.status === 403) {
+                            throw new Error(`Authentication/CSRF Error: Server returned status ${retryResponse.status}. Your session may have expired. Please refresh the page.`);
+                        }
+                        throw new Error(`Unexpected response format: expected JSON. Status: ${retryResponse.status}`);
+                    }
+                    
+                    const retryData = await retryResponse.json();
+                    
+                    if (!retryResponse.ok) {
+                        const errorMessages = retryData.errors 
+                            ? Object.entries(retryData.errors).map(([field, msgs]) => `${field}: ${Array.isArray(msgs) ? msgs.join(', ') : msgs}`).join('; ')
+                            : retryData.message;
+                        throw new Error(errorMessages || `File upload failed with status ${retryResponse.status}`);
+                    }
+                    
+                    return retryData;
+                } catch (refreshError) {
+                    throw new Error(`Session expired. Please refresh the page and try again.`);
+                }
+            }
+            
             if (!contentType || !contentType.includes('application/json')) {
                 const responseText = await response.text();
                 
                 if (response.status === 419 || response.status === 401 || response.status === 403) {
-                     throw new Error(`Authentication/CSRF Error: Server returned status ${response.status}. Your session may have expired.`);
+                    throw new Error(`Authentication/CSRF Error: Server returned status ${response.status}. Your session may have expired. Please refresh the page.`);
                 }
                 
                 if (responseText.startsWith('<!DOCTYPE html>')) {
@@ -186,6 +265,13 @@ class AdminCourseMaterialService {
      * Upload a new course material (Uses FormData for file transfer)
      */
     async uploadMaterial(data: CourseMaterialUploadData): Promise<ApiResponse<CourseMaterial>> {
+        // Fetch fresh CSRF token before upload to prevent 419 errors
+        try {
+            await this.fetchFreshCsrfToken();
+        } catch (error) {
+            console.warn('⚠️ Could not fetch fresh CSRF token, using existing token:', error);
+        }
+
         const formData = new FormData();
         formData.append('subject_id', data.subject_id.toString());
         formData.append('title', data.title);
