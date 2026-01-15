@@ -69,8 +69,23 @@ class CourseMaterialController extends Controller
     public function store(Request $request)
     {
         try {
+            // Debug: Log what we received
+            \Log::info('Course Material Upload Request', [
+                'has_file' => $request->hasFile('file'),
+                'all_files' => $request->allFiles(),
+                'input_keys' => array_keys($request->all()),
+                'content_type' => $request->header('Content-Type'),
+                'subject_id' => $request->input('subject_id'),
+                'title' => $request->input('title'),
+            ]);
+            
             // Check if file was uploaded
             if (!$request->hasFile('file')) {
+                \Log::warning('No file in request', [
+                    'all_files' => $request->allFiles(),
+                    'has_file' => $request->hasFile('file'),
+                ]);
+                
                 return response()->json([
                     'success' => false, 
                     'message' => 'No file was uploaded',

@@ -160,22 +160,53 @@ class AdminCourseMaterialService {
         }
     }
     
+    // Helper to create FormData from upload data
+    private createFormData(data: CourseMaterialUploadData): FormData {
+        const formData = new FormData();
+        formData.append('subject_id', data.subject_id.toString());
+        formData.append('title', data.title);
+        if (data.description) {
+            formData.append('description', data.description);
+        }
+        formData.append('file', data.file);
+        
+        // Debug: Verify file is in FormData
+        if (formData.has('file')) {
+            console.log('✅ File added to FormData:', data.file.name);
+        } else {
+            console.error('❌ File NOT in FormData!');
+        }
+        
+        return formData;
+    }
+
     // FormData Request Handler (For file uploads) with CSRF token refresh on 419
-    private async formDataRequest<T>(url: string, formData: FormData, retry: boolean = true): Promise<ApiResponse<T>> {
+    private async formDataRequest<T>(
+        url: string, 
+        formData: FormData | CourseMaterialUploadData, 
+        retry: boolean = true
+    ): Promise<ApiResponse<T>> {
+        // If formData is actually upload data, convert it to FormData
+        const isUploadData = formData && typeof formData === 'object' && 'file' in formData && formData.file instanceof File;
+        const uploadData = isUploadData ? formData as CourseMaterialUploadData : null;
+        let requestFormData = isUploadData ? this.createFormData(uploadData) : formData as FormData;
+        
         let csrfToken = this.getCsrfToken();
         
-        const options: RequestInit = {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-CSRF-TOKEN': csrfToken,
-                'X-Requested-With': 'XMLHttpRequest',
-            },
-            credentials: 'same-origin',
+        const makeRequest = (formDataToSend: FormData, token: string) => {
+            return fetch(url, {
+                method: 'POST',
+                body: formDataToSend,
+                headers: {
+                    'X-CSRF-TOKEN': token,
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+                credentials: 'same-origin',
+            });
         };
 
         try {
-            const response = await fetch(url, options);
+            const response = await makeRequest(requestFormData, csrfToken);
             
             const contentType = response.headers.get('content-type');
             
@@ -184,12 +215,12 @@ class AdminCourseMaterialService {
                 console.log('🔄 CSRF token expired, fetching fresh token and retrying...');
                 try {
                     csrfToken = await this.fetchFreshCsrfToken();
-                    // Retry with fresh token
-                    options.headers = {
-                        'X-CSRF-TOKEN': csrfToken,
-                        'X-Requested-With': 'XMLHttpRequest',
-                    };
-                    const retryResponse = await fetch(url, options);
+                    // Recreate FormData for retry (FormData can only be read once)
+                    if (uploadData) {
+                        requestFormData = this.createFormData(uploadData);
+                    }
+                    
+                    const retryResponse = await makeRequest(requestFormData, csrfToken);
                     
                     if (!retryResponse.headers.get('content-type')?.includes('application/json')) {
                         const responseText = await retryResponse.text();
@@ -304,14 +335,6 @@ class AdminCourseMaterialService {
         } catch (error) {
             console.warn('⚠️ Could not fetch fresh CSRF token, using existing token:', error);
         }
-
-        const formData = new FormData();
-        formData.append('subject_id', data.subject_id.toString());
-        formData.append('title', data.title);
-        if (data.description) {
-            formData.append('description', data.description);
-        }
-        formData.append('file', data.file);
         
         // Log file info for debugging (without sensitive data)
         console.log('📤 Uploading file:', {
@@ -320,7 +343,8 @@ class AdminCourseMaterialService {
             type: data.file.type
         });
         
-        return this.formDataRequest<CourseMaterial>(`${this.baseURL}/course-materials`, formData);
+        // Pass the data object directly so FormData can be recreated on retry if needed
+        return this.formDataRequest<CourseMaterial>(`${this.baseURL}/course-materials`, data);
     }
 
     /**
