@@ -350,18 +350,63 @@ class CourseMaterialController extends Controller
         try {
             $material = CourseMaterial::findOrFail($id);
             
-            if (!Storage::disk('public')->exists($material->file_path)) {
-                return response()->json(['success' => false, 'message' => 'File not found on server'], 404);
+            if (!$material->file_path) {
+                \Log::warning('Course Material Download - No file path', [
+                    'material_id' => $id,
+                    'title' => $material->title,
+                ]);
+                return response()->json([
+                    'success' => false, 
+                    'message' => 'File path not found for this material'
+                ], 404);
             }
             
-            $fileName = $material->title . '.' . $material->getFileExtension();
+            // Check if file exists
+            if (!Storage::disk('public')->exists($material->file_path)) {
+                \Log::warning('Course Material Download - File not found', [
+                    'material_id' => $id,
+                    'file_path' => $material->file_path,
+                    'storage_path' => storage_path('app/public/' . $material->file_path),
+                    'file_exists' => file_exists(storage_path('app/public/' . $material->file_path)),
+                ]);
+                
+                return response()->json([
+                    'success' => false, 
+                    'message' => 'File not found on server',
+                    'debug' => [
+                        'file_path' => $material->file_path,
+                        'storage_disk' => 'public',
+                    ]
+                ], 404);
+            }
+            
+            // Get file extension from stored path or use default
+            $extension = $material->getFileExtension();
+            $fileName = $extension 
+                ? $material->title . '.' . $extension
+                : $material->title;
+            
+            // Sanitize filename
+            $fileName = preg_replace('/[^a-zA-Z0-9._-]/', '_', $fileName);
             
             return Storage::disk('public')->download($material->file_path, $fileName);
             
         } catch (ModelNotFoundException $e) {
-            return response()->json(['success' => false, 'message' => 'Course material not found'], 404);
+            return response()->json([
+                'success' => false, 
+                'message' => 'Course material not found'
+            ], 404);
         } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => 'Failed to download file'], 500);
+            \Log::error('Course Material Download Error', [
+                'material_id' => $id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            
+            return response()->json([
+                'success' => false, 
+                'message' => 'Failed to download file: ' . $e->getMessage()
+            ], 500);
         }
     }
 

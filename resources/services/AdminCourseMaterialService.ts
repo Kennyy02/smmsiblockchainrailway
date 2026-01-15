@@ -353,7 +353,8 @@ class AdminCourseMaterialService {
                     // Provide helpful error message for PHP upload limits
                     if (data.debug.upload_error && data.debug.upload_error.includes('upload_max_filesize')) {
                         const fileSizeMB = uploadData ? (uploadData.file.size / 1024 / 1024).toFixed(2) : 'unknown';
-                        throw new Error(`File size (${fileSizeMB} MB) exceeds server limit. Maximum allowed: 50MB.`);
+                        const currentLimit = data.debug.php_upload_max_filesize || data.debug.current_limit || 'unknown';
+                        throw new Error(`File size (${fileSizeMB} MB) exceeds server limit (${currentLimit}). Redeploy to apply 50MB limit.`);
                     }
                 }
                 
@@ -449,12 +450,20 @@ class AdminCourseMaterialService {
     async downloadMaterial(id: number, filename: string): Promise<void> {
         const url = `${this.baseURL}/course-materials/${id}/download`; 
         
+        // Ensure URL is absolute - always use full URL to avoid redirects
+        let absoluteUrl = url;
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+            absoluteUrl = window.location.origin + (url.startsWith('/') ? url : '/' + url);
+        }
+        
         try {
-            const response = await fetch(url, {
+            const response = await fetch(absoluteUrl, {
                 method: 'GET',
                 credentials: 'same-origin',
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+                    'Accept': 'application/json, */*',
+                    'X-Requested-With': 'XMLHttpRequest',
                 }
             });
 
@@ -462,7 +471,18 @@ class AdminCourseMaterialService {
                 const contentType = response.headers.get('content-type');
                 if (contentType?.includes('application/json')) {
                      const errorData = await response.json();
-                     throw new Error(`Download failed: ${errorData.message || 'Server error'}`);
+                     const errorMessage = errorData.message || 'File not found on server';
+                     
+                     // Provide helpful message if file doesn't exist
+                     if (response.status === 404) {
+                         throw new Error(`File not found. This may be because the file was not uploaded successfully. Please re-upload the file.`);
+                     }
+                     
+                     throw new Error(`Download failed: ${errorMessage}`);
+                }
+                
+                if (response.status === 404) {
+                    throw new Error(`File not found. This may be because the file was not uploaded successfully. Please re-upload the file.`);
                 }
                 
                 throw new Error(`Download failed with status ${response.status}.`);

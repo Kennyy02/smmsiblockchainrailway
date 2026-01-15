@@ -1,10 +1,23 @@
 #!/bin/bash
 # Startup script for Railway with PHP upload limits
 
-# Set PHP configuration via environment variables (if supported)
-export PHP_INI_SCAN_DIR="/etc/php:/usr/local/etc/php"
+# Run migrations with PHP limits
+php -d upload_max_filesize=50M \
+    -d post_max_size=52M \
+    -d max_execution_time=300 \
+    -d max_input_time=300 \
+    -d memory_limit=256M \
+    artisan migrate --force
 
-# Start PHP with explicit limits
+# Run admin setup (if needed)
+php -d upload_max_filesize=50M \
+    -d post_max_size=52M \
+    -d max_execution_time=300 \
+    -d max_input_time=300 \
+    -d memory_limit=256M \
+    artisan admin:setup-from-env || true
+
+# Start Laravel server with PHP limits
 exec php -d upload_max_filesize=50M \
          -d post_max_size=52M \
          -d max_execution_time=300 \
