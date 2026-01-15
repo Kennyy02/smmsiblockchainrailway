@@ -290,6 +290,17 @@ class AdminCourseMaterialService {
                     const retryData = await retryResponse.json();
                     
                     if (!retryResponse.ok) {
+                        // Log backend debug info if available (retry)
+                        if (retryData.debug) {
+                            console.error('🔍 Backend Debug Info (retry):', {
+                                content_type: retryData.debug.content_type,
+                                has_file: retryData.debug.has_file,
+                                all_files_count: retryData.debug.all_files_count,
+                                files_direct_keys: retryData.debug.files_direct_keys,
+                                upload_error: retryData.debug.upload_error,
+                            });
+                        }
+                        
                         // Enhanced error handling for validation errors on retry
                         let errorMessage = retryData.message || `File upload failed with status ${retryResponse.status}`;
                         
@@ -329,6 +340,17 @@ class AdminCourseMaterialService {
             const data = await response.json(); 
             
             if (!response.ok) {
+                // Log backend debug info if available
+                if (data.debug) {
+                    console.error('🔍 Backend Debug Info:', {
+                        content_type: data.debug.content_type,
+                        has_file: data.debug.has_file,
+                        all_files_count: data.debug.all_files_count,
+                        files_direct_keys: data.debug.files_direct_keys,
+                        upload_error: data.debug.upload_error,
+                    });
+                }
+                
                 // Enhanced error handling for validation errors
                 let errorMessage = data.message || `File upload failed with status ${response.status}`;
                 
