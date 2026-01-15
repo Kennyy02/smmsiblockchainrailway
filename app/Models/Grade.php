@@ -159,12 +159,12 @@ class Grade extends Model
 
     public function calculateFinalRating(): float
     {
-        // Typical formula: (Prelim * 0.3) + (Midterm * 0.3) + (Final * 0.4)
+        // Simple average: (Prelim + Midterm + Final) / 3
         $prelim = $this->prelim_grade ?? 0;
         $midterm = $this->midterm_grade ?? 0;
         $final = $this->final_grade ?? 0;
 
-        return round(($prelim * 0.3) + ($midterm * 0.3) + ($final * 0.4), 2);
+        return round(($prelim + $midterm + $final) / 3, 2);
     }
 
     public function updateFinalRating(): void

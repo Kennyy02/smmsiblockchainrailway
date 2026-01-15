@@ -9,7 +9,7 @@ import {
     SemestersResponse, 
     ApiResponse 
 } from '../../../services/AdminSemesterService'; 
-import { AcademicYear } from '../../../services/AdminAcademicYearService';
+import { AcademicYear, adminAcademicYearService } from '../../../services/AdminAcademicYearService';
 import DeleteConfirmationModal from '../../components/DeleteConfirmationModal';
 
 // --- THEME COLORS ---
@@ -83,6 +83,16 @@ const SemesterModal: React.FC<{
     });
     const [loading, setLoading] = useState(false);
 
+    // Update formData when academicYears loads (for new semesters)
+    useEffect(() => {
+        if (!semesterItem && academicYears.length > 0 && formData.academic_year_id === 0) {
+            setFormData(prev => ({
+                ...prev,
+                academic_year_id: academicYears[0].id
+            }));
+        }
+    }, [academicYears, semesterItem]);
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
@@ -132,10 +142,15 @@ const SemesterModal: React.FC<{
                                 onChange={handleChange}
                                 className={`w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                                 required
+                                disabled={academicYears.length === 0}
                             >
-                                {academicYears.map(year => (
-                                    <option key={year.id} value={year.id}>{year.year_name}</option>
-                                ))}
+                                {academicYears.length === 0 ? (
+                                    <option value={0}>No academic years available</option>
+                                ) : (
+                                    academicYears.map(year => (
+                                        <option key={year.id} value={year.id}>{year.year_name}</option>
+                                    ))
+                                )}
                             </select>
                             {errors.academic_year_id && (<p className="text-red-500 text-xs mt-1">{errors.academic_year_id[0]}</p>)}
                         </div>
@@ -342,14 +357,16 @@ const Semesters: React.FC = () => {
     });
 
     useEffect(() => {
-        // NOTE: A service method for fetching ALL academic years is needed
-        // For now, using a placeholder fetch
         const fetchAcademicYears = async () => {
-             // Assuming a helper service exists to fetch all academic years for the dropdown filter
-             // e.g. from AdminAcademicYearService (or adminService)
-            // const response = await adminAcademicYearService.getAcademicYears(); 
-            // setAcademicYears(response.data); 
-            setAcademicYears([{id: 1, year_name: '2024-2025', start_date: '2024-06-01', end_date: '2025-05-31', is_current: true, status: 'current', semesters_count: 2, classes_count: 10, grades_count: 100 }]);
+            try {
+                const response = await adminAcademicYearService.getAcademicYears({ per_page: 1000 }); // Fetch all academic years
+                if (response.success) {
+                    setAcademicYears(response.data);
+                }
+            } catch (error) {
+                console.error('Error loading academic years:', error);
+                setNotification({ type: 'error', message: 'Failed to load academic years' });
+            }
         };
         fetchAcademicYears();
         loadSemesters();
