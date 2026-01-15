@@ -70,6 +70,7 @@ class CourseMaterialController extends Controller
     {
         try {
             // Debug: Log what we received
+            // NOTE: Do NOT read php://input as it can interfere with multipart parsing
             \Log::info('Course Material Upload Request', [
                 'has_file' => $request->hasFile('file'),
                 'all_files' => $request->allFiles(),
@@ -80,7 +81,9 @@ class CourseMaterialController extends Controller
                 'title' => $request->input('title'),
                 'request_method' => $request->method(),
                 'is_multipart' => str_contains($request->header('Content-Type', ''), 'multipart/form-data'),
-                'php_input_size' => strlen(file_get_contents('php://input')),
+                'server_request_method' => $_SERVER['REQUEST_METHOD'] ?? 'unknown',
+                'server_content_type' => $_SERVER['CONTENT_TYPE'] ?? 'unknown',
+                'server_content_length' => $_SERVER['CONTENT_LENGTH'] ?? 'unknown',
             ]);
             
             // Check if file was uploaded
@@ -94,13 +97,27 @@ class CourseMaterialController extends Controller
                     }
                 }
                 
+                // Also check $_FILES directly for debugging
+                $filesDirect = $_FILES ?? [];
+                $filesDirectInfo = [];
+                if (isset($_FILES['file'])) {
+                    $filesDirectInfo = [
+                        'name' => $_FILES['file']['name'] ?? 'N/A',
+                        'size' => $_FILES['file']['size'] ?? 0,
+                        'error' => $_FILES['file']['error'] ?? 'N/A',
+                        'error_message' => $this->getUploadErrorMessage($_FILES['file']['error'] ?? UPLOAD_ERR_NO_FILE),
+                    ];
+                }
+                
                 \Log::warning('No file in request', [
                     'all_files' => $request->allFiles(),
                     'has_file' => $request->hasFile('file'),
                     'content_type' => $request->header('Content-Type'),
                     'content_length' => $request->header('Content-Length'),
                     'alternative_field' => $fileField,
-                    'all_input' => $request->all(),
+                    'all_input_keys' => array_keys($request->all()),
+                    'files_direct_keys' => array_keys($filesDirect),
+                    'files_direct_file' => $filesDirectInfo,
                 ]);
                 
                 return response()->json([
@@ -111,9 +128,13 @@ class CourseMaterialController extends Controller
                         'content_type' => $request->header('Content-Type'),
                         'has_file' => $request->hasFile('file'),
                         'all_files_count' => count($request->allFiles()),
+                        'files_direct_keys' => array_keys($filesDirect),
+                        'upload_error' => $filesDirectInfo['error_message'] ?? 'No file in $_FILES',
                     ]
                 ], 422);
             }
+            
+            $file = $request->file('file');
 
             $validator = Validator::make($request->all(), [
                 'subject_id' => 'required|exists:subjects,id',
@@ -362,7 +383,26 @@ class CourseMaterialController extends Controller
             $subjects = Subject::orderBy('subject_code')->get();
             return response()->json(['success' => true, 'data' => $subjects]);
         } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => 'Failed to retrieve subjects'], 500);
+                return response()->json(['success' => false, 'message' => 'Failed to retrieve subjects'], 500);
         }
+    }
+
+    /**
+     * Get human-readable upload error message
+     */
+    private function getUploadErrorMessage(int $errorCode): string
+    {
+        $errors = [
+            UPLOAD_ERR_OK => 'No error',
+            UPLOAD_ERR_INI_SIZE => 'File exceeds PHP upload_max_filesize limit',
+            UPLOAD_ERR_FORM_SIZE => 'File exceeds form MAX_FILE_SIZE limit',
+            UPLOAD_ERR_PARTIAL => 'File was only partially uploaded',
+            UPLOAD_ERR_NO_FILE => 'No file was uploaded',
+            UPLOAD_ERR_NO_TMP_DIR => 'Missing temporary folder',
+            UPLOAD_ERR_CANT_WRITE => 'Failed to write file to disk',
+            UPLOAD_ERR_EXTENSION => 'File upload stopped by extension',
+        ];
+        
+        return $errors[$errorCode] ?? 'Unknown upload error';
     }
 }
