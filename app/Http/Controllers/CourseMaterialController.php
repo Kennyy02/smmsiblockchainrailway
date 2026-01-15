@@ -149,7 +149,7 @@ class CourseMaterialController extends Controller
                         'php_upload_max_filesize' => ini_get('upload_max_filesize'),
                         'php_post_max_size' => ini_get('post_max_size'),
                         'current_limit' => ini_get('upload_max_filesize'),
-                        'file_size_mb' => isset($_FILES['file']['size']) ? round($_FILES['file']['size'] / 1024 / 1024, 2) : 'unknown',
+                        'file_size_mb' => isset($_FILES['file']['size']) ? round($_FILES['file']['size'] / 1024 / 1024, 10) : 'unknown',
                     ]
                 ], 422);
             }
