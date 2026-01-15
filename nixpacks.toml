@@ -17,4 +17,4 @@ cmds = [
 ]
 
 [start]
-cmd = "sh -c 'php -d upload_max_filesize=10M -d post_max_size=12M -d max_execution_time=300 -d max_input_time=300 artisan migrate --force && (php artisan admin:setup-from-env || true) && php -d upload_max_filesize=10M -d post_max_size=12M -d max_execution_time=300 -d max_input_time=300 artisan serve --host=0.0.0.0 --port=$PORT'"
+cmd = "sh -c 'php -d upload_max_filesize=50M -d post_max_size=52M -d max_execution_time=300 -d max_input_time=300 artisan migrate --force && (php artisan admin:setup-from-env || true) && php -d upload_max_filesize=50M -d post_max_size=52M -d max_execution_time=300 -d max_input_time=300 artisan serve --host=0.0.0.0 --port=$PORT'"

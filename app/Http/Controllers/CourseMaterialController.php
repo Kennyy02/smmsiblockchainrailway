@@ -126,9 +126,9 @@ class CourseMaterialController extends Controller
                     $uploadError = $filesDirectInfo['error_message'];
                     if (str_contains($uploadError, 'upload_max_filesize')) {
                         $fileSizeMB = isset($_FILES['file']['size']) ? round($_FILES['file']['size'] / 1024 / 1024, 2) : 'unknown';
-                        $errorMessage = "File size ({$fileSizeMB} MB) exceeds the server's PHP upload_max_filesize limit. Maximum allowed size is typically 2MB. Please reduce the file size or contact the administrator to increase PHP upload limits.";
+                        $errorMessage = "File size ({$fileSizeMB} MB) exceeds the server limit. Maximum allowed: 50MB.";
                     } elseif (str_contains($uploadError, 'post_max_size')) {
-                        $errorMessage = "File size exceeds the server's PHP post_max_size limit. Please reduce the file size or contact the administrator.";
+                        $errorMessage = "File size exceeds server limit. Maximum allowed: 50MB.";
                     } else {
                         $errorMessage = $uploadError;
                     }
@@ -156,7 +156,7 @@ class CourseMaterialController extends Controller
                 'subject_id' => 'required|exists:subjects,id',
                 'title' => 'required|string|max:255',
                 'description' => 'nullable|string',
-                'file' => 'required|file|max:10240', // max:10240 = 10MB in kilobytes
+                'file' => 'required|file|max:51200', // max:51200 = 50MB in kilobytes
             ]);
 
             if ($validator->fails()) {
