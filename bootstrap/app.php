@@ -8,11 +8,9 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
 
-// Set PHP upload limits programmatically (works immediately without redeploy)
-ini_set('upload_max_filesize', '50M');
-ini_set('post_max_size', '52M');
-ini_set('max_execution_time', '300');
-ini_set('max_input_time', '300');
+// Note: upload_max_filesize and post_max_size cannot be set via ini_set()
+// They must be set in php.ini or via command-line flags (-d)
+// The limits are set in nixpacks.toml start command
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(

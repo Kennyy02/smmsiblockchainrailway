@@ -89,6 +89,18 @@ Route::middleware('auth:sanctum')->post('/test-file-upload', function (Request $
     ]);
 });
 
+// Check PHP upload limits
+Route::middleware('auth:sanctum')->get('/php-limits', function () {
+    return response()->json([
+        'success' => true,
+        'upload_max_filesize' => ini_get('upload_max_filesize'),
+        'post_max_size' => ini_get('post_max_size'),
+        'max_execution_time' => ini_get('max_execution_time'),
+        'max_input_time' => ini_get('max_input_time'),
+        'memory_limit' => ini_get('memory_limit'),
+    ]);
+});
+
 // ========================================================================
 // 🔐 PROTECTED API ROUTES - REQUIRE AUTHENTICATION
 // ========================================================================
