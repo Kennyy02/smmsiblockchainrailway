@@ -75,21 +75,43 @@ class CourseMaterialController extends Controller
                 'all_files' => $request->allFiles(),
                 'input_keys' => array_keys($request->all()),
                 'content_type' => $request->header('Content-Type'),
+                'content_length' => $request->header('Content-Length'),
                 'subject_id' => $request->input('subject_id'),
                 'title' => $request->input('title'),
+                'request_method' => $request->method(),
+                'is_multipart' => str_contains($request->header('Content-Type', ''), 'multipart/form-data'),
+                'php_input_size' => strlen(file_get_contents('php://input')),
             ]);
             
             // Check if file was uploaded
             if (!$request->hasFile('file')) {
+                // Try alternative field names
+                $fileField = null;
+                foreach (['file', 'upload', 'document'] as $field) {
+                    if ($request->hasFile($field)) {
+                        $fileField = $field;
+                        break;
+                    }
+                }
+                
                 \Log::warning('No file in request', [
                     'all_files' => $request->allFiles(),
                     'has_file' => $request->hasFile('file'),
+                    'content_type' => $request->header('Content-Type'),
+                    'content_length' => $request->header('Content-Length'),
+                    'alternative_field' => $fileField,
+                    'all_input' => $request->all(),
                 ]);
                 
                 return response()->json([
                     'success' => false, 
                     'message' => 'No file was uploaded',
-                    'errors' => ['file' => ['Please select a file to upload.']]
+                    'errors' => ['file' => ['Please select a file to upload.']],
+                    'debug' => [
+                        'content_type' => $request->header('Content-Type'),
+                        'has_file' => $request->hasFile('file'),
+                        'all_files_count' => count($request->allFiles()),
+                    ]
                 ], 422);
             }
 

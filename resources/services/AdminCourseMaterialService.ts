@@ -194,15 +194,44 @@ class AdminCourseMaterialService {
         let csrfToken = this.getCsrfToken();
         
         const makeRequest = (formDataToSend: FormData, token: string) => {
-            return fetch(url, {
+            // Debug: Verify FormData contents before sending
+            console.log('📤 Sending request with FormData:', {
+                hasFile: formDataToSend.has('file'),
+                hasSubjectId: formDataToSend.has('subject_id'),
+                hasTitle: formDataToSend.has('title'),
+            });
+            
+            // Get all FormData entries for debugging (note: this consumes FormData, so we recreate it)
+            if (uploadData) {
+                // We can safely check uploadData since we have it
+                console.log('📋 FormData contents:', {
+                    subject_id: uploadData.subject_id,
+                    title: uploadData.title,
+                    description: uploadData.description,
+                    file_name: uploadData.file.name,
+                    file_size: uploadData.file.size,
+                    file_type: uploadData.file.type,
+                });
+            }
+            
+            // IMPORTANT: Do NOT set Content-Type header - browser will set it automatically with boundary
+            // When using FormData, the browser automatically sets Content-Type to multipart/form-data with boundary
+            // Manually setting it would break the file upload
+            const fetchOptions: RequestInit = {
                 method: 'POST',
                 body: formDataToSend,
-                headers: {
-                    'X-CSRF-TOKEN': token,
-                    'X-Requested-With': 'XMLHttpRequest',
-                },
                 credentials: 'same-origin',
-            });
+            };
+            
+            // Only set custom headers (NOT Content-Type - browser handles that)
+            const headers: HeadersInit = {
+                'X-CSRF-TOKEN': token,
+                'X-Requested-With': 'XMLHttpRequest',
+            };
+            
+            fetchOptions.headers = headers;
+            
+            return fetch(url, fetchOptions);
         };
 
         try {
