@@ -8,6 +8,12 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
 
+// Set PHP upload limits programmatically (works immediately without redeploy)
+ini_set('upload_max_filesize', '50M');
+ini_set('post_max_size', '52M');
+ini_set('max_execution_time', '300');
+ini_set('max_input_time', '300');
+
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
