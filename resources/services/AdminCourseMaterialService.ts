@@ -188,17 +188,24 @@ class AdminCourseMaterialService {
     ): Promise<ApiResponse<T>> {
         // If formData is actually upload data, convert it to FormData
         const isUploadData = formData && typeof formData === 'object' && 'file' in formData && formData.file instanceof File;
-        const uploadData = isUploadData ? formData as CourseMaterialUploadData : null;
-        let requestFormData = isUploadData ? this.createFormData(uploadData) : formData as FormData;
+        const uploadData = isUploadData ? (formData as CourseMaterialUploadData) : null;
+        let requestFormData = isUploadData && uploadData ? this.createFormData(uploadData) : formData as FormData;
         
         let csrfToken = this.getCsrfToken();
         
         const makeRequest = (formDataToSend: FormData, token: string) => {
+            // Ensure URL is absolute - use full URL to avoid redirects
+            let absoluteUrl = url;
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                absoluteUrl = window.location.origin + (url.startsWith('/') ? url : '/' + url);
+            }
+            
             // Debug: Verify FormData contents before sending
             console.log('📤 Sending request with FormData:', {
                 hasFile: formDataToSend.has('file'),
                 hasSubjectId: formDataToSend.has('subject_id'),
                 hasTitle: formDataToSend.has('title'),
+                url: absoluteUrl,
             });
             
             // Get all FormData entries for debugging (note: this consumes FormData, so we recreate it)
@@ -221,7 +228,7 @@ class AdminCourseMaterialService {
             // Verify file is still in FormData right before sending
             if (!formDataToSend.has('file')) {
                 console.error('❌ CRITICAL: File missing from FormData right before sending!');
-                if (uploadData) {
+                if (uploadData && uploadData.file instanceof File) {
                     // Recreate FormData if file is missing
                     console.log('🔄 Recreating FormData...');
                     formDataToSend = this.createFormData(uploadData);
@@ -245,14 +252,14 @@ class AdminCourseMaterialService {
             
             // Log the actual request details
             console.log('🚀 Making fetch request:', {
-                url: url,
+                url: absoluteUrl,
                 method: 'POST',
                 hasBody: !!fetchOptions.body,
                 headers: Object.keys(headers),
                 credentials: fetchOptions.credentials,
             });
             
-            return fetch(url, fetchOptions);
+            return fetch(absoluteUrl, fetchOptions);
         };
 
         try {
