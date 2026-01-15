@@ -69,22 +69,65 @@ class CourseMaterialController extends Controller
     public function store(Request $request)
     {
         try {
+            // Check if file was uploaded
+            if (!$request->hasFile('file')) {
+                return response()->json([
+                    'success' => false, 
+                    'message' => 'No file was uploaded',
+                    'errors' => ['file' => ['Please select a file to upload.']]
+                ], 422);
+            }
+
             $validator = Validator::make($request->all(), [
                 'subject_id' => 'required|exists:subjects,id',
                 'title' => 'required|string|max:255',
                 'description' => 'nullable|string',
-                'file' => 'required|file|max:10240',
+                'file' => 'required|file|max:10240', // max:10240 = 10MB in kilobytes
             ]);
 
             if ($validator->fails()) {
+                // Enhance file validation error messages
+                $errors = $validator->errors();
+                if ($errors->has('file') && $request->hasFile('file')) {
+                    $file = $request->file('file');
+                    // Check for specific file upload errors
+                    if ($file && $file->getError() !== UPLOAD_ERR_OK) {
+                        $uploadErrors = [
+                            UPLOAD_ERR_INI_SIZE => 'File exceeds PHP upload_max_filesize limit. Maximum file size is 10 MB.',
+                            UPLOAD_ERR_FORM_SIZE => 'File exceeds form MAX_FILE_SIZE limit. Maximum file size is 10 MB.',
+                            UPLOAD_ERR_PARTIAL => 'File was only partially uploaded. Please try again.',
+                            UPLOAD_ERR_NO_FILE => 'No file was uploaded',
+                            UPLOAD_ERR_NO_TMP_DIR => 'Missing temporary folder on server',
+                            UPLOAD_ERR_CANT_WRITE => 'Failed to write file to disk',
+                            UPLOAD_ERR_EXTENSION => 'File upload stopped by extension',
+                        ];
+                        $errorCode = $file->getError();
+                        $errorMsg = $uploadErrors[$errorCode] ?? 'File upload failed. Please check the file size and try again.';
+                        $errors->add('file', $errorMsg);
+                    } elseif ($file && $file->getSize() > 10240 * 1024) {
+                        // File size exceeds 10MB (10240 KB)
+                        $errors->add('file', 'File size exceeds the maximum allowed size of 10 MB.');
+                    }
+                }
+                
                 return response()->json([
                     'success' => false, 
                     'message' => 'Validation failed', 
-                    'errors' => $validator->errors()
+                    'errors' => $errors
                 ], 422);
             }
 
             $file = $request->file('file');
+            
+            // Additional file validation
+            if (!$file || !$file->isValid()) {
+                return response()->json([
+                    'success' => false, 
+                    'message' => 'Invalid file upload',
+                    'errors' => ['file' => ['The uploaded file is not valid. Please check the file and try again.']]
+                ], 422);
+            }
+            
             $filePath = $file->store('course_materials', 'public');
             
             $data = [

@@ -202,10 +202,20 @@ class AdminCourseMaterialService {
                     const retryData = await retryResponse.json();
                     
                     if (!retryResponse.ok) {
-                        const errorMessages = retryData.errors 
-                            ? Object.entries(retryData.errors).map(([field, msgs]) => `${field}: ${Array.isArray(msgs) ? msgs.join(', ') : msgs}`).join('; ')
-                            : retryData.message;
-                        throw new Error(errorMessages || `File upload failed with status ${retryResponse.status}`);
+                        // Enhanced error handling for validation errors on retry
+                        let errorMessage = retryData.message || `File upload failed with status ${retryResponse.status}`;
+                        
+                        if (retryData.errors) {
+                            const errorDetails = Object.entries(retryData.errors).map(([field, msgs]) => {
+                                const messages = Array.isArray(msgs) ? msgs : [msgs];
+                                return `${field}: ${messages.join(', ')}`;
+                            }).join('; ');
+                            
+                            errorMessage = errorDetails || errorMessage;
+                            console.error('❌ Validation errors (retry):', retryData.errors);
+                        }
+                        
+                        throw new Error(errorMessage);
                     }
                     
                     return retryData;
@@ -231,10 +241,22 @@ class AdminCourseMaterialService {
             const data = await response.json(); 
             
             if (!response.ok) {
-                const errorMessages = data.errors 
-                    ? Object.entries(data.errors).map(([field, msgs]) => `${field}: ${Array.isArray(msgs) ? msgs.join(', ') : msgs}`).join('; ')
-                    : data.message;
-                throw new Error(errorMessages || `File upload failed with status ${response.status}`);
+                // Enhanced error handling for validation errors
+                let errorMessage = data.message || `File upload failed with status ${response.status}`;
+                
+                if (data.errors) {
+                    const errorDetails = Object.entries(data.errors).map(([field, msgs]) => {
+                        const messages = Array.isArray(msgs) ? msgs : [msgs];
+                        return `${field}: ${messages.join(', ')}`;
+                    }).join('; ');
+                    
+                    errorMessage = errorDetails || errorMessage;
+                    
+                    // Log detailed errors for debugging
+                    console.error('❌ Validation errors:', data.errors);
+                }
+                
+                throw new Error(errorMessage);
             }
             
             return data;
@@ -265,6 +287,17 @@ class AdminCourseMaterialService {
      * Upload a new course material (Uses FormData for file transfer)
      */
     async uploadMaterial(data: CourseMaterialUploadData): Promise<ApiResponse<CourseMaterial>> {
+        // Validate file before upload
+        if (!data.file) {
+            throw new Error('No file provided for upload');
+        }
+
+        // Check file size (max 10MB = 10240 KB)
+        const maxSizeBytes = 10 * 1024 * 1024; // 10MB in bytes
+        if (data.file.size > maxSizeBytes) {
+            throw new Error(`File size (${(data.file.size / 1024 / 1024).toFixed(2)} MB) exceeds the maximum allowed size of 10 MB`);
+        }
+
         // Fetch fresh CSRF token before upload to prevent 419 errors
         try {
             await this.fetchFreshCsrfToken();
@@ -279,6 +312,13 @@ class AdminCourseMaterialService {
             formData.append('description', data.description);
         }
         formData.append('file', data.file);
+        
+        // Log file info for debugging (without sensitive data)
+        console.log('📤 Uploading file:', {
+            name: data.file.name,
+            size: `${(data.file.size / 1024).toFixed(2)} KB`,
+            type: data.file.type
+        });
         
         return this.formDataRequest<CourseMaterial>(`${this.baseURL}/course-materials`, formData);
     }
