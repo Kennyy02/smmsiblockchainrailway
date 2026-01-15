@@ -15,16 +15,16 @@ chmod -R 775 storage bootstrap/cache || true
 php artisan storage:link || true
 
 # Run migrations with PHP limits
-php -d upload_max_filesize=50M \
-    -d post_max_size=52M \
+php -d upload_max_filesize=10M \
+    -d post_max_size=12M \
     -d max_execution_time=300 \
     -d max_input_time=300 \
     -d memory_limit=256M \
     artisan migrate --force
 
 # Run admin setup (if needed)
-php -d upload_max_filesize=50M \
-    -d post_max_size=52M \
+php -d upload_max_filesize=10M \
+    -d post_max_size=12M \
     -d max_execution_time=300 \
     -d max_input_time=300 \
     -d memory_limit=256M \
@@ -32,8 +32,8 @@ php -d upload_max_filesize=50M \
 
 # Start Laravel server with PHP limits
 # Files stored in storage/app/public will persist in Railway volume
-exec php -d upload_max_filesize=50M \
-         -d post_max_size=52M \
+exec php -d upload_max_filesize=10M \
+         -d post_max_size=12M \
          -d max_execution_time=300 \
          -d max_input_time=300 \
          -d memory_limit=256M \

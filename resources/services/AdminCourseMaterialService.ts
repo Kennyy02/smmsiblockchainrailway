@@ -384,7 +384,7 @@ class AdminCourseMaterialService {
                     if (data.debug.upload_error && data.debug.upload_error.includes('upload_max_filesize')) {
                         const fileSizeMB = uploadData ? (uploadData.file.size / 1024 / 1024).toFixed(2) : 'unknown';
                         const currentLimit = data.debug.php_upload_max_filesize || data.debug.current_limit || 'unknown';
-                        throw new Error(`File size (${fileSizeMB} MB) exceeds server limit (${currentLimit}). Redeploy to apply 50MB limit.`);
+                        throw new Error(`File size (${fileSizeMB} MB) exceeds server limit (${currentLimit}).`);
                     }
                 }
                 
@@ -439,10 +439,10 @@ class AdminCourseMaterialService {
             throw new Error('No file provided for upload');
         }
 
-        // Check file size (max 50MB)
-        const maxSizeBytes = 50 * 1024 * 1024; // 50MB in bytes
+        // Check file size (max 10MB)
+        const maxSizeBytes = 10 * 1024 * 1024; // 10MB in bytes
         if (data.file.size > maxSizeBytes) {
-            throw new Error(`File size (${(data.file.size / 1024 / 1024).toFixed(2)} MB) exceeds the maximum allowed size of 50 MB`);
+            throw new Error(`File size (${(data.file.size / 1024 / 1024).toFixed(2)} MB) exceeds the maximum allowed size of 10 MB`);
         }
 
 
