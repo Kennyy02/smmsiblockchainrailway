@@ -20,9 +20,37 @@ interface UserData {
     level: number | null;
     program: string;
     grade: number | null;
-    student?: any;
-    teacher?: any;
-    parent?: any;
+    phone?: string;
+    address?: string;
+    student?: {
+        phone?: string;
+        address?: string;
+        parents?: Array<{
+            id: number;
+            first_name: string;
+            last_name: string;
+            middle_name?: string;
+            full_name?: string;
+            phone?: string;
+            address?: string;
+        }>;
+    };
+    teacher?: {
+        phone?: string;
+    };
+    parent?: {
+        phone?: string;
+        address?: string;
+        students?: Array<{
+            id: number;
+            first_name: string;
+            last_name: string;
+            middle_name?: string;
+            full_name?: string;
+            phone?: string;
+            address?: string;
+        }>;
+    };
     created_at: string;
     updated_at: string;
 }
@@ -90,6 +118,10 @@ const ViewUserModal: React.FC<{
 }> = ({ user, onClose }) => {
     if (!user) return null;
 
+    // Get phone and address from user or role-specific data
+    const phone = user.phone || user.student?.phone || user.teacher?.phone || user.parent?.phone || 'N/A';
+    const address = user.address || user.student?.address || user.parent?.address || 'N/A';
+
     return (
         <div className="fixed inset-0 z-50 overflow-y-auto">
             <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
@@ -117,12 +149,8 @@ const ViewUserModal: React.FC<{
                         <div className="space-y-4">
                             {/* Basic Information */}
                             <div>
-                                <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Basic Information</h4>
+                                <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">User Information</h4>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div>
-                                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Name</label>
-                                        <p className="mt-1 text-sm text-gray-900 dark:text-white">{user.name}</p>
-                                    </div>
                                     <div>
                                         <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Email</label>
                                         <p className="mt-1 text-sm text-gray-900 dark:text-white">{user.email}</p>
@@ -135,139 +163,69 @@ const ViewUserModal: React.FC<{
                                         <p className="mt-1 text-xs text-gray-500 italic">(Hashed - Cannot be decrypted)</p>
                                     </div>
                                     <div>
-                                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Role</label>
-                                        <p className="mt-1">
-                                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                                                user.role === 'admin' ? 'bg-red-100 text-red-800' :
-                                                user.role === 'teacher' ? 'bg-blue-100 text-blue-800' :
-                                                user.role === 'student' ? 'bg-green-100 text-green-800' :
-                                                'bg-purple-100 text-purple-800'
-                                            }`}>
-                                                {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
-                                            </span>
-                                        </p>
+                                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Phone Number</label>
+                                        <p className="mt-1 text-sm text-gray-900 dark:text-white">{phone}</p>
                                     </div>
                                     <div>
-                                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Status</label>
-                                        <p className="mt-1">
-                                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                                                user.status === 'active' 
-                                                    ? 'bg-green-100 text-green-800' 
-                                                    : 'bg-red-100 text-red-800'
-                                            }`}>
-                                                {user.status.charAt(0).toUpperCase() + user.status.slice(1)}
-                                            </span>
-                                        </p>
+                                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Address</label>
+                                        <p className="mt-1 text-sm text-gray-900 dark:text-white">{address}</p>
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Role-Specific Information */}
-                            <div>
-                                <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Role-Specific Information</h4>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div>
-                                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Level</label>
-                                        <p className="mt-1 text-sm text-gray-900 dark:text-white">
-                                            {user.level ? formatGradeLevel(user.level) : 'N/A'}
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Program/Department</label>
-                                        <p className="mt-1 text-sm text-gray-900 dark:text-white">{user.program || 'N/A'}</p>
-                                    </div>
-                                    <div>
-                                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Grade</label>
-                                        <p className="mt-1 text-sm text-gray-900 dark:text-white">
-                                            {user.grade ? formatGradeLevel(user.grade) : 'N/A'}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Additional Role Details */}
-                            {user.student && (
+                            {/* Student's Parent Information */}
+                            {user.role === 'student' && user.student?.parents && user.student.parents.length > 0 && (
                                 <div>
-                                    <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Student Details</h4>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div>
-                                            <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Student ID</label>
-                                            <p className="mt-1 text-sm text-gray-900 dark:text-white">{user.student.student_id || 'N/A'}</p>
+                                    <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Parent Information</h4>
+                                    {user.student.parents.map((parent, index) => (
+                                        <div key={parent.id || index} className="mb-4 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div>
+                                                    <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Parent Name</label>
+                                                    <p className="mt-1 text-sm text-gray-900 dark:text-white">
+                                                        {parent.full_name || `${parent.first_name} ${parent.middle_name ? parent.middle_name + ' ' : ''}${parent.last_name}`}
+                                                    </p>
+                                                </div>
+                                                <div>
+                                                    <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Phone Number</label>
+                                                    <p className="mt-1 text-sm text-gray-900 dark:text-white">{parent.phone || 'N/A'}</p>
+                                                </div>
+                                                <div className="md:col-span-2">
+                                                    <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Address</label>
+                                                    <p className="mt-1 text-sm text-gray-900 dark:text-white">{parent.address || 'N/A'}</p>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Date of Birth</label>
-                                            <p className="mt-1 text-sm text-gray-900 dark:text-white">
-                                                {user.student.date_of_birth 
-                                                    ? new Date(user.student.date_of_birth).toLocaleDateString() 
-                                                    : 'N/A'}
-                                            </p>
-                                        </div>
-                                        <div>
-                                            <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Gender</label>
-                                            <p className="mt-1 text-sm text-gray-900 dark:text-white">{user.student.gender || 'N/A'}</p>
-                                        </div>
-                                        <div>
-                                            <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Phone</label>
-                                            <p className="mt-1 text-sm text-gray-900 dark:text-white">{user.student.phone || 'N/A'}</p>
-                                        </div>
-                                    </div>
+                                    ))}
                                 </div>
                             )}
 
-                            {user.teacher && (
+                            {/* Parent's Child Information */}
+                            {user.role === 'parent' && user.parent?.students && user.parent.students.length > 0 && (
                                 <div>
-                                    <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Teacher Details</h4>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div>
-                                            <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Teacher ID</label>
-                                            <p className="mt-1 text-sm text-gray-900 dark:text-white">{user.teacher.teacher_id || 'N/A'}</p>
+                                    <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Child Information</h4>
+                                    {user.parent.students.map((child, index) => (
+                                        <div key={child.id || index} className="mb-4 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div>
+                                                    <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Child Name</label>
+                                                    <p className="mt-1 text-sm text-gray-900 dark:text-white">
+                                                        {child.full_name || `${child.first_name} ${child.middle_name ? child.middle_name + ' ' : ''}${child.last_name}`}
+                                                    </p>
+                                                </div>
+                                                <div>
+                                                    <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Phone Number</label>
+                                                    <p className="mt-1 text-sm text-gray-900 dark:text-white">{child.phone || 'N/A'}</p>
+                                                </div>
+                                                <div className="md:col-span-2">
+                                                    <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Address</label>
+                                                    <p className="mt-1 text-sm text-gray-900 dark:text-white">{child.address || 'N/A'}</p>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Department</label>
-                                            <p className="mt-1 text-sm text-gray-900 dark:text-white">{user.teacher.department || 'N/A'}</p>
-                                        </div>
-                                        <div>
-                                            <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Phone</label>
-                                            <p className="mt-1 text-sm text-gray-900 dark:text-white">{user.teacher.phone || 'N/A'}</p>
-                                        </div>
-                                    </div>
+                                    ))}
                                 </div>
                             )}
-
-                            {user.parent && (
-                                <div>
-                                    <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Parent Details</h4>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div>
-                                            <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Phone</label>
-                                            <p className="mt-1 text-sm text-gray-900 dark:text-white">{user.parent.phone || 'N/A'}</p>
-                                        </div>
-                                        <div>
-                                            <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Address</label>
-                                            <p className="mt-1 text-sm text-gray-900 dark:text-white">{user.parent.address || 'N/A'}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* Timestamps */}
-                            <div>
-                                <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">System Information</h4>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div>
-                                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Created At</label>
-                                        <p className="mt-1 text-sm text-gray-900 dark:text-white">
-                                            {new Date(user.created_at).toLocaleString()}
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Last Updated</label>
-                                        <p className="mt-1 text-sm text-gray-900 dark:text-white">
-                                            {new Date(user.updated_at).toLocaleString()}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
 
@@ -473,53 +431,83 @@ const Users: React.FC = () => {
                                         <thead className={`${PRIMARY_COLOR_CLASS}`}>
                                             <tr>
                                                 <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Name</th>
-                                                <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Level</th>
-                                                <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Program</th>
-                                                <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Grade</th>
-                                                <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Status</th>
+                                                {selectedRole === 'all' ? (
+                                                    <>
+                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Email</th>
+                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Phone Number</th>
+                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Address</th>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Level</th>
+                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Program</th>
+                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Grade</th>
+                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Status</th>
+                                                    </>
+                                                )}
                                                 <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                                            {filteredUsers.map((user) => (
-                                                <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                                    <td className="px-6 py-4 whitespace-nowrap">
-                                                        <div className="text-sm font-medium text-gray-900 dark:text-white">{user.name}</div>
-                                                        <div className="text-sm text-gray-500 dark:text-gray-400">{user.email}</div>
-                                                    </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">
-                                                        <div className="text-sm text-gray-900 dark:text-white">
-                                                            {user.level ? formatGradeLevel(user.level) : 'N/A'}
-                                                        </div>
-                                                    </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">
-                                                        <div className="text-sm text-gray-900 dark:text-white">{user.program || 'N/A'}</div>
-                                                    </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">
-                                                        <div className="text-sm text-gray-900 dark:text-white">
-                                                            {user.grade ? formatGradeLevel(user.grade) : 'N/A'}
-                                                        </div>
-                                                    </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">
-                                                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                                                            user.status === 'active' 
-                                                                ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' 
-                                                                : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
-                                                        }`}>
-                                                            {user.status.charAt(0).toUpperCase() + user.status.slice(1)}
-                                                        </span>
-                                                    </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                                        <button
-                                                            onClick={() => handleView(user)}
-                                                            className={`inline-flex items-center px-3 py-1.5 ${PRIMARY_COLOR_CLASS} text-white rounded-lg ${HOVER_COLOR_CLASS} transition-colors`}
-                                                        >
-                                                            <Eye className="h-4 w-4 mr-1" />
-                                                            View
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                            ))}
+                                            {filteredUsers.map((user) => {
+                                                const phone = user.phone || user.student?.phone || user.teacher?.phone || user.parent?.phone || 'N/A';
+                                                const address = user.address || user.student?.address || user.parent?.address || 'N/A';
+                                                
+                                                return (
+                                                    <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                                        <td className="px-6 py-4 whitespace-nowrap">
+                                                            <div className="text-sm font-medium text-gray-900 dark:text-white">{user.name}</div>
+                                                        </td>
+                                                        {selectedRole === 'all' ? (
+                                                            <>
+                                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                                    <div className="text-sm text-gray-900 dark:text-white">{user.email}</div>
+                                                                </td>
+                                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                                    <div className="text-sm text-gray-900 dark:text-white">{phone}</div>
+                                                                </td>
+                                                                <td className="px-6 py-4">
+                                                                    <div className="text-sm text-gray-900 dark:text-white">{address}</div>
+                                                                </td>
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                                    <div className="text-sm text-gray-900 dark:text-white">
+                                                                        {user.level ? formatGradeLevel(user.level) : 'N/A'}
+                                                                    </div>
+                                                                </td>
+                                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                                    <div className="text-sm text-gray-900 dark:text-white">{user.program || 'N/A'}</div>
+                                                                </td>
+                                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                                    <div className="text-sm text-gray-900 dark:text-white">
+                                                                        {user.grade ? formatGradeLevel(user.grade) : 'N/A'}
+                                                                    </div>
+                                                                </td>
+                                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                                                                        user.status === 'active' 
+                                                                            ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' 
+                                                                            : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+                                                                    }`}>
+                                                                        {user.status.charAt(0).toUpperCase() + user.status.slice(1)}
+                                                                    </span>
+                                                                </td>
+                                                            </>
+                                                        )}
+                                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                            <button
+                                                                onClick={() => handleView(user)}
+                                                                className={`inline-flex items-center px-3 py-1.5 ${PRIMARY_COLOR_CLASS} text-white rounded-lg ${HOVER_COLOR_CLASS} transition-colors`}
+                                                            >
+                                                                <Eye className="h-4 w-4 mr-1" />
+                                                                View
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            })}
                                         </tbody>
                                     </table>
                                 </div>

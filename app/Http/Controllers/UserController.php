@@ -23,7 +23,13 @@ class UserController extends Controller
             ], 403);
         }
 
-        $query = User::with(['student', 'teacher', 'parent']);
+        $query = User::with([
+            'student.parents', 
+            'teacher', 
+            'parent' => function($q) {
+                $q->with('students');
+            }
+        ]);
 
         // Search
         if ($request->has('search')) {
@@ -50,23 +56,31 @@ class UserController extends Controller
             $user->makeVisible(['password']);
             $userData = $user->toArray();
             
-            // Add role-specific information
+            // Add role-specific information and contact details
             if ($user->student) {
                 $userData['level'] = $user->student->year_level;
                 $userData['program'] = $user->student->program;
                 $userData['grade'] = $user->student->year_level; // Grade is same as level for students
+                $userData['phone'] = $user->student->phone ?? null;
+                $userData['address'] = $user->student->address ?? null;
             } elseif ($user->teacher) {
                 $userData['level'] = null;
                 $userData['program'] = $user->teacher->department ?? 'N/A';
                 $userData['grade'] = null;
+                $userData['phone'] = $user->teacher->phone ?? null;
+                $userData['address'] = null;
             } elseif ($user->parent) {
                 $userData['level'] = null;
                 $userData['program'] = 'N/A';
                 $userData['grade'] = null;
+                $userData['phone'] = $user->parent->phone ?? null;
+                $userData['address'] = $user->parent->address ?? null;
             } else {
                 $userData['level'] = null;
                 $userData['program'] = 'N/A';
                 $userData['grade'] = null;
+                $userData['phone'] = null;
+                $userData['address'] = null;
             }
             
             return $userData;
@@ -165,29 +179,43 @@ class UserController extends Controller
         }
 
         try {
-            $user = User::with(['teacher', 'student', 'parent'])->findOrFail($id);
+            $user = User::with([
+                'teacher', 
+                'student.parents', 
+                'parent' => function($q) {
+                    $q->with('students');
+                }
+            ])->findOrFail($id);
             
             // Make password visible for this response
             $user->makeVisible(['password']);
             $userData = $user->toArray();
             
-            // Add role-specific information
+            // Add role-specific information and contact details
             if ($user->student) {
                 $userData['level'] = $user->student->year_level;
                 $userData['program'] = $user->student->program;
                 $userData['grade'] = $user->student->year_level;
+                $userData['phone'] = $user->student->phone ?? null;
+                $userData['address'] = $user->student->address ?? null;
             } elseif ($user->teacher) {
                 $userData['level'] = null;
                 $userData['program'] = $user->teacher->department ?? 'N/A';
                 $userData['grade'] = null;
+                $userData['phone'] = $user->teacher->phone ?? null;
+                $userData['address'] = null;
             } elseif ($user->parent) {
                 $userData['level'] = null;
                 $userData['program'] = 'N/A';
                 $userData['grade'] = null;
+                $userData['phone'] = $user->parent->phone ?? null;
+                $userData['address'] = $user->parent->address ?? null;
             } else {
                 $userData['level'] = null;
                 $userData['program'] = 'N/A';
                 $userData['grade'] = null;
+                $userData['phone'] = null;
+                $userData['address'] = null;
             }
 
             return response()->json([
