@@ -23,7 +23,7 @@ class UserController extends Controller
             ], 403);
         }
 
-        $query = User::query();
+        $query = User::with(['student', 'teacher', 'parent']);
 
         // Search
         if ($request->has('search')) {
@@ -31,7 +31,7 @@ class UserController extends Controller
         }
 
         // Filter by role
-        if ($request->has('role')) {
+        if ($request->has('role') && $request->role !== 'all') {
             $query->byRole($request->role);
         }
 
@@ -43,6 +43,34 @@ class UserController extends Controller
         // Pagination
         $perPage = $request->get('per_page', 15);
         $users = $query->orderBy('created_at', 'desc')->paginate($perPage);
+
+        // Include password and format data
+        $users->getCollection()->transform(function ($user) {
+            // Make password visible for this response
+            $user->makeVisible(['password']);
+            $userData = $user->toArray();
+            
+            // Add role-specific information
+            if ($user->student) {
+                $userData['level'] = $user->student->year_level;
+                $userData['program'] = $user->student->program;
+                $userData['grade'] = $user->student->year_level; // Grade is same as level for students
+            } elseif ($user->teacher) {
+                $userData['level'] = null;
+                $userData['program'] = $user->teacher->department ?? 'N/A';
+                $userData['grade'] = null;
+            } elseif ($user->parent) {
+                $userData['level'] = null;
+                $userData['program'] = 'N/A';
+                $userData['grade'] = null;
+            } else {
+                $userData['level'] = null;
+                $userData['program'] = 'N/A';
+                $userData['grade'] = null;
+            }
+            
+            return $userData;
+        });
 
         return response()->json([
             'success' => true,
@@ -138,10 +166,33 @@ class UserController extends Controller
 
         try {
             $user = User::with(['teacher', 'student', 'parent'])->findOrFail($id);
+            
+            // Make password visible for this response
+            $user->makeVisible(['password']);
+            $userData = $user->toArray();
+            
+            // Add role-specific information
+            if ($user->student) {
+                $userData['level'] = $user->student->year_level;
+                $userData['program'] = $user->student->program;
+                $userData['grade'] = $user->student->year_level;
+            } elseif ($user->teacher) {
+                $userData['level'] = null;
+                $userData['program'] = $user->teacher->department ?? 'N/A';
+                $userData['grade'] = null;
+            } elseif ($user->parent) {
+                $userData['level'] = null;
+                $userData['program'] = 'N/A';
+                $userData['grade'] = null;
+            } else {
+                $userData['level'] = null;
+                $userData['program'] = 'N/A';
+                $userData['grade'] = null;
+            }
 
             return response()->json([
                 'success' => true,
-                'data' => $user
+                'data' => $userData
             ]);
         } catch (\Exception $e) {
             return response()->json([
