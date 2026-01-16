@@ -247,6 +247,7 @@ function AppHeader() {
                 { title: 'Teachers', href: '/admin/teachers', icon: UserCheck },
                 { title: 'Students', href: '/admin/students', icon: GraduationCap },
                 { title: 'Parents', href: '/admin/parents', icon: User },
+                { title: 'User Access', href: '/admin/users', icon: UserCheck },
             ]
         },
         {
