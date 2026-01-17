@@ -1117,7 +1117,6 @@ const Parents: React.FC = () => {
                                                     : 'bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 hover:scale-102'
                                             }`}
                                         >
-                                            <span className="mr-1.5 sm:mr-2 text-base sm:text-lg">{level.icon}</span>
                                             <span className="text-xs sm:text-sm md:text-base">{level.label}</span>
                                             <span className={`ml-1.5 sm:ml-2 px-1.5 sm:px-2 md:px-2.5 py-0.5 rounded-full text-xs font-bold ${
                                                 isSelected ? 'bg-white/20 text-white' : 'bg-gray-200 dark:bg-gray-600 text-gray-600 dark:text-gray-300'

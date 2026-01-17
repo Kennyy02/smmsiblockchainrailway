@@ -1311,7 +1311,6 @@ const Students: React.FC = () => {
                                                         : 'bg-gray-50 text-gray-700 hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
                                             }`}
                                         >
-                                            <span className="mr-1.5 sm:mr-2 text-base sm:text-lg">{level.icon}</span>
                                             <span className="text-xs sm:text-sm md:text-base">{level.label}</span>
                                             <span className={`ml-1.5 sm:ml-2 px-1.5 sm:px-2 md:px-2.5 py-0.5 rounded-full text-xs font-bold ${
                                                 isSelected

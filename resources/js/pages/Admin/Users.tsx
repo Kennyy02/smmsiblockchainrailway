@@ -198,13 +198,6 @@ const ViewUserModal: React.FC<{
                                         <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Address</label>
                                         <p className="mt-1 text-sm text-gray-900 dark:text-white">{address}</p>
                                     </div>
-                                    {/* Show generated password only if user hasn't changed their password and we have a generated password */}
-                                    {generatedPassword && !user.password_changed_at && (
-                                        <div className="md:col-span-2">
-                                            <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Generated Password</label>
-                                            <p className="mt-1 text-sm font-mono text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-700 px-3 py-2 rounded border">{generatedPassword}</p>
-                                        </div>
-                                    )}
                                 </div>
                             </div>
 
@@ -557,6 +550,13 @@ const Users: React.FC = () => {
                 // Store generated password to display in modal
                 if (data.generated_password) {
                     setGeneratedPassword(data.generated_password);
+                    // Update selectedUser to reflect that password_changed_at is now null
+                    if (selectedUser && selectedUser.id === userId) {
+                        setSelectedUser({
+                            ...selectedUser,
+                            password_changed_at: null
+                        });
+                    }
                 }
                 // Reload user data to get updated password_changed_at status
                 if (selectedUser) {
