@@ -66,7 +66,7 @@ export default function VerifyEmail({ status }: VerifyEmailProps) {
                         SOUTHERN MINDORO MARITIME SCHOOL
                     </h1>
                     <p className="text-amber-400 text-sm font-medium italic">
-                        Scheduling System
+                        Blockchain Grading System
                     </p>
                 </div>
                 

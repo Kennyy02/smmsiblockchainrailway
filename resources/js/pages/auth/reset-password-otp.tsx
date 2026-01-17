@@ -93,7 +93,7 @@ export default function ResetPasswordOtp({ email, status }: ResetPasswordOtpProp
                         SOUTHERN MINDORO MARITIME SCHOOL
                     </h1>
                     <p className="text-amber-400 text-sm font-medium italic">
-                        Scheduling System
+                        Blockchain Grading System
                     </p>
                 </div>
 
@@ -116,8 +116,8 @@ export default function ResetPasswordOtp({ email, status }: ResetPasswordOtpProp
                     </p>
 
                     {status && (
-                        <div className="mb-4 p-3 bg-green-500 bg-opacity-20 border border-green-400 rounded-lg">
-                            <p className="text-center text-sm font-medium text-green-300">{status}</p>
+                        <div className="mb-4 p-3 bg-white border border-green-500 rounded-lg">
+                            <p className="text-center text-sm font-medium text-green-700">{status}</p>
                         </div>
                     )}
 

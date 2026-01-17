@@ -173,7 +173,7 @@ export default function VerifyOtp({ email, status, canResend = 0, errors = {} }:
                         SOUTHERN MINDORO MARITIME SCHOOL
                     </h1>
                     <p className="text-amber-400 text-sm font-medium italic">
-                        Scheduling System
+                        Blockchain Grading System
                     </p>
                 </div>
 
