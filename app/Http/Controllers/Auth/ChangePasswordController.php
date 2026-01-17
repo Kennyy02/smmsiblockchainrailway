@@ -37,7 +37,12 @@ class ChangePasswordController extends Controller
 
         $validator = Validator::make($request->all(), [
             'current_password' => ['required', 'string'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'confirmed',
+            ],
         ]);
 
         // Verify current password
@@ -47,11 +52,25 @@ class ChangePasswordController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
+        // Custom validation for password complexity
+        $password = $request->password;
+        
+        if (strlen($password) < 8) {
+            $validator->errors()->add('password', 'Password must be at least 8 characters long.');
+        }
+        if (!preg_match('/[A-Z]/', $password)) {
+            $validator->errors()->add('password', 'Password must contain at least one uppercase letter (A-Z).');
+        }
+        if (!preg_match('/[0-9]/', $password)) {
+            $validator->errors()->add('password', 'Password must contain at least one number (0-9).');
+        }
+        if (!preg_match('/[^A-Za-z0-9]/', $password)) {
+            $validator->errors()->add('password', 'Password must contain at least one special character (!@#$%^&*()_+-=[]{}|;:,.<>?).');
+        }
+        
         // Check if new password is different from current password
         if (Hash::check($request->password, $user->password)) {
             $validator->errors()->add('password', 'The new password must be different from your current password.');
-            
-            return back()->withErrors($validator)->withInput();
         }
 
         if ($validator->fails()) {

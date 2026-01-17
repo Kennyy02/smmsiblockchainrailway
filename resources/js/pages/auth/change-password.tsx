@@ -171,7 +171,15 @@ export default function ChangePassword({ status }: ChangePasswordProps) {
                                 </button>
                             </div>
                             <InputError message={errors.password} className="mt-1" />
-                            <p className="text-white/60 text-xs mt-1">Password must be at least 8 characters long.</p>
+                            <div className="text-white/60 text-xs mt-2 space-y-1">
+                                <p className="font-semibold mb-1">Password must meet the following requirements:</p>
+                                <ul className="list-disc list-inside space-y-0.5 ml-2">
+                                    <li>At least 8 characters long</li>
+                                    <li>At least one uppercase letter (A-Z)</li>
+                                    <li>At least one number (0-9)</li>
+                                    <li>At least one special character (!@#$%^&*()_+-=[]{}|;:,.<>?)</li>
+                                </ul>
+                            </div>
                         </div>
 
                         {/* Confirm Password */}
