@@ -222,6 +222,14 @@ class GradeController extends Controller
             $query = Grade::query();
             
             // Apply filters if provided
+            if ($studentId = $request->input('student_id')) {
+                $query->byStudent($studentId);
+            }
+            if ($teacherId = $request->input('teacher_id')) {
+                $query->whereHas('classSubject', function($q) use ($teacherId) {
+                    $q->where('teacher_id', $teacherId);
+                });
+            }
             if ($academicYearId = $request->input('academic_year_id')) {
                 $query->byAcademicYear($academicYearId);
             }
@@ -234,7 +242,11 @@ class GradeController extends Controller
             $failedCount = $query->clone()->failed()->count();
             $incompleteCount = $query->clone()->incomplete()->count();
             
-            $avgFinalRating = $query->clone()->whereNotNull('final_rating')->avg('final_rating');
+            // Only calculate average if there are grades with final_rating
+            $gradesWithRating = $query->clone()->whereNotNull('final_rating')->get();
+            $avgFinalRating = $gradesWithRating->count() > 0 
+                ? $gradesWithRating->avg('final_rating') 
+                : null;
             
             $passRate = $totalGrades > 0 ? round(($passedCount / $totalGrades) * 100, 2) : 0;
             
@@ -246,7 +258,7 @@ class GradeController extends Controller
                     'failed_count' => $failedCount,
                     'incomplete_count' => $incompleteCount,
                     'pass_rate' => $passRate,
-                    'average_final_rating' => round($avgFinalRating ?? 0, 2)
+                    'average_final_rating' => $avgFinalRating !== null ? round($avgFinalRating, 2) : null
                 ]
             ]);
         } catch (\Exception $e) {

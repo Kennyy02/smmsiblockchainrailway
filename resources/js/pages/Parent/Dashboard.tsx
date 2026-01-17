@@ -322,7 +322,10 @@ const ParentDashboard: React.FC = () => {
                 ]);
 
                 const totalSubjects = classSubjectsRes.success ? classSubjectsRes.data.length : 0;
-                const avgGrade = gradeStatsRes.success ? (gradeStatsRes.data.average_final_rating ?? 0) : 0;
+                // Only show average grade if it exists (not null/undefined) and student has grades
+                const avgGrade = (gradeStatsRes.success && gradeStatsRes.data.average_final_rating !== null && gradeStatsRes.data.average_final_rating !== undefined) 
+                    ? gradeStatsRes.data.average_final_rating 
+                    : 0;
                 const attendanceRate = attendanceStatsRes.success ? (attendanceStatsRes.data.attendance_rate ?? 0) : 0;
 
                 return {
