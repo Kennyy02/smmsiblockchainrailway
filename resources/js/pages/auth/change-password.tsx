@@ -28,6 +28,14 @@ export default function ChangePassword({ status }: ChangePasswordProps) {
         password_confirmation: '',
     });
 
+    // Password validation functions
+    const hasMinLength = data.password.length >= 8;
+    const hasUppercase = /[A-Z]/.test(data.password);
+    const hasNumber = /[0-9]/.test(data.password);
+    const hasSpecialChar = /[^A-Za-z0-9]/.test(data.password);
+    const passwordsMatch = data.password === data.password_confirmation && data.password_confirmation.length > 0;
+    const isPasswordValid = hasMinLength && hasUppercase && hasNumber && hasSpecialChar;
+
     // Handle redirect after successful password change
     useEffect(() => {
         if (status === 'success') {
@@ -171,13 +179,21 @@ export default function ChangePassword({ status }: ChangePasswordProps) {
                                 </button>
                             </div>
                             <InputError message={errors.password} className="mt-1" />
-                            <div className="text-white/60 text-xs mt-2 space-y-1">
-                                <p className="font-semibold mb-1">Password must meet the following requirements:</p>
+                            <div className="text-xs mt-2 space-y-1">
+                                <p className="font-semibold mb-1 text-white/60">Password must meet the following requirements:</p>
                                 <ul className="list-disc list-inside space-y-0.5 ml-2">
-                                    <li>At least 8 characters long</li>
-                                    <li>At least one uppercase letter (A-Z)</li>
-                                    <li>At least one number (0-9)</li>
-                                    <li>At least one special character ({'!@#$%^&*()_+-=[]{}|;:,.<>?'})</li>
+                                    <li className={data.password.length > 0 ? (hasMinLength ? 'text-green-400' : 'text-red-400') : 'text-white/60'}>
+                                        At least 8 characters long
+                                    </li>
+                                    <li className={data.password.length > 0 ? (hasUppercase ? 'text-green-400' : 'text-red-400') : 'text-white/60'}>
+                                        At least one uppercase letter (A-Z)
+                                    </li>
+                                    <li className={data.password.length > 0 ? (hasNumber ? 'text-green-400' : 'text-red-400') : 'text-white/60'}>
+                                        At least one number (0-9)
+                                    </li>
+                                    <li className={data.password.length > 0 ? (hasSpecialChar ? 'text-green-400' : 'text-red-400') : 'text-white/60'}>
+                                        At least one special character ({'!@#$%^&*()_+-=[]{}|;:,.<>?'})
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -210,6 +226,11 @@ export default function ChangePassword({ status }: ChangePasswordProps) {
                                 </button>
                             </div>
                             <InputError message={errors.password_confirmation} className="mt-1" />
+                            {data.password_confirmation.length > 0 && (
+                                <p className={`text-xs mt-1 ${passwordsMatch ? 'text-green-400' : 'text-red-400'}`}>
+                                    {passwordsMatch ? '✓ Password Matched' : '✗ Password not match'}
+                                </p>
+                            )}
                         </div>
 
                         {/* Submit Button */}

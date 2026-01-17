@@ -21,6 +21,13 @@ export default function ResetPassword() {
         password_confirmation: '',
     });
 
+    // Password validation functions
+    const hasMinLength = data.password.length >= 8;
+    const hasUppercase = /[A-Z]/.test(data.password);
+    const hasNumber = /[0-9]/.test(data.password);
+    const hasSpecialChar = /[^A-Za-z0-9]/.test(data.password);
+    const passwordsMatch = data.password === data.password_confirmation && data.password_confirmation.length > 0;
+
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
         post(route('password.store'), {
@@ -155,15 +162,28 @@ export default function ResetPassword() {
                                 </button>
                             </div>
                             <InputError message={errors.password_confirmation} className="text-red-300 mt-1" />
+                            {data.password_confirmation.length > 0 && (
+                                <p className={`text-xs mt-1 ${passwordsMatch ? 'text-green-400' : 'text-red-400'}`}>
+                                    {passwordsMatch ? '✓ Password Matched' : '✗ Password not match'}
+                                </p>
+                            )}
                         </div>
 
                         <div className="bg-blue-500/20 border border-blue-400 rounded-lg p-4">
                             <p className="text-blue-200 text-sm font-semibold mb-2">Password Requirements:</p>
-                            <ul className="text-blue-100 text-xs space-y-1 list-disc list-inside">
-                                <li>At least 8 characters long</li>
-                                <li>Must contain at least one uppercase letter (A-Z)</li>
-                                <li>Must contain at least one number (0-9)</li>
-                                <li>Must contain at least one special character ({`(!@#$%^&*()_+-=[]{}|;:,.<>?)`})</li>
+                            <ul className="text-xs space-y-1 list-disc list-inside">
+                                <li className={data.password.length > 0 ? (hasMinLength ? 'text-green-400' : 'text-red-400') : 'text-blue-100'}>
+                                    At least 8 characters long
+                                </li>
+                                <li className={data.password.length > 0 ? (hasUppercase ? 'text-green-400' : 'text-red-400') : 'text-blue-100'}>
+                                    Must contain at least one uppercase letter (A-Z)
+                                </li>
+                                <li className={data.password.length > 0 ? (hasNumber ? 'text-green-400' : 'text-red-400') : 'text-blue-100'}>
+                                    Must contain at least one number (0-9)
+                                </li>
+                                <li className={data.password.length > 0 ? (hasSpecialChar ? 'text-green-400' : 'text-red-400') : 'text-blue-100'}>
+                                    Must contain at least one special character ({`(!@#$%^&*()_+-=[]{}|;:,.<>?)`})
+                                </li>
                             </ul>
                         </div>
 
