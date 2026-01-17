@@ -163,7 +163,7 @@ export default function ResetPassword() {
                                 <li>At least 8 characters long</li>
                                 <li>Must contain at least one uppercase letter (A-Z)</li>
                                 <li>Must contain at least one number (0-9)</li>
-                                <li>Must contain at least one special character (!@#$%^&*()_+-=[]{}|;:,.<>?)</li>
+                                <li>Must contain at least one special character ({`(!@#$%^&*()_+-=[]{}|;:,.<>?)`})</li>
                             </ul>
                         </div>
 

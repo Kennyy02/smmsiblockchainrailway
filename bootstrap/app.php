@@ -39,6 +39,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Register middleware aliases
         $middleware->alias([
             'checkRole' => \App\Http\Middleware\CheckRole::class,
+            'requirePasswordChange' => \App\Http\Middleware\RequirePasswordChange::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
