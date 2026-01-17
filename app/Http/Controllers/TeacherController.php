@@ -127,6 +127,7 @@ class TeacherController extends Controller
             if ($existingUser) {
                 // Reuse existing user account
                 $user = $existingUser;
+                $password = null; // Don't send email for reused user
                 Log::info('Reusing existing user account for teacher', ['user_id' => $user->id, 'email' => $user->email]);
             } else {
                 // Always generate password (password field removed from form)
@@ -142,9 +143,6 @@ class TeacherController extends Controller
                     'must_change_password' => true,
                 ]);
                 Log::info('Created new user account for teacher', ['user_id' => $user->id, 'email' => $user->email, 'password_generated' => true]);
-            } else {
-                // User was reused, set password to null so we don't send email
-                $password = null;
             }
 
             // Create teacher record
