@@ -18,7 +18,9 @@ class AuthenticatedSessionController extends Controller
     public function create(Request $request): Response
     {
         // Note: 'guest' middleware already handles redirecting authenticated users
-        return Inertia::render('auth/login');
+        return Inertia::render('auth/login', [
+            'canResetPassword' => true, // Password reset via OTP is enabled
+        ]);
     }
 
     /**
