@@ -216,8 +216,10 @@ class StudentController extends Controller
             if ($createdUser && $generatedPassword) {
                 try {
                     $this->sendAccountInfoEmail($createdUser, $generatedPassword);
+                    Log::info('Account info email queued for student', ['user_id' => $createdUser->id, 'email' => $createdUser->email]);
                 } catch (\Exception $e) {
                     Log::error('Failed to send account info email to student: ' . $e->getMessage());
+                    Log::error('Student email error trace: ' . $e->getTraceAsString());
                     // Don't fail the creation if email fails
                 }
             }
@@ -763,6 +765,12 @@ class StudentController extends Controller
     private function sendAccountInfoEmail(User $user, string $password): void
     {
         try {
+            Log::info('Attempting to send account info email', [
+                'user_id' => $user->id,
+                'user_email' => $user->email,
+                'mail_driver' => config('mail.default'),
+            ]);
+            
             Mail::send('emails.account-info', [
                 'user' => $user,
                 'email' => $user->email,
@@ -773,12 +781,17 @@ class StudentController extends Controller
                         ->subject('Your Account Information - ' . config('app.name', 'School Management System'));
             });
             
-            Log::info('Account information email sent', [
+            Log::info('Account information email sent successfully', [
                 'user_id' => $user->id,
                 'user_email' => $user->email,
             ]);
         } catch (\Exception $e) {
-            Log::error('Failed to send account info email: ' . $e->getMessage());
+            Log::error('Failed to send account info email', [
+                'user_id' => $user->id,
+                'user_email' => $user->email,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             throw $e;
         }
     }

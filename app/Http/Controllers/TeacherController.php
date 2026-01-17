@@ -139,15 +139,10 @@ class TeacherController extends Controller
                     'role' => 'teacher',
                     'status' => 'active',
                 ]);
-                Log::info('Created new user account for teacher', ['user_id' => $user->id, 'email' => $user->email]);
-                
-                // Send account information email
-                try {
-                    $this->sendAccountInfoEmail($user, $password);
-                } catch (\Exception $e) {
-                    Log::error('Failed to send account info email to teacher: ' . $e->getMessage());
-                    // Don't fail the creation if email fails
-                }
+                Log::info('Created new user account for teacher', ['user_id' => $user->id, 'email' => $user->email, 'password_generated' => true]);
+            } else {
+                // User was reused, set password to null so we don't send email
+                $password = null;
             }
 
             // Create teacher record
@@ -169,6 +164,19 @@ class TeacherController extends Controller
             $teacher->full_name = $teacher->getFullName();
 
             DB::commit();
+
+            // Send account information email after transaction commit
+            // Only send if user was just created (not reused) and password was generated
+            if (isset($password) && $password) {
+                try {
+                    $this->sendAccountInfoEmail($user, $password);
+                    Log::info('Account info email queued for teacher', ['user_id' => $user->id, 'email' => $user->email]);
+                } catch (\Exception $e) {
+                    Log::error('Failed to send account info email to teacher: ' . $e->getMessage());
+                    Log::error('Teacher email error trace: ' . $e->getTraceAsString());
+                    // Don't fail the creation if email fails
+                }
+            }
 
             return response()->json([
                 'success' => true,
@@ -626,6 +634,12 @@ class TeacherController extends Controller
     private function sendAccountInfoEmail(User $user, string $password): void
     {
         try {
+            Log::info('Attempting to send account info email', [
+                'user_id' => $user->id,
+                'user_email' => $user->email,
+                'mail_driver' => config('mail.default'),
+            ]);
+            
             Mail::send('emails.account-info', [
                 'user' => $user,
                 'email' => $user->email,
@@ -636,12 +650,17 @@ class TeacherController extends Controller
                         ->subject('Your Account Information - ' . config('app.name', 'School Management System'));
             });
             
-            Log::info('Account information email sent', [
+            Log::info('Account information email sent successfully', [
                 'user_id' => $user->id,
                 'user_email' => $user->email,
             ]);
         } catch (\Exception $e) {
-            Log::error('Failed to send account info email: ' . $e->getMessage());
+            Log::error('Failed to send account info email', [
+                'user_id' => $user->id,
+                'user_email' => $user->email,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             throw $e;
         }
     }

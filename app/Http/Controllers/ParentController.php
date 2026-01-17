@@ -214,12 +214,15 @@ class ParentController extends Controller
             // Check if user with this email already exists
             $user = User::where('email', $validated['email'])->first();
             
+            $password = null; // Initialize password variable
+            
             if ($user) {
                 // Check if this user is already a parent
                 $existingParent = ParentModel::where('user_id', $user->id)->first();
                 if ($existingParent) {
                     return response()->json(['success' => false, 'message' => 'A parent account with this email already exists'], 422);
                 }
+                // User was reused, password remains null so we don't send email
             } else {
                 // Always generate password (password field removed from form)
                 $password = Str::random(12);
@@ -233,13 +236,7 @@ class ParentController extends Controller
                     'status' => 'active',
                 ]);
                 
-                // Send account information email
-                try {
-                    $this->sendAccountInfoEmail($user, $password);
-                } catch (\Exception $e) {
-                    Log::error('Failed to send account info email to parent: ' . $e->getMessage());
-                    // Don't fail the creation if email fails
-                }
+                Log::info('Created new user account for parent', ['user_id' => $user->id, 'email' => $user->email, 'password_generated' => true]);
             }
 
             // Create the parent record
@@ -264,6 +261,19 @@ class ParentController extends Controller
             }
             
             $parent->load(['user', 'students']);
+            
+            // Send account information email after parent is created
+            // Only send if user was just created (not reused) and password was generated
+            if (isset($password) && $password) {
+                try {
+                    $this->sendAccountInfoEmail($user, $password);
+                    Log::info('Account info email queued for parent', ['user_id' => $user->id, 'email' => $user->email]);
+                } catch (\Exception $e) {
+                    Log::error('Failed to send account info email to parent: ' . $e->getMessage());
+                    Log::error('Parent email error trace: ' . $e->getTraceAsString());
+                    // Don't fail the creation if email fails
+                }
+            }
             
             return $request->expectsJson() ? response()->json(['success' => true, 'data' => $parent, 'message' => 'Parent created successfully'], 201) : redirect()->route('parents.index')->with('success', 'Parent created successfully');
         } catch (\Exception $e) {
@@ -438,6 +448,12 @@ class ParentController extends Controller
     private function sendAccountInfoEmail(User $user, string $password): void
     {
         try {
+            Log::info('Attempting to send account info email', [
+                'user_id' => $user->id,
+                'user_email' => $user->email,
+                'mail_driver' => config('mail.default'),
+            ]);
+            
             Mail::send('emails.account-info', [
                 'user' => $user,
                 'email' => $user->email,
@@ -448,12 +464,17 @@ class ParentController extends Controller
                         ->subject('Your Account Information - ' . config('app.name', 'School Management System'));
             });
             
-            Log::info('Account information email sent', [
+            Log::info('Account information email sent successfully', [
                 'user_id' => $user->id,
                 'user_email' => $user->email,
             ]);
         } catch (\Exception $e) {
-            Log::error('Failed to send account info email: ' . $e->getMessage());
+            Log::error('Failed to send account info email', [
+                'user_id' => $user->id,
+                'user_email' => $user->email,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             throw $e;
         }
     }
