@@ -125,20 +125,47 @@ const ViewUserModal: React.FC<{
     const phone = user.phone || user.student?.phone || user.teacher?.phone || user.parent?.phone || 'N/A';
     const address = user.address || user.student?.address || user.parent?.address || 'N/A';
 
+    // Get role display name
+    const getRoleDisplay = () => {
+        if (!user.role) return 'User';
+        return user.role.charAt(0).toUpperCase() + user.role.slice(1);
+    };
+
+    // Get role badge color
+    const getRoleBadgeColor = () => {
+        switch (user.role) {
+            case 'admin':
+                return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200';
+            case 'teacher':
+                return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200';
+            case 'student':
+                return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
+            case 'parent':
+                return 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200';
+            default:
+                return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200';
+        }
+    };
+
     return (
         <div className="fixed inset-0 z-50 overflow-y-auto">
             <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-                {/* Background overlay */}
+                {/* Background overlay with blur */}
                 <div 
-                    className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"
+                    className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75 backdrop-blur-sm"
                     onClick={onClose}
                 />
 
                 {/* Modal panel */}
                 <div className="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
-                    {/* Header */}
+                    {/* Header with Role Badge */}
                     <div className={`${PRIMARY_COLOR_CLASS} px-6 py-4 flex items-center justify-between`}>
-                        <h3 className="text-lg font-semibold text-white">User Details</h3>
+                        <div className="flex items-center gap-3">
+                            <h3 className="text-lg font-semibold text-white">User Details</h3>
+                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getRoleBadgeColor()}`}>
+                                {getRoleDisplay()}
+                            </span>
+                        </div>
                         <button
                             onClick={onClose}
                             className="text-white hover:text-gray-200 transition-colors"
@@ -487,6 +514,7 @@ const Users: React.FC = () => {
                                                         <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Email</th>
                                                         <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Phone Number</th>
                                                         <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Address</th>
+                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Role</th>
                                                     </>
                                                 ) : (
                                                     <>
@@ -519,6 +547,21 @@ const Users: React.FC = () => {
                                                                 </td>
                                                                 <td className="px-6 py-4">
                                                                     <div className="text-sm text-gray-900 dark:text-white">{address}</div>
+                                                                </td>
+                                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                                                                        user.role === 'admin' 
+                                                                            ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200'
+                                                                            : user.role === 'teacher'
+                                                                            ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
+                                                                            : user.role === 'student'
+                                                                            ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                                                                            : user.role === 'parent'
+                                                                            ? 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200'
+                                                                            : 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200'
+                                                                    }`}>
+                                                                        {user.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : 'N/A'}
+                                                                    </span>
                                                                 </td>
                                                             </>
                                                         ) : (
