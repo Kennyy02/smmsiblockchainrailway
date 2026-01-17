@@ -33,8 +33,8 @@ class AuthenticatedSessionController extends Controller
         // Get authenticated user
         $user = Auth::user();
 
-        // If user must change password, redirect to password change page
-        if ($user->must_change_password) {
+        // If user must change password or password was never changed (still auto-generated), redirect to password change page
+        if ($user->must_change_password || is_null($user->password_changed_at)) {
             return redirect()->route('password.change')
                 ->with('warning', 'You must change your password before continuing.');
         }

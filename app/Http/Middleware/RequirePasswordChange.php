@@ -36,7 +36,8 @@ class RequirePasswordChange
         }
 
         // Redirect to password change if required
-        if ($user->must_change_password) {
+        // Check both must_change_password flag and if password was never changed (still auto-generated)
+        if ($user->must_change_password || is_null($user->password_changed_at)) {
             return redirect()->route('password.change')
                 ->with('warning', 'You must change your password before continuing.');
         }

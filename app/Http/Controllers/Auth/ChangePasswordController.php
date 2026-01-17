@@ -20,7 +20,8 @@ class ChangePasswordController extends Controller
         $user = Auth::user();
         
         // If password already changed, redirect to dashboard
-        if (!$user->must_change_password) {
+        // Check both must_change_password flag and password_changed_at timestamp
+        if (!$user->must_change_password && !is_null($user->password_changed_at)) {
             return $this->redirectToDashboard($user);
         }
 
@@ -60,6 +61,7 @@ class ChangePasswordController extends Controller
         // Update password
         $user->password = Hash::make($request->password);
         $user->must_change_password = false;
+        $user->password_changed_at = now();
         $user->save();
 
         // Redirect to appropriate dashboard based on user role
