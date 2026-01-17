@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { User, Search, X, Eye, RefreshCw, Users as UsersIcon, ChevronDown, Mail } from 'lucide-react';
+import { usePage } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 
 // --- MARITIME THEME COLORS ---
@@ -302,8 +303,52 @@ const Users: React.FC = () => {
     });
 
     const getCsrfToken = (): string => {
-        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-        return csrfToken || '';
+        // Try multiple sources for CSRF token
+        let csrfToken: string | null = null;
+        
+        // 1. Try meta tag first
+        csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || null;
+        
+        // 2. Try Inertia page props
+        if (!csrfToken && typeof window !== 'undefined') {
+            try {
+                const inertiaData = (window as any).__INERTIA_DATA__;
+                if (inertiaData?.page?.props?.csrf_token) {
+                    csrfToken = inertiaData.page.props.csrf_token;
+                } else if ((window as any).Inertia?.page?.props?.csrf_token) {
+                    csrfToken = (window as any).Inertia.page.props.csrf_token;
+                }
+            } catch (e) {
+                console.warn('Could not retrieve CSRF token from Inertia props:', e);
+            }
+        }
+        
+        // 3. Try Laravel's default token name
+        if (!csrfToken) {
+            const tokenInput = document.querySelector('input[name="_token"]') as HTMLInputElement;
+            if (tokenInput) {
+                csrfToken = tokenInput.value;
+            }
+        }
+        
+        // 4. Try XSRF-TOKEN cookie
+        if (!csrfToken) {
+            const cookies = document.cookie.split(';');
+            for (let cookie of cookies) {
+                const [name, value] = cookie.trim().split('=');
+                if (name === 'XSRF-TOKEN') {
+                    csrfToken = decodeURIComponent(value);
+                    break;
+                }
+            }
+        }
+        
+        if (!csrfToken) {
+            console.error('CSRF token not found. Please refresh the page.');
+            return '';
+        }
+        
+        return csrfToken;
     };
 
     const loadUsers = async () => {
