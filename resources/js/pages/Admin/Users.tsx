@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { User, Search, X, Eye, RefreshCw, Users as UsersIcon, ChevronDown } from 'lucide-react';
+import { User, Search, X, Eye, RefreshCw, Users as UsersIcon, ChevronDown, Mail } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
 
 // --- MARITIME THEME COLORS ---
@@ -115,7 +115,9 @@ const Notification: React.FC<{ notification: Notification; onClose: () => void }
 const ViewUserModal: React.FC<{
     user: UserData | null;
     onClose: () => void;
-}> = ({ user, onClose }) => {
+    onSendAccountInfo?: (userId: number) => Promise<void>;
+    sendingEmail?: boolean;
+}> = ({ user, onClose, onSendAccountInfo, sendingEmail = false }) => {
     if (!user) return null;
 
     // Get phone and address from user or role-specific data
@@ -156,17 +158,10 @@ const ViewUserModal: React.FC<{
                                         <p className="mt-1 text-sm text-gray-900 dark:text-white">{user.email}</p>
                                     </div>
                                     <div>
-                                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Password</label>
-                                        <p className="mt-1 text-sm text-gray-600 dark:text-gray-400 font-mono break-all">
-                                            {user.password}
-                                        </p>
-                                        <p className="mt-1 text-xs text-gray-500 italic">(Hashed - Cannot be decrypted)</p>
-                                    </div>
-                                    <div>
                                         <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Phone Number</label>
                                         <p className="mt-1 text-sm text-gray-900 dark:text-white">{phone}</p>
                                     </div>
-                                    <div>
+                                    <div className="md:col-span-2">
                                         <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Address</label>
                                         <p className="mt-1 text-sm text-gray-900 dark:text-white">{address}</p>
                                     </div>
@@ -230,7 +225,24 @@ const ViewUserModal: React.FC<{
                     </div>
 
                     {/* Footer */}
-                    <div className="px-6 py-4 bg-gray-50 dark:bg-gray-700 flex justify-end">
+                    <div className="px-6 py-4 bg-gray-50 dark:bg-gray-700 flex justify-between items-center">
+                        <button
+                            onClick={() => onSendAccountInfo && onSendAccountInfo(user.id)}
+                            disabled={sendingEmail}
+                            className={`px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2`}
+                        >
+                            {sendingEmail ? (
+                                <>
+                                    <RefreshCw className="h-4 w-4 animate-spin" />
+                                    Sending...
+                                </>
+                            ) : (
+                                <>
+                                    <Mail className="h-4 w-4" />
+                                    Send Account Information
+                                </>
+                            )}
+                        </button>
                         <button
                             onClick={onClose}
                             className={`px-4 py-2 ${PRIMARY_COLOR_CLASS} text-white rounded-lg ${HOVER_COLOR_CLASS} transition-colors`}
@@ -253,6 +265,7 @@ const Users: React.FC = () => {
     const [selectedUser, setSelectedUser] = useState<UserData | null>(null);
     const [showViewModal, setShowViewModal] = useState(false);
     const [notification, setNotification] = useState<Notification | null>(null);
+    const [sendingEmail, setSendingEmail] = useState(false);
     const [pagination, setPagination] = useState<Pagination>({
         current_page: 1,
         last_page: 1,
@@ -324,6 +337,35 @@ const Users: React.FC = () => {
     const handleView = (user: UserData) => {
         setSelectedUser(user);
         setShowViewModal(true);
+    };
+
+    const handleSendAccountInfo = async (userId: number) => {
+        setSendingEmail(true);
+        try {
+            const response = await fetch(`/api/users/${userId}/send-account-info`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': getCsrfToken(),
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+                credentials: 'include',
+            });
+
+            const data: ApiResponse<any> = await response.json();
+
+            if (data.success) {
+                setNotification({ type: 'success', message: 'Account information sent successfully to user\'s email!' });
+            } else {
+                setNotification({ type: 'error', message: data.message || 'Failed to send account information' });
+            }
+        } catch (error: any) {
+            console.error('Error sending account info:', error);
+            setNotification({ type: 'error', message: error.message || 'Failed to send account information' });
+        } finally {
+            setSendingEmail(false);
+        }
     };
 
     const handleSearch = () => {
@@ -548,6 +590,8 @@ const Users: React.FC = () => {
                                 setShowViewModal(false);
                                 setSelectedUser(null);
                             }}
+                            onSendAccountInfo={handleSendAccountInfo}
+                            sendingEmail={sendingEmail}
                         />
                     )}
 

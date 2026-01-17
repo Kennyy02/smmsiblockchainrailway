@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
@@ -148,8 +150,8 @@ class StudentController extends Controller
                 'program' => 'nullable|string|max:255',
                 'year_level' => 'required|integer|min:1|max:16',
                 'current_class_id' => 'nullable|exists:classes,id',
-                // Student password (for creating user account)
-                'password' => 'required_without:user_id|string|min:8|confirmed',
+                // Password is now optional - will be auto-generated if not provided
+                'password' => 'nullable|string|min:8',
                 // Parent/Guardian validation
                 'parent_guardian' => 'nullable|array',
                 'parent_guardian.first_name' => 'nullable|string|max:255',
@@ -175,22 +177,30 @@ class StudentController extends Controller
             unset($studentData['parent_guardian']); // Remove parent data from student creation
             
             // Create or reuse user account if user_id not provided
-            if (!isset($studentData['user_id']) && isset($studentData['password'])) {
+            $createdUser = null;
+            $generatedPassword = null;
+            
+            if (!isset($studentData['user_id'])) {
                 // Check if user exists (from earlier check)
                 if ($existingUser) {
                     // Reuse existing user account
                     $studentData['user_id'] = $existingUser->id;
                     Log::info('Reusing existing user account for student', ['user_id' => $existingUser->id, 'email' => $existingUser->email]);
                 } else {
+                    // Always generate password (password field removed from form)
+                    $password = Str::random(12);
+                    
                     // Create new user account
                     $user = User::create([
                         'name' => trim($studentData['first_name'] . ' ' . $studentData['last_name']),
                         'email' => $studentData['email'],
-                        'password' => Hash::make($studentData['password']),
+                        'password' => Hash::make($password),
                         'role' => 'student',
                         'status' => 'active',
                     ]);
                     $studentData['user_id'] = $user->id;
+                    $createdUser = $user;
+                    $generatedPassword = $password;
                     Log::info('Created new user account for student', ['user_id' => $user->id, 'email' => $user->email]);
                 }
             }
@@ -201,6 +211,16 @@ class StudentController extends Controller
             $student = Student::create($studentData);
             
             DB::commit();
+            
+            // Send account information email if user was just created
+            if ($createdUser && $generatedPassword) {
+                try {
+                    $this->sendAccountInfoEmail($createdUser, $generatedPassword);
+                } catch (\Exception $e) {
+                    Log::error('Failed to send account info email to student: ' . $e->getMessage());
+                    // Don't fail the creation if email fails
+                }
+            }
             
             // Handle parent/guardian creation AFTER commit to avoid transaction rollback
             try {
@@ -268,11 +288,19 @@ class StudentController extends Controller
                 ]);
                 $parent = $existingParent;
             } else {
+                // Always generate password (password field removed from form)
+                $password = Str::random(12);
+                $parentEmail = $parentData['email'] ?? null;
+                
+                if (!$parentEmail) {
+                    throw new \Exception('Email is required when creating a new parent account');
+                }
+                
                 // Create user account for parent
                 $user = User::create([
                     'name' => trim($parentData['first_name'] . ' ' . ($parentData['last_name'] ?? '')),
-                    'email' => $parentData['email'] ?? 'parent_' . uniqid() . '@temp.local',
-                    'password' => Hash::make($parentData['password'] ?? 'password123'),
+                    'email' => $parentEmail,
+                    'password' => Hash::make($password),
                     'role' => 'parent',
                     'status' => 'active',
                 ]);
@@ -283,10 +311,18 @@ class StudentController extends Controller
                     'first_name' => $parentData['first_name'],
                     'middle_name' => $parentData['middle_name'] ?? null,
                     'last_name' => $parentData['last_name'],
-                    'email' => $parentData['email'] ?? $user->email,
+                    'email' => $parentEmail,
                     'phone' => $parentData['phone'] ?? null,
                     'address' => $parentData['address'] ?? null,
                 ]);
+                
+                // Send account information email
+                try {
+                    $this->sendAccountInfoEmail($user, $password);
+                } catch (\Exception $e) {
+                    Log::error('Failed to send account info email to parent: ' . $e->getMessage());
+                    // Don't fail the creation if email fails
+                }
             }
             
             // Link parent to student (many-to-many relationship)
@@ -718,6 +754,32 @@ class StudentController extends Controller
         } catch (\Exception $e) {
             Log::error('Error fetching student transcript: ' . $e->getMessage());
             return response()->json(['success' => false, 'message' => 'Failed to retrieve transcript', 'error' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Send account information email to user
+     */
+    private function sendAccountInfoEmail(User $user, string $password): void
+    {
+        try {
+            Mail::send('emails.account-info', [
+                'user' => $user,
+                'email' => $user->email,
+                'password' => $password,
+                'appName' => config('app.name', 'School Management System')
+            ], function ($message) use ($user) {
+                $message->to($user->email)
+                        ->subject('Your Account Information - ' . config('app.name', 'School Management System'));
+            });
+            
+            Log::info('Account information email sent', [
+                'user_id' => $user->id,
+                'user_email' => $user->email,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Failed to send account info email: ' . $e->getMessage());
+            throw $e;
         }
     }
 }

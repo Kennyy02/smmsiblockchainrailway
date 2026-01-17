@@ -16,6 +16,9 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 // ==========================================
@@ -182,7 +185,8 @@ class ParentController extends Controller
                 'gender' => 'nullable|in:Male,Female',
                 'phone' => 'nullable|string|max:20',
                 'address' => 'nullable|string|max:500',
-                'password' => 'required|string|min:8|confirmed',
+                // Password is now optional - will be auto-generated if not provided
+                'password' => 'nullable|string|min:8',
                 'students' => 'nullable|array',
                 'students.*.student_id' => 'exists:students,id',
                 'students.*.relationship' => 'string|max:50',
@@ -217,14 +221,25 @@ class ParentController extends Controller
                     return response()->json(['success' => false, 'message' => 'A parent account with this email already exists'], 422);
                 }
             } else {
+                // Always generate password (password field removed from form)
+                $password = Str::random(12);
+                
                 // Create User for this parent
                 $user = User::create([
                     'name' => $validated['first_name'] . ' ' . $validated['last_name'],
                     'email' => $validated['email'],
-                    'password' => bcrypt($validated['password']),
+                    'password' => Hash::make($password),
                     'role' => 'parent',
                     'status' => 'active',
                 ]);
+                
+                // Send account information email
+                try {
+                    $this->sendAccountInfoEmail($user, $password);
+                } catch (\Exception $e) {
+                    Log::error('Failed to send account info email to parent: ' . $e->getMessage());
+                    // Don't fail the creation if email fails
+                }
             }
 
             // Create the parent record
@@ -414,6 +429,32 @@ class ParentController extends Controller
         } catch (\Exception $e) {
             Log::error('Error deleting parent: ' . $e->getMessage());
             return $request->expectsJson() ? response()->json(['success' => false, 'message' => 'Failed to delete parent: ' . $e->getMessage()], 500) : back()->with('error', 'Failed to delete parent');
+        }
+    }
+
+    /**
+     * Send account information email to user
+     */
+    private function sendAccountInfoEmail(User $user, string $password): void
+    {
+        try {
+            Mail::send('emails.account-info', [
+                'user' => $user,
+                'email' => $user->email,
+                'password' => $password,
+                'appName' => config('app.name', 'School Management System')
+            ], function ($message) use ($user) {
+                $message->to($user->email)
+                        ->subject('Your Account Information - ' . config('app.name', 'School Management System'));
+            });
+            
+            Log::info('Account information email sent', [
+                'user_id' => $user->id,
+                'user_email' => $user->email,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Failed to send account info email: ' . $e->getMessage());
+            throw $e;
         }
     }
 }

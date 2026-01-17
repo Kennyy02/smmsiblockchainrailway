@@ -115,6 +115,7 @@ Route::prefix('users')->group(function () {
     Route::get('/', [UserController::class, 'index']);
     Route::get('/{id}', [UserController::class, 'show']);
     Route::put('/{id}/role', [UserController::class, 'updateRole']);
+    Route::post('/{id}/send-account-info', [UserController::class, 'sendAccountInfo']);
 });
 
 // ========================================================================

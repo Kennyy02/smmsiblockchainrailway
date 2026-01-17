@@ -465,76 +465,10 @@ const StudentModal: React.FC<{
                                 {errors.address && (<p className="text-red-500 text-xs mt-1">{errors.address[0]}</p>)}
                             </div>
 
-                            <p className='text-xs sm:text-sm text-gray-500 dark:text-gray-400 pt-2'>{student ? "Leave password fields empty to keep current password." : "Set an initial password for the student."}</p>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                                <div>
-                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1.5 sm:mb-2">Password</label>
-                                    <div className="relative">
-                                        <input
-                                            type={showPassword ? "text" : "password"}
-                                            name="password"
-                                            value={formData.password}
-                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e)}
-                                            autoComplete={student ? "new-password" : "new-password"}
-                                            className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 dark:border-gray-600 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all pr-10 sm:pr-12 bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
-                                            required={!student}
-                                        />
-                                        <button 
-                                            type="button" 
-                                            onClick={togglePasswordVisibility}
-                                            className="absolute inset-y-0 right-0 pr-2.5 sm:pr-3 flex items-center text-gray-400 dark:text-gray-300 hover:text-gray-600 dark:hover:text-gray-100 transition-colors"
-                                        >
-                                            {showPassword ? <Eye className="h-4 w-4 sm:h-5 sm:w-5" /> : <EyeOff className="h-4 w-4 sm:h-5 sm:w-5" />}
-                                        </button>
-                                    </div>
-                                    {errors.password && (
-                                        <div className="mt-2 p-2 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-                                            <p className="text-red-600 dark:text-red-400 text-sm font-medium">{formatErrorMessage(errors.password[0])}</p>
-                                        </div>
-                                    )}
-                                </div>
-                                <div>
-                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1.5 sm:mb-2">Confirm Password</label>
-                                    <div className="relative">
-                                        <input
-                                            type={showPassword ? "text" : "password"}
-                                            name="password_confirmation"
-                                            value={formData.password_confirmation}
-                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e)}
-                                            autoComplete="new-password"
-                                            className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 dark:border-gray-600 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all pr-10 sm:pr-12 bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
-                                            required={!student}
-                                        />
-                                        <button 
-                                            type="button" 
-                                            onClick={togglePasswordVisibility}
-                                            className="absolute inset-y-0 right-0 pr-2.5 sm:pr-3 flex items-center text-gray-400 dark:text-gray-300 hover:text-gray-600 dark:hover:text-gray-100 transition-colors"
-                                        >
-                                            {showPassword ? <Eye className="h-4 w-4 sm:h-5 sm:w-5" /> : <EyeOff className="h-4 w-4 sm:h-5 sm:w-5" />}
-                                        </button>
-                                    </div>
-                                    
-                                    {/* Real-time password match feedback */}
-                                    {passwordsDontMatch && (
-                                        <div className="mt-2 p-2 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg flex items-center gap-2">
-                                            <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-400 flex-shrink-0" />
-                                            <p className="text-red-600 dark:text-red-400 text-sm font-medium">Passwords do not match</p>
-                                        </div>
-                                    )}
-                                    {passwordsMatch && (
-                                        <div className="mt-2 p-2 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg flex items-center gap-2">
-                                            <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400 flex-shrink-0" />
-                                            <p className="text-green-600 dark:text-green-400 text-sm font-medium">Passwords match</p>
-                                        </div>
-                                    )}
-                                    
-                                    {/* Server-side validation errors */}
-                                    {errors.password_confirmation && !passwordsMatch && !passwordsDontMatch && (
-                                        <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded-lg">
-                                            <p className="text-red-600 text-sm font-medium">{formatErrorMessage(errors.password_confirmation[0])}</p>
-                                        </div>
-                                    )}
-                                </div>
+                            <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                                <p className="text-xs sm:text-sm text-blue-700 dark:text-blue-300">
+                                    <strong>Note:</strong> Password will be automatically generated and sent to the student's email address.
+                                </p>
                             </div>
                             
                                                         {/* Parent/Guardian Section */}
@@ -682,77 +616,12 @@ const StudentModal: React.FC<{
                                     />
                                 </div>
                                 
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                                    <div>
-                                        <label className="block text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1.5 sm:mb-2">Password</label>
-                                        <div className="relative">
-                                            <input 
-                                                type={showParentPassword ? "text" : "password"}
-                                                name="password" 
-                                                value={formData.parent_guardian?.password || ''} 
-                                                onChange={handleParentChange} 
-                                                autoComplete="new-password"
-                                                className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 dark:border-gray-600 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all pr-10 sm:pr-12 bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
-                                                placeholder="Parent login password"
-                                            />
-                                            <button 
-                                                type="button" 
-                                                onClick={() => setShowParentPassword(prev => !prev)}
-                                                className="absolute inset-y-0 right-0 pr-2.5 sm:pr-3 flex items-center text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
-                                            >
-                                                {showParentPassword ? <Eye className="h-4 w-4 sm:h-5 sm:w-5" /> : <EyeOff className="h-4 w-4 sm:h-5 sm:w-5" />}
-                                            </button>
-                                        </div>
-                                        {errors['parent_guardian.password'] && (
-                                            <div className="mt-2 p-2 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
-                                                <p className="text-red-600 dark:text-red-400 text-sm font-medium">{formatErrorMessage(errors['parent_guardian.password'][0])}</p>
-                                            </div>
-                                        )}
-                                    </div>
-                                    <div>
-                                        <label className="block text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1.5 sm:mb-2">Confirm Password</label>
-                                        <div className="relative">
-                                            <input 
-                                                type={showParentPassword ? "text" : "password"}
-                                                name="password_confirmation" 
-                                                value={formData.parent_guardian?.password_confirmation || ''} 
-                                                onChange={handleParentChange}
-                                                autoComplete="new-password" 
-                                                className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-200 dark:border-gray-600 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all pr-10 sm:pr-12 bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
-                                                placeholder="Confirm password"
-                                            />
-                                            <button 
-                                                type="button" 
-                                                onClick={() => setShowParentPassword(prev => !prev)}
-                                                className="absolute inset-y-0 right-0 pr-2.5 sm:pr-3 flex items-center text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
-                                            >
-                                                {showParentPassword ? <Eye className="h-4 w-4 sm:h-5 sm:w-5" /> : <EyeOff className="h-4 w-4 sm:h-5 sm:w-5" />}
-                                            </button>
-                                        </div>
-                                        
-                                        {/* Real-time password match feedback for parent */}
-                                        {parentPasswordsDontMatch && (
-                                            <div className="mt-2 p-2 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg flex items-center gap-2">
-                                                <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-400 flex-shrink-0" />
-                                                <p className="text-red-600 dark:text-red-400 text-sm font-medium">Passwords do not match</p>
-                                            </div>
-                                        )}
-                                        {parentPasswordsMatch && (
-                                            <div className="mt-2 p-2 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-lg flex items-center gap-2">
-                                                <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400 flex-shrink-0" />
-                                                <p className="text-green-600 dark:text-green-400 text-sm font-medium">Passwords match</p>
-                                            </div>
-                                        )}
-                                        
-                                        {/* Server-side validation errors */}
-                                        {errors['parent_guardian.password_confirmation'] && !parentPasswordsMatch && !parentPasswordsDontMatch && (
-                                            <div className="mt-2 p-2 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
-                                                <p className="text-red-600 dark:text-red-400 text-sm font-medium">{formatErrorMessage(errors['parent_guardian.password_confirmation'][0])}</p>
-                                            </div>
-                                        )}
-                                    </div>
+                                <div className="mt-3 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                                    <p className="text-xs sm:text-sm text-blue-700 dark:text-blue-300">
+                                        <strong>Note:</strong> If creating a parent account, password will be automatically generated and sent to the parent's email address.
+                                    </p>
                                 </div>
-                                <p className="text-xs text-gray-500 mt-2">Optional: Fill in parent/guardian details to link them to this student. Password is required if creating a parent account.</p>
+                                <p className="text-xs text-gray-500 mt-2">Optional: Fill in parent/guardian details to link them to this student.</p>
                             </div>
                         </div>
 

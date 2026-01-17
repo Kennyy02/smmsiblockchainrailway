@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class TeacherController extends Controller
 {
@@ -105,7 +107,8 @@ class TeacherController extends Controller
             'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:500',
             'department' => 'nullable|string|max:255',
-            'password' => 'required|string|min:8|confirmed',
+            // Password is now optional - will be auto-generated if not provided
+            'password' => 'nullable|string|min:8',
         ]);
 
         if ($validator->fails()) {
@@ -125,15 +128,26 @@ class TeacherController extends Controller
                 $user = $existingUser;
                 Log::info('Reusing existing user account for teacher', ['user_id' => $user->id, 'email' => $user->email]);
             } else {
+                // Always generate password (password field removed from form)
+                $password = Str::random(12);
+                
                 // Create new user account
                 $user = User::create([
                     'name' => $request->first_name . ' ' . $request->last_name,
                     'email' => $request->email,
-                    'password' => Hash::make($request->password),
+                    'password' => Hash::make($password),
                     'role' => 'teacher',
                     'status' => 'active',
                 ]);
                 Log::info('Created new user account for teacher', ['user_id' => $user->id, 'email' => $user->email]);
+                
+                // Send account information email
+                try {
+                    $this->sendAccountInfoEmail($user, $password);
+                } catch (\Exception $e) {
+                    Log::error('Failed to send account info email to teacher: ' . $e->getMessage());
+                    // Don't fail the creation if email fails
+                }
             }
 
             // Create teacher record
@@ -603,6 +617,32 @@ class TeacherController extends Controller
                 'success' => false,
                 'message' => 'Error loading departments'
             ], 500);
+        }
+    }
+
+    /**
+     * Send account information email to user
+     */
+    private function sendAccountInfoEmail(User $user, string $password): void
+    {
+        try {
+            Mail::send('emails.account-info', [
+                'user' => $user,
+                'email' => $user->email,
+                'password' => $password,
+                'appName' => config('app.name', 'School Management System')
+            ], function ($message) use ($user) {
+                $message->to($user->email)
+                        ->subject('Your Account Information - ' . config('app.name', 'School Management System'));
+            });
+            
+            Log::info('Account information email sent', [
+                'user_id' => $user->id,
+                'user_email' => $user->email,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Failed to send account info email: ' . $e->getMessage());
+            throw $e;
         }
     }
 }

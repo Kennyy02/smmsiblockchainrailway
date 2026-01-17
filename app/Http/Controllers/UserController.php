@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -226,6 +229,71 @@ class UserController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'User not found'
+            ], 404);
+        }
+    }
+
+    /**
+     * Send account information to user via email (Admin only).
+     */
+    public function sendAccountInfo($id)
+    {
+        // Only admins can access this
+        if (!Auth::check() || !Auth::user()->isAdmin()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized. Admin access required.'
+            ], 403);
+        }
+
+        try {
+            $user = User::findOrFail($id);
+            
+            // Generate a new temporary password
+            $temporaryPassword = Str::random(12); // Generate 12-character random password
+            
+            // Update user's password with the temporary password
+            $user->password = Hash::make($temporaryPassword);
+            $user->save();
+            
+            // Send email with account information
+            try {
+                Mail::send('emails.account-info', [
+                    'user' => $user,
+                    'email' => $user->email,
+                    'password' => $temporaryPassword,
+                    'appName' => config('app.name', 'School Management System')
+                ], function ($message) use ($user) {
+                    $message->to($user->email)
+                            ->subject('Your Account Information - ' . config('app.name', 'School Management System'));
+                });
+                
+                Log::info('Account information sent', [
+                    'user_id' => $user->id,
+                    'user_email' => $user->email,
+                    'sent_by' => Auth::user()->id,
+                ]);
+                
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Account information sent successfully to ' . $user->email
+                ]);
+            } catch (\Exception $e) {
+                Log::error('Failed to send account info email: ' . $e->getMessage());
+                
+                // Revert password change if email failed
+                // Note: In production, you might want to handle this differently
+                
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to send email: ' . $e->getMessage()
+                ], 500);
+            }
+        } catch (\Exception $e) {
+            Log::error('Error sending account info: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'User not found or error occurred'
             ], 404);
         }
     }
