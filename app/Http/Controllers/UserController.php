@@ -313,5 +313,67 @@ class UserController extends Controller
             ], 404);
         }
     }
+
+    /**
+     * Send reminder email to user without resetting password (Admin only).
+     */
+    public function sendReminder($id)
+    {
+        // Only admins can access this
+        if (!Auth::check() || !Auth::user()->isAdmin()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized. Admin access required.'
+            ], 403);
+        }
+
+        try {
+            $user = User::findOrFail($id);
+            
+            // Check if user has already changed their password
+            if (!is_null($user->password_changed_at)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Cannot send reminder. User has already changed their password.'
+                ], 400);
+            }
+            
+            // Send reminder email
+            try {
+                Mail::send('emails.password-reminder', [
+                    'user' => $user,
+                    'email' => $user->email,
+                    'appName' => config('app.name', 'School Management System')
+                ], function ($message) use ($user) {
+                    $message->to($user->email)
+                            ->subject('Reminder: Your Account Login Information - ' . config('app.name', 'School Management System'));
+                });
+                
+                Log::info('Password reminder sent', [
+                    'user_id' => $user->id,
+                    'user_email' => $user->email,
+                    'sent_by' => Auth::user()->id,
+                ]);
+                
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Reminder sent successfully to ' . $user->email . '.',
+                ]);
+            } catch (\Exception $e) {
+                Log::error('Failed to send reminder email: ' . $e->getMessage());
+                
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to send email: ' . $e->getMessage()
+                ], 500);
+            }
+        } catch (\Exception $e) {
+            Log::error('Error sending reminder: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'User not found or error occurred'
+            ], 404);
+        }
+    }
 }
 

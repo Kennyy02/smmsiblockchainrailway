@@ -119,9 +119,11 @@ const ViewUserModal: React.FC<{
     user: UserData | null;
     onClose: () => void;
     onSendAccountInfo?: (userId: number) => Promise<void>;
+    onSendReminder?: (userId: number) => Promise<void>;
     sendingEmail?: boolean;
+    sendingReminder?: boolean;
     generatedPassword?: string | null;
-}> = ({ user, onClose, onSendAccountInfo, sendingEmail = false, generatedPassword = null }) => {
+}> = ({ user, onClose, onSendAccountInfo, onSendReminder, sendingEmail = false, sendingReminder = false, generatedPassword = null }) => {
     if (!user) return null;
 
     // Get phone and address from user or role-specific data
@@ -153,9 +155,9 @@ const ViewUserModal: React.FC<{
     return (
         <div className="fixed inset-0 z-50 overflow-y-auto">
             <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-                {/* Background overlay with blur only */}
+                {/* Background overlay with dark blur */}
                 <div 
-                    className="fixed inset-0 transition-opacity backdrop-blur-sm"
+                    className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
                     onClick={onClose}
                 />
 
@@ -264,23 +266,45 @@ const ViewUserModal: React.FC<{
 
                     {/* Footer */}
                     <div className="px-6 py-4 bg-gray-50 dark:bg-gray-700 flex justify-between items-center">
-                        <button
-                            onClick={() => onSendAccountInfo && onSendAccountInfo(user.id)}
-                            disabled={sendingEmail}
-                            className={`px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2`}
-                        >
-                            {sendingEmail ? (
-                                <>
-                                    <RefreshCw className="h-4 w-4 animate-spin" />
-                                    Sending...
-                                </>
-                            ) : (
-                                <>
-                                    <Mail className="h-4 w-4" />
-                                    Send Account Information
-                                </>
+                        <div className="flex gap-3">
+                            <button
+                                onClick={() => onSendAccountInfo && onSendAccountInfo(user.id)}
+                                disabled={sendingEmail || sendingReminder}
+                                className={`px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2`}
+                            >
+                                {sendingEmail ? (
+                                    <>
+                                        <RefreshCw className="h-4 w-4 animate-spin" />
+                                        Resetting...
+                                    </>
+                                ) : (
+                                    <>
+                                        <Mail className="h-4 w-4" />
+                                        Reset Password
+                                    </>
+                                )}
+                            </button>
+                            {/* Show Remind button only if password hasn't been changed */}
+                            {!user.password_changed_at && onSendReminder && (
+                                <button
+                                    onClick={() => onSendReminder(user.id)}
+                                    disabled={sendingEmail || sendingReminder}
+                                    className={`px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2`}
+                                >
+                                    {sendingReminder ? (
+                                        <>
+                                            <RefreshCw className="h-4 w-4 animate-spin" />
+                                            Sending...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Mail className="h-4 w-4" />
+                                            Remind
+                                        </>
+                                    )}
+                                </button>
                             )}
-                        </button>
+                        </div>
                         <button
                             onClick={onClose}
                             className={`px-4 py-2 ${PRIMARY_COLOR_CLASS} text-white rounded-lg ${HOVER_COLOR_CLASS} transition-colors`}
@@ -304,6 +328,7 @@ const Users: React.FC = () => {
     const [showViewModal, setShowViewModal] = useState(false);
     const [notification, setNotification] = useState<Notification | null>(null);
     const [sendingEmail, setSendingEmail] = useState(false);
+    const [sendingReminder, setSendingReminder] = useState(false);
     const [generatedPassword, setGeneratedPassword] = useState<string | null>(null);
     const [pagination, setPagination] = useState<Pagination>({
         current_page: 1,
@@ -545,6 +570,117 @@ const Users: React.FC = () => {
             setNotification({ type: 'error', message: error.message || 'Failed to send account information' });
         } finally {
             setSendingEmail(false);
+        }
+    };
+
+    const handleSendReminder = async (userId: number) => {
+        setSendingReminder(true);
+        try {
+            // Fetch fresh CSRF token from API if available
+            let csrfToken = getCsrfToken();
+            
+            // If token is empty, try to fetch it from the API
+            if (!csrfToken) {
+                try {
+                    const tokenResponse = await fetch('/api/csrf-token', {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest',
+                        },
+                        credentials: 'include',
+                    });
+                    
+                    if (tokenResponse.ok) {
+                        const tokenData = await tokenResponse.json();
+                        if (tokenData.success && tokenData.csrf_token) {
+                            csrfToken = tokenData.csrf_token;
+                        }
+                    }
+                } catch (e) {
+                    console.warn('Could not fetch CSRF token from API:', e);
+                }
+            }
+
+            const response = await fetch(`/api/users/${userId}/send-reminder`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+                credentials: 'include',
+            });
+
+            // If we get a 419, try refreshing the token and retry once
+            if (response.status === 419) {
+                try {
+                    const tokenResponse = await fetch('/api/csrf-token', {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest',
+                        },
+                        credentials: 'include',
+                    });
+                    
+                    if (tokenResponse.ok) {
+                        const tokenData = await tokenResponse.json();
+                        if (tokenData.success && tokenData.csrf_token) {
+                            // Retry with fresh token
+                            const retryResponse = await fetch(`/api/users/${userId}/send-reminder`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Accept': 'application/json',
+                                    'X-CSRF-TOKEN': tokenData.csrf_token,
+                                    'X-Requested-With': 'XMLHttpRequest',
+                                },
+                                credentials: 'include',
+                            });
+                            
+                            const data: ApiResponse<any> = await retryResponse.json();
+                            if (!retryResponse.ok || !data.success) {
+                                setNotification({ type: 'error', message: data.message || 'Failed to send reminder. Please refresh the page and try again.' });
+                                setSendingReminder(false);
+                                return;
+                            }
+                            
+                            // Success on retry
+                            setNotification({ 
+                                type: 'success', 
+                                message: 'Reminder sent successfully!'
+                            });
+                            setSendingReminder(false);
+                            return;
+                        }
+                    }
+                } catch (e) {
+                    console.error('Failed to refresh CSRF token:', e);
+                }
+                
+                // If retry failed, show error
+                setNotification({ type: 'error', message: 'Session expired. Please refresh the page and try again.' });
+                setSendingReminder(false);
+                return;
+            }
+
+            const data: ApiResponse<any> = await response.json();
+
+            if (data.success) {
+                setNotification({ 
+                    type: 'success', 
+                    message: 'Reminder sent successfully!'
+                });
+            } else {
+                setNotification({ type: 'error', message: data.message || 'Failed to send reminder' });
+            }
+        } catch (error: any) {
+            console.error('Error sending reminder:', error);
+            setNotification({ type: 'error', message: error.message || 'Failed to send reminder' });
+        } finally {
+            setSendingReminder(false);
         }
     };
 
@@ -793,7 +929,9 @@ const Users: React.FC = () => {
                                 setGeneratedPassword(null); // Clear generated password when closing modal
                             }}
                             onSendAccountInfo={handleSendAccountInfo}
+                            onSendReminder={handleSendReminder}
                             sendingEmail={sendingEmail}
+                            sendingReminder={sendingReminder}
                             generatedPassword={generatedPassword}
                         />
                     )}
