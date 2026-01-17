@@ -415,16 +415,99 @@ const Users: React.FC = () => {
     const handleSendAccountInfo = async (userId: number) => {
         setSendingEmail(true);
         try {
+            // Fetch fresh CSRF token from API if available
+            let csrfToken = getCsrfToken();
+            
+            // If token is empty, try to fetch it from the API
+            if (!csrfToken) {
+                try {
+                    const tokenResponse = await fetch('/api/csrf-token', {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest',
+                        },
+                        credentials: 'include',
+                    });
+                    
+                    if (tokenResponse.ok) {
+                        const tokenData = await tokenResponse.json();
+                        if (tokenData.success && tokenData.csrf_token) {
+                            csrfToken = tokenData.csrf_token;
+                        }
+                    }
+                } catch (e) {
+                    console.warn('Could not fetch CSRF token from API:', e);
+                }
+            }
+
             const response = await fetch(`/api/users/${userId}/send-account-info`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
-                    'X-CSRF-TOKEN': getCsrfToken(),
+                    'X-CSRF-TOKEN': csrfToken,
                     'X-Requested-With': 'XMLHttpRequest',
                 },
                 credentials: 'include',
             });
+
+            // If we get a 419, try refreshing the token and retry once
+            if (response.status === 419) {
+                try {
+                    const tokenResponse = await fetch('/api/csrf-token', {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest',
+                        },
+                        credentials: 'include',
+                    });
+                    
+                    if (tokenResponse.ok) {
+                        const tokenData = await tokenResponse.json();
+                        if (tokenData.success && tokenData.csrf_token) {
+                            // Retry with fresh token
+                            const retryResponse = await fetch(`/api/users/${userId}/send-account-info`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Accept': 'application/json',
+                                    'X-CSRF-TOKEN': tokenData.csrf_token,
+                                    'X-Requested-With': 'XMLHttpRequest',
+                                },
+                                credentials: 'include',
+                            });
+                            
+                            const data: ApiResponse<any> = await retryResponse.json();
+                            if (!retryResponse.ok || !data.success) {
+                                setNotification({ type: 'error', message: data.message || 'Failed to send account information. Please refresh the page and try again.' });
+                                setSendingEmail(false);
+                                return;
+                            }
+                            
+                            // Success on retry - show notification
+                            const passwordMessage = data.generated_password 
+                                ? `Account information sent! Generated Password: ${data.generated_password}`
+                                : 'Account information sent successfully to user\'s email!';
+                            setNotification({ 
+                                type: 'success', 
+                                message: passwordMessage,
+                                generatedPassword: data.generated_password
+                            });
+                            setSendingEmail(false);
+                            return;
+                        }
+                    }
+                } catch (e) {
+                    console.error('Failed to refresh CSRF token:', e);
+                }
+                
+                // If retry failed, show error
+                setNotification({ type: 'error', message: 'Session expired. Please refresh the page and try again.' });
+                setSendingEmail(false);
+                return;
+            }
 
             const data: ApiResponse<any> = await response.json();
 
