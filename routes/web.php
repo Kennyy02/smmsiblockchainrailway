@@ -227,7 +227,12 @@ Route::middleware(['auth', 'requirePasswordChange', 'verified', 'checkRole:admin
     
     // ==================== USER MANAGEMENT ====================
     
-    Route::get('/users', function () {
+    Route::get('/users', function (Request $request) {
+        // Check if password has been verified in session
+        if (!$request->session()->get('user_password_management_verified')) {
+            return redirect()->route('admin.dashboard')->with('error', 'Password required to access User Password Management.');
+        }
+        
         return Inertia::render('Admin/Users');
     })->name('users');
     

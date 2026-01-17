@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, usePage, router } from '@inertiajs/react';
+import PasswordModal from './PasswordModal';
 import { 
     LayoutGrid, 
     Users, 
@@ -134,22 +135,34 @@ const DropdownMenuItem = ({
                 <div className={`${isMobile ? 'ml-3 mt-1.5 space-y-1' : 'absolute left-0 mt-1.5 w-52 rounded-lg shadow-2xl bg-blue-800 ring-1 ring-white/20 z-50 overflow-hidden'} transition-all duration-300`}>
                     {item.submenu.map((subItem, index) => {
                         const subIsActive = window.location.pathname === subItem.href;
+                        const isPasswordProtected = subItem.href === '/admin/users';
+                        
                         return (
-                            <Link
+                            <button
                                 key={index}
-                                href={subItem.href}
-                                className={`block px-3 py-2 text-xs ${isMobile ? 'rounded-lg' : ''} ${
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    handleSubmenuClick();
+                                    if (isPasswordProtected) {
+                                        // Trigger password modal via parent component
+                                        if ((window as any).openPasswordModal) {
+                                            (window as any).openPasswordModal();
+                                        }
+                                    } else {
+                                        router.visit(subItem.href);
+                                    }
+                                }}
+                                className={`block w-full text-left px-3 py-2 text-xs ${isMobile ? 'rounded-lg' : ''} ${
                                     subIsActive 
                                         ? 'bg-blue-600 text-white font-semibold' 
                                         : 'text-white/90 hover:bg-white/10 hover:text-white'
                                 } transition-all duration-300`}
-                                onClick={handleSubmenuClick}
                             >
                                 <div className="flex items-center">
                                     {subItem.icon && <subItem.icon className="mr-1.5 h-3.5 w-3.5 flex-shrink-0" />}
                                     <span className="truncate">{subItem.title}</span>
                                 </div>
-                            </Link>
+                            </button>
                         );
                     })}
                 </div>
@@ -164,8 +177,25 @@ function AppHeader() {
     const [userMenuOpen, setUserMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const [activeDropdown, setActiveDropdown] = useState<number | null>(null);
+    const [passwordModalOpen, setPasswordModalOpen] = useState(false);
     
     const userRole = auth.user?.role || 'student';
+
+    // Expose password modal function to global scope for submenu items
+    useEffect(() => {
+        (window as any).openPasswordModal = () => {
+            setPasswordModalOpen(true);
+        };
+        
+        return () => {
+            delete (window as any).openPasswordModal;
+        };
+    }, []);
+
+    const handlePasswordSuccess = () => {
+        // Navigate to Users page after successful password verification
+        router.visit('/admin/users');
+    };
 
     const closeAllDropdowns = () => {
         setMobileMenuOpen(false);
@@ -415,6 +445,7 @@ function AppHeader() {
     const roleBadge = getRoleBadge();
 
     return (
+        <>
         <header 
             className={`sticky top-0 z-40 w-full transition-all duration-500 ${
                 scrolled 
@@ -552,6 +583,13 @@ function AppHeader() {
                 </div>
             </div>
         </header>
+        {/* Password Modal for User Password Management */}
+        <PasswordModal
+            isOpen={passwordModalOpen}
+            onClose={() => setPasswordModalOpen(false)}
+            onSuccess={handlePasswordSuccess}
+        />
+        </>
     );
 }
 

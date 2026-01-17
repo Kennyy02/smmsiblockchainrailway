@@ -117,6 +117,7 @@ Route::prefix('users')->group(function () {
     Route::put('/{id}/role', [UserController::class, 'updateRole']);
     Route::post('/{id}/send-account-info', [UserController::class, 'sendAccountInfo']);
     Route::post('/{id}/send-reminder', [UserController::class, 'sendReminder']);
+    Route::post('/verify-access-password', [UserController::class, 'verifyAccessPassword']);
 });
 
 // ========================================================================

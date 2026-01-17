@@ -375,5 +375,59 @@ class UserController extends Controller
             ], 404);
         }
     }
+
+    /**
+     * Verify password for accessing User Password Management (Admin only).
+     */
+    public function verifyAccessPassword(Request $request)
+    {
+        // Only admins can access this
+        if (!Auth::check() || !Auth::user()->isAdmin()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized. Admin access required.'
+            ], 403);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'password' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Password is required.'
+            ], 422);
+        }
+
+        $providedPassword = $request->password;
+        $correctPassword = env('USER_PASSWORD_MANAGEMENT_PASSWORD', 'administrator');
+
+        if ($providedPassword === $correctPassword) {
+            // Store verification in session
+            session(['user_password_management_verified' => true]);
+            session(['user_password_management_verified_at' => now()]);
+
+            Log::info('User Password Management access verified', [
+                'user_id' => Auth::user()->id,
+                'user_email' => Auth::user()->email,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Password verified successfully.'
+            ]);
+        } else {
+            Log::warning('Failed User Password Management access attempt', [
+                'user_id' => Auth::user()->id,
+                'user_email' => Auth::user()->email,
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Incorrect password. Please try again.'
+            ], 401);
+        }
+    }
 }
 
