@@ -177,7 +177,7 @@ export default function ChangePassword({ status }: ChangePasswordProps) {
                                     <li>At least 8 characters long</li>
                                     <li>At least one uppercase letter (A-Z)</li>
                                     <li>At least one number (0-9)</li>
-                                    <li>At least one special character (!@#$%^&*()_+-=[]{}|;:,.<>?)</li>
+                                    <li>At least one special character ({'!@#$%^&*()_+-=[]{}|;:,.<>?'})</li>
                                 </ul>
                             </div>
                         </div>
