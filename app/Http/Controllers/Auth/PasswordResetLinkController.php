@@ -37,9 +37,9 @@ class PasswordResetLinkController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        // Don't reveal if user exists for security
+        // Check if email is registered in the system
         if (!$user) {
-            return back()->with('status', 'If an account exists with that email, a password reset code has been sent.');
+            return back()->withErrors(['email' => 'This email address is not registered in the system. Please check your email and try again.']);
         }
 
         // Generate 6-digit OTP

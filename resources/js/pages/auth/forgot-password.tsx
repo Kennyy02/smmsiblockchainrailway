@@ -93,6 +93,12 @@ export default function ForgotPassword({ status }: { status?: string }) {
                         </div>
                     )}
 
+                    {errors.email && (
+                        <div className="mb-4 p-3 bg-red-500 bg-opacity-20 border border-red-400 rounded-lg">
+                            <p className="text-center text-sm font-medium text-red-300">{errors.email}</p>
+                        </div>
+                    )}
+
                     <form onSubmit={submit} className="space-y-5">
                         <div>
                             <Label htmlFor="email" className="text-white/90 font-medium mb-2 block">
@@ -109,7 +115,6 @@ export default function ForgotPassword({ status }: { status?: string }) {
                                 placeholder="your.email@columban.edu.ph"
                                 className="w-full bg-white/90 border-0 text-gray-900 placeholder:text-gray-500 rounded-xl px-4 py-3 focus:ring-2 focus:ring-amber-400"
                             />
-                            <InputError message={errors.email} className="text-red-300 mt-1" />
                         </div>
 
                         <Button 
