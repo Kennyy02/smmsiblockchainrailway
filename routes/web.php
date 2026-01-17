@@ -53,7 +53,7 @@ Route::get('/verify', function () {
 })->name('verify');
 
 // ==================== ADMIN ROUTES ====================
-Route::middleware(['auth', 'verified', 'checkRole:admin'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'requirePasswordChange', 'verified', 'checkRole:admin'])->prefix('admin')->name('admin.')->group(function () {
     
     // Dashboard
     Route::get('/dashboard', function () {
@@ -255,7 +255,7 @@ Route::middleware(['auth', 'verified', 'checkRole:admin'])->prefix('admin')->nam
 });
 
 // ==================== TEACHER ROUTES ====================
-Route::middleware(['auth', 'verified', 'checkRole:teacher'])->prefix('teacher')->name('teacher.')->group(function () {
+Route::middleware(['auth', 'requirePasswordChange', 'verified', 'checkRole:teacher'])->prefix('teacher')->name('teacher.')->group(function () {
     
     // Teacher Dashboard
     Route::get('/dashboard', function () {
@@ -319,7 +319,7 @@ Route::middleware(['auth', 'verified', 'checkRole:teacher'])->prefix('teacher')-
 });
 
 // ==================== STUDENT ROUTES ====================
-Route::middleware(['auth', 'verified', 'checkRole:student'])->prefix('student')->name('student.')->group(function () {
+Route::middleware(['auth', 'requirePasswordChange', 'verified', 'checkRole:student'])->prefix('student')->name('student.')->group(function () {
     
     // Student Dashboard
     Route::get('/dashboard', function () {
@@ -383,7 +383,7 @@ Route::middleware(['auth', 'verified', 'checkRole:student'])->prefix('student')-
 });
 
 // ==================== PARENT ROUTES ====================
-Route::middleware(['auth', 'verified', 'checkRole:parent'])->prefix('parent')->name('parent.')->group(function () {
+Route::middleware(['auth', 'requirePasswordChange', 'verified', 'checkRole:parent'])->prefix('parent')->name('parent.')->group(function () {
     
     // Parent Dashboard
     Route::get('/dashboard', function () {

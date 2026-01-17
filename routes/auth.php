@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\ChangePasswordController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
@@ -28,6 +29,9 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
+    // Password change routes (must be accessible even if password change is required)
+    Route::get('password/change', [ChangePasswordController::class, 'show'])->name('password.change');
+    Route::post('password/change', [ChangePasswordController::class, 'update'])->name('password.update');
     // OTP Verification Routes (BEFORE 'verified' middleware)
     Route::get('verify-otp', [OtpVerificationController::class, 'show'])->name('otp.verify');
     Route::post('verify-otp', [OtpVerificationController::class, 'verify']);

@@ -26,6 +26,7 @@ class User extends Authenticatable
         'role', // Allowed during creation, protected during updates
         'status',
         'avatar',
+        'must_change_password',
     ];
 
     /**

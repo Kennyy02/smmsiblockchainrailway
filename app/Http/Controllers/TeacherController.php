@@ -139,6 +139,7 @@ class TeacherController extends Controller
                     'password' => Hash::make($password),
                     'role' => 'teacher',
                     'status' => 'active',
+                    'must_change_password' => true,
                 ]);
                 Log::info('Created new user account for teacher', ['user_id' => $user->id, 'email' => $user->email, 'password_generated' => true]);
             } else {

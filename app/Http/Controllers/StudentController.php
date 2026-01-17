@@ -198,6 +198,7 @@ class StudentController extends Controller
                         'password' => Hash::make($password),
                         'role' => 'student',
                         'status' => 'active',
+                        'must_change_password' => true,
                     ]);
                     $studentData['user_id'] = $user->id;
                     $createdUser = $user;
@@ -306,6 +307,7 @@ class StudentController extends Controller
                     'password' => Hash::make($password),
                     'role' => 'parent',
                     'status' => 'active',
+                    'must_change_password' => true,
                 ]);
                 
                 // Create parent record

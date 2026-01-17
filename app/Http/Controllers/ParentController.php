@@ -235,6 +235,7 @@ class ParentController extends Controller
                     'password' => Hash::make($password),
                     'role' => 'parent',
                     'status' => 'active',
+                    'must_change_password' => true,
                 ]);
                 
                 Log::info('Created new user account for parent', ['user_id' => $user->id, 'email' => $user->email, 'password_generated' => true]);
