@@ -190,12 +190,21 @@ const ParentModal: React.FC<{
     // Load existing linked students when editing
     useEffect(() => {
         if (parent && parent.students) {
-            const existingStudents: SelectedStudent[] = parent.students.map((student: any) => ({
-                student_id: student.id,
-                student_name: student.full_name,
-                student_info: `${student.program || 'N/A'} - ${formatGradeLevelModal(student.year_level)}`,
-                relationship: student.pivot?.relationship || 'Parent',
-            }));
+            const existingStudents: SelectedStudent[] = parent.students.map((student: any) => {
+                // For Junior High (7-10) and Elementary (1-6), don't show program
+                const yearLevel = student.year_level || 0;
+                const isJuniorOrElementary = yearLevel >= 1 && yearLevel <= 10;
+                const studentInfo = isJuniorOrElementary 
+                    ? formatGradeLevelModal(yearLevel)
+                    : `${student.program || 'N/A'} - ${formatGradeLevelModal(yearLevel)}`;
+                
+                return {
+                    student_id: student.id,
+                    student_name: student.full_name,
+                    student_info: studentInfo,
+                    relationship: student.pivot?.relationship || 'Parent',
+                };
+            });
             setSelectedStudents(existingStudents);
         }
     }, [parent]);
@@ -236,10 +245,17 @@ const ParentModal: React.FC<{
     }, [studentSearch, searchStudents]);
 
     const addStudent = (student: Student, defaultRelationship: string = 'Father') => {
+        // For Junior High (7-10) and Elementary (1-6), don't show program
+        const yearLevel = student.year_level || 0;
+        const isJuniorOrElementary = yearLevel >= 1 && yearLevel <= 10;
+        const studentInfo = isJuniorOrElementary 
+            ? formatGradeLevelModal(yearLevel)
+            : `${student.program || 'N/A'} - ${formatGradeLevelModal(yearLevel)}`;
+        
         const newStudent: SelectedStudent = {
             student_id: student.id,
             student_name: student.full_name,
-            student_info: `${student.program || 'N/A'} - ${formatGradeLevelModal(student.year_level)}`,
+            student_info: studentInfo,
             relationship: defaultRelationship,
         };
         setSelectedStudents(prev => [...prev, newStudent]);
@@ -408,7 +424,7 @@ const ParentModal: React.FC<{
 
                             {/* Student/Child Link Section */}
                             <div className="pt-4">
-                                <h3 className="text-lg font-bold text-gray-800 dark:text-white border-b dark:border-gray-700 pb-2 mb-4">Link to Student(s)/Child(ren)</h3>
+                                <h3 className="text-lg font-bold text-gray-800 dark:text-white border-b dark:border-gray-700 pb-2 mb-4">Link to Student(s)</h3>
                                 
                                 {/* Search Bar */}
                                 <div className="relative mb-4">
@@ -443,7 +459,13 @@ const ParentModal: React.FC<{
                                                         </div>
                                                         <div>
                                                             <div className="text-sm font-medium text-gray-900 dark:text-white">{student.full_name}</div>
-                                                            <div className="text-xs text-gray-500 dark:text-gray-400">{student.student_id} • {student.program || 'N/A'} - {formatGradeLevelModal(student.year_level)}</div>
+                                                            <div className="text-xs text-gray-500 dark:text-gray-400">
+                                                                {student.student_id} • {
+                                                                    (student.year_level >= 1 && student.year_level <= 10)
+                                                                        ? formatGradeLevelModal(student.year_level)
+                                                                        : `${student.program || 'N/A'} - ${formatGradeLevelModal(student.year_level)}`
+                                                                }
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <UserPlus className="h-5 w-5 text-green-500 dark:text-green-400" />
