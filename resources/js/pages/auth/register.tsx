@@ -1,6 +1,6 @@
 // ============================================
 // FILE: pages/Auth/Register.tsx
-// Columban College Scheduling System - Register (Updated with Current Offerings 2024-2025)
+// Southern Mindoro Maritime School - Register
 // ============================================
 import { Head, useForm } from '@inertiajs/react';
 import { LoaderCircle, Eye, EyeOff, ArrowLeft, User, Mail, Building2, Briefcase } from 'lucide-react';
@@ -36,7 +36,7 @@ export default function Register() {
         campus: 'main',
     });
 
-    // Actual Columban College Departments/Colleges (2024-2025 Academic Year)
+    // Southern Mindoro Maritime School Departments
     const colleges = [
         { value: '', label: 'Select College/Department', disabled: true },
         
@@ -95,7 +95,7 @@ export default function Register() {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-950 via-blue-900 to-blue-800 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-            <Head title="Register - Columban College" />
+            <Head title="Register - Southern Mindoro Maritime School" />
 
             {/* Decorative Background Elements */}
             <div className="absolute inset-0 overflow-hidden">
@@ -129,14 +129,14 @@ export default function Register() {
                 <div className="text-center mb-8">
                     <img
                         src="/logo.png"
-                        alt="Columban College Logo"
+                        alt="SMMS Logo"
                         className="mx-auto w-20 h-20 mb-4 object-contain"
                         onError={(e) => {
                             e.currentTarget.style.display = 'none';
                         }}
                     />
                     <h1 className="text-2xl font-bold text-white mb-2">
-                        COLUMBAN COLLEGE, INC.
+                        SOUTHERN MINDORO MARITIME SCHOOL
                     </h1>
                     <p className="text-amber-400 text-sm font-medium italic mb-1">
                         Christi Simus Non Nostri
@@ -149,7 +149,7 @@ export default function Register() {
                 <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl shadow-2xl py-8 px-6 sm:px-10">
                     <div className="mb-6 text-center">
                         <h2 className="text-3xl font-bold text-white mb-2">Create Account</h2>
-                        <p className="text-gray-300 text-sm">Join the Columban College scheduling system</p>
+                        <p className="text-gray-300 text-sm">Join the Southern Mindoro Maritime School system</p>
                     </div>
 
                     <form className="flex flex-col gap-5" onSubmit={submit}>
@@ -190,13 +190,13 @@ export default function Register() {
                                         autoComplete="email"
                                         value={data.email}
                                         onChange={(e) => setData('email', e.target.value)}
-                                        placeholder="email@columban.edu.ph"
+                                        placeholder="email@smms.edu.ph"
                                         className="w-full rounded-xl bg-white/90 text-gray-900 border-0 placeholder:text-gray-500 focus:ring-2 focus:ring-amber-400 pl-10 pr-4 py-3 text-base"
                                     />
                                 </div>
                                 <InputError message={errors.email} className="text-red-300 mt-1" />
                                 <p className="text-xs text-blue-200 mt-1">
-                                    Please use your official Columban College email address
+                                    Please use your official Southern Mindoro Maritime School email address
                                 </p>
                             </div>
 
@@ -353,7 +353,7 @@ export default function Register() {
                             {/* Terms and Conditions */}
                             <div className="bg-white/5 border border-white/10 rounded-xl p-4">
                                 <p className="text-xs text-gray-300 leading-relaxed">
-                                    By creating an account, you agree to Columban College's Terms of Service and 
+                                    By creating an account, you agree to Southern Mindoro Maritime School's Terms of Service and 
                                     acknowledge that you have read our Privacy Policy. This account will be subject 
                                     to approval by the system administrator.
                                 </p>
@@ -394,8 +394,8 @@ export default function Register() {
                     </p>
                     <p className="text-white/60 text-xs">
                         Need help? Contact{' '}
-                        <a href="mailto:info@columban.edu.ph" className="text-amber-400 hover:text-amber-300">
-                            info@columban.edu.ph
+                        <a href="mailto:info@smms.edu.ph" className="text-amber-400 hover:text-amber-300">
+                            info@smms.edu.ph
                         </a>
                         {' '}or call{' '}
                         <a href="tel:+63472223329" className="text-amber-400 hover:text-amber-300">

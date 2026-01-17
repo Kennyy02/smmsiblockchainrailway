@@ -49,7 +49,7 @@ export default function ResetPasswordOtp({ email, status }: ResetPasswordOtpProp
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-950 via-blue-900 to-blue-800 flex items-center justify-center px-4 relative overflow-hidden">
-            <Head title="Verify Reset Code - Columban College" />
+            <Head title="Verify Reset Code - Southern Mindoro Maritime School" />
 
             {/* Decorative Background Elements */}
             <div className="absolute inset-0 overflow-hidden">
@@ -83,14 +83,14 @@ export default function ResetPasswordOtp({ email, status }: ResetPasswordOtpProp
                 <div className="text-center mb-8">
                     <img
                         src="/logo.png"
-                        alt="Columban College Logo"
+                        alt="SMMS Logo"
                         className="mx-auto w-20 h-20 mb-4 object-contain"
                         onError={(e) => {
                             e.currentTarget.style.display = 'none';
                         }}
                     />
                     <h1 className="text-2xl font-bold text-white mb-2">
-                        COLUMBAN COLLEGE, INC.
+                        SOUTHERN MINDORO MARITIME SCHOOL
                     </h1>
                     <p className="text-amber-400 text-sm font-medium italic">
                         Scheduling System

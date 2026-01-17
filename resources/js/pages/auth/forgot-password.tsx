@@ -88,14 +88,14 @@ export default function ForgotPassword({ status }: { status?: string }) {
                     </p>
 
                     {status && (
-                        <div className="mb-4 p-3 bg-green-500 bg-opacity-20 border border-green-400 rounded-lg">
-                            <p className="text-center text-sm font-medium text-white">{status}</p>
+                        <div className="mb-4 p-3 bg-white border border-green-500 rounded-lg">
+                            <p className="text-center text-sm font-medium text-green-600">{status}</p>
                         </div>
                     )}
 
                     {errors.email && (
-                        <div className="mb-4 p-3 bg-red-500 bg-opacity-20 border border-red-400 rounded-lg">
-                            <p className="text-center text-sm font-medium text-white">{errors.email}</p>
+                        <div className="mb-4 p-3 bg-white border border-red-500 rounded-lg">
+                            <p className="text-center text-sm font-medium text-red-600">{errors.email}</p>
                         </div>
                     )}
 
