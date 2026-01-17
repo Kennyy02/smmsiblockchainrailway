@@ -1,6 +1,6 @@
 // ============================================
 // FILE: pages/Auth/ForgotPassword.tsx
-// Columban College Scheduling System - Forgot Password
+// Southern Mindoro Maritime School - Forgot Password
 // ============================================
 import { Head, useForm } from '@inertiajs/react';
 import { LoaderCircle, ArrowLeft, Mail } from 'lucide-react';
@@ -24,7 +24,7 @@ export default function ForgotPassword({ status }: { status?: string }) {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-950 via-blue-900 to-blue-800 flex items-center justify-center px-4 relative overflow-hidden">
-            <Head title="Forgot Password - Columban College" />
+            <Head title="Forgot Password - Southern Mindoro Maritime School" />
 
             {/* Decorative Background Elements */}
             <div className="absolute inset-0 overflow-hidden">
@@ -58,17 +58,17 @@ export default function ForgotPassword({ status }: { status?: string }) {
                 <div className="text-center mb-8">
                     <img
                         src="/logo.png"
-                        alt="Columban College Logo"
+                        alt="SMMS Logo"
                         className="mx-auto w-20 h-20 mb-4 object-contain"
                         onError={(e) => {
                             e.currentTarget.style.display = 'none';
                         }}
                     />
                     <h1 className="text-2xl font-bold text-white mb-2">
-                        COLUMBAN COLLEGE, INC.
+                        SOUTHERN MINDORO MARITIME SCHOOL
                     </h1>
                     <p className="text-amber-400 text-sm font-medium italic">
-                        Scheduling System
+                        Blockchain Grading System
                     </p>
                 </div>
 
@@ -89,13 +89,13 @@ export default function ForgotPassword({ status }: { status?: string }) {
 
                     {status && (
                         <div className="mb-4 p-3 bg-green-500 bg-opacity-20 border border-green-400 rounded-lg">
-                            <p className="text-center text-sm font-medium text-white-300">{status}</p>
+                            <p className="text-center text-sm font-medium text-white">{status}</p>
                         </div>
                     )}
 
                     {errors.email && (
                         <div className="mb-4 p-3 bg-red-500 bg-opacity-20 border border-red-400 rounded-lg">
-                            <p className="text-center text-sm font-medium text-white-300">{errors.email}</p>
+                            <p className="text-center text-sm font-medium text-white">{errors.email}</p>
                         </div>
                     )}
 
@@ -112,7 +112,7 @@ export default function ForgotPassword({ status }: { status?: string }) {
                                 autoComplete="email"
                                 value={data.email}
                                 onChange={(e) => setData('email', e.target.value)}
-                                placeholder="your.email@columban.edu.ph"
+                                placeholder="your.email@smms.edu.ph"
                                 className="w-full bg-white/90 border-0 text-gray-900 placeholder:text-gray-500 rounded-xl px-4 py-3 focus:ring-2 focus:ring-amber-400"
                             />
                         </div>

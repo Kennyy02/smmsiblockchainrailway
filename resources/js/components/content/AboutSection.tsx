@@ -88,11 +88,11 @@ const AboutSection = () => {
                              The Trust Protocol
                         </h3>
                          <p className="text-gray-700 mb-8 text-lg">
-                            We secure your future with technology built on trust. Every grade, every diploma, is a verified block in our private ledger. This is not just grading; it's **certified truth**.
+                            We secure your future with technology built on trust. Every grade, every diploma, is a verified block in our private ledger. This is not just grading; it's certified truth.
                         </p>
                         
                         {/* Blockchain Diagram Placeholder */}
-                        [Image of a simplified private blockchain ledger diagram showing a sequence of blocks containing student grade records linked by hashes, illustrating tamper-proof immutability]
+                        Image of a simplified private blockchain ledger diagram showing a sequence of blocks containing student grade records linked by hashes, illustrating tamper-proof immutability
 
                         <div className="bg-gradient-to-br from-blue-900 to-blue-800 rounded-2xl p-8 shadow-2xl mt-8">
                              <div className="grid grid-cols-2 gap-6">
@@ -138,7 +138,7 @@ const AboutSection = () => {
                                 "The integration of blockchain technology elevates the credibility of our graduates to a global standard, giving them a clear advantage in the maritime industry."
                             </p>
                             <p className="text-gray-600 mt-2 font-semibold">
-                                - Dr. A. Dela Cruz, President, SMMSI
+                                - Mrs. Edna Famadico, President, SMMSI
                             </p>
                         </div>
                     </div>
