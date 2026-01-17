@@ -23,6 +23,7 @@ interface UserData {
     grade: number | null;
     phone?: string;
     address?: string;
+    password_changed_at?: string | null;
     student?: {
         phone?: string;
         address?: string;
@@ -119,7 +120,8 @@ const ViewUserModal: React.FC<{
     onClose: () => void;
     onSendAccountInfo?: (userId: number) => Promise<void>;
     sendingEmail?: boolean;
-}> = ({ user, onClose, onSendAccountInfo, sendingEmail = false }) => {
+    generatedPassword?: string | null;
+}> = ({ user, onClose, onSendAccountInfo, sendingEmail = false, generatedPassword = null }) => {
     if (!user) return null;
 
     // Get phone and address from user or role-specific data
@@ -151,9 +153,9 @@ const ViewUserModal: React.FC<{
     return (
         <div className="fixed inset-0 z-50 overflow-y-auto">
             <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-                {/* Background overlay with blur */}
+                {/* Background overlay with blur only */}
                 <div 
-                    className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75 backdrop-blur-sm"
+                    className="fixed inset-0 transition-opacity backdrop-blur-sm"
                     onClick={onClose}
                 />
 
@@ -194,6 +196,13 @@ const ViewUserModal: React.FC<{
                                         <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Address</label>
                                         <p className="mt-1 text-sm text-gray-900 dark:text-white">{address}</p>
                                     </div>
+                                    {/* Show generated password only if user hasn't changed their password and we have a generated password */}
+                                    {generatedPassword && !user.password_changed_at && (
+                                        <div className="md:col-span-2">
+                                            <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Generated Password</label>
+                                            <p className="mt-1 text-sm font-mono text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-700 px-3 py-2 rounded border">{generatedPassword}</p>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
 
@@ -295,6 +304,7 @@ const Users: React.FC = () => {
     const [showViewModal, setShowViewModal] = useState(false);
     const [notification, setNotification] = useState<Notification | null>(null);
     const [sendingEmail, setSendingEmail] = useState(false);
+    const [generatedPassword, setGeneratedPassword] = useState<string | null>(null);
     const [pagination, setPagination] = useState<Pagination>({
         current_page: 1,
         last_page: 1,
@@ -410,6 +420,8 @@ const Users: React.FC = () => {
     const handleView = (user: UserData) => {
         setSelectedUser(user);
         setShowViewModal(true);
+        // Clear generated password when viewing a different user
+        setGeneratedPassword(null);
     };
 
     const handleSendAccountInfo = async (userId: number) => {
@@ -487,14 +499,14 @@ const Users: React.FC = () => {
                             }
                             
                             // Success on retry - show notification
-                            const passwordMessage = data.generated_password 
-                                ? `Account information sent! Generated Password: ${data.generated_password}`
-                                : 'Account information sent successfully to user\'s email!';
                             setNotification({ 
                                 type: 'success', 
-                                message: passwordMessage,
-                                generatedPassword: data.generated_password
+                                message: 'Account information sent!'
                             });
+                            // Store generated password to display in modal
+                            if (data.generated_password) {
+                                setGeneratedPassword(data.generated_password);
+                            }
                             setSendingEmail(false);
                             return;
                         }
@@ -512,15 +524,19 @@ const Users: React.FC = () => {
             const data: ApiResponse<any> = await response.json();
 
             if (data.success) {
-                // Show the generated password to admin
-                const passwordMessage = data.generated_password 
-                    ? `Account information sent! Generated Password: ${data.generated_password}`
-                    : 'Account information sent successfully to user\'s email!';
+                // Show notification without password
                 setNotification({ 
                     type: 'success', 
-                    message: passwordMessage,
-                    generatedPassword: data.generated_password // Store for potential display
+                    message: 'Account information sent!'
                 });
+                // Store generated password to display in modal
+                if (data.generated_password) {
+                    setGeneratedPassword(data.generated_password);
+                }
+                // Reload user data to get updated password_changed_at status
+                if (selectedUser) {
+                    loadUsers();
+                }
             } else {
                 setNotification({ type: 'error', message: data.message || 'Failed to send account information' });
             }
@@ -641,7 +657,7 @@ const Users: React.FC = () => {
                                                     <>
                                                         <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Email</th>
                                                         <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Phone Number</th>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Address</th>
+                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Password Status</th>
                                                         <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Role</th>
                                                     </>
                                                 ) : (
@@ -658,7 +674,7 @@ const Users: React.FC = () => {
                                         <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                             {filteredUsers.map((user) => {
                                                 const phone = user.phone || user.student?.phone || user.teacher?.phone || user.parent?.phone || 'N/A';
-                                                const address = user.address || user.student?.address || user.parent?.address || 'N/A';
+                                                const passwordChanged = user.password_changed_at !== null && user.password_changed_at !== undefined;
                                                 
                                                 return (
                                                     <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
@@ -673,8 +689,13 @@ const Users: React.FC = () => {
                                                                 <td className="px-6 py-4 whitespace-nowrap">
                                                                     <div className="text-sm text-gray-900 dark:text-white">{phone}</div>
                                                                 </td>
-                                                                <td className="px-6 py-4">
-                                                                    <div className="text-sm text-gray-900 dark:text-white">{address}</div>
+                                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                                    <div className="flex items-center gap-2">
+                                                                        <span className={`h-2 w-2 rounded-full ${passwordChanged ? 'bg-green-500' : 'bg-red-500'}`}></span>
+                                                                        <span className={`text-sm ${passwordChanged ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                                                                            {passwordChanged ? 'Changed' : 'Not Yet Changed'}
+                                                                        </span>
+                                                                    </div>
                                                                 </td>
                                                                 <td className="px-6 py-4 whitespace-nowrap">
                                                                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
@@ -769,9 +790,11 @@ const Users: React.FC = () => {
                             onClose={() => {
                                 setShowViewModal(false);
                                 setSelectedUser(null);
+                                setGeneratedPassword(null); // Clear generated password when closing modal
                             }}
                             onSendAccountInfo={handleSendAccountInfo}
                             sendingEmail={sendingEmail}
+                            generatedPassword={generatedPassword}
                         />
                     )}
 
