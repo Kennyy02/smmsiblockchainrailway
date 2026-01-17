@@ -27,6 +27,9 @@ class User extends Authenticatable
         'status',
         'avatar',
         'must_change_password',
+        'password_changed_at',
+        'password_reset_otp',
+        'password_reset_otp_expires_at',
     ];
 
     /**

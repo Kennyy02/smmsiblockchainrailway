@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -22,7 +25,7 @@ class PasswordResetLinkController extends Controller
     }
 
     /**
-     * Handle an incoming password reset link request.
+     * Handle an incoming password reset OTP request.
      *
      * @throws \Illuminate\Validation\ValidationException
      */
@@ -32,10 +35,46 @@ class PasswordResetLinkController extends Controller
             'email' => 'required|email',
         ]);
 
-        Password::sendResetLink(
-            $request->only('email')
-        );
+        $user = User::where('email', $request->email)->first();
 
-        return back()->with('status', __('A reset link will be sent if the account exists.'));
+        // Don't reveal if user exists for security
+        if (!$user) {
+            return back()->with('status', 'If an account exists with that email, a password reset code has been sent.');
+        }
+
+        // Generate 6-digit OTP
+        $otp = str_pad((string)random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+        
+        // Store OTP in database (expires in 10 minutes)
+        $user->update([
+            'password_reset_otp' => $otp,
+            'password_reset_otp_expires_at' => now()->addMinutes(10),
+        ]);
+
+        // Send OTP via email
+        try {
+            Mail::mailer('smtp')->send('emails.password-reset-otp', [
+                'otp' => $otp,
+                'user' => $user,
+                'expires_in' => 10,
+            ], function ($message) use ($user) {
+                $message->to($user->email)
+                        ->from(config('mail.from.address'), config('mail.from.name'))
+                        ->subject('Password Reset Code - ' . config('app.name', 'School Management System'));
+            });
+
+            // Store email in session for OTP verification step
+            Session::put('password_reset_email', $user->email);
+
+            Log::info('Password reset OTP sent', [
+                'user_id' => $user->id,
+                'user_email' => $user->email,
+            ]);
+
+            return redirect()->route('password.reset.verify')->with('status', 'A password reset code has been sent to your email address.');
+        } catch (\Exception $e) {
+            Log::error('Failed to send password reset OTP: ' . $e->getMessage());
+            return back()->withErrors(['email' => 'Failed to send reset code. Please try again later.']);
+        }
     }
 }

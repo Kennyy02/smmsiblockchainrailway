@@ -65,6 +65,7 @@ interface Pagination {
 interface Notification {
     type: 'success' | 'error';
     message: string;
+    generatedPassword?: string;
 }
 
 interface ApiResponse<T> {
@@ -356,7 +357,15 @@ const Users: React.FC = () => {
             const data: ApiResponse<any> = await response.json();
 
             if (data.success) {
-                setNotification({ type: 'success', message: 'Account information sent successfully to user\'s email!' });
+                // Show the generated password to admin
+                const passwordMessage = data.generated_password 
+                    ? `Account information sent! Generated Password: ${data.generated_password}`
+                    : 'Account information sent successfully to user\'s email!';
+                setNotification({ 
+                    type: 'success', 
+                    message: passwordMessage,
+                    generatedPassword: data.generated_password // Store for potential display
+                });
             } else {
                 setNotification({ type: 'error', message: data.message || 'Failed to send account information' });
             }

@@ -24,8 +24,13 @@ Route::middleware('guest')->group(function () {
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])->name('password.request');
     Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])->name('password.email');
 
-    Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])->name('password.reset');
-    Route::post('reset-password', [NewPasswordController::class, 'store'])->name('password.store');
+    // OTP-based password reset routes
+    Route::get('reset-password/verify', [\App\Http\Controllers\Auth\PasswordResetOtpController::class, 'show'])->name('password.reset.verify');
+    Route::post('reset-password/verify', [\App\Http\Controllers\Auth\PasswordResetOtpController::class, 'verify']);
+    Route::post('reset-password/resend', [\App\Http\Controllers\Auth\PasswordResetOtpController::class, 'resend'])->name('password.reset.resend');
+    
+    Route::get('reset-password', [\App\Http\Controllers\Auth\ResetPasswordController::class, 'show'])->name('password.reset.form');
+    Route::post('reset-password', [\App\Http\Controllers\Auth\ResetPasswordController::class, 'store'])->name('password.store');
 });
 
 Route::middleware('auth')->group(function () {

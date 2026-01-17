@@ -249,11 +249,19 @@ class UserController extends Controller
         try {
             $user = User::findOrFail($id);
             
+            // Check if user has already changed their password
+            $passwordAlreadyChanged = !is_null($user->password_changed_at);
+            
             // Generate a new temporary password
             $temporaryPassword = Str::random(12); // Generate 12-character random password
             
             // Update user's password with the temporary password
             $user->password = Hash::make($temporaryPassword);
+            
+            // Reset password change flags since we're setting a new auto-generated password
+            $user->must_change_password = true;
+            $user->password_changed_at = null; // Reset to null since password is now auto-generated again
+            
             $user->save();
             
             // Send email with account information
@@ -268,15 +276,23 @@ class UserController extends Controller
                             ->subject('Your Account Information - ' . config('app.name', 'School Management System'));
                 });
                 
+                $message = 'Account information sent successfully to ' . $user->email . '.';
+                if ($passwordAlreadyChanged) {
+                    $message .= ' Note: User\'s password has been reset to a new auto-generated password. They will be required to change it on next login.';
+                }
+
                 Log::info('Account information sent', [
                     'user_id' => $user->id,
                     'user_email' => $user->email,
                     'sent_by' => Auth::user()->id,
+                    'password_was_changed' => $passwordAlreadyChanged,
                 ]);
                 
                 return response()->json([
                     'success' => true,
-                    'message' => 'Account information sent successfully to ' . $user->email
+                    'message' => $message,
+                    'password_reset' => $passwordAlreadyChanged,
+                    'generated_password' => $temporaryPassword, // Return generated password to admin
                 ]);
             } catch (\Exception $e) {
                 Log::error('Failed to send account info email: ' . $e->getMessage());

@@ -12,18 +12,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
-interface ResetPasswordProps {
-    token: string;
-    email: string;
-}
-
-export default function ResetPassword({ token, email }: ResetPasswordProps) {
+export default function ResetPassword() {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     
     const { data, setData, post, processing, errors, reset } = useForm({
-        token: token,
-        email: email,
         password: '',
         password_confirmation: '',
     });
@@ -102,20 +95,6 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
 
                     <form onSubmit={submit} className="space-y-5">
                         <div>
-                            <Label htmlFor="email" className="text-white/90 font-medium mb-2 block">
-                                Email Address
-                            </Label>
-                            <Input
-                                id="email"
-                                type="email"
-                                value={data.email}
-                                readOnly
-                                autoComplete="email"
-                                className="w-full bg-white/20 border-0 text-gray-300 rounded-xl px-4 py-3 cursor-not-allowed"
-                            />
-                        </div>
-
-                        <div>
                             <Label htmlFor="password" className="text-white/90 font-medium mb-2 block">
                                 New Password
                             </Label>
@@ -178,11 +157,15 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
                             <InputError message={errors.password_confirmation} className="text-red-300 mt-1" />
                         </div>
 
-                        {errors.email && (
-                            <div className="p-3 bg-red-500 bg-opacity-20 border border-red-400 rounded-lg">
-                                <p className="text-center text-sm text-red-300">{errors.email}</p>
-                            </div>
-                        )}
+                        <div className="bg-blue-500/20 border border-blue-400 rounded-lg p-4">
+                            <p className="text-blue-200 text-sm font-semibold mb-2">Password Requirements:</p>
+                            <ul className="text-blue-100 text-xs space-y-1 list-disc list-inside">
+                                <li>At least 8 characters long</li>
+                                <li>Must contain at least one uppercase letter (A-Z)</li>
+                                <li>Must contain at least one number (0-9)</li>
+                                <li>Must contain at least one special character (!@#$%^&*()_+-=[]{}|;:,.<>?)</li>
+                            </ul>
+                        </div>
 
                         <Button 
                             type="submit" 

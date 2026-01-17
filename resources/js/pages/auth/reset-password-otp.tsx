@@ -1,10 +1,10 @@
 // ============================================
-// FILE: pages/Auth/ForgotPassword.tsx
-// Columban College Scheduling System - Forgot Password
+// FILE: pages/Auth/ResetPasswordOtp.tsx
+// OTP Verification for Password Reset
 // ============================================
-import { Head, useForm } from '@inertiajs/react';
-import { LoaderCircle, ArrowLeft, Mail } from 'lucide-react';
-import { FormEventHandler } from 'react';
+import { Head, useForm, router } from '@inertiajs/react';
+import { LoaderCircle, ArrowLeft, Key, RefreshCw } from 'lucide-react';
+import { FormEventHandler, useState, useEffect } from 'react';
 
 import InputError from '@/components/input-error';
 import TextLink from '@/components/text-link';
@@ -12,19 +12,44 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
-export default function ForgotPassword({ status }: { status?: string }) {
-    const { data, setData, post, processing, errors } = useForm<Required<{ email: string }>>({
-        email: '',
+interface ResetPasswordOtpProps {
+    email: string;
+    status?: string;
+}
+
+export default function ResetPasswordOtp({ email, status }: ResetPasswordOtpProps) {
+    const [resendCooldown, setResendCooldown] = useState(0);
+    
+    const { data, setData, post, processing, errors } = useForm<Required<{ otp: string }>>({
+        otp: '',
     });
+
+    useEffect(() => {
+        // Countdown timer for resend button
+        if (resendCooldown > 0) {
+            const timer = setTimeout(() => setResendCooldown(resendCooldown - 1), 1000);
+            return () => clearTimeout(timer);
+        }
+    }, [resendCooldown]);
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post(route('password.email'));
+        post(route('password.reset.verify'));
+    };
+
+    const handleResend = () => {
+        if (resendCooldown > 0) return;
+        
+        router.post(route('password.reset.resend'), {}, {
+            onSuccess: () => {
+                setResendCooldown(60); // 60 second cooldown
+            }
+        });
     };
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-950 via-blue-900 to-blue-800 flex items-center justify-center px-4 relative overflow-hidden">
-            <Head title="Forgot Password - Columban College" />
+            <Head title="Verify Reset Code - Columban College" />
 
             {/* Decorative Background Elements */}
             <div className="absolute inset-0 overflow-hidden">
@@ -46,11 +71,11 @@ export default function ForgotPassword({ status }: { status?: string }) {
                 {/* Back button */}
                 <div className="mb-6">
                     <TextLink 
-                        href={route('login')} 
+                        href={route('password.request')} 
                         className="inline-flex items-center text-base font-semibold text-white/80 hover:text-amber-400 transition-colors"
                     >
                         <ArrowLeft className="mr-2 h-5 w-5" />
-                        Back to Login
+                        Back
                     </TextLink>
                 </div>
 
@@ -76,15 +101,18 @@ export default function ForgotPassword({ status }: { status?: string }) {
                     {/* Icon */}
                     <div className="flex justify-center mb-6">
                         <div className="w-16 h-16 bg-amber-500 rounded-full flex items-center justify-center shadow-lg">
-                            <Mail className="w-8 h-8 text-blue-950" />
+                            <Key className="w-8 h-8 text-blue-950" />
                         </div>
                     </div>
 
                     <h2 className="text-3xl font-bold text-white text-center mb-3">
-                        Forgot Password?
+                        Enter Reset Code
                     </h2>
-                    <p className="text-gray-300 text-center mb-6 text-sm">
-                        No problem. Just let us know your email address and we will email you a password reset code.
+                    <p className="text-gray-300 text-center mb-2 text-sm">
+                        We've sent a 6-digit code to:
+                    </p>
+                    <p className="text-amber-400 text-center mb-6 font-semibold">
+                        {email}
                     </p>
 
                     {status && (
@@ -95,37 +123,55 @@ export default function ForgotPassword({ status }: { status?: string }) {
 
                     <form onSubmit={submit} className="space-y-5">
                         <div>
-                            <Label htmlFor="email" className="text-white/90 font-medium mb-2 block">
-                                Email Address
+                            <Label htmlFor="otp" className="text-white/90 font-medium mb-2 block">
+                                Reset Code
                             </Label>
                             <Input
-                                id="email"
-                                type="email"
+                                id="otp"
+                                type="text"
                                 required
                                 autoFocus
-                                autoComplete="email"
-                                value={data.email}
-                                onChange={(e) => setData('email', e.target.value)}
-                                placeholder="your.email@columban.edu.ph"
-                                className="w-full bg-white/90 border-0 text-gray-900 placeholder:text-gray-500 rounded-xl px-4 py-3 focus:ring-2 focus:ring-amber-400"
+                                maxLength={6}
+                                value={data.otp}
+                                onChange={(e) => setData('otp', e.target.value.replace(/\D/g, '').slice(0, 6))}
+                                placeholder="000000"
+                                className="w-full bg-white/90 border-0 text-gray-900 text-center text-2xl font-bold tracking-widest placeholder:text-gray-400 rounded-xl px-4 py-3 focus:ring-2 focus:ring-amber-400"
                             />
-                            <InputError message={errors.email} className="text-red-300 mt-1" />
+                            <InputError message={errors.otp} className="text-red-300 mt-1" />
+                            <p className="text-white/70 text-xs text-center mt-2">
+                                Enter the 6-digit code from your email
+                            </p>
                         </div>
 
                         <Button 
                             type="submit" 
                             className="w-full bg-amber-500 hover:bg-amber-600 text-blue-950 font-bold py-3 rounded-xl transition-all shadow-lg hover:shadow-xl flex items-center justify-center" 
-                            disabled={processing}
+                            disabled={processing || data.otp.length !== 6}
                         >
                             {processing ? (
                                 <>
                                     <LoaderCircle className="animate-spin -ml-1 mr-3 h-5 w-5" />
-                                    Sending...
+                                    Verifying...
                                 </>
                             ) : (
-                                'Send Reset Code'
+                                'Verify Code'
                             )}
                         </Button>
+
+                        <div className="text-center">
+                            <p className="text-white/80 text-sm mb-2">
+                                Didn't receive the code?
+                            </p>
+                            <button
+                                type="button"
+                                onClick={handleResend}
+                                disabled={resendCooldown > 0 || processing}
+                                className="inline-flex items-center text-amber-400 hover:text-amber-300 font-medium text-sm disabled:text-gray-500 disabled:cursor-not-allowed transition-colors"
+                            >
+                                <RefreshCw className={`mr-2 h-4 w-4 ${resendCooldown > 0 ? 'animate-spin' : ''}`} />
+                                {resendCooldown > 0 ? `Resend in ${resendCooldown}s` : 'Resend Code'}
+                            </button>
+                        </div>
 
                         <p className="text-center text-white/80 text-sm mt-4">
                             Remembered your password?{' '}
@@ -153,3 +199,4 @@ export default function ForgotPassword({ status }: { status?: string }) {
         </div>
     );
 }
+
