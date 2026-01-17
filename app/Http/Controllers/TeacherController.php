@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 
 class TeacherController extends Controller
 {
@@ -638,15 +639,20 @@ class TeacherController extends Controller
                 'user_id' => $user->id,
                 'user_email' => $user->email,
                 'mail_driver' => config('mail.default'),
+                'mail_host' => config('mail.mailers.smtp.host'),
+                'mail_port' => config('mail.mailers.smtp.port'),
+                'mail_username' => config('mail.mailers.smtp.username'),
             ]);
             
-            Mail::send('emails.account-info', [
+            // Explicitly use SMTP mailer
+            Mail::mailer('smtp')->send('emails.account-info', [
                 'user' => $user,
                 'email' => $user->email,
                 'password' => $password,
                 'appName' => config('app.name', 'School Management System')
             ], function ($message) use ($user) {
                 $message->to($user->email)
+                        ->from(config('mail.from.address'), config('mail.from.name'))
                         ->subject('Your Account Information - ' . config('app.name', 'School Management System'));
             });
             
@@ -654,6 +660,13 @@ class TeacherController extends Controller
                 'user_id' => $user->id,
                 'user_email' => $user->email,
             ]);
+        } catch (TransportExceptionInterface $e) {
+            Log::error('SMTP Transport Error - Failed to send account info email', [
+                'user_id' => $user->id,
+                'user_email' => $user->email,
+                'error' => $e->getMessage(),
+            ]);
+            throw $e;
         } catch (\Exception $e) {
             Log::error('Failed to send account info email', [
                 'user_id' => $user->id,
