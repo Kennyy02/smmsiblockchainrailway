@@ -1268,21 +1268,21 @@ const Parents: React.FC = () => {
                                                     <div className="flex justify-end space-x-1 sm:space-x-2">
                                                         <button
                                                             onClick={() => handleView(parent)}
-                                                            className={`p-1.5 sm:p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors`}
+                                                            className={`p-1.5 sm:p-2 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-lg transition-colors`}
                                                             title="View Details"
                                                         >
                                                             <Eye className="h-4 w-4 sm:h-5 sm:w-5" />
                                                         </button>
                                                         <button
                                                             onClick={() => handleEdit(parent)}
-                                                            className={`p-1.5 sm:p-2 ${TEXT_COLOR_CLASS} ${LIGHT_HOVER_CLASS} rounded-lg transition-colors`}
+                                                            className={`p-1.5 sm:p-2 ${TEXT_COLOR_CLASS} dark:text-blue-400 ${LIGHT_HOVER_CLASS} dark:hover:bg-gray-700 rounded-lg transition-colors`}
                                                             title="Edit Guardian"
                                                         >
                                                             <Edit className="h-4 w-4 sm:h-5 sm:w-5" />
                                                         </button>
                                                         <button
                                                             onClick={() => handleDelete(parent)}
-                                                            className="p-1.5 sm:p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                                            className="p-1.5 sm:p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
                                                             title="Delete Guardian"
                                                         >
                                                             <Trash2 className="h-4 w-4 sm:h-5 sm:w-5" />

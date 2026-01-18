@@ -72,11 +72,11 @@ const getEducationLevel = (yearLevel: number): string => {
 // Get education level badge color
 const getEducationLevelColor = (level: string): string => {
     switch (level) {
-        case 'College': return 'bg-purple-100 text-purple-800 border-purple-200';
-        case 'Senior High': return 'bg-blue-100 text-blue-800 border-blue-200';
-        case 'Junior High': return 'bg-green-100 text-green-800 border-green-200';
-        case 'Elementary': return 'bg-orange-100 text-orange-800 border-orange-200';
-        default: return 'bg-gray-100 text-gray-800 border-gray-200';
+        case 'College': return 'bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900 dark:text-purple-200 dark:border-purple-700';
+        case 'Senior High': return 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900 dark:text-blue-200 dark:border-blue-700';
+        case 'Junior High': return 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900 dark:text-green-200 dark:border-green-700';
+        case 'Elementary': return 'bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-900 dark:text-orange-200 dark:border-orange-700';
+        default: return 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-700';
     }
 };
 
@@ -1043,13 +1043,13 @@ const Students: React.FC = () => {
     const getActiveStatusTag = (classId: number | null) => {
         if (classId) {
             return (
-                <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold uppercase bg-green-100 text-green-800`}>
+                <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold uppercase bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200`}>
                     Active
                 </span>
             );
         }
         return (
-            <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold uppercase bg-gray-100 text-gray-600`}>
+            <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold uppercase bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300`}>
                 Inactive
             </span>
         );
@@ -1074,8 +1074,8 @@ const Students: React.FC = () => {
                     onClick={() => handlePageChange(i)}
                     className={`px-4 py-2 mx-1 rounded-lg font-medium transition-all ${
                         i === pagination.current_page ? 
-                        `${PRIMARY_COLOR_CLASS} text-white shadow-lg` : 
-                        `bg-white text-gray-700 ${LIGHT_HOVER_CLASS} border border-gray-300`
+                        `${PRIMARY_COLOR_CLASS} dark:bg-[#003366] text-white shadow-lg` : 
+                        `bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 ${LIGHT_HOVER_CLASS} dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-700`
                     }`}
                 >
                     {i}
@@ -1085,7 +1085,7 @@ const Students: React.FC = () => {
         
         return (
             <div className="flex justify-between items-center mt-6 px-6">
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-gray-600 dark:text-gray-400">
                     Showing <span className="font-semibold">{(pagination.current_page - 1) * pagination.per_page + 1}</span> to <span className="font-semibold">{Math.min(pagination.current_page * pagination.per_page, pagination.total)}</span> of <span className="font-semibold">{pagination.total}</span> students
                 </p>
                 <div className="flex justify-center items-center space-x-2">
@@ -1434,15 +1434,15 @@ const Students: React.FC = () => {
                     <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700">
                         <div className="overflow-x-auto">
                             <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                                <thead className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-700">
+                                <thead className={`${PRIMARY_COLOR_CLASS} dark:bg-[#003366]`}>
                                     <tr>
-                                        <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">Student & ID</th>
-                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">Parent/Guardian</th>
-                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">Level</th>
-                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">Program</th>
-                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">Grade</th>
-                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">Status</th> 
-                                        <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-right text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">Actions</th>
+                                        <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">Student & ID</th>
+                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">Parent/Guardian</th>
+                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">Level</th>
+                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">Program</th>
+                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">Grade</th>
+                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">Status</th> 
+                                        <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-right text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -1459,8 +1459,8 @@ const Students: React.FC = () => {
                                             <td colSpan={7} className="px-3 sm:px-6 py-8 sm:py-12 text-center text-gray-500 dark:text-gray-400">
                                                 <div className="flex flex-col items-center">
                                                     <User className="h-10 w-10 sm:h-12 sm:w-12 text-gray-300 dark:text-gray-600 mb-3 sm:mb-4" />
-                                                    <p className="text-base sm:text-lg font-medium dark:text-gray-200">No students found</p>
-                                                    <p className="text-xs sm:text-sm dark:text-gray-400">Try adjusting your search or filters</p>
+                                                    <p className="text-base sm:text-lg font-medium text-gray-900 dark:text-gray-200">No students found</p>
+                                                    <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">Try adjusting your search or filters</p>
                                                 </div>
                                             </td>
                                         </tr>
