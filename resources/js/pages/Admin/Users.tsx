@@ -341,7 +341,7 @@ const Users: React.FC = () => {
     const [pagination, setPagination] = useState<Pagination>({
         current_page: 1,
         last_page: 1,
-        per_page: 15,
+        per_page: 10,
         total: 0,
     });
 
@@ -704,18 +704,8 @@ const Users: React.FC = () => {
         loadUsers();
     };
 
-    const filteredUsers = users.filter(user => {
-        // Exclude super_admin users
-        if (user.role === 'super_admin') return false;
-        
-        if (!searchTerm) return true;
-        const search = searchTerm.toLowerCase();
-        return (
-            user.name.toLowerCase().includes(search) ||
-            user.email.toLowerCase().includes(search) ||
-            (user.program && user.program.toLowerCase().includes(search))
-        );
-    });
+    // Filter out super_admin users (they should already be excluded from backend, but just in case)
+    const filteredUsers = users.filter(user => user.role !== 'super_admin');
 
     return (
         <AppLayout>

@@ -423,7 +423,7 @@ const Admins: React.FC = () => {
     const [pagination, setPagination] = useState<Pagination>({
         current_page: 1,
         last_page: 1,
-        per_page: 15,
+        per_page: 10,
         total: 0,
     });
 
@@ -504,7 +504,7 @@ const Admins: React.FC = () => {
                     current_page: data.data.current_page,
                     last_page: data.data.last_page,
                     per_page: data.data.per_page,
-                    total: adminUsers.length, // Update total to reflect filtered count
+                    total: data.data.total, // Use backend total for proper pagination
                 });
             } else {
                 setNotification({ type: 'error', message: data.message || 'Failed to load admins' });
@@ -998,14 +998,8 @@ const Admins: React.FC = () => {
         loadUsers();
     };
 
-    const filteredUsers = users.filter(user => {
-        if (!searchTerm) return true;
-        const search = searchTerm.toLowerCase();
-        return (
-            user.name.toLowerCase().includes(search) ||
-            user.email.toLowerCase().includes(search)
-        );
-    });
+    // No client-side filtering - backend handles search
+    const filteredUsers = users;
 
     return (
         <AppLayout>
