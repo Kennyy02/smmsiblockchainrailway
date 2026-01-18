@@ -287,6 +287,7 @@ class StudentController extends Controller
                     'first_name' => $parentData['first_name'],
                     'middle_name' => $parentData['middle_name'] ?? null,
                     'last_name' => $parentData['last_name'],
+                    'gender' => $parentData['gender'] ?? null,
                     'phone' => $parentData['phone'] ?? null,
                     'address' => $parentData['address'] ?? null,
                 ]);
@@ -317,6 +318,7 @@ class StudentController extends Controller
                     'middle_name' => $parentData['middle_name'] ?? null,
                     'last_name' => $parentData['last_name'],
                     'email' => $parentEmail,
+                    'gender' => $parentData['gender'] ?? null,
                     'phone' => $parentData['phone'] ?? null,
                     'address' => $parentData['address'] ?? null,
                 ]);

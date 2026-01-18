@@ -107,7 +107,7 @@ const DropdownMenuItem = ({
         return (
             <Link
                 href={item.href}
-                className={`flex items-center py-1.5 px-3 rounded-lg text-xs ${activeStyles} ${isMobile ? 'w-full' : ''}`}
+                className={`flex items-center py-1.5 px-3 rounded-lg text-xs cursor-pointer ${activeStyles} ${isMobile ? 'w-full' : ''}`}
                 onClick={closeDropdowns}
             >
                 {item.icon && <item.icon className="mr-1.5 h-4 w-4 flex-shrink-0" />}
@@ -120,7 +120,7 @@ const DropdownMenuItem = ({
         <div className={`relative ${isMobile ? 'w-full' : ''}`}>
             <button
                 onClick={toggleDropdown}
-                className={`flex items-center justify-between py-1.5 px-3 rounded-lg w-full text-xs ${activeStyles}`}
+                className={`flex items-center justify-between py-1.5 px-3 rounded-lg w-full text-xs cursor-pointer ${activeStyles}`}
                 aria-expanded={isCurrentlyOpen}
                 aria-haspopup="true"
             >
@@ -152,7 +152,7 @@ const DropdownMenuItem = ({
                                         router.visit(subItem.href);
                                     }
                                 }}
-                                className={`block w-full text-left px-3 py-2 text-xs ${isMobile ? 'rounded-lg' : ''} ${
+                                className={`block w-full text-left px-3 py-2 text-xs cursor-pointer ${isMobile ? 'rounded-lg' : ''} ${
                                     subIsActive 
                                         ? 'bg-blue-600 text-white font-semibold' 
                                         : 'text-white/90 hover:bg-white/10 hover:text-white'
@@ -457,7 +457,7 @@ function AppHeader() {
                 <div className="flex h-14 items-center justify-between">
                     {/* Left - Logo */}
                     <div className="flex items-center flex-shrink-0">
-                        <Link href={homeLink} className="flex items-center">
+                        <Link href={homeLink} className="flex items-center cursor-pointer">
                             <SchoolLogo />
                         </Link>
                     </div>
@@ -484,7 +484,7 @@ function AppHeader() {
                         {/* Mobile menu button */}
                         <button
                             type="button"
-                            className="lg:hidden inline-flex items-center justify-center p-2 rounded-lg text-white hover:bg-white/10 transition-all duration-300"
+                            className="lg:hidden inline-flex items-center justify-center p-2 rounded-lg text-white hover:bg-white/10 transition-all duration-300 cursor-pointer"
                             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                         >
                             {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -493,7 +493,7 @@ function AppHeader() {
                         {/* User Menu */}
                         <div className="relative" ref={userMenuRef}>
                             <button 
-                                className="flex items-center max-w-xs text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 hover:bg-white/10 px-2 py-1.5 transition-all duration-300"
+                                className="flex items-center max-w-xs text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 hover:bg-white/10 px-2 py-1.5 transition-all duration-300 cursor-pointer"
                                 onClick={() => {
                                     setUserMenuOpen(!userMenuOpen);
                                     setActiveDropdown(null);
@@ -534,7 +534,7 @@ function AppHeader() {
                                                 userRole === 'parent' ? '/settings/profile' : 
                                                 '/settings/profile'
                                             } 
-                                            className="block px-4 py-2 text-xs text-gray-700 hover:bg-blue-50 transition-all duration-300"
+                                            className="block px-4 py-2 text-xs text-gray-700 hover:bg-blue-50 transition-all duration-300 cursor-pointer"
                                             onClick={() => setUserMenuOpen(false)}
                                         >
                                             Your Profile
@@ -544,7 +544,7 @@ function AppHeader() {
                                                 userRole === 'admin' ? '/settings' : 
                                                 '/settings'
                                             } 
-                                            className="block px-4 py-2 text-xs text-gray-700 hover:bg-blue-50 transition-all duration-300"
+                                            className="block px-4 py-2 text-xs text-gray-700 hover:bg-blue-50 transition-all duration-300 cursor-pointer"
                                             onClick={() => setUserMenuOpen(false)}
                                         >
                                             Settings
@@ -552,7 +552,7 @@ function AppHeader() {
                                     </div>
                                     <div className="py-1.5 border-t border-gray-200">
                                         <button 
-                                            className="block w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-blue-50 transition-all duration-300"
+                                            className="block w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-blue-50 transition-all duration-300 cursor-pointer"
                                             onClick={handleLogout}
                                         >
                                             Sign out

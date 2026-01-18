@@ -343,11 +343,16 @@ const ParentModal: React.FC<{
                             {/* Parent/Guardian Information */}
                             <h3 className="text-lg font-bold text-gray-800 dark:text-white border-b dark:border-gray-700 pb-2">Parent/Guardian Information</h3>
                             
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-3 gap-4">
                                 <div>
                                     <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">First Name</label>
                                     <input type="text" name="first_name" value={formData.first_name} onChange={handleChange} autoComplete="given-name" className={`w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white`} required/>
                                     {errors.first_name && (<p className="text-red-500 text-xs mt-1">{errors.first_name[0]}</p>)}
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Middle Name</label>
+                                    <input type="text" name="middle_name" value={formData.middle_name || ''} onChange={handleChange} autoComplete="additional-name" className={`w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}/>
+                                    {errors.middle_name && (<p className="text-red-500 text-xs mt-1">{errors.middle_name[0]}</p>)}
                                 </div>
                                 <div>
                                     <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Last Name</label>
