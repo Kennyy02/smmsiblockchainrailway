@@ -9,6 +9,12 @@ use Illuminate\Support\Facades\Request;
 trait Auditable
 {
     /**
+     * Cache for old attributes to avoid database persistence issues
+     * Keyed by object hash to handle multiple models
+     */
+    protected static $oldAttributesCache = [];
+
+    /**
      * Boot the Auditable trait
      */
     protected static function bootAuditable()
@@ -21,17 +27,19 @@ trait Auditable
         });
 
         // Log when model is updated
-        static::updating(function (Model $model) use ($auditService) {
-            // Store old values before update
-            $model->oldAttributes = $model->getOriginal();
+        static::updating(function (Model $model) {
+            // Store old values in a way that Laravel won't try to persist
+            // Using a static array keyed by model instance hash to avoid database persistence
+            static::$oldAttributesCache[spl_object_hash($model)] = $model->getOriginal();
         });
 
         static::updated(function (Model $model) use ($auditService) {
-            if (isset($model->oldAttributes)) {
-                $oldValues = $model->oldAttributes;
+            $modelHash = spl_object_hash($model);
+            if (isset(static::$oldAttributesCache[$modelHash])) {
+                $oldValues = static::$oldAttributesCache[$modelHash];
                 $newValues = $model->getAttributes();
                 $auditService->logUpdate($model, $oldValues, $newValues, request());
-                unset($model->oldAttributes);
+                unset(static::$oldAttributesCache[$modelHash]);
             }
         });
 
