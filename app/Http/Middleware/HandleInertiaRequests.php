@@ -57,18 +57,14 @@ class HandleInertiaRequests extends Middleware
         try {
             $user = $request->user();
             if ($user) {
-                // Super admin (env-based) has id=0 and doesn't have database relationships
-                // Only load relationships for database users
-                if ($user->id !== 0 && $user->exists) {
-                    $user->loadMissing([
-                        'student.course', 
-                        'student.currentClass',
-                        'teacher.advisoryClass',
-                        'teacher.subjects',
-                        'parent.students.course',
-                        'parent.students.currentClass'
-                    ]);
-                }
+                $user->loadMissing([
+                    'student.course', 
+                    'student.currentClass',
+                    'teacher.advisoryClass',
+                    'teacher.subjects',
+                    'parent.students.course',
+                    'parent.students.currentClass'
+                ]);
             }
         } catch (\Exception $e) {
             // If session is invalid, user will be null

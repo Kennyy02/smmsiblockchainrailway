@@ -20,7 +20,7 @@ class SetupAdminFromEnv extends Command
      *
      * @var string
      */
-    protected $description = 'Ensure super admin is env-only (remove any database records with super_admin role)';
+    protected $description = 'Create or update super admin account from environment variables (ADMIN_EMAIL and ADMIN_PASSWORD)';
 
     /**
      * Execute the console command.
@@ -65,43 +65,72 @@ class SetupAdminFromEnv extends Command
             $this->info("✅ Found ADMIN_PASSWORD: [Set, length: " . strlen($password) . "]");
 
             $this->info('Connecting to database...');
-            
-            // Super admin is env-only, not in database
-            // Remove any existing super_admin records from database (shouldn't exist)
-            $superAdmins = User::where('role', 'super_admin')->get();
-            
-            if ($superAdmins->count() > 0) {
-                $this->warn("⚠️  Found {$superAdmins->count()} user(s) with super_admin role in database.");
-                $this->info("   Super admin should only exist in environment variables.");
-                $this->info("   Removing super_admin records from database...");
+            // Check if admin user already exists
+            $admin = User::where('email', $email)->first();
+
+            if ($admin) {
+                // Update existing admin
+                $this->info("📝 Found existing admin user: {$admin->name} ({$admin->email})");
+                $this->info("   Current role: {$admin->role}");
+                $this->info("   Current status: {$admin->status}");
                 
-                foreach ($superAdmins as $superAdmin) {
-                    $this->info("   - Removing user: {$superAdmin->email} (ID: {$superAdmin->id})");
-                    // Delete or change role to admin if it matches env email
-                    if ($superAdmin->email === $email) {
-                        // If email matches env, delete it (super admin is env-only)
-                        $superAdmin->delete();
-                        $this->info("     ✓ Deleted (email matches env, so it's env-managed)");
-                    } else {
-                        // If email doesn't match, change role to admin (shouldn't happen)
-                        $superAdmin->allowRoleChange = true;
-                        $superAdmin->role = 'admin';
-                        $superAdmin->save();
-                        $this->warn("     ⚠ Changed role to 'admin' (email doesn't match env)");
-                    }
+                // Update password with proper Bcrypt hashing
+                $this->info('Hashing password...');
+                $admin->password = Hash::make($password);
+                
+                // Ensure role is super_admin
+                if ($admin->role !== 'super_admin') {
+                    $this->warn("⚠️  User role is '{$admin->role}', changing to 'super_admin'...");
+                    $admin->allowRoleChange = true;
+                    $admin->role = 'super_admin';
+                    unset($admin->allowRoleChange);
                 }
                 
-                $this->info("✅ Cleaned up super_admin records from database.");
+                // Ensure status is active
+                $admin->status = 'active';
+                
+                $this->info('Saving super admin user...');
+                $admin->save();
+                
+                $this->info("✅ Super admin account updated successfully!");
+                $this->info("   Email: {$email}");
+                $this->info("   Password: [Updated with Bcrypt]");
+                $this->info("   Role: super_admin");
+                $this->info("   Status: active");
             } else {
-                $this->info("✅ No super_admin records found in database (correct - super admin is env-only).");
+                // Create new super admin user
+                $name = env('ADMIN_NAME', 'Administrator');
+                $this->info("📝 Creating new super admin user...");
+                $this->info("   Name: {$name}");
+                $this->info("   Email: {$email}");
+                
+                $this->info('Hashing password...');
+                $hashedPassword = Hash::make($password);
+                
+                $this->info('Creating user record...');
+                $admin = User::create([
+                    'name' => $name,
+                    'email' => $email,
+                    'password' => $hashedPassword,
+                    'role' => 'super_admin',
+                    'status' => 'active',
+                    'email_verified_at' => now(),
+                ]);
+                
+                $this->info("✅ Super admin account created successfully!");
+                $this->info("   Name: {$name}");
+                $this->info("   Email: {$email}");
+                $this->info("   Password: [Set from environment, hashed with Bcrypt]");
+                $this->info("   Role: super_admin");
+                $this->info("   Status: active");
+                $this->info("   User ID: {$admin->id}");
             }
 
             $this->newLine();
-            $this->info("🎉 Setup complete! Super admin is configured via environment variables.");
-            $this->info("   Super admin credentials:");
+            $this->info("🎉 Setup complete! You can now log in with:");
             $this->info("   Email: {$email}");
-            $this->info("   Password: [Set in ADMIN_PASSWORD environment variable]");
-            $this->info("   Note: Super admin is NOT stored in database, only in environment variables.");
+            $this->info("   Password: [The password you set in ADMIN_PASSWORD]");
+            $this->info("   Note: Super admin is stored in database and managed via environment variables.");
             $this->newLine();
 
             return 0;

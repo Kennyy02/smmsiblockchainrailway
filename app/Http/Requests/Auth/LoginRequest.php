@@ -41,32 +41,7 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        $email = $this->string('email');
-        $password = $this->string('password');
-
-        // SUPER ADMIN: Check env credentials FIRST (super admin is env-only, NOT in database)
-        $envEmail = env('ADMIN_EMAIL');
-        $envPassword = env('ADMIN_PASSWORD');
-
-        // If credentials match env, this is super_admin (env-only)
-        // Skip database authentication entirely for super admin
-        if ($envEmail && $envPassword && $email === $envEmail && $password === $envPassword) {
-            // Super admin authentication via env - bypass database completely
-            RateLimiter::clear($this->throttleKey());
-            return; // AuthenticatedSessionController will handle super_admin login
-        }
-
-        // For all OTHER users (NOT super_admin), use standard database authentication
-        // IMPORTANT: If email matches env email but password doesn't, still fail (super admin is env-only)
-        if ($envEmail && $email === $envEmail) {
-            // Email matches env but password doesn't - this means wrong super admin password
-            RateLimiter::hit($this->throttleKey());
-            throw ValidationException::withMessages([
-                'email' => __('auth.failed'),
-            ]);
-        }
-
-        // Regular database users (not super_admin email)
+        // Standard database authentication (super admin is in database, managed by env)
         try {
             if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
                 RateLimiter::hit($this->throttleKey());

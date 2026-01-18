@@ -28,49 +28,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        $email = $request->string('email');
-        $password = $request->string('password');
-
-        // Check if this is super_admin login (from env, not database)
-        // Super admin credentials are ONLY in env, never in database
-        $envEmail = env('ADMIN_EMAIL');
-        $envPassword = env('ADMIN_PASSWORD');
-
-        // Debug logging (remove after testing)
-        \Log::info('Super Admin Login Attempt', [
-            'input_email' => $email,
-            'input_password_length' => strlen($password),
-            'env_email' => $envEmail ? 'SET' : 'NOT SET',
-            'env_password' => $envPassword ? 'SET' : 'NOT SET',
-            'email_match' => $email === $envEmail,
-            'password_match' => $password === $envPassword,
-        ]);
-
-        // IMPORTANT: Check env credentials BEFORE database lookup
-        // Super admin is env-only, so if credentials match env, it's super admin
-        // Use trim() to handle any whitespace issues
-        if ($envEmail && $envPassword && trim($email) === trim($envEmail) && trim($password) === trim($envPassword)) {
-            // Super admin: Create a temporary User object for session (no database record)
-            $superAdmin = new \App\Models\User([
-                'id' => 0, // Special ID to indicate env-based user
-                'name' => env('ADMIN_NAME', 'Super Administrator'),
-                'email' => $envEmail,
-                'role' => 'super_admin',
-                'status' => 'active',
-                'email_verified_at' => now(),
-                'password_changed_at' => now(), // Super admin doesn't need password change
-            ]);
-            $superAdmin->exists = false; // Mark as non-persistent
-
-            // Manually log in the super admin (bypass database)
-            Auth::login($superAdmin, $request->boolean('remember'));
-            $request->session()->regenerate();
-            
-            // Redirect super admin to admin dashboard
-            return redirect()->intended(route('admin.dashboard'));
-        }
-
-        // Standard authentication for database users
+        // Standard authentication (super admin is in database, managed by env)
         $request->authenticate();
         $request->session()->regenerate();
 
