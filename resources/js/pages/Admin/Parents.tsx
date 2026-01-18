@@ -635,11 +635,10 @@ const ViewParentModal: React.FC<{
                                 <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Children (Students)</h4>
                                 <div className="space-y-2">
                                     {parent.students.map((student, idx) => (
-                                        <div key={idx} className="flex items-center justify-between bg-gray-50 dark:bg-gray-700 px-4 py-2 rounded-lg">
+                                        <div key={idx} className="flex items-center bg-gray-50 dark:bg-gray-700 px-4 py-2 rounded-lg">
                                             <span className="font-medium text-gray-900 dark:text-white">
                                                 {student.first_name} {student.middle_name ? `${student.middle_name.charAt(0)}.` : ''} {student.last_name}
                                             </span>
-                                            <span className="text-sm text-gray-500 dark:text-gray-400">{student.pivot?.relationship || 'Child'}</span>
                                         </div>
                                     ))}
                                 </div>
@@ -1133,7 +1132,7 @@ const Parents: React.FC = () => {
                                                 setEducationLevelFilter(isSelected ? '' : level.id);
                                                 setFilters(prev => ({ ...prev, page: 1 }));
                                             }}
-                                            className={`flex items-center px-3 py-2 sm:px-4 sm:py-2.5 md:px-5 md:py-3 rounded-lg sm:rounded-xl font-medium transition-all whitespace-nowrap flex-shrink-0 ${
+                                            className={`flex items-center px-3 py-2 sm:px-4 sm:py-2.5 md:px-5 md:py-3 rounded-lg sm:rounded-xl font-medium transition-all whitespace-nowrap flex-shrink-0 cursor-pointer ${
                                                 isSelected
                                                     ? `${PRIMARY_COLOR_CLASS} text-white shadow-md sm:shadow-lg scale-105`
                                                     : 'bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 hover:scale-102'

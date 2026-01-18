@@ -322,11 +322,11 @@ class StudentController extends Controller
                 ]);
                 
                 // Send account information email
-                try {
-                    $this->sendAccountInfoEmail($user, $password);
-                } catch (\Exception $e) {
-                    Log::error('Failed to send account info email to parent: ' . $e->getMessage());
-                    // Don't fail the creation if email fails
+                    try {
+                        $this->sendAccountInfoEmail($user, $password);
+                    } catch (\Exception $e) {
+                        Log::error('Failed to send account info email to parent: ' . $e->getMessage());
+                        // Don't fail the creation if email fails
                 }
             }
             

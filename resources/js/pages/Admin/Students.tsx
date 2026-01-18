@@ -620,7 +620,7 @@ const StudentModal: React.FC<{
                                     <p className="text-xs sm:text-sm text-blue-700 dark:text-blue-300">
                                         <strong>Note:</strong> If creating a parent account, password will be automatically generated and sent to the parent's email address.
                                     </p>
-                                </div>
+                                        </div>
                                 <p className="text-xs text-gray-500 mt-2">Optional: Fill in parent/guardian details to link them to this student.</p>
                             </div>
                         </div>
@@ -1301,7 +1301,7 @@ const Students: React.FC = () => {
                                             setEducationLevelFilter(level.id);
                                             setFilters(prev => ({ ...prev, year_level: '', program: '', page: 1 }));
                                         }}
-                                            className={`flex items-center px-3 py-2 sm:px-4 sm:py-2.5 md:px-5 md:py-3 rounded-lg sm:rounded-xl font-medium transition-all whitespace-nowrap flex-shrink-0 ${
+                                            className={`flex items-center px-3 py-2 sm:px-4 sm:py-2.5 md:px-5 md:py-3 rounded-lg sm:rounded-xl font-medium transition-all whitespace-nowrap flex-shrink-0 cursor-pointer ${
                                                 isSelected
                                                     ? isDropped
                                                         ? 'bg-red-600 text-white shadow-md sm:shadow-lg dark:bg-red-600 dark:text-white'

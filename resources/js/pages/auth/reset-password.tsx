@@ -185,7 +185,7 @@ export default function ResetPassword() {
                                     Must contain at least one special character ({`(!@#$%^&*()_+-=[]{}|;:,.<>?)`})
                                 </li>
                             </ul>
-                        </div>
+                            </div>
 
                         <Button 
                             type="submit" 
