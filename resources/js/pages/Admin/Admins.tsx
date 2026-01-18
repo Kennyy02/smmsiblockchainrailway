@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { UserCheck, Search, X, Eye, RefreshCw, Users as UsersIcon, Mail, Plus, EyeOff, Edit, Trash2 } from 'lucide-react';
+import { UserCheck, Search, X, Eye, RefreshCw, Users as UsersIcon, Mail, Plus, Edit, Trash2 } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
 
 // --- MARITIME THEME COLORS ---
@@ -82,8 +82,6 @@ interface AdminFormData {
     gender: string;
     phone: string;
     address: string;
-    password: string;
-    password_confirmation: string;
 }
 
 const AdminModal: React.FC<{
@@ -98,25 +96,8 @@ const AdminModal: React.FC<{
         gender: admin?.gender || '',
         phone: admin?.phone || '',
         address: admin?.address || '',
-        password: '',
-        password_confirmation: '',
     });
     const [loading, setLoading] = useState(false);
-    const [showPassword, setShowPassword] = useState(false);
-
-    // Password strength checks
-    const passwordChecks = {
-        minLength: formData.password.length >= 8,
-        hasUppercase: /[A-Z]/.test(formData.password),
-        hasNumber: /[0-9]/.test(formData.password),
-        hasSpecial: /[^A-Za-z0-9]/.test(formData.password),
-    };
-
-    // Password match check
-    const passwordsMatch = formData.password && formData.password_confirmation && 
-                          formData.password === formData.password_confirmation;
-    const passwordsDontMatch = formData.password_confirmation && 
-                              formData.password !== formData.password_confirmation;
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -247,102 +228,6 @@ const AdminModal: React.FC<{
                                     <p className="text-red-500 text-xs mt-1">{formatErrorMessage(errors.address[0])}</p>
                                 )}
                             </div>
-
-                            {!admin && (
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
-                                            Password <span className="text-red-500">*</span>
-                                        </label>
-                                        <div className="relative">
-                                            <input
-                                                type={showPassword ? 'text' : 'password'}
-                                                name="password"
-                                                value={formData.password}
-                                                onChange={handleChange}
-                                                className={`w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white pr-10`}
-                                                placeholder="Enter password"
-                                                required
-                                                minLength={8}
-                                            />
-                                            <button
-                                                type="button"
-                                                onClick={() => setShowPassword(!showPassword)}
-                                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                                            >
-                                                {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                                            </button>
-                                        </div>
-                                        {errors.password && (
-                                            <p className="text-red-500 text-xs mt-1">{formatErrorMessage(errors.password[0])}</p>
-                                        )}
-                                        {/* Password Requirements */}
-                                        {formData.password && (
-                                            <div className="mt-2 p-3 bg-gray-50 dark:bg-gray-900/50 rounded-lg border border-gray-200 dark:border-gray-700">
-                                                <p className="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-2">Password Requirements:</p>
-                                                <ul className="space-y-1 text-xs">
-                                                    <li className={`flex items-center ${passwordChecks.minLength ? 'text-green-600 dark:text-green-400' : 'text-gray-600 dark:text-gray-400'}`}>
-                                                        <span className={`mr-2 ${passwordChecks.minLength ? 'text-green-500' : 'text-gray-400'}`}>
-                                                            {passwordChecks.minLength ? '✓' : '○'}
-                                                        </span>
-                                                        At least 8 characters
-                                                    </li>
-                                                    <li className={`flex items-center ${passwordChecks.hasUppercase ? 'text-green-600 dark:text-green-400' : 'text-gray-600 dark:text-gray-400'}`}>
-                                                        <span className={`mr-2 ${passwordChecks.hasUppercase ? 'text-green-500' : 'text-gray-400'}`}>
-                                                            {passwordChecks.hasUppercase ? '✓' : '○'}
-                                                        </span>
-                                                        One uppercase letter (A-Z)
-                                                    </li>
-                                                    <li className={`flex items-center ${passwordChecks.hasNumber ? 'text-green-600 dark:text-green-400' : 'text-gray-600 dark:text-gray-400'}`}>
-                                                        <span className={`mr-2 ${passwordChecks.hasNumber ? 'text-green-500' : 'text-gray-400'}`}>
-                                                            {passwordChecks.hasNumber ? '✓' : '○'}
-                                                        </span>
-                                                        One number (0-9)
-                                                    </li>
-                                                    <li className={`flex items-center ${passwordChecks.hasSpecial ? 'text-green-600 dark:text-green-400' : 'text-gray-600 dark:text-gray-400'}`}>
-                                                        <span className={`mr-2 ${passwordChecks.hasSpecial ? 'text-green-500' : 'text-gray-400'}`}>
-                                                            {passwordChecks.hasSpecial ? '✓' : '○'}
-                                                        </span>
-                                                        One special character (!@#$%^&*...)
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        )}
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
-                                            Confirm Password <span className="text-red-500">*</span>
-                                        </label>
-                                        <div className="relative">
-                                            <input
-                                                type={showPassword ? 'text' : 'password'}
-                                                name="password_confirmation"
-                                                value={formData.password_confirmation}
-                                                onChange={handleChange}
-                                                className={`w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white pr-10`}
-                                                placeholder="Confirm password"
-                                                required
-                                            />
-                                            <button
-                                                type="button"
-                                                onClick={() => setShowPassword(!showPassword)}
-                                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                                            >
-                                                {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                                            </button>
-                                        </div>
-                                        {errors.password_confirmation && (
-                                            <p className="text-red-500 text-xs mt-1">{formatErrorMessage(errors.password_confirmation[0])}</p>
-                                        )}
-                                        {/* Password Match Feedback */}
-                                        {formData.password_confirmation && (
-                                            <p className={`text-xs mt-1 ${passwordsMatch ? 'text-green-600 dark:text-green-400' : passwordsDontMatch ? 'text-red-600 dark:text-red-400' : ''}`}>
-                                                {passwordsMatch ? 'Password matched' : passwordsDontMatch ? 'Password not matched' : ''}
-                                            </p>
-                                        )}
-                                    </div>
-                                </div>
-                            )}
                         </div>
 
                         <div className="flex justify-end space-x-3 pt-4 border-t dark:border-gray-700">
@@ -680,12 +565,6 @@ const Admins: React.FC = () => {
                 address: formData.address || null,
                 role: 'admin',
             };
-            
-            // Only include password if provided (required for create, optional for edit)
-            if (formData.password) {
-                bodyData.password = formData.password;
-                bodyData.password_confirmation = formData.password_confirmation;
-            }
 
             const response = await fetch(url, {
                 method: method,

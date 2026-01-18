@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 
 class UserController extends Controller
 {
@@ -115,26 +116,7 @@ class UserController extends Controller
             'gender' => 'required|in:Male,Female',
             'phone' => 'required|string|max:20',
             'address' => 'required|string|max:500',
-            'password' => 'required|string|min:8|confirmed',
         ]);
-
-        // Custom validation for password complexity
-        if ($request->filled('password')) {
-            $password = $request->password;
-            
-            if (strlen($password) < 8) {
-                $validator->errors()->add('password', 'Password must be at least 8 characters long.');
-            }
-            if (!preg_match('/[A-Z]/', $password)) {
-                $validator->errors()->add('password', 'Password must contain at least one uppercase letter (A-Z).');
-            }
-            if (!preg_match('/[0-9]/', $password)) {
-                $validator->errors()->add('password', 'Password must contain at least one number (0-9).');
-            }
-            if (!preg_match('/[^A-Za-z0-9]/', $password)) {
-                $validator->errors()->add('password', 'Password must contain at least one special character (!@#$%^&*()_+-=[]{}|;:,.<>?).');
-            }
-        }
 
         if ($validator->fails()) {
             return response()->json([
@@ -145,10 +127,13 @@ class UserController extends Controller
         }
 
         try {
+            // Auto-generate password (12 characters random string)
+            $generatedPassword = Str::random(12);
+            
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
-                'password' => Hash::make($request->password),
+                'password' => Hash::make($generatedPassword),
                 'phone' => $request->phone,
                 'address' => $request->address,
                 'gender' => $request->gender,
@@ -164,6 +149,16 @@ class UserController extends Controller
                 'email' => $user->email,
                 'created_by' => Auth::user()->id,
             ]);
+
+            // Send account information email with generated password
+            try {
+                $this->sendAccountInfoEmail($user, $generatedPassword);
+                Log::info('Account info email queued for admin', ['user_id' => $user->id, 'email' => $user->email]);
+            } catch (\Exception $e) {
+                Log::error('Failed to send account info email to admin: ' . $e->getMessage());
+                Log::error('Admin email error trace: ' . $e->getTraceAsString());
+                // Don't fail the creation if email fails
+            }
 
             return response()->json([
                 'success' => true,
@@ -678,6 +673,55 @@ class UserController extends Controller
                 'success' => false,
                 'message' => 'Incorrect password. Please try again.'
             ], 401);
+        }
+    }
+
+    /**
+     * Send account information email to user with password.
+     */
+    private function sendAccountInfoEmail(User $user, string $password): void
+    {
+        try {
+            Log::info('Attempting to send account info email', [
+                'user_id' => $user->id,
+                'user_email' => $user->email,
+                'mail_driver' => config('mail.default'),
+                'mail_host' => config('mail.mailers.smtp.host'),
+                'mail_port' => config('mail.mailers.smtp.port'),
+                'mail_username' => config('mail.mailers.smtp.username'),
+            ]);
+            
+            // Explicitly use SMTP mailer
+            Mail::mailer('smtp')->send('emails.account-info', [
+                'user' => $user,
+                'email' => $user->email,
+                'password' => $password,
+                'appName' => config('app.name', 'School Management System')
+            ], function ($message) use ($user) {
+                $message->to($user->email)
+                        ->from(config('mail.from.address'), config('mail.from.name'))
+                        ->subject('Your Account Information - ' . config('app.name', 'School Management System'));
+            });
+            
+            Log::info('Account information email sent successfully', [
+                'user_id' => $user->id,
+                'user_email' => $user->email,
+            ]);
+        } catch (TransportExceptionInterface $e) {
+            Log::error('SMTP Transport Error - Failed to send account info email', [
+                'user_id' => $user->id,
+                'user_email' => $user->email,
+                'error' => $e->getMessage(),
+            ]);
+            throw $e;
+        } catch (\Exception $e) {
+            Log::error('Failed to send account info email', [
+                'user_id' => $user->id,
+                'user_email' => $user->email,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            throw $e;
         }
     }
 }
