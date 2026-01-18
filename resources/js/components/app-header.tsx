@@ -181,6 +181,13 @@ function AppHeader() {
     
     const userRole = auth.user?.role || 'student';
 
+    // Debug: Log user role to console (remove after debugging)
+    useEffect(() => {
+        console.log('Current user role:', userRole);
+        console.log('Auth user:', auth.user);
+        console.log('Is super_admin?', userRole === 'super_admin');
+    }, [userRole, auth.user]);
+
     // Expose password modal function to global scope for submenu items
     useEffect(() => {
         (window as any).openPasswordModal = () => {
