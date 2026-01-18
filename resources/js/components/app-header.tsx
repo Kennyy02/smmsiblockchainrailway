@@ -403,7 +403,7 @@ function AppHeader() {
     ];
 
     // Select navigation based on user role
-    const baseNavItems = userRole === 'admin' 
+    const baseNavItems = (userRole === 'admin' || userRole === 'super_admin')
         ? adminNavItemsData 
         : userRole === 'teacher' 
             ? teacherNavItemsData 
@@ -420,7 +420,7 @@ function AppHeader() {
         };
     });
 
-    const homeLink = userRole === 'admin' 
+    const homeLink = (userRole === 'admin' || userRole === 'super_admin')
         ? '/admin/dashboard' 
         : userRole === 'teacher' 
             ? '/teacher/dashboard' 
@@ -431,6 +431,8 @@ function AppHeader() {
     // Get role badge color
     const getRoleBadge = () => {
         switch(userRole) {
+            case 'super_admin':
+                return { color: 'bg-red-600', label: 'Super Administrator' };
             case 'admin':
                 return { color: 'bg-red-600', label: 'Administrator' };
             case 'teacher':
@@ -529,7 +531,7 @@ function AppHeader() {
                                     <div className="py-1.5">
                                         <Link 
                                             href={
-                                                userRole === 'admin' ? '/settings/profile' : 
+                                                (userRole === 'admin' || userRole === 'super_admin') ? '/settings/profile' : 
                                                 userRole === 'teacher' ? '/settings/profile' : 
                                                 userRole === 'parent' ? '/settings/profile' : 
                                                 '/settings/profile'
@@ -541,7 +543,7 @@ function AppHeader() {
                                         </Link>
                                         <Link 
                                             href={
-                                                userRole === 'admin' ? '/settings' : 
+                                                (userRole === 'admin' || userRole === 'super_admin') ? '/settings' : 
                                                 '/settings'
                                             } 
                                             className="block px-4 py-2 text-xs text-gray-700 hover:bg-blue-50 transition-all duration-300 cursor-pointer"

@@ -20,7 +20,7 @@ class SetupAdminFromEnv extends Command
      *
      * @var string
      */
-    protected $description = 'Create or update admin account from environment variables (ADMIN_EMAIL and ADMIN_PASSWORD)';
+    protected $description = 'Create or update super admin account from environment variables (ADMIN_EMAIL and ADMIN_PASSWORD)';
 
     /**
      * Execute the console command.
@@ -29,8 +29,8 @@ class SetupAdminFromEnv extends Command
     {
         try {
             // Always output that we're starting
-            $this->info('=== Admin Setup from Environment Variables ===');
-            $this->info('Starting admin setup process...');
+            $this->info('=== Super Admin Setup from Environment Variables ===');
+            $this->info('Starting super admin setup process...');
             
             $email = env('ADMIN_EMAIL');
             $password = env('ADMIN_PASSWORD');
@@ -43,21 +43,21 @@ class SetupAdminFromEnv extends Command
             if (!$email) {
                 $this->error('❌ ADMIN_EMAIL environment variable is not set.');
                 $this->info('Please set ADMIN_EMAIL in Railway Variables.');
-                $this->info('Skipping admin setup...');
+                $this->info('Skipping super admin setup...');
                 return 0; // Return 0 so deployment doesn't fail
             }
 
             if (!$password) {
                 $this->error('❌ ADMIN_PASSWORD environment variable is not set.');
                 $this->info('Please set ADMIN_PASSWORD in Railway Variables.');
-                $this->info('Skipping admin setup...');
+                $this->info('Skipping super admin setup...');
                 return 0; // Return 0 so deployment doesn't fail
             }
 
             if (strlen($password) < 8) {
                 $this->error('❌ ADMIN_PASSWORD must be at least 8 characters long.');
                 $this->info('Current length: ' . strlen($password));
-                $this->info('Skipping admin setup...');
+                $this->info('Skipping super admin setup...');
                 return 0; // Return 0 so deployment doesn't fail
             }
 
@@ -78,29 +78,29 @@ class SetupAdminFromEnv extends Command
                 $this->info('Hashing password...');
                 $admin->password = Hash::make($password);
                 
-                // Ensure role is admin
-                if ($admin->role !== 'admin') {
-                    $this->warn("⚠️  User role is '{$admin->role}', changing to 'admin'...");
+                // Ensure role is super_admin
+                if ($admin->role !== 'super_admin') {
+                    $this->warn("⚠️  User role is '{$admin->role}', changing to 'super_admin'...");
                     $admin->allowRoleChange = true;
-                    $admin->role = 'admin';
+                    $admin->role = 'super_admin';
                     unset($admin->allowRoleChange);
                 }
                 
                 // Ensure status is active
                 $admin->status = 'active';
                 
-                $this->info('Saving admin user...');
+                $this->info('Saving super admin user...');
                 $admin->save();
                 
-                $this->info("✅ Admin account updated successfully!");
+                $this->info("✅ Super admin account updated successfully!");
                 $this->info("   Email: {$email}");
                 $this->info("   Password: [Updated with Bcrypt]");
-                $this->info("   Role: admin");
+                $this->info("   Role: super_admin");
                 $this->info("   Status: active");
             } else {
-                // Create new admin user
+                // Create new super admin user
                 $name = env('ADMIN_NAME', 'Administrator');
-                $this->info("📝 Creating new admin user...");
+                $this->info("📝 Creating new super admin user...");
                 $this->info("   Name: {$name}");
                 $this->info("   Email: {$email}");
                 
@@ -112,16 +112,16 @@ class SetupAdminFromEnv extends Command
                     'name' => $name,
                     'email' => $email,
                     'password' => $hashedPassword,
-                    'role' => 'admin',
+                    'role' => 'super_admin',
                     'status' => 'active',
                     'email_verified_at' => now(),
                 ]);
                 
-                $this->info("✅ Admin account created successfully!");
+                $this->info("✅ Super admin account created successfully!");
                 $this->info("   Name: {$name}");
                 $this->info("   Email: {$email}");
                 $this->info("   Password: [Set from environment, hashed with Bcrypt]");
-                $this->info("   Role: admin");
+                $this->info("   Role: super_admin");
                 $this->info("   Status: active");
                 $this->info("   User ID: {$admin->id}");
             }

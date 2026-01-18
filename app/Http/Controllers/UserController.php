@@ -109,7 +109,7 @@ class UserController extends Controller
         }
 
         $validator = Validator::make($request->all(), [
-            'role' => 'required|in:admin,teacher,student,parent',
+            'role' => 'required|in:super_admin,admin,teacher,student,parent',
         ]);
 
         if ($validator->fails()) {
@@ -124,11 +124,27 @@ class UserController extends Controller
             $user = User::findOrFail($id);
             $changer = Auth::user();
 
+            // Only super_admin can create admins
+            if ($request->role === 'admin' && !$changer->isSuperAdmin()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Unauthorized. Only Super Admin can create Admin accounts.'
+                ], 403);
+            }
+
+            // Prevent creating or changing to super_admin role
+            if ($request->role === 'super_admin') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Cannot assign super_admin role. This role is managed through environment variables only.'
+                ], 403);
+            }
+
             // Check if role can be changed
             if (!$user->canChangeRole($changer)) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'You cannot change this user\'s role. Admins cannot change their own role.'
+                    'message' => 'You cannot change this user\'s role. Admins cannot change their own role or super_admin roles.'
                 ], 403);
             }
 

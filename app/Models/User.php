@@ -110,7 +110,7 @@ class User extends Authenticatable
 
     public function scopeAdmins($query)
     {
-        return $query->where('role', 'admin');
+        return $query->whereIn('role', ['admin', 'super_admin']);
     }
 
     public function scopeTeachers($query)
@@ -175,7 +175,12 @@ class User extends Authenticatable
     // Helper Methods
     public function isAdmin(): bool
     {
-        return $this->role === 'admin';
+        return $this->role === 'admin' || $this->role === 'super_admin';
+    }
+
+    public function isSuperAdmin(): bool
+    {
+        return $this->role === 'super_admin';
     }
 
     public function isTeacher(): bool
@@ -253,6 +258,7 @@ class User extends Authenticatable
     public function getRoleBadgeColorAttribute(): string
     {
         return match($this->role) {
+            'super_admin' => 'red',
             'admin' => 'red',
             'teacher' => 'blue',
             'student' => 'green',
@@ -275,9 +281,14 @@ class User extends Authenticatable
      */
     public function setRole(string $role): bool
     {
-        $allowedRoles = ['admin', 'teacher', 'student', 'parent'];
+        $allowedRoles = ['super_admin', 'admin', 'teacher', 'student', 'parent'];
         
         if (!in_array($role, $allowedRoles)) {
+            return false;
+        }
+
+        // Prevent changing super_admin role (only env setup can do this)
+        if ($this->role === 'super_admin' && $role !== 'super_admin') {
             return false;
         }
 
@@ -304,13 +315,18 @@ class User extends Authenticatable
             return false;
         }
 
-        // Only admins can change roles
+        // Only admins/super_admins can change roles
         if (!$changer->isAdmin()) {
             return false;
         }
 
         // Admins cannot change their own role
         if ($changer->id === $this->id) {
+            return false;
+        }
+
+        // Prevent changing super_admin role (only env setup can do this)
+        if ($this->role === 'super_admin') {
             return false;
         }
 

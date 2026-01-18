@@ -17,12 +17,31 @@ class CheckRole
     {
         $user = $request->user();
         
-        if (!$user || !in_array($user->role, $roles)) {
+        if (!$user) {
+            return redirect()->route('student.dashboard');
+        }
+
+        // Allow super_admin access for 'admin' role routes
+        $hasAccess = false;
+        foreach ($roles as $allowedRole) {
+            if ($user->role === $allowedRole) {
+                $hasAccess = true;
+                break;
+            }
+            // super_admin can access admin routes
+            if ($allowedRole === 'admin' && $user->role === 'super_admin') {
+                $hasAccess = true;
+                break;
+            }
+        }
+        
+        if (!$hasAccess) {
             // Redirect to user's own dashboard based on their role
-            $userRole = $user ? $user->role : 'student';
+            $userRole = $user->role;
             
             // Use switch statement for better compatibility
             switch ($userRole) {
+                case 'super_admin':
                 case 'admin':
                     $dashboardRoute = 'admin.dashboard';
                     break;

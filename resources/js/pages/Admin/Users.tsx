@@ -16,7 +16,7 @@ interface UserData {
     name: string;
     email: string;
     password: string;
-    role: 'admin' | 'teacher' | 'student' | 'parent';
+    role: 'super_admin' | 'admin' | 'teacher' | 'student' | 'parent';
     status: 'active' | 'inactive';
     level: number | null;
     program: string;
@@ -133,12 +133,15 @@ const ViewUserModal: React.FC<{
     // Get role display name
     const getRoleDisplay = () => {
         if (!user.role) return 'User';
+        if (user.role === 'super_admin') return 'Super Admin';
         return user.role.charAt(0).toUpperCase() + user.role.slice(1);
     };
 
     // Get role badge color
     const getRoleBadgeColor = () => {
         switch (user.role) {
+            case 'super_admin':
+                return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
             case 'admin':
                 return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200';
             case 'teacher':
@@ -835,7 +838,9 @@ const Users: React.FC = () => {
                                                                 </td>
                                                                 <td className="px-6 py-4 whitespace-nowrap">
                                                                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                                                                        user.role === 'admin' 
+                                                                        user.role === 'super_admin'
+                                                                            ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+                                                                            : user.role === 'admin' 
                                                                             ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200'
                                                                             : user.role === 'teacher'
                                                                             ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
@@ -845,7 +850,7 @@ const Users: React.FC = () => {
                                                                             ? 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200'
                                                                             : 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200'
                                                                     }`}>
-                                                                        {user.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : 'N/A'}
+                                                                        {user.role ? (user.role === 'super_admin' ? 'Super Admin' : user.role.charAt(0).toUpperCase() + user.role.slice(1)) : 'N/A'}
                                                                     </span>
                                                                 </td>
                                                             </>
