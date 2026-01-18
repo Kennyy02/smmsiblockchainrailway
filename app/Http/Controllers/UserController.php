@@ -111,6 +111,9 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:users',
+            'gender' => 'nullable|in:Male,Female',
+            'phone' => 'nullable|string|max:20',
+            'address' => 'nullable|string|max:500',
             'password' => 'required|string|min:8|confirmed',
         ]);
 
@@ -127,6 +130,9 @@ class UserController extends Controller
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
+                'phone' => $request->phone,
+                'address' => $request->address,
+                'gender' => $request->gender,
                 'role' => 'admin', // Always set to 'admin', never 'super_admin'
                 'status' => 'active',
                 'email_verified_at' => now(),

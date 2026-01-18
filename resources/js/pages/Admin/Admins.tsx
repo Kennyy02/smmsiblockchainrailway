@@ -79,6 +79,9 @@ const Notification: React.FC<{ notification: Notification; onClose: () => void }
 interface AdminFormData {
     name: string;
     email: string;
+    gender: string;
+    phone: string;
+    address: string;
     password: string;
     password_confirmation: string;
 }
@@ -91,6 +94,9 @@ const AdminModal: React.FC<{
     const [formData, setFormData] = useState<AdminFormData>({
         name: '',
         email: '',
+        gender: '',
+        phone: '',
+        address: '',
         password: '',
         password_confirmation: '',
     });
@@ -107,7 +113,7 @@ const AdminModal: React.FC<{
         }
     };
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
@@ -155,20 +161,72 @@ const AdminModal: React.FC<{
                                 )}
                             </div>
 
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Email</label>
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        value={formData.email}
+                                        onChange={handleChange}
+                                        autoComplete="email"
+                                        className={`w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
+                                        placeholder="admin@example.com"
+                                        required
+                                    />
+                                    {errors.email && (
+                                        <p className="text-red-500 text-xs mt-1">{formatErrorMessage(errors.email[0])}</p>
+                                    )}
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Gender</label>
+                                    <select
+                                        name="gender"
+                                        value={formData.gender || ''}
+                                        onChange={handleChange}
+                                        className={`w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
+                                    >
+                                        <option value="">Select Gender</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                    </select>
+                                    {errors.gender && (
+                                        <p className="text-red-500 text-xs mt-1">{formatErrorMessage(errors.gender[0])}</p>
+                                    )}
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Phone Number</label>
+                                    <input
+                                        type="text"
+                                        name="phone"
+                                        value={formData.phone}
+                                        onChange={handleChange}
+                                        autoComplete="tel"
+                                        className={`w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
+                                        placeholder="+63 XXX XXX XXXX"
+                                    />
+                                    {errors.phone && (
+                                        <p className="text-red-500 text-xs mt-1">{formatErrorMessage(errors.phone[0])}</p>
+                                    )}
+                                </div>
+                            </div>
+
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Email</label>
+                                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Address</label>
                                 <input
-                                    type="email"
-                                    name="email"
-                                    value={formData.email}
+                                    type="text"
+                                    name="address"
+                                    value={formData.address || ''}
                                     onChange={handleChange}
-                                    autoComplete="email"
+                                    autoComplete="street-address"
                                     className={`w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
-                                    placeholder="admin@example.com"
-                                    required
+                                    placeholder="Complete address"
                                 />
-                                {errors.email && (
-                                    <p className="text-red-500 text-xs mt-1">{formatErrorMessage(errors.email[0])}</p>
+                                {errors.address && (
+                                    <p className="text-red-500 text-xs mt-1">{formatErrorMessage(errors.address[0])}</p>
                                 )}
                             </div>
 
@@ -528,6 +586,9 @@ const Admins: React.FC = () => {
                 body: JSON.stringify({
                     name: formData.name,
                     email: formData.email,
+                    gender: formData.gender || null,
+                    phone: formData.phone || null,
+                    address: formData.address || null,
                     password: formData.password,
                     password_confirmation: formData.password_confirmation,
                     role: 'admin',

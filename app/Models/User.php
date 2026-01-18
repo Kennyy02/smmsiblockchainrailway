@@ -26,6 +26,9 @@ class User extends Authenticatable
         'role', // Allowed during creation, protected during updates
         'status',
         'avatar',
+        'phone',
+        'address',
+        'gender',
         'must_change_password',
         'password_changed_at',
         'password_reset_otp',
