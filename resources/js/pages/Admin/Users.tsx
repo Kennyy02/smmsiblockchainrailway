@@ -129,6 +129,9 @@ const ViewUserModal: React.FC<{
     // Get phone and address from user or role-specific data
     const phone = user.phone || user.student?.phone || user.teacher?.phone || user.parent?.phone || 'N/A';
     const address = user.address || user.student?.address || user.parent?.address || 'N/A';
+    
+    // Get password status
+    const passwordChanged = user.password_changed_at !== null && user.password_changed_at !== undefined;
 
     // Get role display name
     const getRoleDisplay = () => {
@@ -196,6 +199,15 @@ const ViewUserModal: React.FC<{
                                     <div>
                                         <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Phone Number</label>
                                         <p className="mt-1 text-sm text-gray-900 dark:text-white">{phone}</p>
+                                    </div>
+                                    <div>
+                                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Password Status</label>
+                                        <div className="mt-1 flex items-center gap-2">
+                                            <span className={`h-2 w-2 rounded-full ${passwordChanged ? 'bg-green-500' : 'bg-red-500'}`}></span>
+                                            <span className={`text-sm ${passwordChanged ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                                                {passwordChanged ? 'Changed' : 'Not Yet Changed'}
+                                            </span>
+                                        </div>
                                     </div>
                                     <div className="md:col-span-2">
                                         <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Address</label>
@@ -693,6 +705,9 @@ const Users: React.FC = () => {
     };
 
     const filteredUsers = users.filter(user => {
+        // Exclude super_admin users
+        if (user.role === 'super_admin') return false;
+        
         if (!searchTerm) return true;
         const search = searchTerm.toLowerCase();
         return (
@@ -713,7 +728,7 @@ const Users: React.FC = () => {
                                 <UsersIcon className="h-8 w-8 text-white" />
                             </div>
                             <div>
-                                <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">User Access</h1>
+                                <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">User Password Management</h1>
                                 <p className="text-gray-600 dark:text-gray-400 mt-1">Manage and view all system users</p>
                             </div>
                         </div>
@@ -794,17 +809,17 @@ const Users: React.FC = () => {
                                                 <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Name</th>
                                                 {selectedRole === 'all' ? (
                                                     <>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Email</th>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Phone Number</th>
+                                                        <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Email</th>
+                                                        <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Phone Number</th>
                                                         <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Password Status</th>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Role</th>
+                                                        <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Role</th>
                                                     </>
                                                 ) : (
                                                     <>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Level</th>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Program</th>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Grade</th>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Status</th>
+                                                        <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Level</th>
+                                                        <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Program</th>
+                                                        <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Grade</th>
+                                                        <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Status</th>
                                                     </>
                                                 )}
                                                 <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Action</th>
@@ -822,10 +837,10 @@ const Users: React.FC = () => {
                                                         </td>
                                                         {selectedRole === 'all' ? (
                                                             <>
-                                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                                <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap">
                                                                     <div className="text-sm text-gray-900 dark:text-white">{user.email}</div>
                                                                 </td>
-                                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                                <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap">
                                                                     <div className="text-sm text-gray-900 dark:text-white">{phone}</div>
                                                                 </td>
                                                                 <td className="px-6 py-4 whitespace-nowrap">
@@ -836,7 +851,7 @@ const Users: React.FC = () => {
                                                                         </span>
                                                                     </div>
                                                                 </td>
-                                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                                <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap">
                                                                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                                                                         user.role === 'super_admin'
                                                                             ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
@@ -856,20 +871,20 @@ const Users: React.FC = () => {
                                                             </>
                                                         ) : (
                                                             <>
-                                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                                <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap">
                                                                     <div className="text-sm text-gray-900 dark:text-white">
                                                                         {user.level ? formatGradeLevel(user.level) : 'N/A'}
                                                                     </div>
                                                                 </td>
-                                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                                <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap">
                                                                     <div className="text-sm text-gray-900 dark:text-white">{user.program || 'N/A'}</div>
                                                                 </td>
-                                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                                <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap">
                                                                     <div className="text-sm text-gray-900 dark:text-white">
                                                                         {user.grade ? formatGradeLevel(user.grade) : 'N/A'}
                                                                     </div>
                                                                 </td>
-                                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                                <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap">
                                                                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                                                                         user.status === 'active' 
                                                                             ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' 

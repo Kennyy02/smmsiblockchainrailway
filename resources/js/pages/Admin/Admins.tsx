@@ -1083,9 +1083,9 @@ const Admins: React.FC = () => {
                                         <thead className={`${PRIMARY_COLOR_CLASS}`}>
                                             <tr>
                                                 <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Name</th>
-                                                <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Email</th>
-                                                <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Phone Number</th>
-                                                <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Status</th>
+                                                <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Email</th>
+                                                <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Phone Number</th>
+                                                <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Status</th>
                                                 <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Action</th>
                                             </tr>
                                         </thead>
@@ -1098,13 +1098,13 @@ const Admins: React.FC = () => {
                                                         <td className="px-6 py-4 whitespace-nowrap">
                                                             <div className="text-sm font-medium text-gray-900 dark:text-white">{user.name}</div>
                                                         </td>
-                                                        <td className="px-6 py-4 whitespace-nowrap">
+                                                        <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap">
                                                             <div className="text-sm text-gray-900 dark:text-white">{user.email}</div>
                                                         </td>
-                                                        <td className="px-6 py-4 whitespace-nowrap">
+                                                        <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap">
                                                             <div className="text-sm text-gray-900 dark:text-white">{phone}</div>
                                                         </td>
-                                                        <td className="px-6 py-4 whitespace-nowrap">
+                                                        <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap">
                                                             <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                                                                 user.status === 'active' 
                                                                     ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' 
