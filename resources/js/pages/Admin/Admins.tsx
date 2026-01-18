@@ -248,107 +248,101 @@ const AdminModal: React.FC<{
                                 )}
                             </div>
 
-                            {admin && (
-                                <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
-                                    <p className="text-sm text-blue-700 dark:text-blue-300">
-                                        <strong>Note:</strong> Leave password fields empty to keep the current password.
-                                    </p>
+                            {!admin && (
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
+                                            Password <span className="text-red-500">*</span>
+                                        </label>
+                                        <div className="relative">
+                                            <input
+                                                type={showPassword ? 'text' : 'password'}
+                                                name="password"
+                                                value={formData.password}
+                                                onChange={handleChange}
+                                                className={`w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white pr-10`}
+                                                placeholder="Enter password"
+                                                required
+                                                minLength={8}
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowPassword(!showPassword)}
+                                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                            >
+                                                {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                                            </button>
+                                        </div>
+                                        {errors.password && (
+                                            <p className="text-red-500 text-xs mt-1">{formatErrorMessage(errors.password[0])}</p>
+                                        )}
+                                        {/* Password Requirements */}
+                                        {formData.password && (
+                                            <div className="mt-2 p-3 bg-gray-50 dark:bg-gray-900/50 rounded-lg border border-gray-200 dark:border-gray-700">
+                                                <p className="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-2">Password Requirements:</p>
+                                                <ul className="space-y-1 text-xs">
+                                                    <li className={`flex items-center ${passwordChecks.minLength ? 'text-green-600 dark:text-green-400' : 'text-gray-600 dark:text-gray-400'}`}>
+                                                        <span className={`mr-2 ${passwordChecks.minLength ? 'text-green-500' : 'text-gray-400'}`}>
+                                                            {passwordChecks.minLength ? '✓' : '○'}
+                                                        </span>
+                                                        At least 8 characters
+                                                    </li>
+                                                    <li className={`flex items-center ${passwordChecks.hasUppercase ? 'text-green-600 dark:text-green-400' : 'text-gray-600 dark:text-gray-400'}`}>
+                                                        <span className={`mr-2 ${passwordChecks.hasUppercase ? 'text-green-500' : 'text-gray-400'}`}>
+                                                            {passwordChecks.hasUppercase ? '✓' : '○'}
+                                                        </span>
+                                                        One uppercase letter (A-Z)
+                                                    </li>
+                                                    <li className={`flex items-center ${passwordChecks.hasNumber ? 'text-green-600 dark:text-green-400' : 'text-gray-600 dark:text-gray-400'}`}>
+                                                        <span className={`mr-2 ${passwordChecks.hasNumber ? 'text-green-500' : 'text-gray-400'}`}>
+                                                            {passwordChecks.hasNumber ? '✓' : '○'}
+                                                        </span>
+                                                        One number (0-9)
+                                                    </li>
+                                                    <li className={`flex items-center ${passwordChecks.hasSpecial ? 'text-green-600 dark:text-green-400' : 'text-gray-600 dark:text-gray-400'}`}>
+                                                        <span className={`mr-2 ${passwordChecks.hasSpecial ? 'text-green-500' : 'text-gray-400'}`}>
+                                                            {passwordChecks.hasSpecial ? '✓' : '○'}
+                                                        </span>
+                                                        One special character (!@#$%^&*...)
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
+                                            Confirm Password <span className="text-red-500">*</span>
+                                        </label>
+                                        <div className="relative">
+                                            <input
+                                                type={showPassword ? 'text' : 'password'}
+                                                name="password_confirmation"
+                                                value={formData.password_confirmation}
+                                                onChange={handleChange}
+                                                className={`w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white pr-10`}
+                                                placeholder="Confirm password"
+                                                required
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowPassword(!showPassword)}
+                                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                            >
+                                                {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                                            </button>
+                                        </div>
+                                        {errors.password_confirmation && (
+                                            <p className="text-red-500 text-xs mt-1">{formatErrorMessage(errors.password_confirmation[0])}</p>
+                                        )}
+                                        {/* Password Match Feedback */}
+                                        {formData.password_confirmation && (
+                                            <p className={`text-xs mt-1 ${passwordsMatch ? 'text-green-600 dark:text-green-400' : passwordsDontMatch ? 'text-red-600 dark:text-red-400' : ''}`}>
+                                                {passwordsMatch ? 'Password matched' : passwordsDontMatch ? 'Password not matched' : ''}
+                                            </p>
+                                        )}
+                                    </div>
                                 </div>
                             )}
-
-                            <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
-                                        Password {!admin && <span className="text-red-500">*</span>}
-                                    </label>
-                                    <div className="relative">
-                                        <input
-                                            type={showPassword ? 'text' : 'password'}
-                                            name="password"
-                                            value={formData.password}
-                                            onChange={handleChange}
-                                            className={`w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white pr-10`}
-                                            placeholder="Enter password"
-                                            required={!admin}
-                                            minLength={8}
-                                        />
-                                        <button
-                                            type="button"
-                                            onClick={() => setShowPassword(!showPassword)}
-                                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                                        >
-                                            {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                                        </button>
-                                    </div>
-                                    {errors.password && (
-                                        <p className="text-red-500 text-xs mt-1">{formatErrorMessage(errors.password[0])}</p>
-                                    )}
-                                    {/* Password Requirements */}
-                                    {formData.password && (
-                                        <div className="mt-2 p-3 bg-gray-50 dark:bg-gray-900/50 rounded-lg border border-gray-200 dark:border-gray-700">
-                                            <p className="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-2">Password Requirements:</p>
-                                            <ul className="space-y-1 text-xs">
-                                                <li className={`flex items-center ${passwordChecks.minLength ? 'text-green-600 dark:text-green-400' : 'text-gray-600 dark:text-gray-400'}`}>
-                                                    <span className={`mr-2 ${passwordChecks.minLength ? 'text-green-500' : 'text-gray-400'}`}>
-                                                        {passwordChecks.minLength ? '✓' : '○'}
-                                                    </span>
-                                                    At least 8 characters
-                                                </li>
-                                                <li className={`flex items-center ${passwordChecks.hasUppercase ? 'text-green-600 dark:text-green-400' : 'text-gray-600 dark:text-gray-400'}`}>
-                                                    <span className={`mr-2 ${passwordChecks.hasUppercase ? 'text-green-500' : 'text-gray-400'}`}>
-                                                        {passwordChecks.hasUppercase ? '✓' : '○'}
-                                                    </span>
-                                                    One uppercase letter (A-Z)
-                                                </li>
-                                                <li className={`flex items-center ${passwordChecks.hasNumber ? 'text-green-600 dark:text-green-400' : 'text-gray-600 dark:text-gray-400'}`}>
-                                                    <span className={`mr-2 ${passwordChecks.hasNumber ? 'text-green-500' : 'text-gray-400'}`}>
-                                                        {passwordChecks.hasNumber ? '✓' : '○'}
-                                                    </span>
-                                                    One number (0-9)
-                                                </li>
-                                                <li className={`flex items-center ${passwordChecks.hasSpecial ? 'text-green-600 dark:text-green-400' : 'text-gray-600 dark:text-gray-400'}`}>
-                                                    <span className={`mr-2 ${passwordChecks.hasSpecial ? 'text-green-500' : 'text-gray-400'}`}>
-                                                        {passwordChecks.hasSpecial ? '✓' : '○'}
-                                                    </span>
-                                                    One special character (!@#$%^&*...)
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    )}
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
-                                        Confirm Password {!admin && <span className="text-red-500">*</span>}
-                                    </label>
-                                    <div className="relative">
-                                        <input
-                                            type={showPassword ? 'text' : 'password'}
-                                            name="password_confirmation"
-                                            value={formData.password_confirmation}
-                                            onChange={handleChange}
-                                            className={`w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white pr-10`}
-                                            placeholder="Confirm password"
-                                            required={!admin}
-                                        />
-                                        <button
-                                            type="button"
-                                            onClick={() => setShowPassword(!showPassword)}
-                                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                                        >
-                                            {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                                        </button>
-                                    </div>
-                                    {errors.password_confirmation && (
-                                        <p className="text-red-500 text-xs mt-1">{formatErrorMessage(errors.password_confirmation[0])}</p>
-                                    )}
-                                    {/* Password Match Feedback */}
-                                    {formData.password_confirmation && (
-                                        <p className={`text-xs mt-1 ${passwordsMatch ? 'text-green-600 dark:text-green-400' : passwordsDontMatch ? 'text-red-600 dark:text-red-400' : ''}`}>
-                                            {passwordsMatch ? 'Password matched' : passwordsDontMatch ? 'Password not matched' : ''}
-                                        </p>
-                                    )}
-                                </div>
-                            </div>
                         </div>
 
                         <div className="flex justify-end space-x-3 pt-4 border-t dark:border-gray-700">

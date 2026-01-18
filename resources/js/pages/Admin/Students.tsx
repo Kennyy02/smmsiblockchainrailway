@@ -734,6 +734,10 @@ const ViewStudentModal: React.FC<{
                                 <p className="text-gray-900 dark:text-gray-100 font-medium mt-1">{formatDate(student.enrollment_date)}</p>
                             </div>
                             <div>
+                                <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Phone Number</label>
+                                <p className="text-gray-900 dark:text-gray-100 font-medium mt-1">{student.phone || '—'}</p>
+                            </div>
+                            <div>
                                 <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Address</label>
                                 <p className="text-gray-900 dark:text-gray-100 font-medium mt-1">{student.address || '—'}</p>
                             </div>

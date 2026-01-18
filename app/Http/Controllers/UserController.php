@@ -71,7 +71,7 @@ class UserController extends Controller
                 $userData['program'] = $user->teacher->department ?? 'N/A';
                 $userData['grade'] = null;
                 $userData['phone'] = $user->teacher->phone ?? null;
-                $userData['address'] = null;
+                $userData['address'] = $user->teacher->address ?? null;
             } elseif ($user->parent) {
                 $userData['level'] = null;
                 $userData['program'] = 'N/A';
@@ -79,11 +79,12 @@ class UserController extends Controller
                 $userData['phone'] = $user->parent->phone ?? null;
                 $userData['address'] = $user->parent->address ?? null;
             } else {
+                // For admin/super_admin users or users without relationships, use phone/address from users table
                 $userData['level'] = null;
                 $userData['program'] = 'N/A';
                 $userData['grade'] = null;
-                $userData['phone'] = null;
-                $userData['address'] = null;
+                $userData['phone'] = $user->phone ?? null;
+                $userData['address'] = $user->address ?? null;
             }
             
             return $userData;
@@ -301,9 +302,10 @@ class UserController extends Controller
             }
 
             $email = $user->email;
-            $user->delete();
+            // Permanently delete the admin user from the database
+            $user->forceDelete();
 
-            Log::info('Admin user deleted', [
+            Log::info('Admin user permanently deleted', [
                 'user_id' => $id,
                 'email' => $email,
                 'deleted_by' => Auth::user()->id,
@@ -454,7 +456,7 @@ class UserController extends Controller
                 $userData['program'] = $user->teacher->department ?? 'N/A';
                 $userData['grade'] = null;
                 $userData['phone'] = $user->teacher->phone ?? null;
-                $userData['address'] = null;
+                $userData['address'] = $user->teacher->address ?? null;
             } elseif ($user->parent) {
                 $userData['level'] = null;
                 $userData['program'] = 'N/A';
@@ -462,11 +464,12 @@ class UserController extends Controller
                 $userData['phone'] = $user->parent->phone ?? null;
                 $userData['address'] = $user->parent->address ?? null;
             } else {
+                // For admin/super_admin users or users without relationships, use phone/address from users table
                 $userData['level'] = null;
                 $userData['program'] = 'N/A';
                 $userData['grade'] = null;
-                $userData['phone'] = null;
-                $userData['address'] = null;
+                $userData['phone'] = $user->phone ?? null;
+                $userData['address'] = $user->address ?? null;
             }
 
             return response()->json([
