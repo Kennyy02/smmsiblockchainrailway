@@ -807,12 +807,12 @@ const Users: React.FC = () => {
                                     <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                                         <thead className={`${PRIMARY_COLOR_CLASS}`}>
                                             <tr>
-                                                <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Name</th>
+                                                <th className="px-2 py-2 md:px-6 md:py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Name</th>
                                                 {selectedRole === 'all' ? (
                                                     <>
                                                         <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Email</th>
                                                         <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Phone Number</th>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Password Status</th>
+                                                        <th className="px-2 py-2 md:px-6 md:py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Password Status</th>
                                                         <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Role</th>
                                                     </>
                                                 ) : (
@@ -823,7 +823,7 @@ const Users: React.FC = () => {
                                                         <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Status</th>
                                                     </>
                                                 )}
-                                                <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Action</th>
+                                                <th className="px-2 py-2 md:px-6 md:py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -833,7 +833,7 @@ const Users: React.FC = () => {
                                                 
                                                 return (
                                                     <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                                        <td className="px-6 py-4 whitespace-nowrap">
+                                                        <td className="px-2 py-2 md:px-6 md:py-4 whitespace-nowrap">
                                                             <div className="text-sm font-medium text-gray-900 dark:text-white">{user.name}</div>
                                                         </td>
                                                         {selectedRole === 'all' ? (
@@ -844,8 +844,8 @@ const Users: React.FC = () => {
                                                                 <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap">
                                                                     <div className="text-sm text-gray-900 dark:text-white">{phone}</div>
                                                                 </td>
-                                                                <td className="px-6 py-4 whitespace-nowrap">
-                                                                    <div className="flex items-center gap-2">
+                                                                <td className="px-2 py-2 md:px-6 md:py-4 whitespace-nowrap">
+                                                                    <div className="flex items-center gap-1 md:gap-2">
                                                                         <span className={`h-2 w-2 rounded-full ${passwordChanged ? 'bg-green-500' : 'bg-red-500'}`}></span>
                                                                         <span className={`hidden md:inline text-sm ${passwordChanged ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
                                                                             {passwordChanged ? 'Changed' : 'Not Yet Changed'}
@@ -896,13 +896,13 @@ const Users: React.FC = () => {
                                                                 </td>
                                                             </>
                                                         )}
-                                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                        <td className="px-2 py-2 md:px-6 md:py-4 whitespace-nowrap text-sm font-medium">
                                                             <button
                                                                 onClick={() => handleView(user)}
-                                                                className={`inline-flex items-center px-3 py-1.5 ${PRIMARY_COLOR_CLASS} text-white rounded-lg ${HOVER_COLOR_CLASS} transition-colors`}
+                                                                className={`inline-flex items-center px-2 py-2 md:px-3 md:py-1.5 ${PRIMARY_COLOR_CLASS} text-white rounded-lg ${HOVER_COLOR_CLASS} transition-colors`}
                                                             >
-                                                                <Eye className="h-4 w-4 mr-1" />
-                                                                View
+                                                                <Eye className="h-4 w-4 md:mr-1" />
+                                                                <span className="hidden md:inline">View</span>
                                                             </button>
                                                         </td>
                                                     </tr>
