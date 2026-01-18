@@ -755,6 +755,7 @@ const Users: React.FC = () => {
                                         className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#003366] appearance-none cursor-pointer pr-10"
                                     >
                                         <option value="all">All Users</option>
+                                        <option value="admin">Admin</option>
                                         <option value="teacher">Teachers</option>
                                         <option value="parent">Parents</option>
                                         <option value="student">Students</option>
@@ -846,7 +847,7 @@ const Users: React.FC = () => {
                                                                 <td className="px-6 py-4 whitespace-nowrap">
                                                                     <div className="flex items-center gap-2">
                                                                         <span className={`h-2 w-2 rounded-full ${passwordChanged ? 'bg-green-500' : 'bg-red-500'}`}></span>
-                                                                        <span className={`text-sm ${passwordChanged ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                                                                        <span className={`hidden md:inline text-sm ${passwordChanged ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
                                                                             {passwordChanged ? 'Changed' : 'Not Yet Changed'}
                                                                         </span>
                                                                     </div>
