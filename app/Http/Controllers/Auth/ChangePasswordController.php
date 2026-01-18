@@ -95,6 +95,7 @@ class ChangePasswordController extends Controller
     {
         switch ($user->role) {
             case 'admin':
+            case 'super_admin':
                 return redirect()->route('admin.dashboard');
             case 'student':
                 return redirect()->route('student.dashboard');
@@ -103,7 +104,8 @@ class ChangePasswordController extends Controller
             case 'teacher':
                 return redirect()->route('teacher.dashboard');
             default:
-                return redirect()->route('dashboard');
+                // Fallback to admin dashboard for unknown roles
+                return redirect()->route('admin.dashboard');
         }
     }
 }
