@@ -41,6 +41,20 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
+        $email = $this->string('email');
+        $password = $this->string('password');
+
+        // Check super_admin credentials from env first (no database record)
+        $envEmail = env('ADMIN_EMAIL');
+        $envPassword = env('ADMIN_PASSWORD');
+
+        if ($envEmail && $envPassword && $email === $envEmail && $password === $envPassword) {
+            // Super admin authentication via env
+            RateLimiter::clear($this->throttleKey());
+            return; // Will be handled in AuthenticatedSessionController
+        }
+
+        // For all other users, use standard database authentication
         try {
             if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
                 RateLimiter::hit($this->throttleKey());

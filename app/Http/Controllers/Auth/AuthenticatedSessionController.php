@@ -28,8 +28,36 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        $request->authenticate();
+        $email = $request->string('email');
+        $password = $request->string('password');
 
+        // Check if this is super_admin login (from env, not database)
+        $envEmail = env('ADMIN_EMAIL');
+        $envPassword = env('ADMIN_PASSWORD');
+
+        if ($envEmail && $envPassword && $email === $envEmail && $password === $envPassword) {
+            // Super admin: Create a temporary User object for session (no database record)
+            $superAdmin = new \App\Models\User([
+                'id' => 0, // Special ID to indicate env-based user
+                'name' => env('ADMIN_NAME', 'Super Administrator'),
+                'email' => $envEmail,
+                'role' => 'super_admin',
+                'status' => 'active',
+                'email_verified_at' => now(),
+                'password_changed_at' => now(), // Super admin doesn't need password change
+            ]);
+            $superAdmin->exists = false; // Mark as non-persistent
+
+            // Manually log in the super admin (bypass database)
+            Auth::login($superAdmin, $request->boolean('remember'));
+            $request->session()->regenerate();
+            
+            // Redirect super admin to admin dashboard
+            return redirect()->intended(route('admin.dashboard'));
+        }
+
+        // Standard authentication for database users
+        $request->authenticate();
         $request->session()->regenerate();
 
         // Get authenticated user
@@ -44,6 +72,7 @@ class AuthenticatedSessionController extends Controller
         // Redirect based on user role
         switch ($user->role) {
             case 'admin':
+            case 'super_admin':
                 return redirect()->intended(route('admin.dashboard'));
 
             case 'student':
