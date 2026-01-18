@@ -214,15 +214,6 @@ const MessageDetailModal: React.FC<MessageDetailModalProps> = ({ message, onClos
                     <div className="sticky bottom-0 bg-gray-50 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 px-6 py-4 rounded-b-2xl">
                         <div className="flex flex-wrap gap-3 justify-between">
                             <div className="flex flex-wrap gap-2">
-                                {message.status !== 'replied' && message.status !== 'archived' && (
-                                    <button
-                                        onClick={() => onStatusChange(message.id, 'replied')}
-                                        className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
-                                    >
-                                        <MailCheck className="w-4 h-4" />
-                                        <span>Mark as Replied</span>
-                                    </button>
-                                )}
                                 {message.status === 'archived' ? (
                                     <button
                                         onClick={() => onStatusChange(message.id, 'unread')}
@@ -240,15 +231,35 @@ const MessageDetailModal: React.FC<MessageDetailModalProps> = ({ message, onClos
                                         <span>Archive</span>
                                     </button>
                                 )}
-                                <a
-                                    href={`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(message.email)}&su=${encodeURIComponent('Re: ' + message.subject)}&body=${encodeURIComponent(`Dear ${message.name},\n\nThank you for contacting Southern Mindoro Maritime School.\n\nRegarding your inquiry about "${message.subject}":\n\n\n\nBest regards,\nSouthern Mindoro Maritime School\nBlockchain Grading System Support`)}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="flex items-center space-x-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
-                                >
-                                    <Send className="w-4 h-4" />
-                                    <span>Reply via Gmail</span>
-                                </a>
+                                {message.status !== 'replied' && (
+                                    <button
+                                        onClick={() => {
+                                            // Mark as replied first
+                                            onStatusChange(message.id, 'replied');
+                                            // Then open Gmail
+                                            window.open(
+                                                `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(message.email)}&su=${encodeURIComponent('Re: ' + message.subject)}&body=${encodeURIComponent(`Dear ${message.name},\n\nThank you for contacting Southern Mindoro Maritime School.\n\nRegarding your inquiry about "${message.subject}":\n\n\n\nBest regards,\nSouthern Mindoro Maritime School\nBlockchain Grading System Support`)}`,
+                                                '_blank',
+                                                'noopener,noreferrer'
+                                            );
+                                        }}
+                                        className="flex items-center space-x-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                                    >
+                                        <Send className="w-4 h-4" />
+                                        <span>Reply via Gmail</span>
+                                    </button>
+                                )}
+                                {message.status === 'replied' && (
+                                    <a
+                                        href={`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(message.email)}&su=${encodeURIComponent('Re: ' + message.subject)}&body=${encodeURIComponent(`Dear ${message.name},\n\nThank you for contacting Southern Mindoro Maritime School.\n\nRegarding your inquiry about "${message.subject}":\n\n\n\nBest regards,\nSouthern Mindoro Maritime School\nBlockchain Grading System Support`)}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex items-center space-x-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                                    >
+                                        <Send className="w-4 h-4" />
+                                        <span>Reply via Gmail</span>
+                                    </a>
+                                )}
                             </div>
                             <button
                                 onClick={() => onDelete(message.id)}
