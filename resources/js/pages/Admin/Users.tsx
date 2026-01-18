@@ -817,9 +817,9 @@ const Users: React.FC = () => {
                                                     </>
                                                 ) : (
                                                     <>
-                                                        <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Level</th>
-                                                        <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Program</th>
-                                                        <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Grade</th>
+                                                        <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Email</th>
+                                                        <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Phone Number</th>
+                                                        <th className="px-2 py-4 md:px-6 md:py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Password Status</th>
                                                         <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Status</th>
                                                     </>
                                                 )}
@@ -873,16 +873,17 @@ const Users: React.FC = () => {
                                                         ) : (
                                                             <>
                                                                 <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap">
-                                                                    <div className="text-sm text-gray-900 dark:text-white">
-                                                                        {user.level ? formatGradeLevel(user.level) : 'N/A'}
-                                                                    </div>
+                                                                    <div className="text-sm text-gray-900 dark:text-white">{user.email}</div>
                                                                 </td>
                                                                 <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap">
-                                                                    <div className="text-sm text-gray-900 dark:text-white">{user.program || 'N/A'}</div>
+                                                                    <div className="text-sm text-gray-900 dark:text-white">{phone}</div>
                                                                 </td>
-                                                                <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap">
-                                                                    <div className="text-sm text-gray-900 dark:text-white">
-                                                                        {user.grade ? formatGradeLevel(user.grade) : 'N/A'}
+                                                                <td className="px-2 py-4 md:px-6 md:py-4 whitespace-nowrap">
+                                                                    <div className="flex items-center justify-center md:justify-start gap-1 md:gap-2">
+                                                                        <span className={`h-2 w-2 rounded-full ${passwordChanged ? 'bg-green-500' : 'bg-red-500'}`}></span>
+                                                                        <span className={`hidden md:inline text-sm ${passwordChanged ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                                                                            {passwordChanged ? 'Changed' : 'Not Yet Changed'}
+                                                                        </span>
                                                                     </div>
                                                                 </td>
                                                                 <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap">
