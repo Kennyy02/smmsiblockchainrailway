@@ -116,7 +116,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                                     autoComplete="email"
                                     value={data.email}
                                     onChange={(e) => setData('email', e.target.value)}
-                                    placeholder="your.email@smms.edu.ph"
+                                    placeholder="Enter your email"
                                     className="w-full rounded-xl bg-white/90 text-gray-900 border-0 placeholder:text-gray-500 focus:ring-2 focus:ring-blue-400 px-4 py-3 text-base"
                                 />
                                 <InputError message={errors.email} className="text-red-300 mt-1" />

@@ -112,7 +112,7 @@ export default function ForgotPassword({ status }: { status?: string }) {
                                 autoComplete="email"
                                 value={data.email}
                                 onChange={(e) => setData('email', e.target.value)}
-                                placeholder="your.email@smms.edu.ph"
+                                placeholder="Enter your email"
                                 className="w-full bg-white/90 border-0 text-gray-900 placeholder:text-gray-500 rounded-xl px-4 py-3 focus:ring-2 focus:ring-amber-400"
                             />
                         </div>
