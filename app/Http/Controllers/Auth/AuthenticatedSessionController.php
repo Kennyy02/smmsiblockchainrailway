@@ -36,9 +36,20 @@ class AuthenticatedSessionController extends Controller
         $envEmail = env('ADMIN_EMAIL');
         $envPassword = env('ADMIN_PASSWORD');
 
+        // Debug logging (remove after testing)
+        \Log::info('Super Admin Login Attempt', [
+            'input_email' => $email,
+            'input_password_length' => strlen($password),
+            'env_email' => $envEmail ? 'SET' : 'NOT SET',
+            'env_password' => $envPassword ? 'SET' : 'NOT SET',
+            'email_match' => $email === $envEmail,
+            'password_match' => $password === $envPassword,
+        ]);
+
         // IMPORTANT: Check env credentials BEFORE database lookup
         // Super admin is env-only, so if credentials match env, it's super admin
-        if ($envEmail && $envPassword && $email === $envEmail && $password === $envPassword) {
+        // Use trim() to handle any whitespace issues
+        if ($envEmail && $envPassword && trim($email) === trim($envEmail) && trim($password) === trim($envPassword)) {
             // Super admin: Create a temporary User object for session (no database record)
             $superAdmin = new \App\Models\User([
                 'id' => 0, // Special ID to indicate env-based user
