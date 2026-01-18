@@ -117,6 +117,11 @@ Route::middleware(['auth', 'requirePasswordChange', 'verified', 'checkRole:admin
     
     // ==================== PEOPLE MANAGEMENT ====================
     
+    // Admins (Super Admin only - managed through Users page filtered to admin role)
+    Route::get('/admins', function () {
+        return Inertia::render('Admin/Admins');
+    })->name('admins');
+    
     // Teachers
     Route::get('/teachers', function () {
         return Inertia::render('Admin/Teachers');

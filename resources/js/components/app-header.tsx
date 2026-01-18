@@ -274,6 +274,7 @@ function AppHeader() {
             href: '/admin/teachers',
             icon: Users,
             submenu: [
+                ...(userRole === 'super_admin' ? [{ title: 'Admin', href: '/admin/admins', icon: UserCheck }] : []),
                 { title: 'Teachers', href: '/admin/teachers', icon: UserCheck },
                 { title: 'Students', href: '/admin/students', icon: GraduationCap },
                 { title: 'Parents', href: '/admin/parents', icon: User },
