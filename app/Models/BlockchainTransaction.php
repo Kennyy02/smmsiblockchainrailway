@@ -78,6 +78,11 @@ class BlockchainTransaction extends Model
         return $this->hasOne(Certificate::class, 'blockchain_tx_hash', 'transaction_hash');
     }
 
+    public function auditLogs()
+    {
+        return $this->hasMany(AuditLog::class, 'blockchain_tx_id');
+    }
+
     /**
      * Find the attendance record associated with this transaction by matching the hash
      */

@@ -9,6 +9,7 @@ use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\BlockchainController; // ✅ NEW UNIFIED CONTROLLER
+use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\ClassesController;
 use App\Http\Controllers\ClassSubjectController;
 use App\Http\Controllers\CourseMaterialController;
@@ -427,6 +428,18 @@ Route::prefix('contact-messages')->group(function () {
     Route::put('/{contactMessage}', [ContactMessageController::class, 'update']);
     Route::delete('/{contactMessage}', [ContactMessageController::class, 'destroy']);
     Route::post('/mark-read', [ContactMessageController::class, 'markAsRead']);
+});
+
+// ========================================================================
+// 📋 AUDIT TRAIL MANAGEMENT
+// System-wide audit logging with blockchain security
+// ========================================================================
+
+Route::prefix('audit-logs')->group(function () {
+    Route::get('/', [AuditLogController::class, 'index']);
+    Route::get('/stats', [AuditLogController::class, 'getStats']);
+    Route::get('/model/{modelType}/{modelId}', [AuditLogController::class, 'getModelLogs']);
+    Route::get('/{id}', [AuditLogController::class, 'show']);
 });
 
 // ========================================================================
