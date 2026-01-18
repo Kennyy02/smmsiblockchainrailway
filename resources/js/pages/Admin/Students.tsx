@@ -1472,8 +1472,8 @@ const Students: React.FC = () => {
                                                 <tr key={student.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                                                     <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
                                                         <div className="flex items-center">
-                                                            <div className={`flex-shrink-0 h-8 w-8 sm:h-10 sm:w-10 rounded-full ${LIGHT_BG_CLASS} flex items-center justify-center border border-[#003366]`}>
-                                                                <User className={`h-4 w-4 sm:h-5 sm:w-5 ${TEXT_COLOR_CLASS}`} />
+                                                            <div className={`flex-shrink-0 h-8 w-8 sm:h-10 sm:w-10 rounded-full ${LIGHT_BG_CLASS} dark:bg-gray-700 flex items-center justify-center border border-[#003366] dark:border-gray-600`}>
+                                                                <User className={`h-4 w-4 sm:h-5 sm:w-5 ${TEXT_COLOR_CLASS} dark:text-white`} />
                                                             </div>
                                                             <div className="ml-2 sm:ml-4 min-w-0 flex-1">
                                                                 <div className="text-xs sm:text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">
