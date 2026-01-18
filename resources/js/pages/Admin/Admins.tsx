@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { UserCheck, Search, X, Eye, RefreshCw, Users as UsersIcon, Mail, Plus, EyeOff } from 'lucide-react';
+import { UserCheck, Search, X, Eye, RefreshCw, Users as UsersIcon, Mail, Plus, EyeOff, Edit, Trash2 } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
 
 // --- MARITIME THEME COLORS ---
@@ -193,12 +193,13 @@ const AdminModal: React.FC<{
                                     )}
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Gender</label>
+                                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Gender <span className="text-red-500">*</span></label>
                                     <select
                                         name="gender"
                                         value={formData.gender || ''}
                                         onChange={handleChange}
                                         className={`w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all appearance-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
+                                        required
                                     >
                                         <option value="">Select Gender</option>
                                         <option value="Male">Male</option>
@@ -212,7 +213,7 @@ const AdminModal: React.FC<{
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Phone Number</label>
+                                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Phone Number <span className="text-red-500">*</span></label>
                                     <input
                                         type="text"
                                         name="phone"
@@ -221,6 +222,7 @@ const AdminModal: React.FC<{
                                         autoComplete="tel"
                                         className={`w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                                         placeholder="+63 XXX XXX XXXX"
+                                        required
                                     />
                                     {errors.phone && (
                                         <p className="text-red-500 text-xs mt-1">{formatErrorMessage(errors.phone[0])}</p>
@@ -229,7 +231,7 @@ const AdminModal: React.FC<{
                             </div>
 
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Address</label>
+                                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Address <span className="text-red-500">*</span></label>
                                 <input
                                     type="text"
                                     name="address"
@@ -238,6 +240,7 @@ const AdminModal: React.FC<{
                                     autoComplete="street-address"
                                     className={`w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                                     placeholder="Complete address"
+                                    required
                                 />
                                 {errors.address && (
                                     <p className="text-red-500 text-xs mt-1">{formatErrorMessage(errors.address[0])}</p>
@@ -363,12 +366,7 @@ const AdminModal: React.FC<{
 const ViewAdminModal: React.FC<{
     user: UserData | null;
     onClose: () => void;
-    onSendAccountInfo?: (userId: number) => Promise<void>;
-    onSendReminder?: (userId: number) => Promise<void>;
-    sendingEmail?: boolean;
-    sendingReminder?: boolean;
-    generatedPassword?: string | null;
-}> = ({ user, onClose, onSendAccountInfo, onSendReminder, sendingEmail = false, sendingReminder = false, generatedPassword = null }) => {
+}> = ({ user, onClose }) => {
     if (!user) return null;
 
     const phone = user.phone || 'N/A';
@@ -432,64 +430,21 @@ const ViewAdminModal: React.FC<{
                                             </span>
                                         </p>
                                     </div>
+                                    <div>
+                                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Gender</label>
+                                        <p className="mt-1 text-sm text-gray-900 dark:text-white">{user.gender || 'N/A'}</p>
+                                    </div>
                                     <div className="md:col-span-2">
                                         <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Address</label>
                                         <p className="mt-1 text-sm text-gray-900 dark:text-white">{address}</p>
                                     </div>
-                                    {generatedPassword && (
-                                        <div className="md:col-span-2">
-                                            <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Generated Password</label>
-                                            <p className="mt-1 text-sm font-mono text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-700 p-2 rounded">
-                                                {generatedPassword}
-                                            </p>
-                                        </div>
-                                    )}
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     {/* Footer */}
-                    <div className="px-6 py-4 bg-gray-50 dark:bg-gray-700 flex justify-between items-center">
-                        <div className="flex gap-3">
-                            <button
-                                onClick={() => onSendAccountInfo && onSendAccountInfo(user.id)}
-                                disabled={sendingEmail || sendingReminder}
-                                className={`px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2`}
-                            >
-                                {sendingEmail ? (
-                                    <>
-                                        <RefreshCw className="h-4 w-4 animate-spin" />
-                                        Resetting...
-                                    </>
-                                ) : (
-                                    <>
-                                        <Mail className="h-4 w-4" />
-                                        Reset Password
-                                    </>
-                                )}
-                            </button>
-                            {/* Show Remind button only if password hasn't been changed */}
-                            {!user.password_changed_at && onSendReminder && (
-                                <button
-                                    onClick={() => onSendReminder(user.id)}
-                                    disabled={sendingEmail || sendingReminder}
-                                    className={`px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2`}
-                                >
-                                    {sendingReminder ? (
-                                        <>
-                                            <RefreshCw className="h-4 w-4 animate-spin" />
-                                            Sending...
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Mail className="h-4 w-4" />
-                                            Remind
-                                        </>
-                                    )}
-                                </button>
-                            )}
-                        </div>
+                    <div className="px-6 py-4 bg-gray-50 dark:bg-gray-700 flex justify-end items-center">
                         <button
                             onClick={onClose}
                             className={`px-4 py-2 ${PRIMARY_COLOR_CLASS} text-white rounded-lg ${HOVER_COLOR_CLASS} transition-colors`}
@@ -756,7 +711,16 @@ const Admins: React.FC = () => {
     const handleView = (user: UserData) => {
         setSelectedUser(user);
         setShowViewModal(true);
-        setGeneratedPassword(null);
+    };
+
+    const handleEdit = (user: UserData) => {
+        // TODO: Implement edit functionality
+        setNotification({ type: 'error', message: 'Edit functionality coming soon' });
+    };
+
+    const handleDelete = (user: UserData) => {
+        // TODO: Implement delete functionality
+        setNotification({ type: 'error', message: 'Delete functionality coming soon' });
     };
 
     const handleSendAccountInfo = async (userId: number) => {
@@ -1108,13 +1072,29 @@ const Admins: React.FC = () => {
                                                             </span>
                                                         </td>
                                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                                            <button
-                                                                onClick={() => handleView(user)}
-                                                                className={`inline-flex items-center px-3 py-1.5 ${PRIMARY_COLOR_CLASS} text-white rounded-lg ${HOVER_COLOR_CLASS} transition-colors`}
-                                                            >
-                                                                <Eye className="h-4 w-4 mr-1" />
-                                                                View
-                                                            </button>
+                                                            <div className="flex items-center gap-2">
+                                                                <button
+                                                                    onClick={() => handleView(user)}
+                                                                    className={`inline-flex items-center px-3 py-1.5 ${PRIMARY_COLOR_CLASS} text-white rounded-lg ${HOVER_COLOR_CLASS} transition-colors`}
+                                                                    title="View"
+                                                                >
+                                                                    <Eye className="h-4 w-4" />
+                                                                </button>
+                                                                <button
+                                                                    onClick={() => handleEdit(user)}
+                                                                    className={`inline-flex items-center px-3 py-1.5 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors`}
+                                                                    title="Edit"
+                                                                >
+                                                                    <Edit className="h-4 w-4" />
+                                                                </button>
+                                                                <button
+                                                                    onClick={() => handleDelete(user)}
+                                                                    className={`inline-flex items-center px-3 py-1.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors`}
+                                                                    title="Delete"
+                                                                >
+                                                                    <Trash2 className="h-4 w-4" />
+                                                                </button>
+                                                            </div>
                                                         </td>
                                                     </tr>
                                                 );
@@ -1170,13 +1150,7 @@ const Admins: React.FC = () => {
                             onClose={() => {
                                 setShowViewModal(false);
                                 setSelectedUser(null);
-                                setGeneratedPassword(null);
                             }}
-                            onSendAccountInfo={handleSendAccountInfo}
-                            onSendReminder={handleSendReminder}
-                            sendingEmail={sendingEmail}
-                            sendingReminder={sendingReminder}
-                            generatedPassword={generatedPassword}
                         />
                     )}
 
