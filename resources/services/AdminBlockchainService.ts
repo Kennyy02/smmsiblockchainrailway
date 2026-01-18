@@ -123,6 +123,20 @@ export interface BlockchainTransaction {
     certificate?: Certificate;
     attendance?: AttendanceData | null;
     grade?: GradeData | null;
+    audit_logs?: AuditLogData[];
+}
+
+export interface AuditLogData {
+    id: number;
+    audit_type: string;
+    auditable_type: string;
+    auditable_id: number;
+    old_values: Record<string, any> | null;
+    new_values: Record<string, any> | null;
+    changes: Record<string, { old: any; new: any }> | null;
+    description: string;
+    blockchain_hash: string | null;
+    created_at: string;
 }
 
 export interface TransactionFilters {

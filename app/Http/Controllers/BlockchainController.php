@@ -77,7 +77,7 @@ class BlockchainController extends Controller
     public function getTransactions(Request $request)
     {
         try {
-            $query = BlockchainTransaction::with('initiator');
+            $query = BlockchainTransaction::with(['initiator', 'auditLogs']);
             
             // Apply filters
             if ($status = $request->input('status')) {
@@ -152,7 +152,7 @@ class BlockchainController extends Controller
     public function getTransaction($id)
     {
         try {
-            $transaction = BlockchainTransaction::with(['initiator', 'certificate'])
+            $transaction = BlockchainTransaction::with(['initiator', 'certificate', 'auditLogs'])
                 ->findOrFail($id);
             
             $transaction->processing_time_seconds = $transaction->getProcessingTime();

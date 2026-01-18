@@ -175,18 +175,36 @@ class AuditService
             case 'updated':
                 $name = $this->getModelName($model);
                 $changeCount = $changes ? count($changes) : 0;
-                $changedFields = $changes ? array_keys($changes) : [];
                 
                 if ($changeCount === 0) {
                     return "{$modelName} '{$name}' was updated" . ($user ? " by {$user->name}" : '');
                 }
                 
-                $fieldsList = implode(', ', array_slice($changedFields, 0, 3));
-                if ($changeCount > 3) {
-                    $fieldsList .= " and " . ($changeCount - 3) . " more";
+                // Build detailed change descriptions with before/after values
+                $changeDescriptions = [];
+                foreach ($changes as $field => $changeData) {
+                    $oldValue = $changeData['old'] ?? null;
+                    $newValue = $changeData['new'] ?? null;
+                    
+                    // Format values for display
+                    $oldDisplay = $this->formatValue($oldValue);
+                    $newDisplay = $this->formatValue($newValue);
+                    
+                    // Capitalize field name (e.g., "address" -> "Address")
+                    $fieldLabel = ucwords(str_replace('_', ' ', $field));
+                    
+                    $changeDescriptions[] = "{$fieldLabel} changed from '{$oldDisplay}' to '{$newDisplay}'";
                 }
                 
-                return "{$modelName} '{$name}' was updated: {$fieldsList}" . ($user ? " by {$user->name}" : '');
+                // Limit to first 3 changes for description, show full details in changes field
+                $displayChanges = array_slice($changeDescriptions, 0, 3);
+                $changeText = implode(', ', $displayChanges);
+                
+                if ($changeCount > 3) {
+                    $changeText .= " and " . ($changeCount - 3) . " more change" . ($changeCount > 4 ? 's' : '');
+                }
+                
+                return "{$modelName} '{$name}' was updated: {$changeText}" . ($user ? " by {$user->name}" : '');
             
             case 'deleted':
                 $name = $this->getModelName($model);
@@ -199,6 +217,26 @@ class AuditService
             default:
                 return "{$modelName} was {$auditType}";
         }
+    }
+
+    /**
+     * Format a value for display in audit logs
+     */
+    protected function formatValue($value): string
+    {
+        if ($value === null) {
+            return 'N/A';
+        }
+        
+        if (is_bool($value)) {
+            return $value ? 'Yes' : 'No';
+        }
+        
+        if (is_array($value)) {
+            return json_encode($value);
+        }
+        
+        return (string) $value;
     }
 
     /**

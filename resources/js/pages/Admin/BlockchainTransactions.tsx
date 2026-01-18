@@ -123,10 +123,10 @@ const TransactionDetailsModal: React.FC<{
 
     const statusColor = (status: TransactionStatus) => {
         switch (status) {
-            case 'confirmed': return 'bg-green-100 text-green-800 border-green-200';
-            case 'pending': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-            case 'failed': return 'bg-red-100 text-red-800 border-red-200';
-            default: return 'bg-gray-100 text-gray-800 border-gray-200';
+            case 'confirmed': return 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900 dark:text-green-200 dark:border-green-700';
+            case 'pending': return 'bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900 dark:text-yellow-200 dark:border-yellow-700';
+            case 'failed': return 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900 dark:text-red-200 dark:border-red-700';
+            default: return 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-700';
         }
     };
 
@@ -135,7 +135,7 @@ const TransactionDetailsModal: React.FC<{
             <div className="flex min-h-full items-center justify-center p-4">
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" onClick={onClose}></div>
                 
-                <div className="relative w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white shadow-2xl transition-all">
+                <div className="relative w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 shadow-2xl transition-all">
                     <div className={`${PRIMARY_COLOR_CLASS} px-6 py-4`}>
                         <div className="flex items-center justify-between">
                             <div className="flex items-center space-x-3">
@@ -149,7 +149,7 @@ const TransactionDetailsModal: React.FC<{
                     </div>
 
                     <div className="p-6 space-y-6 max-h-[calc(100vh-200px)] overflow-y-auto">
-                        <div className="bg-gray-50 dark:bg-gray-800 dark:border-white rounded-xl p-6 space-y-4 border dark:border-white">
+                        <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 space-y-4 border dark:border-gray-700">
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <label className="block text-xs font-semibold text-gray-500 dark:text-white uppercase mb-1">Transaction ID</label>
@@ -191,31 +191,31 @@ const TransactionDetailsModal: React.FC<{
                             </div>
 
                             {transaction.certificate && (
-                                <div className="border-t dark:border-white pt-4 mt-4">
-                                    <label className="block text-xs font-semibold text-gray-500 dark:text-white uppercase mb-2">Related Certificate</label>
-                                    <div className="bg-white dark:bg-gray-900 dark:text-white dark:border-white rounded-lg border dark:border-white p-4 space-y-2">
-                                        <p><strong>Title:</strong> {transaction.certificate.title}</p>
-                                        <p><strong>Certificate #:</strong> {transaction.certificate.certificate_number}</p>
-                                        <p><strong>Student:</strong> {transaction.certificate.student?.full_name}</p>
+                                <div className="border-t dark:border-gray-700 pt-4 mt-4">
+                                    <label className="block text-xs font-semibold text-gray-500 dark:text-gray-300 uppercase mb-2">Related Certificate</label>
+                                    <div className="bg-white dark:bg-gray-900 dark:text-gray-100 rounded-lg border dark:border-gray-700 p-4 space-y-2">
+                                        <p className="dark:text-gray-100"><strong>Title:</strong> {transaction.certificate.title}</p>
+                                        <p className="dark:text-gray-100"><strong>Certificate #:</strong> {transaction.certificate.certificate_number}</p>
+                                        <p className="dark:text-gray-100"><strong>Student:</strong> {transaction.certificate.student?.full_name}</p>
                                     </div>
                                 </div>
                             )}
 
                             {transaction.attendance && (
-                                <div className="border-t dark:border-white pt-4 mt-4">
-                                    <label className="block text-xs font-semibold text-gray-500 dark:text-white uppercase mb-2">Attendance Details</label>
-                                    <div className="bg-white dark:bg-gray-900 dark:text-white dark:border-white rounded-lg border dark:border-white p-4 space-y-2">
-                                        <p><strong>Student:</strong> {transaction.attendance.student?.full_name || `${transaction.attendance.student?.first_name} ${transaction.attendance.student?.last_name}`}</p>
-                                        <p><strong>Subject:</strong> {transaction.attendance.class_subject?.subject?.subject_name || 'N/A'}</p>
-                                        <p><strong>Date:</strong> {new Date(transaction.attendance.attendance_date).toLocaleDateString()}</p>
-                                        <p>
+                                <div className="border-t dark:border-gray-700 pt-4 mt-4">
+                                    <label className="block text-xs font-semibold text-gray-500 dark:text-gray-300 uppercase mb-2">Attendance Details</label>
+                                    <div className="bg-white dark:bg-gray-900 dark:text-gray-100 rounded-lg border dark:border-gray-700 p-4 space-y-2">
+                                        <p className="dark:text-gray-100"><strong>Student:</strong> {transaction.attendance.student?.full_name || `${transaction.attendance.student?.first_name} ${transaction.attendance.student?.last_name}`}</p>
+                                        <p className="dark:text-gray-100"><strong>Subject:</strong> {transaction.attendance.class_subject?.subject?.subject_name || 'N/A'}</p>
+                                        <p className="dark:text-gray-100"><strong>Date:</strong> {new Date(transaction.attendance.attendance_date).toLocaleDateString()}</p>
+                                        <p className="dark:text-gray-100">
                                             <strong>Status:</strong>{' '}
-                                            <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold dark:border-white dark:text-white ${
-                                                transaction.attendance.status === 'Present' ? 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900' :
-                                                transaction.attendance.status === 'Absent' ? 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900' :
-                                                transaction.attendance.status === 'Late' ? 'bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900' :
-                                                'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900'
-                                            } border dark:border-white`}>
+                                            <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${
+                                                transaction.attendance.status === 'Present' ? 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900 dark:text-green-200 dark:border-green-700' :
+                                                transaction.attendance.status === 'Absent' ? 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900 dark:text-red-200 dark:border-red-700' :
+                                                transaction.attendance.status === 'Late' ? 'bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900 dark:text-yellow-200 dark:border-yellow-700' :
+                                                'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-700'
+                                            } border`}>
                                                 {transaction.attendance.status}
                                             </span>
                                         </p>
@@ -224,35 +224,81 @@ const TransactionDetailsModal: React.FC<{
                             )}
 
                             {transaction.grade && (
-                                <div className="border-t dark:border-white pt-4 mt-4">
-                                    <label className="block text-xs font-semibold text-gray-500 dark:text-white uppercase mb-2">Grade Details</label>
-                                    <div className="bg-white dark:bg-gray-900 dark:text-white dark:border-white rounded-lg border dark:border-white p-4 space-y-2">
-                                        <p><strong>Student:</strong> {transaction.grade.student?.full_name || `${transaction.grade.student?.first_name} ${transaction.grade.student?.last_name}`}</p>
-                                        <p><strong>Subject:</strong> {transaction.grade.class_subject?.subject?.subject_name || 'N/A'}</p>
+                                <div className="border-t dark:border-gray-700 pt-4 mt-4">
+                                    <label className="block text-xs font-semibold text-gray-500 dark:text-gray-300 uppercase mb-2">Grade Details</label>
+                                    <div className="bg-white dark:bg-gray-900 dark:text-gray-100 rounded-lg border dark:border-gray-700 p-4 space-y-2">
+                                        <p className="dark:text-gray-100"><strong>Student:</strong> {transaction.grade.student?.full_name || `${transaction.grade.student?.first_name} ${transaction.grade.student?.last_name}`}</p>
+                                        <p className="dark:text-gray-100"><strong>Subject:</strong> {transaction.grade.class_subject?.subject?.subject_name || 'N/A'}</p>
                                         {transaction.grade.prelim_grade !== null && transaction.grade.prelim_grade !== undefined && (
-                                            <p><strong>Prelim Grade:</strong> {transaction.grade.prelim_grade}</p>
+                                            <p className="dark:text-gray-100"><strong>Prelim Grade:</strong> {transaction.grade.prelim_grade}</p>
                                         )}
                                         {transaction.grade.midterm_grade !== null && transaction.grade.midterm_grade !== undefined && (
-                                            <p><strong>Midterm Grade:</strong> {transaction.grade.midterm_grade}</p>
+                                            <p className="dark:text-gray-100"><strong>Midterm Grade:</strong> {transaction.grade.midterm_grade}</p>
                                         )}
                                         {transaction.grade.final_grade !== null && transaction.grade.final_grade !== undefined && (
-                                            <p><strong>Final Grade:</strong> {transaction.grade.final_grade}</p>
+                                            <p className="dark:text-gray-100"><strong>Final Grade:</strong> {transaction.grade.final_grade}</p>
                                         )}
                                         {transaction.grade.final_rating !== null && transaction.grade.final_rating !== undefined && (
-                                            <p><strong>Final Rating:</strong> {transaction.grade.final_rating}</p>
+                                            <p className="dark:text-gray-100"><strong>Final Rating:</strong> {transaction.grade.final_rating}</p>
                                         )}
                                         {transaction.grade.remarks && (
-                                            <p>
+                                            <p className="dark:text-gray-100">
                                                 <strong>Remarks:</strong>{' '}
-                                                <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold dark:border-white dark:text-white ${
-                                                    transaction.grade.remarks === 'Passed' ? 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900' :
-                                                    transaction.grade.remarks === 'Failed' ? 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900' :
-                                                    'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900'
-                                                } border dark:border-white`}>
+                                                <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${
+                                                    transaction.grade.remarks === 'Passed' ? 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900 dark:text-green-200 dark:border-green-700' :
+                                                    transaction.grade.remarks === 'Failed' ? 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900 dark:text-red-200 dark:border-red-700' :
+                                                    'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-700'
+                                                } border`}>
                                                     {transaction.grade.remarks}
                                                 </span>
                                             </p>
                                         )}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Audit Log Changes - Show detailed before/after for audit transactions */}
+                            {transaction.transaction_type?.startsWith('audit_') && transaction.audit_logs && transaction.audit_logs.length > 0 && (
+                                <div className="border-t dark:border-gray-700 pt-4 mt-4">
+                                    <label className="block text-xs font-semibold text-gray-500 dark:text-gray-300 uppercase mb-2">Changes Made</label>
+                                    <div className="bg-white dark:bg-gray-900 rounded-lg border dark:border-gray-700 p-4 space-y-4">
+                                        {transaction.audit_logs.map((auditLog) => (
+                                            <div key={auditLog.id} className="space-y-3">
+                                                {auditLog.description && (
+                                                    <p className="text-sm font-medium text-gray-700 dark:text-gray-300">{auditLog.description}</p>
+                                                )}
+                                                
+                                                {auditLog.changes && Object.keys(auditLog.changes).length > 0 && (
+                                                    <div className="space-y-2">
+                                                        {Object.entries(auditLog.changes).map(([field, change]) => {
+                                                            const oldValue = change.old ?? null;
+                                                            const newValue = change.new ?? null;
+                                                            const fieldLabel = field.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                                                            
+                                                            return (
+                                                                <div key={field} className="border-l-4 border-blue-500 dark:border-blue-400 pl-3 py-2 bg-blue-50 dark:bg-blue-900/20 rounded">
+                                                                    <p className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase mb-1">{fieldLabel}</p>
+                                                                    <div className="space-y-1">
+                                                                        <p className="text-sm text-gray-700 dark:text-gray-300">
+                                                                            <span className="font-medium">From:</span>{' '}
+                                                                            <span className="text-red-600 dark:text-red-400 font-mono">
+                                                                                {oldValue === null || oldValue === '' ? 'N/A' : String(oldValue)}
+                                                                            </span>
+                                                                        </p>
+                                                                        <p className="text-sm text-gray-700 dark:text-gray-300">
+                                                                            <span className="font-medium">To:</span>{' '}
+                                                                            <span className="text-green-600 dark:text-green-400 font-mono">
+                                                                                {newValue === null || newValue === '' ? 'N/A' : String(newValue)}
+                                                                            </span>
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            );
+                                                        })}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
                             )}
