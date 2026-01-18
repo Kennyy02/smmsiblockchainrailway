@@ -120,6 +120,11 @@ Route::prefix('users')->group(function () {
     Route::post('/verify-access-password', [UserController::class, 'verifyAccessPassword']);
 });
 
+// Admin Management (Super Admin Only)
+Route::prefix('admins')->group(function () {
+    Route::post('/', [UserController::class, 'storeAdmin']);
+});
+
 // ========================================================================
 // 📚 ACADEMIC STRUCTURE
 // ========================================================================

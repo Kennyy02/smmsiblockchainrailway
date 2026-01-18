@@ -96,6 +96,65 @@ class UserController extends Controller
     }
 
     /**
+     * Store a newly created admin user (Super Admin only).
+     */
+    public function storeAdmin(Request $request)
+    {
+        // Only super_admin can create admin users
+        if (!Auth::check() || !Auth::user()->isSuperAdmin()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized. Super admin access required.'
+            ], 403);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|lowercase|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        try {
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'role' => 'admin', // Always set to 'admin', never 'super_admin'
+                'status' => 'active',
+                'email_verified_at' => now(),
+                'must_change_password' => true, // Require password change on first login
+                'password_changed_at' => null,
+            ]);
+
+            Log::info('Admin user created', [
+                'user_id' => $user->id,
+                'email' => $user->email,
+                'created_by' => Auth::user()->id,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Admin created successfully',
+                'data' => $user
+            ], 201);
+        } catch (\Exception $e) {
+            Log::error('Error creating admin user: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to create admin: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
      * Update user role (Admin only).
      */
     public function updateRole(Request $request, $id)

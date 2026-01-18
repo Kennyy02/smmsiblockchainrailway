@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { UserCheck, Search, X, Eye, RefreshCw, Users as UsersIcon, Mail } from 'lucide-react';
+import { UserCheck, Search, X, Eye, RefreshCw, Users as UsersIcon, Mail, Plus, EyeOff } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
 
 // --- MARITIME THEME COLORS ---
@@ -44,6 +44,7 @@ interface ApiResponse<T> {
     success: boolean;
     data: T;
     message?: string;
+    errors?: Record<string, string[]>;
 }
 
 // Notification Component
@@ -68,6 +69,180 @@ const Notification: React.FC<{ notification: Notification; onClose: () => void }
                     >
                         <X className="w-4 h-4" />
                     </button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+// Admin Modal (Create/Edit)
+interface AdminFormData {
+    name: string;
+    email: string;
+    password: string;
+    password_confirmation: string;
+}
+
+const AdminModal: React.FC<{
+    onClose: () => void;
+    onSave: (data: AdminFormData) => Promise<void>;
+    errors: Record<string, string[]>;
+}> = ({ onClose, onSave, errors }) => {
+    const [formData, setFormData] = useState<AdminFormData>({
+        name: '',
+        email: '',
+        password: '',
+        password_confirmation: '',
+    });
+    const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setLoading(true);
+        try {
+            await onSave(formData);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const formatErrorMessage = (message: string): string => {
+        return message
+            .replace(/The password field confirmation does not match\./i, 'Passwords do not match')
+            .replace(/The (.+?) field is required\./i, '$1 is required')
+            .replace(/The (.+?) has already been taken\./i, '$1 is already in use')
+            .replace(/The (.+?) must be at least (\d+) characters\./i, '$1 must be at least $2 characters');
+    };
+
+    return (
+        <div className="fixed inset-0 z-50 overflow-y-auto">
+            <div className="flex min-h-full items-center justify-center p-4">
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" onClick={onClose}></div>
+                
+                <div className="relative w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 shadow-2xl transition-all">
+                    <div className={`${PRIMARY_COLOR_CLASS} px-6 py-4`}>
+                        <div className="flex items-center justify-between">
+                            <h2 className="text-xl font-bold text-white">Add New Admin</h2>
+                            <button 
+                                onClick={onClose} 
+                                className="rounded-full p-2 text-white/80 hover:bg-white/20 hover:text-white transition-colors"
+                            >
+                                <X className="h-5 w-5" />
+                            </button>
+                        </div>
+                    </div>
+
+                    <form onSubmit={handleSubmit} className="p-6 space-y-6 dark:bg-gray-800">
+                        <div className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Name</label>
+                                <input
+                                    type="text"
+                                    name="name"
+                                    value={formData.name}
+                                    onChange={handleChange}
+                                    className={`w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
+                                    placeholder="Administrator Name"
+                                    required
+                                />
+                                {errors.name && (
+                                    <p className="text-red-500 text-xs mt-1">{formatErrorMessage(errors.name[0])}</p>
+                                )}
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Email</label>
+                                <input
+                                    type="email"
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    autoComplete="email"
+                                    className={`w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
+                                    placeholder="admin@example.com"
+                                    required
+                                />
+                                {errors.email && (
+                                    <p className="text-red-500 text-xs mt-1">{formatErrorMessage(errors.email[0])}</p>
+                                )}
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Password</label>
+                                    <div className="relative">
+                                        <input
+                                            type={showPassword ? 'text' : 'password'}
+                                            name="password"
+                                            value={formData.password}
+                                            onChange={handleChange}
+                                            className={`w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white pr-10`}
+                                            placeholder="Enter password"
+                                            required
+                                            minLength={8}
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowPassword(!showPassword)}
+                                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                        >
+                                            {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                                        </button>
+                                    </div>
+                                    {errors.password && (
+                                        <p className="text-red-500 text-xs mt-1">{formatErrorMessage(errors.password[0])}</p>
+                                    )}
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Confirm Password</label>
+                                    <div className="relative">
+                                        <input
+                                            type={showPassword ? 'text' : 'password'}
+                                            name="password_confirmation"
+                                            value={formData.password_confirmation}
+                                            onChange={handleChange}
+                                            className={`w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white pr-10`}
+                                            placeholder="Confirm password"
+                                            required
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowPassword(!showPassword)}
+                                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                        >
+                                            {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                                        </button>
+                                    </div>
+                                    {errors.password_confirmation && (
+                                        <p className="text-red-500 text-xs mt-1">{formatErrorMessage(errors.password_confirmation[0])}</p>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="flex justify-end space-x-3 pt-4 border-t dark:border-gray-700">
+                            <button
+                                type="button"
+                                onClick={onClose}
+                                className="px-6 py-3 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-medium"
+                                disabled={loading}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="submit"
+                                className={`px-6 py-3 ${PRIMARY_COLOR_CLASS} text-white rounded-xl ${HOVER_COLOR_CLASS} transition-all font-medium shadow-lg disabled:opacity-50`}
+                                disabled={loading}
+                            >
+                                {loading ? 'Creating...' : 'Create Admin'}
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -225,6 +400,8 @@ const Admins: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedUser, setSelectedUser] = useState<UserData | null>(null);
     const [showViewModal, setShowViewModal] = useState(false);
+    const [showCreateModal, setShowCreateModal] = useState(false);
+    const [modalErrors, setModalErrors] = useState<Record<string, string[]>>({});
     const [notification, setNotification] = useState<Notification | null>(null);
     const [sendingEmail, setSendingEmail] = useState(false);
     const [sendingReminder, setSendingReminder] = useState(false);
@@ -329,6 +506,54 @@ const Admins: React.FC = () => {
     useEffect(() => {
         loadUsers();
     }, [pagination.current_page]);
+
+    const handleAdd = () => {
+        setModalErrors({});
+        setShowCreateModal(true);
+    };
+
+    const handleCreateAdmin = async (formData: AdminFormData) => {
+        try {
+            const csrfToken = getCsrfToken();
+
+            const response = await fetch('/api/admins', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    name: formData.name,
+                    email: formData.email,
+                    password: formData.password,
+                    password_confirmation: formData.password_confirmation,
+                    role: 'admin',
+                }),
+            });
+
+            const data: ApiResponse<any> = await response.json();
+
+            if (response.ok && data.success) {
+                setNotification({ type: 'success', message: 'Admin created successfully!' });
+                setShowCreateModal(false);
+                setModalErrors({});
+                loadUsers();
+            } else {
+                // Handle validation errors (422) or other errors
+                if (response.status === 422 && data.errors) {
+                    setModalErrors(data.errors);
+                } else {
+                    setNotification({ type: 'error', message: data.message || 'Failed to create admin' });
+                }
+            }
+        } catch (error: any) {
+            console.error('Error creating admin:', error);
+            setNotification({ type: 'error', message: error.message || 'Failed to create admin' });
+        }
+    };
 
     const handleView = (user: UserData) => {
         setSelectedUser(user);
@@ -583,12 +808,21 @@ const Admins: React.FC = () => {
                                 <p className="text-gray-600 dark:text-gray-400 mt-1">Manage admin accounts</p>
                             </div>
                         </div>
-                        <button
-                            onClick={loadUsers}
-                            className="inline-flex items-center px-4 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all shadow-sm"
-                        >
-                            <RefreshCw className={`h-5 w-5 ${loading ? 'animate-spin' : ''}`} />
-                        </button>
+                        <div className="flex items-center gap-3">
+                            <button
+                                onClick={loadUsers}
+                                className="inline-flex items-center px-4 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all shadow-sm"
+                            >
+                                <RefreshCw className={`h-5 w-5 ${loading ? 'animate-spin' : ''}`} />
+                            </button>
+                            <button
+                                onClick={handleAdd}
+                                className={`inline-flex items-center px-4 py-3 ${PRIMARY_COLOR_CLASS} text-white rounded-xl ${HOVER_COLOR_CLASS} transition-all shadow-lg font-medium`}
+                            >
+                                <Plus className="h-5 w-5 mr-2" />
+                                Add Admin
+                            </button>
+                        </div>
                     </div>
 
                     {/* Search */}
@@ -718,6 +952,18 @@ const Admins: React.FC = () => {
                             </>
                         )}
                     </div>
+
+                    {/* Create Admin Modal */}
+                    {showCreateModal && (
+                        <AdminModal
+                            onClose={() => {
+                                setShowCreateModal(false);
+                                setModalErrors({});
+                            }}
+                            onSave={handleCreateAdmin}
+                            errors={modalErrors}
+                        />
+                    )}
 
                     {/* View Modal */}
                     {showViewModal && (
