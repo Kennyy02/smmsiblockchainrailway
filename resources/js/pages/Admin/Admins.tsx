@@ -111,6 +111,12 @@ const AdminModal: React.FC<{
         hasSpecial: /[^A-Za-z0-9]/.test(formData.password),
     };
 
+    // Password match check
+    const passwordsMatch = formData.password && formData.password_confirmation && 
+                          formData.password === formData.password_confirmation;
+    const passwordsDontMatch = formData.password_confirmation && 
+                              formData.password !== formData.password_confirmation;
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
@@ -318,6 +324,12 @@ const AdminModal: React.FC<{
                                     </div>
                                     {errors.password_confirmation && (
                                         <p className="text-red-500 text-xs mt-1">{formatErrorMessage(errors.password_confirmation[0])}</p>
+                                    )}
+                                    {/* Password Match Feedback */}
+                                    {formData.password_confirmation && (
+                                        <p className={`text-xs mt-1 ${passwordsMatch ? 'text-green-600 dark:text-green-400' : passwordsDontMatch ? 'text-red-600 dark:text-red-400' : ''}`}>
+                                            {passwordsMatch ? 'Password matched' : passwordsDontMatch ? 'Password not matched' : ''}
+                                        </p>
                                     )}
                                 </div>
                             </div>
