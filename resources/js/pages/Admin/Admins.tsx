@@ -103,6 +103,14 @@ const AdminModal: React.FC<{
     const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
 
+    // Password strength checks
+    const passwordChecks = {
+        minLength: formData.password.length >= 8,
+        hasUppercase: /[A-Z]/.test(formData.password),
+        hasNumber: /[0-9]/.test(formData.password),
+        hasSpecial: /[^A-Za-z0-9]/.test(formData.password),
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
@@ -254,6 +262,38 @@ const AdminModal: React.FC<{
                                     </div>
                                     {errors.password && (
                                         <p className="text-red-500 text-xs mt-1">{formatErrorMessage(errors.password[0])}</p>
+                                    )}
+                                    {/* Password Requirements */}
+                                    {formData.password && (
+                                        <div className="mt-2 p-3 bg-gray-50 dark:bg-gray-900/50 rounded-lg border border-gray-200 dark:border-gray-700">
+                                            <p className="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-2">Password Requirements:</p>
+                                            <ul className="space-y-1 text-xs">
+                                                <li className={`flex items-center ${passwordChecks.minLength ? 'text-green-600 dark:text-green-400' : 'text-gray-600 dark:text-gray-400'}`}>
+                                                    <span className={`mr-2 ${passwordChecks.minLength ? 'text-green-500' : 'text-gray-400'}`}>
+                                                        {passwordChecks.minLength ? '✓' : '○'}
+                                                    </span>
+                                                    At least 8 characters
+                                                </li>
+                                                <li className={`flex items-center ${passwordChecks.hasUppercase ? 'text-green-600 dark:text-green-400' : 'text-gray-600 dark:text-gray-400'}`}>
+                                                    <span className={`mr-2 ${passwordChecks.hasUppercase ? 'text-green-500' : 'text-gray-400'}`}>
+                                                        {passwordChecks.hasUppercase ? '✓' : '○'}
+                                                    </span>
+                                                    One uppercase letter (A-Z)
+                                                </li>
+                                                <li className={`flex items-center ${passwordChecks.hasNumber ? 'text-green-600 dark:text-green-400' : 'text-gray-600 dark:text-gray-400'}`}>
+                                                    <span className={`mr-2 ${passwordChecks.hasNumber ? 'text-green-500' : 'text-gray-400'}`}>
+                                                        {passwordChecks.hasNumber ? '✓' : '○'}
+                                                    </span>
+                                                    One number (0-9)
+                                                </li>
+                                                <li className={`flex items-center ${passwordChecks.hasSpecial ? 'text-green-600 dark:text-green-400' : 'text-gray-600 dark:text-gray-400'}`}>
+                                                    <span className={`mr-2 ${passwordChecks.hasSpecial ? 'text-green-500' : 'text-gray-400'}`}>
+                                                        {passwordChecks.hasSpecial ? '✓' : '○'}
+                                                    </span>
+                                                    One special character (!@#$%^&*...)
+                                                </li>
+                                            </ul>
+                                        </div>
                                     )}
                                 </div>
                                 <div>
@@ -572,7 +612,29 @@ const Admins: React.FC = () => {
 
     const handleCreateAdmin = async (formData: AdminFormData) => {
         try {
-            const csrfToken = getCsrfToken();
+            let csrfToken = getCsrfToken();
+            
+            if (!csrfToken) {
+                try {
+                    const tokenResponse = await fetch('/api/csrf-token', {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest',
+                        },
+                        credentials: 'include',
+                    });
+                    
+                    if (tokenResponse.ok) {
+                        const tokenData = await tokenResponse.json();
+                        if (tokenData.success && tokenData.csrf_token) {
+                            csrfToken = tokenData.csrf_token;
+                        }
+                    }
+                } catch (e) {
+                    console.warn('Could not fetch CSRF token from API:', e);
+                }
+            }
 
             const response = await fetch('/api/admins', {
                 method: 'POST',
@@ -594,6 +656,69 @@ const Admins: React.FC = () => {
                     role: 'admin',
                 }),
             });
+
+            // If we get a 419, try refreshing the token and retry once
+            if (response.status === 419) {
+                try {
+                    const tokenResponse = await fetch('/api/csrf-token', {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest',
+                        },
+                        credentials: 'include',
+                    });
+                    
+                    if (tokenResponse.ok) {
+                        const tokenData = await tokenResponse.json();
+                        if (tokenData.success && tokenData.csrf_token) {
+                            // Retry with fresh token
+                            const retryResponse = await fetch('/api/admins', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Accept': 'application/json',
+                                    'X-CSRF-TOKEN': tokenData.csrf_token,
+                                    'X-Requested-With': 'XMLHttpRequest',
+                                },
+                                credentials: 'include',
+                                body: JSON.stringify({
+                                    name: formData.name,
+                                    email: formData.email,
+                                    gender: formData.gender || null,
+                                    phone: formData.phone || null,
+                                    address: formData.address || null,
+                                    password: formData.password,
+                                    password_confirmation: formData.password_confirmation,
+                                    role: 'admin',
+                                }),
+                            });
+                            
+                            const retryData: ApiResponse<any> = await retryResponse.json();
+                            if (retryResponse.ok && retryData.success) {
+                                setNotification({ type: 'success', message: 'Admin created successfully!' });
+                                setShowCreateModal(false);
+                                setModalErrors({});
+                                loadUsers();
+                                return;
+                            } else {
+                                // Handle validation errors (422) or other errors
+                                if (retryResponse.status === 422 && retryData.errors) {
+                                    setModalErrors(retryData.errors);
+                                } else {
+                                    setNotification({ type: 'error', message: retryData.message || 'Failed to create admin. Please refresh the page and try again.' });
+                                }
+                                return;
+                            }
+                        }
+                    }
+                } catch (e) {
+                    console.error('Failed to refresh CSRF token:', e);
+                }
+                
+                setNotification({ type: 'error', message: 'Session expired. Please refresh the page and try again.' });
+                return;
+            }
 
             const data: ApiResponse<any> = await response.json();
 
