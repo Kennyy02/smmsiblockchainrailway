@@ -845,7 +845,7 @@ const Users: React.FC = () => {
                                                                     <div className="text-sm text-gray-900 dark:text-white">{phone}</div>
                                                                 </td>
                                                                 <td className="px-2 py-2 md:px-6 md:py-4 whitespace-nowrap">
-                                                                    <div className="flex items-center gap-1 md:gap-2">
+                                                                    <div className="flex items-center justify-center md:justify-start gap-1 md:gap-2">
                                                                         <span className={`h-2 w-2 rounded-full ${passwordChanged ? 'bg-green-500' : 'bg-red-500'}`}></span>
                                                                         <span className={`hidden md:inline text-sm ${passwordChanged ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
                                                                             {passwordChanged ? 'Changed' : 'Not Yet Changed'}
