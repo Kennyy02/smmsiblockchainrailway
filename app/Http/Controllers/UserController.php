@@ -179,6 +179,155 @@ class UserController extends Controller
     }
 
     /**
+     * Update an admin user (Super Admin only).
+     */
+    public function updateAdmin(Request $request, $id)
+    {
+        // Only super_admin can update admin users
+        if (!Auth::check() || !Auth::user()->isSuperAdmin()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized. Super admin access required.'
+            ], 403);
+        }
+
+        try {
+            $user = User::findOrFail($id);
+            
+            // Ensure we're only updating admin users
+            if ($user->role !== 'admin') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Can only update admin users.'
+                ], 403);
+            }
+
+            // Password is optional for updates
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|string|max:255',
+                'email' => 'required|string|lowercase|email|max:255|unique:users,email,' . $id,
+                'gender' => 'required|in:Male,Female',
+                'phone' => 'required|string|max:20',
+                'address' => 'required|string|max:500',
+                'password' => 'nullable|string|min:8|confirmed',
+            ]);
+
+            // Custom validation for password complexity (if password is provided)
+            if ($request->filled('password')) {
+                $password = $request->password;
+                
+                if (strlen($password) < 8) {
+                    $validator->errors()->add('password', 'Password must be at least 8 characters long.');
+                }
+                if (!preg_match('/[A-Z]/', $password)) {
+                    $validator->errors()->add('password', 'Password must contain at least one uppercase letter (A-Z).');
+                }
+                if (!preg_match('/[0-9]/', $password)) {
+                    $validator->errors()->add('password', 'Password must contain at least one number (0-9).');
+                }
+                if (!preg_match('/[^A-Za-z0-9]/', $password)) {
+                    $validator->errors()->add('password', 'Password must contain at least one special character (!@#$%^&*()_+-=[]{}|;:,.<>?).');
+                }
+            }
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validation failed',
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->gender = $request->gender;
+            $user->phone = $request->phone;
+            $user->address = $request->address;
+            
+            // Only update password if provided
+            if ($request->filled('password')) {
+                $user->password = Hash::make($request->password);
+            }
+            
+            $user->save();
+
+            Log::info('Admin user updated', [
+                'user_id' => $user->id,
+                'email' => $user->email,
+                'updated_by' => Auth::user()->id,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Admin updated successfully',
+                'data' => $user
+            ]);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Admin not found'
+            ], 404);
+        } catch (\Exception $e) {
+            Log::error('Error updating admin user: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update admin: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Delete an admin user (Super Admin only).
+     */
+    public function destroyAdmin($id)
+    {
+        // Only super_admin can delete admin users
+        if (!Auth::check() || !Auth::user()->isSuperAdmin()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized. Super admin access required.'
+            ], 403);
+        }
+
+        try {
+            $user = User::findOrFail($id);
+            
+            // Ensure we're only deleting admin users
+            if ($user->role !== 'admin') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Can only delete admin users.'
+                ], 403);
+            }
+
+            $email = $user->email;
+            $user->delete();
+
+            Log::info('Admin user deleted', [
+                'user_id' => $id,
+                'email' => $email,
+                'deleted_by' => Auth::user()->id,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Admin deleted successfully'
+            ]);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Admin not found'
+            ], 404);
+        } catch (\Exception $e) {
+            Log::error('Error deleting admin user: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to delete admin: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
      * Update user role (Admin only).
      */
     public function updateRole(Request $request, $id)

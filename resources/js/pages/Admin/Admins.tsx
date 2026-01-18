@@ -87,16 +87,17 @@ interface AdminFormData {
 }
 
 const AdminModal: React.FC<{
+    admin: UserData | null;
     onClose: () => void;
     onSave: (data: AdminFormData) => Promise<void>;
     errors: Record<string, string[]>;
-}> = ({ onClose, onSave, errors }) => {
+}> = ({ admin, onClose, onSave, errors }) => {
     const [formData, setFormData] = useState<AdminFormData>({
-        name: '',
-        email: '',
-        gender: '',
-        phone: '',
-        address: '',
+        name: admin?.name || '',
+        email: admin?.email || '',
+        gender: admin?.gender || '',
+        phone: admin?.phone || '',
+        address: admin?.address || '',
         password: '',
         password_confirmation: '',
     });
@@ -147,7 +148,7 @@ const AdminModal: React.FC<{
                 <div className="relative w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 shadow-2xl transition-all">
                     <div className={`${PRIMARY_COLOR_CLASS} px-6 py-4`}>
                         <div className="flex items-center justify-between">
-                            <h2 className="text-xl font-bold text-white">Add New Admin</h2>
+                            <h2 className="text-xl font-bold text-white">{admin ? 'Edit Admin' : 'Add New Admin'}</h2>
                             <button 
                                 onClick={onClose} 
                                 className="rounded-full p-2 text-white/80 hover:bg-white/20 hover:text-white transition-colors"
@@ -247,9 +248,19 @@ const AdminModal: React.FC<{
                                 )}
                             </div>
 
+                            {admin && (
+                                <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                                    <p className="text-sm text-blue-700 dark:text-blue-300">
+                                        <strong>Note:</strong> Leave password fields empty to keep the current password.
+                                    </p>
+                                </div>
+                            )}
+
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Password</label>
+                                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
+                                        Password {!admin && <span className="text-red-500">*</span>}
+                                    </label>
                                     <div className="relative">
                                         <input
                                             type={showPassword ? 'text' : 'password'}
@@ -258,7 +269,7 @@ const AdminModal: React.FC<{
                                             onChange={handleChange}
                                             className={`w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white pr-10`}
                                             placeholder="Enter password"
-                                            required
+                                            required={!admin}
                                             minLength={8}
                                         />
                                         <button
@@ -306,7 +317,9 @@ const AdminModal: React.FC<{
                                     )}
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Confirm Password</label>
+                                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
+                                        Confirm Password {!admin && <span className="text-red-500">*</span>}
+                                    </label>
                                     <div className="relative">
                                         <input
                                             type={showPassword ? 'text' : 'password'}
@@ -315,7 +328,7 @@ const AdminModal: React.FC<{
                                             onChange={handleChange}
                                             className={`w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white pr-10`}
                                             placeholder="Confirm password"
-                                            required
+                                            required={!admin}
                                         />
                                         <button
                                             type="button"
@@ -352,7 +365,7 @@ const AdminModal: React.FC<{
                                 className={`px-6 py-3 ${PRIMARY_COLOR_CLASS} text-white rounded-xl ${HOVER_COLOR_CLASS} transition-all font-medium shadow-lg disabled:opacity-50`}
                                 disabled={loading}
                             >
-                                {loading ? 'Creating...' : 'Create Admin'}
+                                {loading ? (admin ? 'Updating...' : 'Creating...') : (admin ? 'Update Admin' : 'Create Admin')}
                             </button>
                         </div>
                     </form>
@@ -458,14 +471,71 @@ const ViewAdminModal: React.FC<{
     );
 };
 
+// Delete Admin Modal
+const DeleteAdminModal: React.FC<{
+    admin: UserData;
+    onClose: () => void;
+    onConfirm: () => Promise<void>;
+}> = ({ admin, onClose, onConfirm }) => {
+    const [loading, setLoading] = useState(false);
+
+    const handleDelete = async () => {
+        setLoading(true);
+        try {
+            await onConfirm();
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <div className="fixed inset-0 z-50 overflow-y-auto">
+            <div className="flex min-h-full items-center justify-center p-4">
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" onClick={onClose}></div>
+                
+                <div className="relative w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 shadow-2xl transition-all">
+                    <div className={`${PRIMARY_COLOR_CLASS} px-6 py-4`}>
+                        <h2 className="text-xl font-bold text-white">Delete Admin</h2>
+                    </div>
+                    
+                    <div className="p-6 dark:bg-gray-800">
+                        <p className="text-gray-600 dark:text-gray-300 mb-6">
+                            Are you sure you want to delete <strong className="text-gray-900 dark:text-white">{admin.name}</strong>? This action cannot be undone.
+                        </p>
+                        
+                        <div className="flex justify-end space-x-3">
+                            <button
+                                onClick={onClose}
+                                className="px-6 py-3 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-medium"
+                                disabled={loading}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={handleDelete}
+                                className="px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl hover:from-red-600 hover:to-red-700 transition-all font-medium shadow-lg disabled:opacity-50"
+                                disabled={loading}
+                            >
+                                {loading ? 'Deleting...' : 'Delete'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
 // Main Admins Component
 const Admins: React.FC = () => {
     const [users, setUsers] = useState<UserData[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedUser, setSelectedUser] = useState<UserData | null>(null);
+    const [selectedAdmin, setSelectedAdmin] = useState<UserData | null>(null);
     const [showViewModal, setShowViewModal] = useState(false);
-    const [showCreateModal, setShowCreateModal] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [modalErrors, setModalErrors] = useState<Record<string, string[]>>({});
     const [notification, setNotification] = useState<Notification | null>(null);
     const [sendingEmail, setSendingEmail] = useState(false);
@@ -573,11 +643,12 @@ const Admins: React.FC = () => {
     }, [pagination.current_page]);
 
     const handleAdd = () => {
+        setSelectedAdmin(null);
         setModalErrors({});
-        setShowCreateModal(true);
+        setShowModal(true);
     };
 
-    const handleCreateAdmin = async (formData: AdminFormData) => {
+    const handleSaveAdmin = async (formData: AdminFormData) => {
         try {
             let csrfToken = getCsrfToken();
             
@@ -603,8 +674,27 @@ const Admins: React.FC = () => {
                 }
             }
 
-            const response = await fetch('/api/admins', {
-                method: 'POST',
+            const isEdit = !!selectedAdmin;
+            const url = isEdit ? `/api/admins/${selectedAdmin.id}` : '/api/admins';
+            const method = isEdit ? 'PUT' : 'POST';
+            
+            const bodyData: any = {
+                name: formData.name,
+                email: formData.email,
+                gender: formData.gender || null,
+                phone: formData.phone || null,
+                address: formData.address || null,
+                role: 'admin',
+            };
+            
+            // Only include password if provided (required for create, optional for edit)
+            if (formData.password) {
+                bodyData.password = formData.password;
+                bodyData.password_confirmation = formData.password_confirmation;
+            }
+
+            const response = await fetch(url, {
+                method: method,
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
@@ -612,16 +702,7 @@ const Admins: React.FC = () => {
                     'X-Requested-With': 'XMLHttpRequest',
                 },
                 credentials: 'include',
-                body: JSON.stringify({
-                    name: formData.name,
-                    email: formData.email,
-                    gender: formData.gender || null,
-                    phone: formData.phone || null,
-                    address: formData.address || null,
-                    password: formData.password,
-                    password_confirmation: formData.password_confirmation,
-                    role: 'admin',
-                }),
+                body: JSON.stringify(bodyData),
             });
 
             // If we get a 419, try refreshing the token and retry once
@@ -640,8 +721,10 @@ const Admins: React.FC = () => {
                         const tokenData = await tokenResponse.json();
                         if (tokenData.success && tokenData.csrf_token) {
                             // Retry with fresh token
-                            const retryResponse = await fetch('/api/admins', {
-                                method: 'POST',
+                            const retryUrl = isEdit ? `/api/admins/${selectedAdmin.id}` : '/api/admins';
+                            const retryMethod = isEdit ? 'PUT' : 'POST';
+                            const retryResponse = await fetch(retryUrl, {
+                                method: retryMethod,
                                 headers: {
                                     'Content-Type': 'application/json',
                                     'Accept': 'application/json',
@@ -649,22 +732,14 @@ const Admins: React.FC = () => {
                                     'X-Requested-With': 'XMLHttpRequest',
                                 },
                                 credentials: 'include',
-                                body: JSON.stringify({
-                                    name: formData.name,
-                                    email: formData.email,
-                                    gender: formData.gender || null,
-                                    phone: formData.phone || null,
-                                    address: formData.address || null,
-                                    password: formData.password,
-                                    password_confirmation: formData.password_confirmation,
-                                    role: 'admin',
-                                }),
+                                body: JSON.stringify(bodyData),
                             });
                             
                             const retryData: ApiResponse<any> = await retryResponse.json();
                             if (retryResponse.ok && retryData.success) {
-                                setNotification({ type: 'success', message: 'Admin created successfully!' });
-                                setShowCreateModal(false);
+                                setNotification({ type: 'success', message: isEdit ? 'Admin updated successfully!' : 'Admin created successfully!' });
+                                setShowModal(false);
+                                setSelectedAdmin(null);
                                 setModalErrors({});
                                 loadUsers();
                                 return;
@@ -673,7 +748,7 @@ const Admins: React.FC = () => {
                                 if (retryResponse.status === 422 && retryData.errors) {
                                     setModalErrors(retryData.errors);
                                 } else {
-                                    setNotification({ type: 'error', message: retryData.message || 'Failed to create admin. Please refresh the page and try again.' });
+                                    setNotification({ type: 'error', message: retryData.message || (isEdit ? 'Failed to update admin. Please refresh the page and try again.' : 'Failed to create admin. Please refresh the page and try again.') });
                                 }
                                 return;
                             }
@@ -690,8 +765,9 @@ const Admins: React.FC = () => {
             const data: ApiResponse<any> = await response.json();
 
             if (response.ok && data.success) {
-                setNotification({ type: 'success', message: 'Admin created successfully!' });
-                setShowCreateModal(false);
+                setNotification({ type: 'success', message: isEdit ? 'Admin updated successfully!' : 'Admin created successfully!' });
+                setShowModal(false);
+                setSelectedAdmin(null);
                 setModalErrors({});
                 loadUsers();
             } else {
@@ -699,12 +775,12 @@ const Admins: React.FC = () => {
                 if (response.status === 422 && data.errors) {
                     setModalErrors(data.errors);
                 } else {
-                    setNotification({ type: 'error', message: data.message || 'Failed to create admin' });
+                    setNotification({ type: 'error', message: data.message || (isEdit ? 'Failed to update admin' : 'Failed to create admin') });
                 }
             }
         } catch (error: any) {
-            console.error('Error creating admin:', error);
-            setNotification({ type: 'error', message: error.message || 'Failed to create admin' });
+            console.error('Error saving admin:', error);
+            setNotification({ type: 'error', message: error.message || (isEdit ? 'Failed to update admin' : 'Failed to create admin') });
         }
     };
 
@@ -714,13 +790,116 @@ const Admins: React.FC = () => {
     };
 
     const handleEdit = (user: UserData) => {
-        // TODO: Implement edit functionality
-        setNotification({ type: 'error', message: 'Edit functionality coming soon' });
+        setSelectedAdmin(user);
+        setModalErrors({});
+        setShowModal(true);
     };
 
     const handleDelete = (user: UserData) => {
-        // TODO: Implement delete functionality
-        setNotification({ type: 'error', message: 'Delete functionality coming soon' });
+        setSelectedAdmin(user);
+        setShowDeleteModal(true);
+    };
+
+    const handleConfirmDelete = async () => {
+        if (!selectedAdmin) return;
+
+        try {
+            let csrfToken = getCsrfToken();
+            
+            if (!csrfToken) {
+                try {
+                    const tokenResponse = await fetch('/api/csrf-token', {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest',
+                        },
+                        credentials: 'include',
+                    });
+                    
+                    if (tokenResponse.ok) {
+                        const tokenData = await tokenResponse.json();
+                        if (tokenData.success && tokenData.csrf_token) {
+                            csrfToken = tokenData.csrf_token;
+                        }
+                    }
+                } catch (e) {
+                    console.warn('Could not fetch CSRF token from API:', e);
+                }
+            }
+
+            const response = await fetch(`/api/admins/${selectedAdmin.id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+                credentials: 'include',
+            });
+
+            // If we get a 419, try refreshing the token and retry once
+            if (response.status === 419) {
+                try {
+                    const tokenResponse = await fetch('/api/csrf-token', {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest',
+                        },
+                        credentials: 'include',
+                    });
+                    
+                    if (tokenResponse.ok) {
+                        const tokenData = await tokenResponse.json();
+                        if (tokenData.success && tokenData.csrf_token) {
+                            const retryResponse = await fetch(`/api/admins/${selectedAdmin.id}`, {
+                                method: 'DELETE',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Accept': 'application/json',
+                                    'X-CSRF-TOKEN': tokenData.csrf_token,
+                                    'X-Requested-With': 'XMLHttpRequest',
+                                },
+                                credentials: 'include',
+                            });
+                            
+                            const retryData: ApiResponse<any> = await retryResponse.json();
+                            if (retryResponse.ok && retryData.success) {
+                                setNotification({ type: 'success', message: 'Admin deleted successfully!' });
+                                setShowDeleteModal(false);
+                                setSelectedAdmin(null);
+                                loadUsers();
+                                return;
+                            } else {
+                                setNotification({ type: 'error', message: retryData.message || 'Failed to delete admin. Please refresh the page and try again.' });
+                                return;
+                            }
+                        }
+                    }
+                } catch (e) {
+                    console.error('Failed to refresh CSRF token:', e);
+                }
+                
+                setNotification({ type: 'error', message: 'Session expired. Please refresh the page and try again.' });
+                return;
+            }
+
+            const data: ApiResponse<any> = await response.json();
+
+            if (response.ok && data.success) {
+                setNotification({ type: 'success', message: 'Admin deleted successfully!' });
+                setShowDeleteModal(false);
+                setSelectedAdmin(null);
+                loadUsers();
+            } else {
+                setNotification({ type: 'error', message: data.message || 'Failed to delete admin' });
+            }
+        } catch (error: any) {
+            console.error('Error deleting admin:', error);
+            setNotification({ type: 'error', message: error.message || 'Failed to delete admin' });
+        }
     };
 
     const handleSendAccountInfo = async (userId: number) => {
@@ -1033,7 +1212,6 @@ const Admins: React.FC = () => {
                                                 <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Name</th>
                                                 <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Email</th>
                                                 <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Phone Number</th>
-                                                <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Password Status</th>
                                                 <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Status</th>
                                                 <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Action</th>
                                             </tr>
@@ -1041,7 +1219,6 @@ const Admins: React.FC = () => {
                                         <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                             {filteredUsers.map((user) => {
                                                 const phone = user.phone || 'N/A';
-                                                const passwordChanged = user.password_changed_at !== null && user.password_changed_at !== undefined;
                                                 
                                                 return (
                                                     <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
@@ -1053,14 +1230,6 @@ const Admins: React.FC = () => {
                                                         </td>
                                                         <td className="px-6 py-4 whitespace-nowrap">
                                                             <div className="text-sm text-gray-900 dark:text-white">{phone}</div>
-                                                        </td>
-                                                        <td className="px-6 py-4 whitespace-nowrap">
-                                                            <div className="flex items-center gap-2">
-                                                                <span className={`h-2 w-2 rounded-full ${passwordChanged ? 'bg-green-500' : 'bg-red-500'}`}></span>
-                                                                <span className={`text-sm ${passwordChanged ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
-                                                                    {passwordChanged ? 'Changed' : 'Not Yet Changed'}
-                                                                </span>
-                                                            </div>
                                                         </td>
                                                         <td className="px-6 py-4 whitespace-nowrap">
                                                             <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
@@ -1075,21 +1244,21 @@ const Admins: React.FC = () => {
                                                             <div className="flex items-center gap-2">
                                                                 <button
                                                                     onClick={() => handleView(user)}
-                                                                    className={`inline-flex items-center px-3 py-1.5 ${PRIMARY_COLOR_CLASS} text-white rounded-lg ${HOVER_COLOR_CLASS} transition-colors`}
+                                                                    className="p-2 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-lg transition-colors"
                                                                     title="View"
                                                                 >
                                                                     <Eye className="h-4 w-4" />
                                                                 </button>
                                                                 <button
                                                                     onClick={() => handleEdit(user)}
-                                                                    className={`inline-flex items-center px-3 py-1.5 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors`}
+                                                                    className="p-2 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
                                                                     title="Edit"
                                                                 >
                                                                     <Edit className="h-4 w-4" />
                                                                 </button>
                                                                 <button
                                                                     onClick={() => handleDelete(user)}
-                                                                    className={`inline-flex items-center px-3 py-1.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors`}
+                                                                    className="p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
                                                                     title="Delete"
                                                                 >
                                                                     <Trash2 className="h-4 w-4" />
@@ -1131,15 +1300,29 @@ const Admins: React.FC = () => {
                         )}
                     </div>
 
-                    {/* Create Admin Modal */}
-                    {showCreateModal && (
+                    {/* Admin Modal (Create/Edit) */}
+                    {showModal && (
                         <AdminModal
+                            admin={selectedAdmin}
                             onClose={() => {
-                                setShowCreateModal(false);
+                                setShowModal(false);
+                                setSelectedAdmin(null);
                                 setModalErrors({});
                             }}
-                            onSave={handleCreateAdmin}
+                            onSave={handleSaveAdmin}
                             errors={modalErrors}
+                        />
+                    )}
+
+                    {/* Delete Admin Modal */}
+                    {showDeleteModal && selectedAdmin && (
+                        <DeleteAdminModal
+                            admin={selectedAdmin}
+                            onClose={() => {
+                                setShowDeleteModal(false);
+                                setSelectedAdmin(null);
+                            }}
+                            onConfirm={handleConfirmDelete}
                         />
                     )}
 

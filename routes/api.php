@@ -123,6 +123,8 @@ Route::prefix('users')->group(function () {
 // Admin Management (Super Admin Only)
 Route::prefix('admins')->group(function () {
     Route::post('/', [UserController::class, 'storeAdmin']);
+    Route::put('/{id}', [UserController::class, 'updateAdmin']);
+    Route::delete('/{id}', [UserController::class, 'destroyAdmin']);
 });
 
 // ========================================================================
