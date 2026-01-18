@@ -337,12 +337,15 @@ class TeacherController extends Controller
 
             DB::beginTransaction();
 
-            // Soft delete teacher
-            $teacher->delete();
+            // Get user reference before deleting teacher
+            $user = $teacher->user;
 
-            // Optionally deactivate user account
-            if ($teacher->user) {
-                $teacher->user->update(['status' => 'inactive']);
+            // Permanently delete teacher from database
+            $teacher->forceDelete();
+
+            // Permanently delete the associated user account as well
+            if ($user) {
+                $user->forceDelete();
             }
 
             DB::commit();

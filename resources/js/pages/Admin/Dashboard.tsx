@@ -3,7 +3,7 @@ import {
     Award, BarChart, Hash, Zap, BookOpen, Clock, TrendingDown, 
     Sunrise, Sun, Moon, RefreshCw, Users, GraduationCap, UserCheck 
 } from 'lucide-react';
-import { router } from '@inertiajs/react';
+import { router, usePage } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { 
     adminGradeService, 
@@ -114,6 +114,9 @@ interface DashboardStats {
 }
 
 const Dashboard: React.FC = () => {
+    // Get auth user from Inertia
+    const { auth } = usePage().props as { auth: { user: { name: string } } };
+    
     const [stats, setStats] = useState<DashboardStats>({
         total_students: 0,
         total_teachers: 0,
@@ -212,7 +215,7 @@ const Dashboard: React.FC = () => {
             <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-900">
                 <div className="container mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8">
                     {/* ☀️ GREETING COMPONENT */}
-                    <Greeting userRole="admin" />
+                    <Greeting userName={auth?.user?.name} userRole="admin" />
 
                     {/* Header/Subtitle */}
                     <div className="mb-4 sm:mb-6 md:mb-8 border-b dark:border-gray-700 pb-3 sm:pb-4">
