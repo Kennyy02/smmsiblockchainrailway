@@ -139,12 +139,28 @@ class GradeController extends Controller
                 ->orderBy('semester_id', 'desc')
                 ->get();
             
-            // Ensure zero grades have null remarks
+            // Handle zero vs null grades differently
             $grades = $grades->map(function ($grade) {
-                if (($grade->prelim_grade ?? 0) == 0 || 
-                    ($grade->midterm_grade ?? 0) == 0 || 
-                    ($grade->final_grade ?? 0) == 0) {
+                $prelim = $grade->prelim_grade;
+                $midterm = $grade->midterm_grade;
+                $final = $grade->final_grade;
+                
+                // Check if all grades are null (teacher left them blank)
+                $allNull = is_null($prelim) && is_null($midterm) && is_null($final);
+                
+                // Check if all grades are 0 (teacher entered zeros)
+                $allZero = ($prelim == 0 || is_null($prelim)) && 
+                          ($midterm == 0 || is_null($midterm)) && 
+                          ($final == 0 || is_null($final)) &&
+                          !$allNull; // Make sure at least one is not null
+                
+                if ($allNull) {
+                    // All null: show as completely blank
                     $grade->remarks = null;
+                    $grade->final_rating = null;
+                } elseif ($allZero) {
+                    // All zero: show as incomplete
+                    $grade->remarks = 'Incomplete';
                     $grade->final_rating = null;
                 }
                 return $grade;
@@ -183,12 +199,28 @@ class GradeController extends Controller
                 ->orderBy('semester_id')
                 ->get();
             
-            // Ensure zero grades have null remarks and final_rating
+            // Handle zero vs null grades differently
             $grades = $grades->map(function ($grade) {
-                if (($grade->prelim_grade ?? 0) == 0 || 
-                    ($grade->midterm_grade ?? 0) == 0 || 
-                    ($grade->final_grade ?? 0) == 0) {
+                $prelim = $grade->prelim_grade;
+                $midterm = $grade->midterm_grade;
+                $final = $grade->final_grade;
+                
+                // Check if all grades are null (teacher left them blank)
+                $allNull = is_null($prelim) && is_null($midterm) && is_null($final);
+                
+                // Check if all grades are 0 (teacher entered zeros)
+                $allZero = ($prelim == 0 || is_null($prelim)) && 
+                          ($midterm == 0 || is_null($midterm)) && 
+                          ($final == 0 || is_null($final)) &&
+                          !$allNull; // Make sure at least one is not null
+                
+                if ($allNull) {
+                    // All null: show as completely blank
                     $grade->remarks = null;
+                    $grade->final_rating = null;
+                } elseif ($allZero) {
+                    // All zero: show as incomplete
+                    $grade->remarks = 'Incomplete';
                     $grade->final_rating = null;
                 }
                 return $grade;
