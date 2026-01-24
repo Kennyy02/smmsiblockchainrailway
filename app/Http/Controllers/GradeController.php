@@ -159,9 +159,12 @@ class GradeController extends Controller
                     $grade->remarks = null;
                     $grade->final_rating = null;
                 } elseif ($allZero) {
-                    // All zero: show as incomplete
-                    $grade->remarks = 'Incomplete';
+                    // All zero: show as incomplete with blank grade cells
+                    $grade->prelim_grade = null;
+                    $grade->midterm_grade = null;
+                    $grade->final_grade = null;
                     $grade->final_rating = null;
+                    $grade->remarks = 'Incomplete';
                 }
                 return $grade;
             });
@@ -219,9 +222,12 @@ class GradeController extends Controller
                     $grade->remarks = null;
                     $grade->final_rating = null;
                 } elseif ($allZero) {
-                    // All zero: show as incomplete
-                    $grade->remarks = 'Incomplete';
+                    // All zero: show as incomplete with blank grade cells
+                    $grade->prelim_grade = null;
+                    $grade->midterm_grade = null;
+                    $grade->final_grade = null;
                     $grade->final_rating = null;
+                    $grade->remarks = 'Incomplete';
                 }
                 return $grade;
             });
