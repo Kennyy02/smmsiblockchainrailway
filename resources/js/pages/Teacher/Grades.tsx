@@ -176,6 +176,7 @@ const GradeModal: React.FC<{
     grade: Grade | null;
     onClose: () => void;
     onSave: (data: GradeFormData) => Promise<void>;
+    onDelete?: (grade: Grade) => Promise<void>;
     errors: Record<string, string[]>;
     classSubjects: MinimalClassSubject[];
     students: MinimalStudent[];
@@ -186,7 +187,8 @@ const GradeModal: React.FC<{
 }> = ({ 
     grade, 
     onClose, 
-    onSave, 
+    onSave,
+    onDelete,
     errors, 
     classSubjects, 
     students,
@@ -744,22 +746,69 @@ const GradeModal: React.FC<{
                             </div>
                         )}
                         
-                        <div className="flex justify-end space-x-3 pt-6 mt-6 border-t">
-                            <button
-                                type="button"
-                                onClick={onClose}
-                                className="px-6 py-3 border border-gray-300 dark:border-white rounded-xl text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-medium"
-                                disabled={loading}
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                type="submit"
-                                className="px-6 py-3 bg-[#003366] text-white rounded-xl hover:bg-[#002244] transition-all font-medium shadow-lg disabled:opacity-50"
-                                disabled={loading || loadingLists || !hasRequiredData || isDuplicateError}
-                            >
-                                {loading ? 'Saving...' : (isEditing ? 'Update Grade' : 'Add Grade')}
-                            </button>
+                        <div className="flex justify-between items-center pt-6 mt-6 border-t">
+                            <div className="flex space-x-3">
+                                {isEditing && onDelete && (
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            if (grade) {
+                                                onDelete(grade);
+                                            }
+                                        }}
+                                        className="px-4 py-3 border border-red-500 text-red-600 dark:text-red-400 rounded-xl hover:bg-red-50 dark:hover:bg-red-950 transition-colors font-medium flex items-center gap-2"
+                                        disabled={loading}
+                                        title="Delete this grade record"
+                                    >
+                                        <X className="w-4 h-4" />
+                                        Delete
+                                    </button>
+                                )}
+                                {isEditing && (
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            // Reset form to original grade values
+                                            if (grade) {
+                                                setFormData({
+                                                    class_subject_id: grade.class_subject_id,
+                                                    student_id: grade.student_id,
+                                                    academic_year_id: grade.academic_year_id,
+                                                    semester_id: grade.semester_id,
+                                                    prelim_grade: grade.prelim_grade ?? undefined,
+                                                    midterm_grade: grade.midterm_grade ?? undefined,
+                                                    final_grade: grade.final_grade ?? undefined,
+                                                    final_rating: grade.final_rating ?? undefined,
+                                                    remarks: grade.remarks || 'Passed',
+                                                });
+                                                setIsDuplicateError(false);
+                                            }
+                                        }}
+                                        className="px-4 py-3 border border-amber-500 text-amber-700 dark:text-amber-400 rounded-xl hover:bg-amber-50 dark:hover:bg-amber-950 transition-colors font-medium"
+                                        disabled={loading}
+                                        title="Reset form to original values"
+                                    >
+                                        ↻ Reset
+                                    </button>
+                                )}
+                            </div>
+                            <div className="flex space-x-3">
+                                <button
+                                    type="button"
+                                    onClick={onClose}
+                                    className="px-6 py-3 border border-gray-300 dark:border-white rounded-xl text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-medium"
+                                    disabled={loading}
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="px-6 py-3 bg-[#003366] text-white rounded-xl hover:bg-[#002244] transition-all font-medium shadow-lg disabled:opacity-50"
+                                    disabled={loading || loadingLists || !hasRequiredData || isDuplicateError}
+                                >
+                                    {loading ? 'Saving...' : (isEditing ? 'Update Grade' : 'Add Grade')}
+                                </button>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -1306,6 +1355,23 @@ const fetchDropdownLists = async () => {
             } else {
                 setNotification({ type: 'error', message: error.message || 'Failed to save grade.' });
             }
+        }
+    };
+
+    const handleDelete = async (grade: Grade) => {
+        if (!confirm(`Are you sure you want to delete the grade for ${grade.student_name || 'this student'}? This action cannot be undone.`)) {
+            return;
+        }
+
+        try {
+            await adminGradeService.deleteGrade(grade.id);
+            setNotification({ type: 'success', message: 'Grade deleted successfully!' });
+            setShowModal(false);
+            setSelectedGrade(null);
+            fetchGrades();
+            fetchStats();
+        } catch (error: any) {
+            setNotification({ type: 'error', message: error.message || 'Failed to delete grade.' });
         }
     };
 
@@ -1858,6 +1924,7 @@ const fetchDropdownLists = async () => {
                         grade={selectedGrade}
                         onClose={() => setShowModal(false)}
                         onSave={handleSave}
+                        onDelete={handleDelete}
                         errors={validationErrors}
                         classSubjects={classSubjects}
                         students={students}
