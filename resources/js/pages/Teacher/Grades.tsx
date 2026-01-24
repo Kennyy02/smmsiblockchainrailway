@@ -784,11 +784,12 @@ const GradeModal: React.FC<{
                                                 setIsDuplicateError(false);
                                             }
                                         }}
-                                        className="px-4 py-3 border border-amber-500 text-amber-700 dark:text-amber-400 rounded-xl hover:bg-amber-50 dark:hover:bg-amber-950 transition-colors font-medium"
+                                        className="px-4 py-3 bg-amber-100 dark:bg-amber-900 border-2 border-amber-500 text-amber-700 dark:text-amber-300 rounded-xl hover:bg-amber-200 dark:hover:bg-amber-800 transition-all font-semibold flex items-center gap-2 shadow-sm"
                                         disabled={loading}
-                                        title="Reset form to original values"
+                                        title="Reset form to original values - undo all changes"
                                     >
-                                        ↻ Reset
+                                        <RefreshCw className="w-5 h-5" />
+                                        Reset Changes
                                     </button>
                                 )}
                             </div>
@@ -1717,25 +1718,40 @@ const fetchDropdownLists = async () => {
                                     </div>
                                 </div>
                                 {hasUnsavedChanges && (
-                                    <button
-                                        onClick={handleBulkSave}
-                                        disabled={saving}
-                                        className={`flex items-center justify-center px-4 py-2 ${PRIMARY_COLOR_CLASS} text-white rounded-xl ${HOVER_COLOR_CLASS} transition-all shadow-lg font-medium disabled:opacity-50 text-sm sm:text-base`}
-                                    >
-                                        {saving ? (
-                                            <>
-                                                <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                                                <span className="hidden sm:inline">Saving...</span>
-                                                <span className="sm:hidden">Saving</span>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <Save className="h-4 w-4 mr-2" />
-                                                <span className="hidden sm:inline">Save All Changes</span>
-                                                <span className="sm:hidden">Save</span>
-                                            </>
-                                        )}
-                                    </button>
+                                    <div className="flex gap-2">
+                                        <button
+                                            onClick={() => {
+                                                setGridData({});
+                                                setHasUnsavedChanges(false);
+                                            }}
+                                            disabled={saving}
+                                            className={`flex items-center justify-center px-4 py-2 bg-amber-100 dark:bg-amber-900 border-2 border-amber-500 text-amber-700 dark:text-amber-300 rounded-xl hover:bg-amber-200 dark:hover:bg-amber-800 transition-all shadow-lg font-medium disabled:opacity-50 text-sm sm:text-base`}
+                                            title="Clear all unsaved changes"
+                                        >
+                                            <RefreshCw className="h-4 w-4 mr-2" />
+                                            <span className="hidden sm:inline">Reset All</span>
+                                            <span className="sm:hidden">Reset</span>
+                                        </button>
+                                        <button
+                                            onClick={handleBulkSave}
+                                            disabled={saving}
+                                            className={`flex items-center justify-center px-4 py-2 ${PRIMARY_COLOR_CLASS} text-white rounded-xl ${HOVER_COLOR_CLASS} transition-all shadow-lg font-medium disabled:opacity-50 text-sm sm:text-base`}
+                                        >
+                                            {saving ? (
+                                                <>
+                                                    <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                                                    <span className="hidden sm:inline">Saving...</span>
+                                                    <span className="sm:hidden">Saving</span>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Save className="h-4 w-4 mr-2" />
+                                                    <span className="hidden sm:inline">Save All Changes</span>
+                                                    <span className="sm:hidden">Save</span>
+                                                </>
+                                            )}
+                                        </button>
+                                    </div>
                                 )}
                             </div>
 
