@@ -15,6 +15,7 @@ class Subject extends Model
         'subject_name',
         'description',
         'units',
+        'price',
         'teacher_id', // Kept for backward compatibility, but use teachers() relationship instead
     ];
 
@@ -24,6 +25,7 @@ class Subject extends Model
     {
         return [
             'units' => 'decimal:2',
+            'price' => 'decimal:2',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime',

@@ -37,6 +37,7 @@ export interface Subject {
     subject_code: string;
     subject_name: string;
     units: number;
+    price?: number;
     description?: string;
     teacher_id?: number;
     teacher?: Teacher;
@@ -50,6 +51,7 @@ export interface SubjectFormData {
     subject_code: string;
     subject_name: string;
     units: number;
+    price?: number;
     description?: string;
     teacher_id?: number | null; // Legacy single teacher
     teacher_ids?: number[]; // Multiple teachers

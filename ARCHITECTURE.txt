@@ -1,0 +1,387 @@
+================================================================================
+SUBJECT PRICE FEATURE - SYSTEM ARCHITECTURE
+================================================================================
+
+DATA FLOW DIAGRAM:
+─────────────────
+
+┌─────────────┐
+│   Browser   │
+│ (React/UI)  │
+└──────┬──────┘
+       │ (HTTP Request with price data)
+       ▼
+┌─────────────────────────────────────┐
+│   Frontend (Vite + React)           │
+├─────────────────────────────────────┤
+│ - Subjects.tsx                      │
+│ - Modal for Add/Edit                │
+│ - Table display with formatting     │
+│ - Price input validation            │
+└──────┬──────────────────────────────┘
+       │ (POST/PUT /api/subjects)
+       ▼
+┌─────────────────────────────────────┐
+│   Laravel Backend (API)             │
+├─────────────────────────────────────┤
+│ SubjectController                   │
+│ - store() → create subject          │
+│ - update() → update subject         │
+│ - Validates price field             │
+└──────┬──────────────────────────────┘
+       │ (Update database)
+       ▼
+┌─────────────────────────────────────┐
+│   Database (MySQL/PostgreSQL)       │
+├─────────────────────────────────────┤
+│ subjects table                      │
+│ - id                                │
+│ - subject_code                      │
+│ - subject_name                      │
+│ - units                             │
+│ - price ← NEW COLUMN (DECIMAL)      │
+│ - description                       │
+│ - timestamps                        │
+└──────────────────────────────────────┘
+
+
+REQUEST/RESPONSE CYCLE:
+───────────────────────
+
+1. ADD SUBJECT WITH PRICE:
+   ┌─────────────────────────────────────┐
+   │ User clicks "+ Add Subject"          │
+   └────────┬────────────────────────────┘
+            │
+            ▼
+   ┌─────────────────────────────────────┐
+   │ Modal opens (SubjectModal component) │
+   │ - Input fields:                      │
+   │   • subject_code (required)          │
+   │   • subject_name (required)          │
+   │   • units (required)                 │
+   │   • price (optional) ← NEW           │
+   │   • description (optional)           │
+   └────────┬────────────────────────────┘
+            │
+            ▼
+   ┌─────────────────────────────────────┐
+   │ User fills form and clicks           │
+   │ "Add Subject"                        │
+   └────────┬────────────────────────────┘
+            │
+            ▼
+   ┌─────────────────────────────────────┐
+   │ Frontend sends POST request:         │
+   │ POST /api/subjects                   │
+   │ {                                   │
+   │   "subject_code": "BIO101",         │
+   │   "subject_name": "Biology",        │
+   │   "units": 3,                       │
+   │   "price": 5000,      ← NEW FIELD   │
+   │   "description": "..."              │
+   │ }                                   │
+   └────────┬────────────────────────────┘
+            │
+            ▼
+   ┌─────────────────────────────────────┐
+   │ Backend SubjectController::store()   │
+   ├─────────────────────────────────────┤
+   │ 1. Validate request:                │
+   │    - price: nullable|numeric|min:0  │
+   │ 2. Create Subject model             │
+   │ 3. Save to database                 │
+   │ 4. Return JSON response             │
+   └────────┬────────────────────────────┘
+            │
+            ▼
+   ┌─────────────────────────────────────┐
+   │ Database stores new subject:        │
+   │ INSERT INTO subjects (...)          │
+   │ VALUES ('BIO101', 'Biology',        │
+   │         3, 5000, ..., NOW())        │
+   └────────┬────────────────────────────┘
+            │
+            ▼
+   ┌─────────────────────────────────────┐
+   │ Backend returns success response:    │
+   │ {                                   │
+   │   "success": true,                  │
+   │   "data": {                         │
+   │     "id": 7,                        │
+   │     "subject_code": "BIO101",       │
+   │     "price": 5000,      ← RETURNED  │
+   │     ...                             │
+   │   },                                │
+   │   "message": "..."                  │
+   │ }                                   │
+   └────────┬────────────────────────────┘
+            │
+            ▼
+   ┌─────────────────────────────────────┐
+   │ Frontend processes response:         │
+   │ 1. Close modal                      │
+   │ 2. Reload subjects list             │
+   │ 3. Display success notification     │
+   └────────┬────────────────────────────┘
+            │
+            ▼
+   ┌─────────────────────────────────────┐
+   │ Subject appears in table with:       │
+   │ "BIO101 | Biology | 3 | ₱5,000.00"  │
+   └─────────────────────────────────────┘
+
+
+2. EDIT SUBJECT PRICE:
+   ┌─────────────────────────────────────┐
+   │ User clicks edit icon (✎)           │
+   └────────┬────────────────────────────┘
+            │
+            ▼
+   ┌─────────────────────────────────────┐
+   │ Modal opens with current values     │
+   │ price field: 5000                   │
+   └────────┬────────────────────────────┘
+            │
+            ▼
+   ┌─────────────────────────────────────┐
+   │ User changes price to 7500 and      │
+   │ clicks "Update Subject"              │
+   └────────┬────────────────────────────┘
+            │
+            ▼
+   ┌─────────────────────────────────────┐
+   │ Frontend sends PUT request:          │
+   │ PUT /api/subjects/7                  │
+   │ { ... "price": 7500 ... }           │
+   └────────┬────────────────────────────┘
+            │
+            ▼
+   ┌─────────────────────────────────────┐
+   │ Backend SubjectController::update()  │
+   ├─────────────────────────────────────┤
+   │ 1. Find subject by ID (7)           │
+   │ 2. Validate request                 │
+   │ 3. Update price field               │
+   │ 4. Save to database                 │
+   └────────┬────────────────────────────┘
+            │
+            ▼
+   ┌─────────────────────────────────────┐
+   │ Database updates record:            │
+   │ UPDATE subjects                     │
+   │ SET price = 7500 WHERE id = 7       │
+   └────────┬────────────────────────────┘
+            │
+            ▼
+   ┌─────────────────────────────────────┐
+   │ Table refreshes and shows:          │
+   │ "BIO101 | Biology | 3 | ₱7,500.00"  │
+   └─────────────────────────────────────┘
+
+
+COMPONENT STRUCTURE:
+────────────────────
+
+Frontend (React/TypeScript):
+  ├── Subjects.tsx (Main page)
+  │   ├── SubjectModal (Add/Edit form)
+  │   │   └── Price input field (type="number")
+  │   ├── ViewSubjectModal (Display details)
+  │   │   └── Price display (formatted as ₱5,000.00)
+  │   ├── Subject table
+  │   │   └── Price column (formatted)
+  │   └── Delete modal
+  │
+  └── AdminSubjectService.ts (API client)
+      ├── Subject interface (includes price?: number)
+      ├── SubjectFormData interface (includes price?: number)
+      └── Methods: getSubjects(), createSubject(), updateSubject()
+
+Backend (Laravel/PHP):
+  ├── SubjectController
+  │   ├── index() - Get all subjects (returns with prices)
+  │   ├── store() - Create subject (validates price)
+  │   ├── update() - Update subject (validates price)
+  │   ├── destroy() - Delete subject
+  │   └── show() - Get single subject
+  │
+  └── Subject Model
+      ├── $fillable (includes 'price')
+      ├── $casts (price => 'decimal:2')
+      └── Relationships (teacher, classes, etc.)
+
+Database (MySQL):
+  └── subjects table
+      ├── Columns (with price DECIMAL(10,2))
+      └── Indexes (on subject_code, subject_name)
+
+
+VALIDATION FLOW:
+────────────────
+
+Frontend Validation (JavaScript):
+  price input field
+  │
+  ├─ Required? NO (nullable)
+  ├─ Type? number
+  ├─ Min value? 0
+  ├─ Max value? 99,999,999.99
+  └─ Format? Decimal (up to 2 places)
+
+Backend Validation (Laravel):
+  $validator = Validator::make($request->all(), [
+      'price' => 'nullable|numeric|min:0',
+      // ... other rules
+  ]);
+
+Database Constraint:
+  DECIMAL(10, 2)
+  - Total digits: 10
+  - Decimal places: 2
+  - Range: 0.00 to 99,999,999.99
+  - Default: 0
+  - Nullable: Yes
+
+
+DISPLAY FORMATTING:
+───────────────────
+
+Frontend (React):
+  Input: 5000
+  Storage: 5000
+  Display: ₱5,000.00
+  
+  Empty value:
+  Input: (empty)
+  Storage: null
+  Display: N/A or ₱0.00
+
+Backend Response:
+  {
+    "price": 5000,          // Returned as number
+    // OR
+    "price": "5000.00"      // Might be string depending on API
+  }
+
+Database:
+  Stored as: 5000.00 (DECIMAL)
+
+
+ERROR HANDLING:
+───────────────
+
+Input Validation:
+  5000      ✅ Valid
+  5000.50   ✅ Valid
+  0         ✅ Valid
+  (empty)   ✅ Valid (optional)
+  -5000     ❌ Invalid (negative)
+  abc       ❌ Invalid (not numeric)
+  5000.999  ❌ Invalid (too many decimals)
+
+Error Response:
+  {
+    "success": false,
+    "message": "Validation failed",
+    "errors": {
+      "price": ["The price must be at least 0"]
+    }
+  }
+
+User Feedback:
+  ✓ Success notification after save
+  ✗ Error notification with specific message
+  ✓ Form remains open on validation error
+
+
+INTEGRATION POINTS:
+───────────────────
+
+1. Database Layer
+   └─ subjects table (price column added)
+
+2. Model Layer
+   └─ Subject model (price in fillable & casts)
+
+3. API Layer
+   ├─ POST /api/subjects (create)
+   ├─ PUT /api/subjects/{id} (update)
+   ├─ GET /api/subjects (list)
+   └─ GET /api/subjects/{id} (single)
+
+4. Frontend Layer
+   ├─ Subjects page component
+   ├─ Subject modal component
+   ├─ AdminSubjectService (API client)
+   └─ UI display components
+
+5. Business Logic
+   └─ Price validation rules
+   └─ Price formatting rules
+   └─ Error handling
+
+
+MIGRATION DETAILS:
+──────────────────
+
+Migration File:
+  2026_01_24_000001_add_price_to_subjects_table.php
+
+Up Method:
+  - Adds price column to subjects table
+  - Type: DECIMAL(10, 2)
+  - Default: 0
+  - Nullable: Yes
+  - After: units column
+
+Down Method:
+  - Drops price column (rollback support)
+
+Execution:
+  php artisan migrate --step
+  or
+  php artisan migrate
+
+
+DEPLOYMENT CHECKLIST:
+─────────────────────
+
+Before going live:
+  ☐ Run migration: php artisan migrate --step
+  ☐ Test adding subject with price
+  ☐ Test editing subject price
+  ☐ Test viewing subject details
+  ☐ Test deleting subject (should still work)
+  ☐ Check browser console for errors
+  ☐ Check Laravel logs for warnings
+  ☐ Verify database column exists
+  ☐ Verify API returns price in response
+  ☐ Verify frontend displays price correctly
+  ☐ Verify price validation works
+  ☐ Test on mobile view
+  ☐ Test negative price validation
+  ☐ Test decimal precision (e.g., 5000.50)
+  ☐ Test empty price handling
+
+
+ROLLBACK PROCEDURE:
+───────────────────
+
+If needed, revert all changes:
+
+  1. Drop migration:
+     php artisan migrate:rollback --step=1
+     
+  2. Restore code (from git):
+     git checkout app/Models/Subject.php
+     git checkout app/Http/Controllers/SubjectController.php
+     git checkout resources/services/AdminSubjectService.ts
+
+Done!
+
+
+================================================================================
+END OF ARCHITECTURE DOCUMENT
+================================================================================
+

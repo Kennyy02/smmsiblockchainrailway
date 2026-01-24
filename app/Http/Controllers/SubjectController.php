@@ -230,6 +230,7 @@ class SubjectController extends Controller
                 'subject_name' => 'required|string|max:255',
                 'description' => 'nullable|string',
                 'units' => 'required|numeric|min:0|max:10',
+                'price' => 'nullable|numeric|min:0',
                 'teacher_id' => 'nullable|exists:teachers,id', // Legacy single teacher
                 'teacher_ids' => 'nullable|array', // Multiple teachers
                 'teacher_ids.*' => 'exists:teachers,id',
@@ -364,6 +365,7 @@ class SubjectController extends Controller
                 'subject_name' => 'required|string|max:255',
                 'description' => 'nullable|string',
                 'units' => 'required|numeric|min:0|max:10',
+                'price' => 'nullable|numeric|min:0',
                 'teacher_id' => 'nullable|exists:teachers,id', // Legacy single teacher
                 'teacher_ids' => 'nullable|array', // Multiple teachers
                 'teacher_ids.*' => 'exists:teachers,id',
