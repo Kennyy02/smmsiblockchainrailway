@@ -313,11 +313,6 @@ function AppHeader() {
                     href: '/admin/blockchain-transactions/attendance', 
                     icon: ClipboardCheck 
                 },
-                { 
-                    title: 'Finance', 
-                    href: '/admin/blockchain-transactions/finance', 
-                    icon: FileText 
-                },
             ]
         },
         { 

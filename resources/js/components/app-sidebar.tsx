@@ -158,11 +158,6 @@ export function AppSidebar() {
                 href: '/admin/users',
                 icon: Users,
             },
-            {
-                title: 'Billing & Finances',
-                href: '/pos/billing',
-                icon: DollarSign,
-            },
         ];
     } 
     // Staff navigation items
