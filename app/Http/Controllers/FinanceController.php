@@ -139,10 +139,9 @@ class FinanceController extends Controller
     /**
      * Get students in a specific class with financial records
      */
-    public function getClassStudentsFinance($classId, Request $request)
+    public function getClassStudentsFinance(Classes $class, Request $request)
     {
         try {
-            $class = Classes::findOrFail($classId);
             $query = $class->students();
 
             // Search filter

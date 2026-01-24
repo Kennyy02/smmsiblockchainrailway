@@ -615,7 +615,7 @@ Route::prefix('search')->group(function () {
 Route::prefix('finance')->group(function () {
     Route::get('/stats', [FinanceController::class, 'getStats']);
     Route::get('/classes', [FinanceController::class, 'getClassesFinance']);
-    Route::get('/classes/{classId}/students', [FinanceController::class, 'getClassStudentsFinance']);
+    Route::get('/classes/{class}/students', [FinanceController::class, 'getClassStudentsFinance']);
     Route::get('/students', [FinanceController::class, 'getStudentsFinance']);
     Route::get('/students/{studentId}/details', [FinanceController::class, 'getStudentFinanceDetails']);
 });
