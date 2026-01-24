@@ -289,7 +289,7 @@ const ViewSubjectModal: React.FC<{
                             </div>
                             <div>
                                 <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Price</label>
-                                <p className="text-gray-900 dark:text-white font-medium mt-1">${subject.price ? subject.price.toFixed(2) : 'N/A'}</p>
+                                <p className="text-gray-900 dark:text-white font-medium mt-1">₱{subject.price ? subject.price.toFixed(2) : 'N/A'}</p>
                             </div>
                             {subject.description && (
                                 <div className="col-span-2">
@@ -665,7 +665,7 @@ const Subjects: React.FC = () => {
                                                     </div>
                                                 </td>
                                                 <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700 dark:text-gray-300">{subject.units}</td>
-                                                <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700 dark:text-gray-300">${subject.price ? subject.price.toFixed(2) : 'N/A'}</td>
+                                                <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700 dark:text-gray-300">₱{subject.price ? subject.price.toFixed(2) : 'N/A'}</td>
                                                 <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 max-w-xs truncate text-xs sm:text-sm text-gray-500 dark:text-gray-400">{subject.description || 'N/A'}</td>
                                                 <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap text-right">
                                                     <div className="flex justify-end space-x-1 sm:space-x-2">
