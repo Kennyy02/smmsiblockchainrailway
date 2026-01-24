@@ -198,6 +198,11 @@ Route::middleware(['auth', 'requirePasswordChange', 'verified', 'checkRole:admin
         return Inertia::render('Admin/BlockchainAttendance');
     })->name('blockchain-transactions.attendance');
     
+    // Blockchain Finance
+    Route::get('/blockchain-transactions/finance', function () {
+        return Inertia::render('Admin/Finance');
+    })->name('blockchain-transactions.finance');
+    
     // Blockchain Class Students for Attendance (View Only)
     Route::get('/blockchain-transactions/attendance/class/{classId}/students', function ($classId) {
         return Inertia::render('Admin/BlockchainClassStudentsAttendance', [
