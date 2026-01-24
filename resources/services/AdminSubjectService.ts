@@ -36,8 +36,8 @@ export interface Subject {
     id: number;
     subject_code: string;
     subject_name: string;
-    units: number;
-    price?: number;
+    units: number | string;
+    price?: number | string;
     description?: string;
     teacher_id?: number;
     teacher?: Teacher;
