@@ -286,14 +286,28 @@ class AdminAttendanceService {
         });
     }
 
-    async updateAttendance(id: number, attendanceData: Partial<AttendanceFormData>): Promise<ApiResponse<AttendanceRecord>> {
+    async updateAttendance(id: number, attendanceData: Partial<AttendanceFormData>, fullRecord?: AttendanceRecord): Promise<ApiResponse<AttendanceRecord>> {
         console.log('✏️ updateAttendance called with:', { id, attendanceData });
         console.log('📋 Update data keys:', Object.keys(attendanceData));
-        console.log('📤 JSON.stringify:', JSON.stringify(attendanceData));
+        
+        // If only status is provided, we need the full record to include required fields
+        let updateData = attendanceData;
+        if (fullRecord && Object.keys(attendanceData).length === 1 && attendanceData.status) {
+            // Preserve all required fields for partial updates
+            updateData = {
+                class_subject_id: fullRecord.class_subject_id,
+                student_id: fullRecord.student_id,
+                attendance_date: fullRecord.attendance_date,
+                status: attendanceData.status,
+            };
+            console.log('🔄 Enhanced update data with required fields:', updateData);
+        }
+        
+        console.log('📤 JSON.stringify:', JSON.stringify(updateData));
         
         return this.request<AttendanceRecord>(`${this.baseURL}/attendance/${id}`, {
             method: 'PUT',
-            body: JSON.stringify(attendanceData),
+            body: JSON.stringify(updateData),
         });
     }
 

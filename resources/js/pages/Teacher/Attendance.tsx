@@ -821,7 +821,7 @@ const AttendancePage: React.FC = () => {
         try {
             if (selectedAttendance) {
                 console.log('✏️ Updating attendance:', selectedAttendance.id);
-                await adminAttendanceService.updateAttendance(selectedAttendance.id, data);
+                await adminAttendanceService.updateAttendance(selectedAttendance.id, data, selectedAttendance);
                 setNotification({ type: 'success', message: 'Attendance updated successfully!' });
             } else {
                 console.log('➕ Creating new attendance');
@@ -871,7 +871,7 @@ const AttendancePage: React.FC = () => {
             } 
             // If a different status exists, update it
             else if (existing) {
-                await adminAttendanceService.updateAttendance(existing.id, { status });
+                await adminAttendanceService.updateAttendance(existing.id, { status }, existing);
                 setNotification({ type: 'success', message: `Attendance updated to ${status} successfully!` });
             }
             // If no attendance exists, create a new one

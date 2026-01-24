@@ -511,7 +511,7 @@ const AttendancePage: React.FC = () => {
             let response: AttendanceResponse;
             
             if (selectedAttendance) {
-                response = await adminAttendanceService.updateAttendance(selectedAttendance.id, data);
+                response = await adminAttendanceService.updateAttendance(selectedAttendance.id, data, selectedAttendance);
                 setNotification({ type: 'success', message: 'Attendance record updated successfully!' });
             } else {
                 response = await adminAttendanceService.createAttendance(data);
