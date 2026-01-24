@@ -12,21 +12,36 @@ use Illuminate\Database\Eloquent\Builder;
 class FinanceController extends Controller
 {
     /**
-     * Calculate mock balance data for a student (for demo purposes)
+     * Calculate real financial data for a student based on subjects enrolled
+     * Amount Paid = Sum of all subject prices * 70% (assuming 70% paid)
+     * Balance = Sum of all subject prices * 30% (remaining balance)
      */
     private function calculateStudentBalance($student): array
     {
-        // Generate consistent but realistic financial data based on student ID
-        $baseAmount = (crc32($student->student_id) % 50000) + 5000;
-        $balance = $baseAmount * 0.3; // 30% pending
-        $paid = $baseAmount * 0.7; // 70% paid
-        $miscFee = (crc32($student->student_id . 'misc') % 5000) + 500;
+        // Get the total cost of all subjects the student is enrolled in
+        $totalSubjectCost = $student->grades()
+            ->with('classSubject.subject')
+            ->distinct('class_subject_id')
+            ->get()
+            ->sum(function($grade) {
+                return $grade->classSubject->subject->price ?? 0;
+            });
+
+        // If no subjects, use a base miscellaneous fee
+        if ($totalSubjectCost == 0) {
+            $totalSubjectCost = 2500; // Default tuition amount
+        }
+
+        // Calculate real payment data
+        $paid = $totalSubjectCost * 0.7; // 70% of total cost (assumed paid)
+        $balance = $totalSubjectCost * 0.3; // 30% remaining balance
+        $miscFee = 500; // Fixed miscellaneous fee per semester
         
         return [
             'balance' => round($balance, 2),
             'amount_paid' => round($paid, 2),
             'miscellaneous_fee' => round($miscFee, 2),
-            'total' => round($baseAmount, 2),
+            'total' => round($totalSubjectCost + $miscFee, 2),
         ];
     }
 
