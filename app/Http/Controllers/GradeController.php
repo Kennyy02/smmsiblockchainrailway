@@ -314,9 +314,17 @@ class GradeController extends Controller
 
             $grade = Grade::create($validator->validated());
             
-            // Auto-calculate final rating if all grades are present
-            if ($grade->prelim_grade && $grade->midterm_grade && $grade->final_grade) {
+            // Auto-calculate final rating if all grades are present and non-zero
+            if ($grade->prelim_grade !== null && $grade->prelim_grade > 0 &&
+                $grade->midterm_grade !== null && $grade->midterm_grade > 0 &&
+                $grade->final_grade !== null && $grade->final_grade > 0) {
                 $grade->updateFinalRating();
+            } else {
+                // Clear final_rating and remarks if any grades are zero
+                $grade->update([
+                    'final_rating' => null,
+                    'remarks' => null
+                ]);
             }
             
             $grade->load(['student', 'classSubject.subject', 'classSubject.teacher', 'academicYear', 'semester']);
@@ -452,9 +460,17 @@ class GradeController extends Controller
 
             $grade->update($validator->validated());
             
-            // Auto-calculate final rating if all grades are present
-            if ($grade->prelim_grade && $grade->midterm_grade && $grade->final_grade) {
+            // Auto-calculate final rating if all grades are present and non-zero
+            if ($grade->prelim_grade !== null && $grade->prelim_grade > 0 &&
+                $grade->midterm_grade !== null && $grade->midterm_grade > 0 &&
+                $grade->final_grade !== null && $grade->final_grade > 0) {
                 $grade->updateFinalRating();
+            } else {
+                // Clear final_rating and remarks if any grades are zero
+                $grade->update([
+                    'final_rating' => null,
+                    'remarks' => null
+                ]);
             }
             
             $grade->load(['student', 'classSubject.subject', 'classSubject.teacher', 'academicYear', 'semester']);

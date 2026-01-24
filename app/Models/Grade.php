@@ -170,11 +170,19 @@ class Grade extends Model
 
     public function updateFinalRating(): void
     {
-        if ($this->prelim_grade && $this->midterm_grade && $this->final_grade) {
+        // Only calculate if all three grades are present AND non-zero
+        // If any grade is 0, treat it as incomplete/null
+        if ($this->prelim_grade !== null && $this->prelim_grade > 0 &&
+            $this->midterm_grade !== null && $this->midterm_grade > 0 &&
+            $this->final_grade !== null && $this->final_grade > 0) {
             $this->final_rating = $this->calculateFinalRating();
             $this->remarks = $this->final_rating >= 75 ? 'Passed' : 'Failed';
-            $this->save();
+        } else {
+            // If any grades are zero or missing, clear the final rating and remarks
+            $this->final_rating = null;
+            $this->remarks = null;
         }
+        $this->save();
     }
 
     public function isComplete(): bool
