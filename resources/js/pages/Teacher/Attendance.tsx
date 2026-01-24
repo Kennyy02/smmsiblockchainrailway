@@ -382,8 +382,8 @@ const AttendancePage: React.FC = () => {
     const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
     const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
     
-    // Store attendance data for the entire month: studentId_day -> { status, id }
-    const [monthAttendanceData, setMonthAttendanceData] = useState<Record<string, { status: AttendanceStatus; id: number }>>({});
+    // Store attendance data for the entire month: studentId_day -> full attendance record
+    const [monthAttendanceData, setMonthAttendanceData] = useState<Record<string, AttendanceRecord>>({});
     
     // Track which cell's dropdown is open
     const [openDropdown, setOpenDropdown] = useState<{ studentId: number; day: number } | null>(null);
@@ -504,12 +504,12 @@ const AttendancePage: React.FC = () => {
             });
 
             if (response.success && Array.isArray(response.data)) {
-                // Create a map: studentId_day -> { status, id }
-                const attendanceMap: Record<string, { status: AttendanceStatus; id: number }> = {};
+                // Create a map: studentId_day -> full attendance record
+                const attendanceMap: Record<string, AttendanceRecord> = {};
                 response.data.forEach((record) => {
                     const day = new Date(record.attendance_date).getDate();
                     const key = `${record.student_id}_${day}`;
-                    attendanceMap[key] = { status: record.status, id: record.id };
+                    attendanceMap[key] = record; // Store full record
                 });
                 
                 // Convert to the format we need for the calendar
@@ -871,7 +871,15 @@ const AttendancePage: React.FC = () => {
             } 
             // If a different status exists, update it
             else if (existing) {
-                await adminAttendanceService.updateAttendance(existing.id, { status }, existing);
+                // Pass full record with all required fields
+                const fullRecord: AttendanceRecord = {
+                    id: existing.id,
+                    class_subject_id: existing.class_subject_id,
+                    student_id: existing.student_id,
+                    attendance_date: existing.attendance_date,
+                    status: existing.status,
+                };
+                await adminAttendanceService.updateAttendance(existing.id, { status }, fullRecord);
                 setNotification({ type: 'success', message: `Attendance updated to ${status} successfully!` });
             }
             // If no attendance exists, create a new one
