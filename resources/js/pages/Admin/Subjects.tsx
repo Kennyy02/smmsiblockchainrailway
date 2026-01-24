@@ -87,11 +87,13 @@ const SubjectModal: React.FC<{
         subject_code: subject?.subject_code || '',
         subject_name: subject?.subject_name || '', 
         units: subject?.units || 0,
+        price: subject?.price || 0,
         description: subject?.description || '',
     });
     
     // Use string for units input to allow empty field
-    const [unitsInput, setUnitsInput] = useState<string>(subject?.units?.toString() || ''); 
+    const [unitsInput, setUnitsInput] = useState<string>(subject?.units?.toString() || '');
+    const [priceInput, setPriceInput] = useState<string>(subject?.price?.toString() || ''); 
 
     const [loading, setLoading] = useState(false);
 
@@ -115,6 +117,14 @@ const SubjectModal: React.FC<{
             setFormData(prev => ({ 
                 ...prev, 
                 units: isNaN(numValue) ? 0 : numValue
+            }));
+        } else if (name === 'price') {
+            // Handle price field
+            setPriceInput(value);
+            const numValue = value === '' ? 0 : parseFloat(value);
+            setFormData(prev => ({
+                ...prev,
+                price: isNaN(numValue) ? 0 : numValue
             }));
         } else {
             setFormData(prev => ({ 
@@ -183,6 +193,21 @@ const SubjectModal: React.FC<{
                                 placeholder="Enter units"
                             />
                             {errors.units && (<p className="text-red-500 dark:text-red-400 text-xs mt-1">{errors.units[0]}</p>)}
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Price (Optional)</label>
+                            <input
+                                type="number"
+                                name="price"
+                                value={priceInput}
+                                onChange={handleChange}
+                                className={`w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
+                                min="0"
+                                step="0.01"
+                                placeholder="Enter price"
+                            />
+                            {errors.price && (<p className="text-red-500 dark:text-red-400 text-xs mt-1">{errors.price[0]}</p>)}
                         </div>
 
                         <div>
@@ -261,6 +286,10 @@ const ViewSubjectModal: React.FC<{
                             <div>
                                 <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Units</label>
                                 <p className="text-gray-900 dark:text-white font-medium mt-1">{subject.units}</p>
+                            </div>
+                            <div>
+                                <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Price</label>
+                                <p className="text-gray-900 dark:text-white font-medium mt-1">${subject.price ? subject.price.toFixed(2) : 'N/A'}</p>
                             </div>
                             {subject.description && (
                                 <div className="col-span-2">
@@ -593,6 +622,7 @@ const Subjects: React.FC = () => {
                                         <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">Code</th>
                                         <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">Name</th>
                                         <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">Units</th>
+                                        <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">Price</th>
                                         <th className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">Description</th>
                                         <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-right text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">Actions</th>
                                     </tr>
@@ -600,7 +630,7 @@ const Subjects: React.FC = () => {
                                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                     {loading ? (
                                         <tr>
-                                            <td colSpan={5} className="px-3 sm:px-6 py-8 sm:py-12 text-center">
+                                            <td colSpan={6} className="px-3 sm:px-6 py-8 sm:py-12 text-center">
                                                 <div className="flex justify-center">
                                                     <RefreshCw className={`h-6 w-6 sm:h-8 sm:w-8 ${TEXT_COLOR_CLASS} animate-spin`} />
                                                 </div>
@@ -608,7 +638,7 @@ const Subjects: React.FC = () => {
                                         </tr>
                                     ) : subjects.length === 0 ? (
                                         <tr>
-                                            <td colSpan={5} className="px-3 sm:px-6 py-8 sm:py-12 text-center text-gray-500 dark:text-gray-400">
+                                            <td colSpan={6} className="px-3 sm:px-6 py-8 sm:py-12 text-center text-gray-500 dark:text-gray-400">
                                                 <div className="flex flex-col items-center">
                                                     <BookOpen className="h-10 w-10 sm:h-12 sm:w-12 text-gray-300 dark:text-gray-600 mb-3 sm:mb-4" />
                                                     <p className="text-base sm:text-lg font-medium dark:text-gray-200">No subjects found</p>
@@ -635,6 +665,7 @@ const Subjects: React.FC = () => {
                                                     </div>
                                                 </td>
                                                 <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700 dark:text-gray-300">{subject.units}</td>
+                                                <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700 dark:text-gray-300">${subject.price ? subject.price.toFixed(2) : 'N/A'}</td>
                                                 <td className="hidden md:table-cell px-3 sm:px-4 md:px-6 py-3 sm:py-4 max-w-xs truncate text-xs sm:text-sm text-gray-500 dark:text-gray-400">{subject.description || 'N/A'}</td>
                                                 <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap text-right">
                                                     <div className="flex justify-end space-x-1 sm:space-x-2">
