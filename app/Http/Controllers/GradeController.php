@@ -139,6 +139,17 @@ class GradeController extends Controller
                 ->orderBy('semester_id', 'desc')
                 ->get();
             
+            // Ensure zero grades have null remarks
+            $grades = $grades->map(function ($grade) {
+                if (($grade->prelim_grade ?? 0) == 0 || 
+                    ($grade->midterm_grade ?? 0) == 0 || 
+                    ($grade->final_grade ?? 0) == 0) {
+                    $grade->remarks = null;
+                    $grade->final_rating = null;
+                }
+                return $grade;
+            });
+            
             return response()->json([
                 'success' => true,
                 'data' => $grades
@@ -171,6 +182,17 @@ class GradeController extends Controller
                 ->orderBy('academic_year_id')
                 ->orderBy('semester_id')
                 ->get();
+            
+            // Ensure zero grades have null remarks and final_rating
+            $grades = $grades->map(function ($grade) {
+                if (($grade->prelim_grade ?? 0) == 0 || 
+                    ($grade->midterm_grade ?? 0) == 0 || 
+                    ($grade->final_grade ?? 0) == 0) {
+                    $grade->remarks = null;
+                    $grade->final_rating = null;
+                }
+                return $grade;
+            });
             
             // Calculate GPA
             $totalGPA = 0;
