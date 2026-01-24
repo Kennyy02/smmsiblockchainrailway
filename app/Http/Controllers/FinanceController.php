@@ -142,7 +142,10 @@ class FinanceController extends Controller
     public function getClassStudentsFinance($classId, Request $request)
     {
         try {
-            $class = Classes::with('students')->findOrFail($classId);
+            // Fetch class first
+            $class = Classes::findOrFail($classId);
+            
+            // Build query using the relationship
             $query = $class->students();
 
             // Search filter
@@ -155,8 +158,14 @@ class FinanceController extends Controller
 
             $students = $query->paginate($request->get('per_page', 10));
 
+            // Store class info before mapping
+            $classId = $class->id;
+            $classCode = $class->class_code;
+            $className = $class->class_name;
+            $program = $class->program;
+
             // Map to response format
-            $studentsData = $students->map(function ($student) {
+            $studentsData = $students->map(function ($student) use ($classId) {
                 $financeData = $this->calculateStudentBalance($student);
                 return [
                     'id' => $student->id,
@@ -167,7 +176,7 @@ class FinanceController extends Controller
                     'miscellaneous_fee' => $financeData['miscellaneous_fee'],
                     'total_paid' => $financeData['amount_paid'],
                     'program' => $student->program,
-                    'class_id' => $class->id,
+                    'class_id' => $classId,
                     'subjects_enrolled' => $student->grades()->distinct('class_subject_id')->count() ?? 0,
                 ];
             });
@@ -176,9 +185,9 @@ class FinanceController extends Controller
                 'success' => true,
                 'data' => $studentsData,
                 'class_info' => [
-                    'class_code' => $class->class_code,
-                    'class_name' => $class->class_name,
-                    'program' => $class->program,
+                    'class_code' => $classCode,
+                    'class_name' => $className,
+                    'program' => $program,
                 ],
                 'pagination' => [
                     'current_page' => $students->currentPage(),
