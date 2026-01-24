@@ -145,21 +145,18 @@ class GradeController extends Controller
                 $midterm = $grade->midterm_grade;
                 $final = $grade->final_grade;
                 
-                // Check if all grades are null (teacher left them blank)
+                // Check if all grades are null (teacher left them blank - NO INPUT)
                 $allNull = is_null($prelim) && is_null($midterm) && is_null($final);
                 
-                // Check if all grades are 0 (teacher entered zeros)
-                $allZero = ($prelim == 0 || is_null($prelim)) && 
-                          ($midterm == 0 || is_null($midterm)) && 
-                          ($final == 0 || is_null($final)) &&
-                          !$allNull; // Make sure at least one is not null
+                // Check if any grade is 0 (teacher explicitly entered zeros)
+                $hasZero = ($prelim == 0) || ($midterm == 0) || ($final == 0);
                 
                 if ($allNull) {
-                    // All null: show as completely blank
+                    // All null: completely blank with no remarks
                     $grade->remarks = null;
                     $grade->final_rating = null;
-                } elseif ($allZero) {
-                    // All zero: show as incomplete with blank grade cells
+                } elseif ($hasZero) {
+                    // Any zero: show as incomplete with blank grade cells
                     $grade->prelim_grade = null;
                     $grade->midterm_grade = null;
                     $grade->final_grade = null;
@@ -208,21 +205,18 @@ class GradeController extends Controller
                 $midterm = $grade->midterm_grade;
                 $final = $grade->final_grade;
                 
-                // Check if all grades are null (teacher left them blank)
+                // Check if all grades are null (teacher left them blank - NO INPUT)
                 $allNull = is_null($prelim) && is_null($midterm) && is_null($final);
                 
-                // Check if all grades are 0 (teacher entered zeros)
-                $allZero = ($prelim == 0 || is_null($prelim)) && 
-                          ($midterm == 0 || is_null($midterm)) && 
-                          ($final == 0 || is_null($final)) &&
-                          !$allNull; // Make sure at least one is not null
+                // Check if any grade is 0 (teacher explicitly entered zeros)
+                $hasZero = ($prelim == 0) || ($midterm == 0) || ($final == 0);
                 
                 if ($allNull) {
-                    // All null: show as completely blank
+                    // All null: completely blank with no remarks
                     $grade->remarks = null;
                     $grade->final_rating = null;
-                } elseif ($allZero) {
-                    // All zero: show as incomplete with blank grade cells
+                } elseif ($hasZero) {
+                    // Any zero: show as incomplete with blank grade cells
                     $grade->prelim_grade = null;
                     $grade->midterm_grade = null;
                     $grade->final_grade = null;
@@ -374,10 +368,11 @@ class GradeController extends Controller
 
             $validated = $validator->validated();
             
-            // If any grade is zero/null, force remarks to null
-            if (($validated['prelim_grade'] ?? 0) == 0 || 
-                ($validated['midterm_grade'] ?? 0) == 0 || 
-                ($validated['final_grade'] ?? 0) == 0) {
+            // If any grade is zero (explicitly entered), force remarks to null
+            // Only null grades (no input) should remain null
+            if (($validated['prelim_grade'] ?? null) == 0 || 
+                ($validated['midterm_grade'] ?? null) == 0 || 
+                ($validated['final_grade'] ?? null) == 0) {
                 $validated['remarks'] = null;
                 $validated['final_rating'] = null;
             }
@@ -524,10 +519,11 @@ class GradeController extends Controller
 
             $validated = $validator->validated();
             
-            // If any grade is zero/null, force remarks to null
-            if (($validated['prelim_grade'] ?? 0) == 0 || 
-                ($validated['midterm_grade'] ?? 0) == 0 || 
-                ($validated['final_grade'] ?? 0) == 0) {
+            // If any grade is zero (explicitly entered), force remarks to null
+            // Only null grades (no input) should remain null
+            if (($validated['prelim_grade'] ?? null) == 0 || 
+                ($validated['midterm_grade'] ?? null) == 0 || 
+                ($validated['final_grade'] ?? null) == 0) {
                 $validated['remarks'] = null;
                 $validated['final_rating'] = null;
             }
