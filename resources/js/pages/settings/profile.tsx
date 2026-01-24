@@ -63,29 +63,29 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
 
                     {/* Student Academic Info */}
                     {student && (
-                        <div className="border border-gray-200 rounded-lg p-5 mb-6">
+                        <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-5 mb-6 bg-white dark:bg-slate-900">
                             <div className="flex items-center mb-4">
-                                <GraduationCap className="h-5 w-5 mr-2 text-gray-400" />
-                                <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide">Student Information</h3>
+                                <GraduationCap className="h-5 w-5 mr-2 text-gray-400 dark:text-gray-500" />
+                                <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Student Information</h3>
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                                 <div>
-                                    <p className="text-xs text-gray-400 uppercase tracking-wide mb-1">Student ID</p>
-                                    <p className="text-base font-medium text-gray-900">{student.student_id || 'N/A'}</p>
+                                    <p className="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-wide mb-1">Student ID</p>
+                                    <p className="text-base font-medium text-gray-900 dark:text-white">{student.student_id || 'N/A'}</p>
                                 </div>
                                 <div>
-                                    <p className="text-xs text-gray-400 uppercase tracking-wide mb-1">Program</p>
-                                    <p className="text-base font-medium text-gray-900">
+                                    <p className="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-wide mb-1">Program</p>
+                                    <p className="text-base font-medium text-gray-900 dark:text-white">
                                         {student.course?.course_name || student.program || 'N/A'}
                                     </p>
                                 </div>
                                 <div>
-                                    <p className="text-xs text-gray-400 uppercase tracking-wide mb-1">Grade Level</p>
-                                    <p className="text-base font-medium text-gray-900">{formatGradeLevel(student.year_level)}</p>
+                                    <p className="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-wide mb-1">Grade Level</p>
+                                    <p className="text-base font-medium text-gray-900 dark:text-white">{formatGradeLevel(student.year_level)}</p>
                                 </div>
                                 <div>
-                                    <p className="text-xs text-gray-400 uppercase tracking-wide mb-1">Section</p>
-                                    <p className="text-base font-medium text-gray-900">{student.section || 'N/A'}</p>
+                                    <p className="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-wide mb-1">Section</p>
+                                    <p className="text-base font-medium text-gray-900 dark:text-white">{student.section || 'N/A'}</p>
                                 </div>
                             </div>
                         </div>
