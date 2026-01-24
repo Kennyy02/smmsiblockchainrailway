@@ -1158,23 +1158,84 @@ const ViewClassModal: React.FC<{
     classItem: Class;
     onClose: () => void;
     formatGradeLevel: (yearLevel: number) => string;
-}> = ({ classItem, onClose, formatGradeLevel }) => {
+    onAddStudents?: () => void;
+    showNotification?: (type: 'success' | 'error', message: string) => void;
+}> = ({ classItem, onClose, formatGradeLevel, onAddStudents, showNotification }) => {
+    const [students, setStudents] = useState<Student[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [search, setSearch] = useState('');
+    const [classInfo, setClassInfo] = useState<any>(null);
+    const [pagination, setPagination] = useState({ current_page: 1, last_page: 1, total: 0 });
+
+    const loadStudents = useCallback(async () => {
+        setLoading(true);
+        try {
+            const response = await adminClassesService.getClassStudents(classItem.id, {
+                search,
+                per_page: 50,
+            });
+            if (response.success) {
+                setStudents(response.data);
+                setClassInfo(response.class_info);
+                if (response.pagination) {
+                    setPagination(response.pagination);
+                }
+            }
+        } catch (error) {
+            console.error('Error loading students:', error);
+            if (showNotification) {
+                showNotification('error', 'Failed to load students');
+            }
+        } finally {
+            setLoading(false);
+        }
+    }, [classItem.id, search, showNotification]);
+
+    useEffect(() => {
+        loadStudents();
+    }, [loadStudents]);
+
+    const handleRemoveStudent = async (studentId: number, studentName: string) => {
+        if (!confirm(`Are you sure you want to remove ${studentName} from this class/section?`)) {
+            return;
+        }
+
+        try {
+            const response = await adminClassesService.unenrollStudent(classItem.id, studentId);
+            if (response.success) {
+                if (showNotification) {
+                    showNotification('success', `${studentName} has been removed from this class`);
+                }
+                loadStudents();
+            }
+        } catch (error: any) {
+            if (showNotification) {
+                showNotification('error', error.message || 'Failed to remove student');
+            }
+        }
+    };
+
     return (
         <div className="fixed inset-0 z-50 overflow-y-auto">
             <div className="flex min-h-full items-center justify-center p-4">
                 <div className="fixed inset-0 bg-black/30 backdrop-blur-sm transition-opacity" onClick={onClose}></div>
                 
-                <div className="relative w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 shadow-2xl transition-all">
+                <div className="relative w-full max-w-4xl transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 shadow-2xl transition-all">
                     <div className={`${PRIMARY_COLOR_CLASS} px-6 py-4`}>
                         <div className="flex items-center justify-between">
-                            <h2 className="text-xl font-bold text-white">Class Details</h2>
+                            <div>
+                                <h2 className="text-xl font-bold text-white">Class Details</h2>
+                                <p className="text-white/80 text-sm mt-1">{classItem.class_code} • {formatGradeLevel(classItem.year_level)} • {classItem.program}</p>
+                            </div>
                             <button onClick={onClose} className="rounded-full p-2 text-white/80 hover:bg-white/20 hover:text-white transition-colors">
                                 <X className="h-5 w-5" />
                             </button>
                         </div>
                     </div>
                     
-                    <div className="p-6 dark:bg-gray-800">
+                    <div className="dark:bg-gray-800 max-h-[85vh] overflow-y-auto">
+                        {/* Class Info Section */}
+                        <div className="p-6 border-b dark:border-gray-700">
                         {/* Header with Icon */}
                         <div className="flex items-center mb-6 pb-6 border-b dark:border-gray-700">
                             <div className={`${LIGHT_BG_CLASS} dark:bg-gray-700 p-4 rounded-full mr-4`}>
@@ -1186,47 +1247,146 @@ const ViewClassModal: React.FC<{
                             </div>
                         </div>
 
-                        {/* Info Grid */}
-                        <div className="grid grid-cols-2 gap-6">
-                            <div>
-                                <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Class Code</label>
-                                <p className="text-gray-900 dark:text-white font-medium mt-1">{classItem.class_code}</p>
-                            </div>
-                            <div>
-                                <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Class Name</label>
-                                <p className="text-gray-900 dark:text-white font-medium mt-1">{classItem.class_name}</p>
-                            </div>
-                            <div>
-                                <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Program</label>
-                                <p className="text-gray-900 dark:text-white font-medium mt-1">{classItem.program}</p>
-                            </div>
-                            <div>
-                                <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Section</label>
-                                <p className="text-gray-900 dark:text-white font-medium mt-1">{classItem.section}</p>
-                            </div>
-                            <div>
-                                <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Year Level</label>
-                                <p className="text-gray-900 dark:text-white font-medium mt-1">{formatGradeLevel(classItem.year_level)}</p>
-                            </div>
-                            <div>
-                                <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Adviser</label>
-                                <p className="text-gray-900 dark:text-white font-medium mt-1">{classItem.adviser_name || 'Unassigned'}</p>
-                            </div>
-                            <div>
-                                <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Students Enrolled</label>
-                                <p className="text-gray-900 dark:text-white font-medium mt-1">{classItem.student_count || 0}</p>
+                            {/* Info Grid */}
+                            <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+                                <div>
+                                    <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Class Code</label>
+                                    <p className="text-gray-900 dark:text-white font-medium mt-1">{classItem.class_code}</p>
+                                </div>
+                                <div>
+                                    <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Class Name</label>
+                                    <p className="text-gray-900 dark:text-white font-medium mt-1">{classItem.class_name}</p>
+                                </div>
+                                <div>
+                                    <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Program</label>
+                                    <p className="text-gray-900 dark:text-white font-medium mt-1">{classItem.program}</p>
+                                </div>
+                                <div>
+                                    <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Section</label>
+                                    <p className="text-gray-900 dark:text-white font-medium mt-1">{classItem.section}</p>
+                                </div>
+                                <div>
+                                    <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Year Level</label>
+                                    <p className="text-gray-900 dark:text-white font-medium mt-1">{formatGradeLevel(classItem.year_level)}</p>
+                                </div>
+                                <div>
+                                    <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Adviser</label>
+                                    <p className="text-gray-900 dark:text-white font-medium mt-1">{classItem.adviser_name || 'Unassigned'}</p>
+                                </div>
                             </div>
                         </div>
 
-                        {/* Footer */}
-                        <div className="flex justify-end mt-6 pt-6 border-t dark:border-gray-700">
-                            <button
-                                onClick={onClose}
-                                className={`px-6 py-3 ${PRIMARY_COLOR_CLASS} text-white rounded-xl ${HOVER_COLOR_CLASS} transition-all font-medium`}
-                            >
-                                Close
-                            </button>
+                        {/* Students Section */}
+                        <div className="p-6">
+                            <div className="flex items-center justify-between mb-4">
+                                <div>
+                                    <h3 className="text-lg font-bold text-gray-900 dark:text-white">Students</h3>
+                                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                        {pagination.total} student{pagination.total !== 1 ? 's' : ''} enrolled
+                                    </p>
+                                </div>
+                                {onAddStudents && (
+                                    <button
+                                        onClick={onAddStudents}
+                                        className={`inline-flex items-center px-4 py-2 ${PRIMARY_COLOR_CLASS} text-white rounded-lg ${HOVER_COLOR_CLASS} transition-all font-medium`}
+                                    >
+                                        <UserPlus className="h-4 w-4 mr-2" />
+                                        Add Students
+                                    </button>
+                                )}
+                            </div>
+
+                            {/* Search Bar */}
+                            <div className="mb-4">
+                                <div className="relative">
+                                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500" />
+                                    <input
+                                        type="text"
+                                        value={search}
+                                        onChange={(e) => setSearch(e.target.value)}
+                                        placeholder="Search students..."
+                                        className={`pl-10 w-full px-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 ${RING_COLOR_CLASS} bg-white dark:bg-gray-800 text-gray-900 dark:text-white`}
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Student List */}
+                            <div className="max-h-[40vh] overflow-y-auto">
+                                {loading ? (
+                                    <div className="flex flex-col items-center justify-center py-12">
+                                        <RefreshCw className={`h-8 w-8 ${TEXT_COLOR_CLASS} dark:text-white animate-spin mb-2`} />
+                                        <p className="text-gray-500 dark:text-gray-400">Loading students...</p>
+                                    </div>
+                                ) : students.length === 0 ? (
+                                    <div className="flex flex-col items-center justify-center py-12">
+                                        <Users className="h-12 w-12 text-gray-300 dark:text-gray-600 mb-3" />
+                                        <p className="text-gray-500 dark:text-gray-400 mb-2">No students enrolled in this class</p>
+                                        {onAddStudents && (
+                                            <button
+                                                onClick={onAddStudents}
+                                                className={`inline-flex items-center px-4 py-2 ${PRIMARY_COLOR_CLASS} text-white rounded-lg ${HOVER_COLOR_CLASS}`}
+                                            >
+                                                <UserPlus className="h-4 w-4 mr-2" />
+                                                Add Students Now
+                                            </button>
+                                        )}
+                                    </div>
+                                ) : (
+                                    <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                        <thead className={`${PRIMARY_COLOR_CLASS} sticky top-0`}>
+                                            <tr>
+                                                <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase">Student</th>
+                                                <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase">ID</th>
+                                                <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase">Grade Level</th>
+                                                <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase">Program</th>
+                                                <th className="px-6 py-3 text-right text-xs font-bold text-white uppercase">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                            {students.map((student) => (
+                                                <tr key={student.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                                                    <td className="px-6 py-4 whitespace-nowrap">
+                                                        <div className="flex items-center">
+                                                            <div className={`h-10 w-10 rounded-full ${LIGHT_BG_CLASS} dark:bg-gray-700 flex items-center justify-center mr-3`}>
+                                                                <span className={`text-sm font-semibold ${TEXT_COLOR_CLASS} dark:text-white`}>
+                                                                    {student.first_name?.[0]}{student.last_name?.[0]}
+                                                                </span>
+                                                            </div>
+                                                            <div>
+                                                                <div className="text-sm font-semibold text-gray-900 dark:text-white">{student.full_name}</div>
+                                                                <div className="text-xs text-gray-500 dark:text-gray-400">{student.email}</div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-white">{student.student_id}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-white">{formatGradeLevel(student.year_level)}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-white">{student.program || '-'}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-right">
+                                                        <button
+                                                            onClick={() => handleRemoveStudent(student.id, student.full_name)}
+                                                            className="p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-colors"
+                                                            title="Remove from Class"
+                                                        >
+                                                            <UserMinus className="h-4 w-4" />
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                )}
+                            </div>
                         </div>
+                    </div>
+
+                    {/* Footer */}
+                    <div className="px-6 py-4 bg-gray-50 dark:bg-gray-700 border-t dark:border-gray-600 flex justify-end">
+                        <button
+                            onClick={onClose}
+                            className={`px-6 py-3 ${PRIMARY_COLOR_CLASS} text-white rounded-xl ${HOVER_COLOR_CLASS} transition-all font-medium`}
+                        >
+                            Close
+                        </button>
                     </div>
                 </div>
             </div>
@@ -1735,6 +1895,12 @@ const Classes: React.FC = () => {
                             classItem={selectedClass}
                             onClose={() => setShowViewModal(false)}
                             formatGradeLevel={formatGradeLevel}
+                            onAddStudents={() => {
+                                setShowViewModal(false);
+                                setSelectedClassForStudents(selectedClass);
+                                setShowAddStudentsModal(true);
+                            }}
+                            showNotification={showNotificationHelper}
                         />
                     )}
 
