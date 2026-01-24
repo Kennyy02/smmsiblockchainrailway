@@ -1157,8 +1157,9 @@ const AddStudentsModal: React.FC<{
 const ViewClassModal: React.FC<{
     classItem: Class;
     onClose: () => void;
+    onAddStudents: () => void;
     formatGradeLevel: (yearLevel: number) => string;
-}> = ({ classItem, onClose, formatGradeLevel }) => {
+}> = ({ classItem, onClose, onAddStudents, formatGradeLevel }) => {
     return (
         <div className="fixed inset-0 z-50 overflow-y-auto">
             <div className="flex min-h-full items-center justify-center p-4">
@@ -1219,7 +1220,14 @@ const ViewClassModal: React.FC<{
                         </div>
 
                         {/* Footer */}
-                        <div className="flex justify-end mt-6 pt-6 border-t dark:border-gray-700">
+                        <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-3 mt-6 pt-6 border-t dark:border-gray-700">
+                            <button
+                                onClick={onAddStudents}
+                                className={`inline-flex items-center justify-center px-6 py-3 ${PRIMARY_COLOR_CLASS} text-white rounded-xl ${HOVER_COLOR_CLASS} transition-all font-medium`}
+                            >
+                                <UserPlus className="h-4 w-4 mr-2" />
+                                Add Students
+                            </button>
                             <button
                                 onClick={onClose}
                                 className={`px-6 py-3 ${PRIMARY_COLOR_CLASS} text-white rounded-xl ${HOVER_COLOR_CLASS} transition-all font-medium`}
@@ -1251,6 +1259,7 @@ const Classes: React.FC = () => {
     const [showStudentsModal, setShowStudentsModal] = useState(false);
     const [showAddStudentsModal, setShowAddStudentsModal] = useState(false);
     const [selectedClassForStudents, setSelectedClassForStudents] = useState<Class | null>(null);
+    const [addStudentsReturnToView, setAddStudentsReturnToView] = useState(false);
     
     const [filters, setFilters] = useState<Filters>({
         search: '',
@@ -1403,8 +1412,27 @@ const Classes: React.FC = () => {
     };
 
     const handleOpenAddStudents = () => {
+        setAddStudentsReturnToView(false);
         setShowStudentsModal(false);
         setShowAddStudentsModal(true);
+    };
+
+    const handleOpenAddStudentsFromView = (classItem: Class) => {
+        setSelectedClassForStudents(classItem);
+        setAddStudentsReturnToView(true);
+        setShowViewModal(false);
+        setShowStudentsModal(false);
+        setShowAddStudentsModal(true);
+    };
+
+    const handleCloseAddStudents = () => {
+        setShowAddStudentsModal(false);
+        if (addStudentsReturnToView) {
+            setShowViewModal(true);
+        } else {
+            setShowStudentsModal(true);
+        }
+        setAddStudentsReturnToView(false);
     };
 
     const handleRowClick = (classItem: Class, event: React.MouseEvent) => {
@@ -1734,6 +1762,7 @@ const Classes: React.FC = () => {
                         <ViewClassModal
                             classItem={selectedClass}
                             onClose={() => setShowViewModal(false)}
+                            onAddStudents={() => handleOpenAddStudentsFromView(selectedClass)}
                             formatGradeLevel={formatGradeLevel}
                         />
                     )}
@@ -1755,10 +1784,7 @@ const Classes: React.FC = () => {
                     {showAddStudentsModal && selectedClassForStudents && (
                         <AddStudentsModal
                             classItem={selectedClassForStudents}
-                            onClose={() => {
-                                setShowAddStudentsModal(false);
-                                setShowStudentsModal(true); // Go back to students list
-                            }}
+                            onClose={handleCloseAddStudents}
                             onSuccess={handleStudentsUpdated}
                             showNotification={showNotificationHelper}
                         />
