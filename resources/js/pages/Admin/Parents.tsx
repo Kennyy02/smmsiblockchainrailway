@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Users, Plus, Search, Filter, Edit, Trash2, X, RefreshCw, Download, Phone, Mail, Link, Eye, EyeOff, UserPlus, GraduationCap, ChevronDown, CheckCircle, AlertCircle } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
+import PrintButton from '@/components/PrintButton';
 // UPDATED IMPORT: Using the new dedicated Parent service
 import { adminParentService, Parent, ParentFormData, ParentStats, ParentsResponse, ApiResponse, StudentSelection } from '../../../services/AdminParentService';
 import { adminStudentService, Student } from '../../../services/AdminStudentService';
@@ -1004,7 +1005,7 @@ const Parents: React.FC = () => {
                             >
                                 <RefreshCw className={`h-5 w-5 ${loading ? 'animate-spin' : ''} dark:text-gray-300`} />
                             </button>
-                            
+                            <PrintButton className="inline-flex items-center gap-2 px-4 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all shadow-sm" />
                             {/* Export Dropdown */}
                             <div className="relative">
                                 <button

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { User, Search, X, Eye, RefreshCw, Users as UsersIcon, ChevronDown, Mail } from 'lucide-react';
 import { usePage } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
+import PrintButton from '@/components/PrintButton';
 
 // --- MARITIME THEME COLORS ---
 const PRIMARY_COLOR_CLASS = 'bg-[#003366]'; // Deep Navy Blue
@@ -722,12 +723,15 @@ const Users: React.FC = () => {
                                 <p className="text-gray-600 dark:text-gray-400 mt-1">Manage and view all system users</p>
                             </div>
                         </div>
-                        <button
-                            onClick={loadUsers}
-                            className="inline-flex items-center px-4 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all shadow-sm"
-                        >
-                            <RefreshCw className={`h-5 w-5 ${loading ? 'animate-spin' : ''}`} />
-                        </button>
+                        <div className="flex items-center gap-2">
+                            <PrintButton className="inline-flex items-center gap-2 px-4 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all shadow-sm" />
+                            <button
+                                onClick={loadUsers}
+                                className="inline-flex items-center px-4 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all shadow-sm"
+                            >
+                                <RefreshCw className={`h-5 w-5 ${loading ? 'animate-spin' : ''}`} />
+                            </button>
+                        </div>
                     </div>
 
                     {/* Filters */}

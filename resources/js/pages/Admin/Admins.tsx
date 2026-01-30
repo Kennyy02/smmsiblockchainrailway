@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { UserCheck, Search, X, Eye, RefreshCw, Users as UsersIcon, Mail, Plus, Edit, Trash2 } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
+import PrintButton from '@/components/PrintButton';
 
 // --- MARITIME THEME COLORS ---
 const PRIMARY_COLOR_CLASS = 'bg-[#003366]'; // Deep Navy Blue
@@ -1023,6 +1024,7 @@ const Admins: React.FC = () => {
                             >
                                 <RefreshCw className={`h-5 w-5 ${loading ? 'animate-spin' : ''}`} />
                             </button>
+                            <PrintButton className="inline-flex items-center gap-2 px-4 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all shadow-sm" />
                             <button
                                 onClick={handleAdd}
                                 className={`inline-flex items-center px-4 py-3 ${PRIMARY_COLOR_CLASS} text-white rounded-xl ${HOVER_COLOR_CLASS} transition-all shadow-lg font-medium`}

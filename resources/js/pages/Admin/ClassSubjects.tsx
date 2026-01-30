@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, Plus, Search, Edit, Trash2, X, RefreshCw, Layers, UserCheck, BookOpen, Eye } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
+import PrintButton from '@/components/PrintButton';
 import { 
     adminClassSubjectService, 
     ClassSubject, 
@@ -631,18 +632,21 @@ const ClassSubjects: React.FC = () => {
                             <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Class-Subject Links</h1>
                             <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mt-0.5 sm:mt-1 md:mt-2">Manage class-subject assignments and schedules</p>
                     </div>
-                    <button
-                        onClick={() => {
-                            setSelectedClassSubject(null);
-                            setShowModal(true);
-                            setValidationErrors({});
-                        }}
-                            className={`${PRIMARY_COLOR_CLASS} ${HOVER_COLOR_CLASS} text-white px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-lg sm:rounded-xl flex items-center space-x-2 transition-all shadow-lg hover:shadow-xl text-xs sm:text-sm md:text-base`}
-                    >
-                            <Plus className="h-4 w-4 sm:h-5 sm:w-5" />
-                            <span className="hidden sm:inline">Link Class & Subject</span>
-                            <span className="sm:hidden">Link</span>
-                    </button>
+                    <div className="flex items-center gap-2">
+                        <PrintButton className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 rounded-lg sm:rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all shadow-sm" />
+                        <button
+                            onClick={() => {
+                                setSelectedClassSubject(null);
+                                setShowModal(true);
+                                setValidationErrors({});
+                            }}
+                                className={`${PRIMARY_COLOR_CLASS} ${HOVER_COLOR_CLASS} text-white px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-lg sm:rounded-xl flex items-center space-x-2 transition-all shadow-lg hover:shadow-xl text-xs sm:text-sm md:text-base`}
+                        >
+                                <Plus className="h-4 w-4 sm:h-5 sm:w-5" />
+                                <span className="hidden sm:inline">Link Class & Subject</span>
+                                <span className="sm:hidden">Link</span>
+                        </button>
+                    </div>
                 </div>
 
                     {/* Filters - Compact on Mobile */}

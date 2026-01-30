@@ -16,6 +16,7 @@ class ClassSubject extends Model
         'teacher_id',
         'academic_year_id',
         'semester_id',
+        'course_year_subject_id',
     ];
 
     // CRITICAL: Append new student-specific accessors
@@ -85,6 +86,16 @@ class ClassSubject extends Model
     public function courseMaterials()
     {
         return $this->hasMany(CourseMaterial::class);
+    }
+
+    public function courseYearSubject()
+    {
+        return $this->belongsTo(CourseYearSubject::class);
+    }
+
+    public function studentSubjectEnrollments()
+    {
+        return $this->hasMany(StudentSubjectEnrollment::class);
     }
 
     // ========================================================================

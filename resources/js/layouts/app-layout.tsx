@@ -9,9 +9,11 @@ interface AppLayoutProps {
 export default function AppLayout({ children }: AppLayoutProps) {
   return (
     <div className="flex flex-col min-h-screen bg-gray-100 dark:bg-gray-900">
-      {/* Top Header Navigation */}
-      <AppHeader />
-      
+      {/* Top Header Navigation - hidden when printing */}
+      <div className="print:hidden">
+        <AppHeader />
+      </div>
+
       {/* Main content area */}
       <main className="flex-1 overflow-y-auto">
         {children}

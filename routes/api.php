@@ -27,6 +27,7 @@ use App\Http\Controllers\LibraryController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ContactMessageController;
 use App\Http\Controllers\EnrollmentController;
+use App\Http\Controllers\StudentSubjectEnrollmentController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\CourseYearSubjectController;
 use App\Http\Controllers\UserController;
@@ -206,6 +207,20 @@ Route::prefix('classes')->group(function () {
     Route::post('/{id}/bulk-enroll', [EnrollmentController::class, 'bulkEnrollStudents']);
     Route::delete('/{id}/unenroll/{studentId}', [EnrollmentController::class, 'unenrollStudent']);
     Route::put('/{id}/enrollment/{studentId}', [EnrollmentController::class, 'updateEnrollmentStatus']);
+});
+
+// Enrollments (central list and management)
+Route::prefix('enrollments')->group(function () {
+    Route::get('/', [EnrollmentController::class, 'index']);
+});
+
+// Student subject enrollments (subjects per student, curriculum-based, required/optional, retake)
+Route::prefix('student-subject-enrollments')->group(function () {
+    Route::get('/', [StudentSubjectEnrollmentController::class, 'index']);
+    Route::get('/available-subjects', [StudentSubjectEnrollmentController::class, 'availableSubjects']);
+    Route::post('/', [StudentSubjectEnrollmentController::class, 'store']);
+    Route::put('/{id}', [StudentSubjectEnrollmentController::class, 'update']);
+    Route::get('/students/{studentId}/irregular-status', [StudentSubjectEnrollmentController::class, 'irregularStatus']);
 });
 
 // Class Subjects (Teacher-Class-Subject assignments)

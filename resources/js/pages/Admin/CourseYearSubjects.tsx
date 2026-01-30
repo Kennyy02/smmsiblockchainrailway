@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link as LinkIcon, Plus, Search, Edit, Trash2, X, RefreshCw, Layers, BookOpen, GraduationCap, Calendar, Filter, Eye, ChevronRight } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
+import PrintButton from '@/components/PrintButton';
 import { 
     adminCourseYearSubjectService, 
     CourseYearSubject, 
@@ -891,6 +892,7 @@ const CourseYearSubjects: React.FC = () => {
                         <button onClick={loadData} className="p-2 sm:p-2.5 md:p-3 border border-gray-200 dark:border-gray-600 rounded-lg sm:rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 bg-white dark:bg-gray-800">
                             <RefreshCw className={`h-4 w-4 sm:h-5 sm:w-5 ${loading ? 'animate-spin' : ''} text-gray-600 dark:text-gray-300`} />
                         </button>
+                        <PrintButton className="inline-flex items-center gap-2 p-2 sm:p-2.5 md:p-3 border border-gray-200 dark:border-gray-600 rounded-lg sm:rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200" />
                     </div>
                 </div>
 

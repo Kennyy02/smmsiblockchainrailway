@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { UserCheck, Plus, Search, Edit, Trash2, X, RefreshCw, Download, Phone, Mail, Users, Eye, EyeOff, CheckCircle, AlertCircle } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
+import PrintButton from '@/components/PrintButton';
 // UPDATED IMPORT: Changed from adminService to adminTeacherService
 import { adminTeacherService, Teacher, TeacherFormData } from '../../../services/AdminTeacherService'; 
 
@@ -682,7 +683,7 @@ const Teachers: React.FC = () => {
                             >
                                 <RefreshCw className={`h-5 w-5 ${loading ? 'animate-spin' : ''}`} />
                             </button>
-                            
+                            <PrintButton className="inline-flex items-center gap-2 px-4 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all shadow-sm" />
                             {/* Export Button */}
                             <button
                                 onClick={() => {

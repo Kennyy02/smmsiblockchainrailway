@@ -4,6 +4,7 @@ import {
     XCircle, Hash, Award, Shield, Clock, X, Download, Plus
 } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
+import PrintButton from '@/components/PrintButton';
 
 import { 
     adminBlockchainService,
@@ -728,6 +729,7 @@ const BlockchainManagement: React.FC = () => {
                                 <RefreshCw className="w-4 h-4 mr-1 sm:mr-2" />
                                 Refresh
                             </button>
+                            <PrintButton className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-white text-gray-700 dark:text-white rounded-lg sm:rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all text-xs sm:text-sm shadow-sm" />
                         </div>
 
                         {/* Stats */}

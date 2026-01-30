@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Award, Plus, Search, Filter, Edit, Trash2, X, RefreshCw, BarChart, BookOpen, User, Zap, Hash, Eye } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
+import PrintButton from '@/components/PrintButton';
 import { 
     adminGradeService, 
     Grade, 
@@ -952,6 +953,7 @@ const Grades: React.FC = () => {
                                 <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-1 sm:mb-2">Grade Management</h1>
                                 <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Manage and track student academic performance</p>
                             </div>
+                            <PrintButton className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 rounded-lg sm:rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all shadow-sm md:ml-auto" />
                         </div>
                     </div>
 

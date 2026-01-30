@@ -5,6 +5,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Head } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
+import PrintButton from '@/components/PrintButton';
 import {
     Mail,
     MailOpen,
@@ -453,13 +454,16 @@ const ContactMessages: React.FC = () => {
                         </h1>
                         <p className="text-gray-600 dark:text-gray-300 mt-1">Manage messages from the contact form</p>
                     </div>
-                    <button
-                        onClick={() => { loadMessages(); loadStats(); }}
-                        className={`flex items-center space-x-2 px-4 py-2 ${PRIMARY_COLOR_CLASS} text-white rounded-xl ${HOVER_COLOR_CLASS}`}
-                    >
-                        <RefreshCw className="w-4 h-4" />
-                        <span>Refresh</span>
-                    </button>
+                    <div className="flex items-center gap-2">
+                        <PrintButton className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all shadow-sm" />
+                        <button
+                            onClick={() => { loadMessages(); loadStats(); }}
+                            className={`flex items-center space-x-2 px-4 py-2 ${PRIMARY_COLOR_CLASS} text-white rounded-xl ${HOVER_COLOR_CLASS}`}
+                        >
+                            <RefreshCw className="w-4 h-4" />
+                            <span>Refresh</span>
+                        </button>
+                    </div>
                 </div>
 
                 {/* Stats Cards */}

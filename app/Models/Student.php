@@ -104,6 +104,22 @@ class Student extends Model
         return $this->hasMany(Grade::class);
     }
 
+    /**
+     * Student-level subject enrollments (subjects per student, from curriculum).
+     */
+    public function studentSubjectEnrollments()
+    {
+        return $this->hasMany(StudentSubjectEnrollment::class);
+    }
+
+    /**
+     * Whether this student is irregular (has failed a required subject not yet passed).
+     */
+    public function isIrregular(): bool
+    {
+        return StudentSubjectEnrollment::studentIsIrregular($this->id);
+    }
+
     public function attendance()
     {
         return $this->hasMany(Attendance::class);

@@ -17,6 +17,63 @@ use Illuminate\Support\Facades\Hash;
 class EnrollmentController extends Controller
 {
     /**
+     * List all enrollments with optional filters (for central Enrollment management page)
+     */
+    public function index(Request $request): JsonResponse
+    {
+        try {
+            $query = Enrollment::query()
+                ->with(['student', 'class', 'academicYear', 'semester', 'course'])
+                ->orderByDesc('enrollment_date');
+
+            if ($academicYearId = $request->input('academic_year_id')) {
+                $query->where('academic_year_id', $academicYearId);
+            }
+            if ($semesterId = $request->input('semester_id')) {
+                $query->where('semester_id', $semesterId);
+            }
+            if ($classId = $request->input('class_id')) {
+                $query->where('class_id', $classId);
+            }
+            if ($studentId = $request->input('student_id')) {
+                $query->where('student_id', $studentId);
+            }
+            if ($status = $request->input('status')) {
+                $query->where('status', $status);
+            }
+            if ($search = $request->input('search')) {
+                $query->whereHas('student', function ($q) use ($search) {
+                    $q->where('student_id', 'like', "%{$search}%")
+                      ->orWhere('first_name', 'like', "%{$search}%")
+                      ->orWhere('last_name', 'like', "%{$search}%")
+                      ->orWhere('email', 'like', "%{$search}%");
+                });
+            }
+
+            $perPage = $request->input('per_page', 15);
+            $enrollments = $query->paginate($perPage);
+
+            return response()->json([
+                'success' => true,
+                'data' => $enrollments->items(),
+                'pagination' => [
+                    'current_page' => $enrollments->currentPage(),
+                    'last_page' => $enrollments->lastPage(),
+                    'per_page' => $enrollments->perPage(),
+                    'total' => $enrollments->total(),
+                ],
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error listing enrollments: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to fetch enrollments',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
      * Get all students enrolled in a specific class
      */
     public function getClassStudents(Request $request, int $classId): JsonResponse

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { RefreshCw, Users, X } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
+import PrintButton from '@/components/PrintButton';
 import { router } from '@inertiajs/react';
 import { adminClassesService, Class } from '../../../services/AdminClassesService';
 
@@ -75,6 +76,7 @@ const BlockchainGrades: React.FC = () => {
                                 </h1>
                                 <p className="text-gray-600 dark:text-white">View student grades by class</p>
                             </div>
+                            <PrintButton className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-white text-gray-700 dark:text-white rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all shadow-sm" />
                             <button
                                 onClick={loadClasses}
                                 className="flex items-center px-4 py-2 bg-gray-200 dark:bg-gray-800 dark:border-white dark:text-white text-gray-700 rounded-xl hover:bg-gray-300 dark:hover:bg-gray-700 transition-all cursor-pointer border dark:border-white"

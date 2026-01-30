@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Search, Filter, Edit, Trash2, X, RefreshCw, BarChart3, User, BookOpen, CalendarCheck, CalendarX, Eye } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
+import PrintButton from '@/components/PrintButton';
 import { 
     adminAttendanceService, 
     Attendance, 
@@ -643,14 +644,17 @@ const AttendancePage: React.FC = () => {
                                 <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">Attendance Management</h1>
                                 <p className="text-xs sm:text-sm text-gray-600">Track and manage daily student attendance records</p>
                             </div>
-                            <button
-                                onClick={handleCreate}
-                                className={`flex items-center px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 ${PRIMARY_COLOR_CLASS} text-white rounded-lg sm:rounded-xl ${HOVER_COLOR_CLASS} transition-all font-medium shadow-lg text-xs sm:text-sm md:text-base`}
-                            >
-                                <Plus className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
-                                <span className="hidden sm:inline">Record New Attendance</span>
-                                <span className="sm:hidden">New</span>
-                            </button>
+                            <div className="flex items-center gap-2">
+                                <PrintButton className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 rounded-lg sm:rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all shadow-sm" />
+                                <button
+                                    onClick={handleCreate}
+                                    className={`flex items-center px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 ${PRIMARY_COLOR_CLASS} text-white rounded-lg sm:rounded-xl ${HOVER_COLOR_CLASS} transition-all font-medium shadow-lg text-xs sm:text-sm md:text-base`}
+                                >
+                                    <Plus className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
+                                    <span className="hidden sm:inline">Record New Attendance</span>
+                                    <span className="sm:hidden">New</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
 

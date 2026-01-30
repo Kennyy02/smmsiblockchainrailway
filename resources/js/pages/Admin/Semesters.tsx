@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Layers, Plus, Search, Filter, Edit, Trash2, X, RefreshCw, Calendar, Eye } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
+import PrintButton from '@/components/PrintButton';
 import { 
     adminSemesterService, 
     Semester, 
@@ -543,6 +544,7 @@ const Semesters: React.FC = () => {
                             >
                                 <RefreshCw className={`h-4 w-4 sm:h-5 sm:w-5 ${loading ? 'animate-spin' : ''} dark:text-white`} />
                             </button>
+                            <PrintButton />
                         </div>
                     </div>
 

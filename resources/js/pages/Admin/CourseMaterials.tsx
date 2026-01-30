@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { BookOpen, Upload, Search, Filter, Edit, Trash2, X, RefreshCw, Download, FileText, File, Eye } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
+import PrintButton from '@/components/PrintButton';
 import { 
     adminCourseMaterialService, 
     CourseMaterial, 
@@ -504,6 +505,7 @@ const CourseMaterials: React.FC = () => {
                             >
                                 <RefreshCw className={`h-4 w-4 sm:h-5 sm:w-5 ${loading ? 'animate-spin' : ''} dark:text-gray-300`} />
                             </button>
+                            <PrintButton className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 rounded-lg sm:rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all shadow-sm" />
                         </div>
                     </div>
 

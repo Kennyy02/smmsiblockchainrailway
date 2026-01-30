@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Search, Send, User, MessageSquare, RefreshCw, X, Hash } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
+import PrintButton from '@/components/PrintButton';
 import { 
     adminMessageService, 
     Message, 
@@ -292,13 +293,16 @@ const MessagesPage: React.FC = () => {
                     {/* Header/Stats */}
                     <div className="mb-6 flex justify-between items-center">
                         <h1 className="text-3xl font-bold text-gray-900">Message Center</h1>
-                        <button
-                            onClick={() => setShowComposeModal(true)}
-                            className={`flex items-center px-4 py-2 ${PRIMARY_COLOR_CLASS} text-white rounded-xl ${HOVER_COLOR_CLASS} transition-all font-medium shadow-md`}
-                        >
-                            <Plus className="w-5 h-5 mr-2" />
-                            Compose
-                        </button>
+                        <div className="flex items-center gap-2">
+                            <PrintButton className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all shadow-sm" />
+                            <button
+                                onClick={() => setShowComposeModal(true)}
+                                className={`flex items-center px-4 py-2 ${PRIMARY_COLOR_CLASS} text-white rounded-xl ${HOVER_COLOR_CLASS} transition-all font-medium shadow-md`}
+                            >
+                                <Plus className="w-5 h-5 mr-2" />
+                                Compose
+                            </button>
+                        </div>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">

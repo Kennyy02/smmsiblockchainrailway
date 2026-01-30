@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { RefreshCw, ArrowLeft, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
+import PrintButton from '@/components/PrintButton';
 import { Link, usePage, router } from '@inertiajs/react';
 import { adminAttendanceService, Attendance } from '../../../services/AdminAttendanceService';
 import { adminClassSubjectService } from '../../../services/AdminClassSubjectService';
@@ -333,6 +334,7 @@ const BlockchainStudentAttendance: React.FC = () => {
                                 </div>
                             </div>
                         </div>
+                        <PrintButton className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-white text-gray-700 dark:text-white rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all shadow-sm flex-shrink-0" />
                     </div>
 
                     {loading ? (

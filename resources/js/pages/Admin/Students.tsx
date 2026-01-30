@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { User, Plus, Search, Filter, Edit, Trash2, X, RefreshCw, Download, Mail, BookOpen, Clock, Eye, EyeOff, GraduationCap, ChevronDown, CheckCircle, AlertCircle } from 'lucide-react';
 import { router } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
+import PrintButton from '@/components/PrintButton';
 // UPDATED IMPORT: Use the new specific service
 import { adminStudentService, Student, StudentFormData, StudentStats, StudentsResponse, ApiResponse, ParentGuardianFormData } from '../../../services/AdminStudentService';
 import { adminCourseService, Course } from '../../../services/AdminCourseService'; 
@@ -1134,6 +1135,7 @@ const Students: React.FC = () => {
                                     >
                                         <RefreshCw className={`h-5 w-5 ${loading ? 'animate-spin' : ''}`} />
                                     </button>
+                                    <PrintButton className="inline-flex items-center gap-2 px-4 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all shadow-sm" />
                                 </div>
                             <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
                                 <button 

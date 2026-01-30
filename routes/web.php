@@ -230,6 +230,12 @@ Route::middleware(['auth', 'requirePasswordChange', 'verified', 'checkRole:admin
         return Inertia::render('Admin/ContactMessages');
     })->name('contact-messages');
     
+    // ==================== ENROLLMENT ====================
+    
+    Route::get('/enrollments', function () {
+        return Inertia::render('Admin/Enrollments');
+    })->name('enrollments');
+    
     // ==================== USER MANAGEMENT ====================
     
     Route::get('/users', function (Request $request) {

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { RefreshCw, ArrowLeft, Eye, Users, X } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
+import PrintButton from '@/components/PrintButton';
 import { usePage, router } from '@inertiajs/react';
 import { adminClassesService, Student } from '../../../services/AdminClassesService';
 
@@ -106,20 +107,23 @@ const BlockchainClassStudentsAttendance: React.FC = () => {
             )}
             <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-900">
                 <div className="container mx-auto px-4 py-8">
-                    <div className="mb-6">
-                        <button
-                            onClick={() => router.visit('/admin/blockchain-transactions/attendance')}
-                            className="inline-flex items-center text-purple-600 hover:text-purple-700 mb-4 cursor-pointer"
-                        >
-                            <ArrowLeft className="w-4 h-4 mr-2" />
-                            Back to Attendance
-                        </button>
+                    <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                         <div>
-                            <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent mb-2">
-                                Class Students
-                            </h1>
-                            <p className="text-gray-600 dark:text-white">{className}</p>
+                            <button
+                                onClick={() => router.visit('/admin/blockchain-transactions/attendance')}
+                                className="inline-flex items-center text-purple-600 hover:text-purple-700 mb-4 cursor-pointer"
+                            >
+                                <ArrowLeft className="w-4 h-4 mr-2" />
+                                Back to Attendance
+                            </button>
+                            <div>
+                                <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent mb-2">
+                                    Class Students
+                                </h1>
+                                <p className="text-gray-600 dark:text-white">{className}</p>
+                            </div>
                         </div>
+                        <PrintButton className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-white text-gray-700 dark:text-white rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all shadow-sm flex-shrink-0" />
                     </div>
 
                     <div className="bg-white dark:bg-gray-800 dark:border-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-white">

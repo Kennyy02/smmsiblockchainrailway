@@ -183,6 +183,36 @@ class Grade extends Model
             $this->remarks = null;
         }
         $this->save();
+        $this->syncStudentSubjectEnrollmentStatus();
+    }
+
+    /**
+     * Sync status to StudentSubjectEnrollment when final grade/remarks is set.
+     * Required for irregular/regular and retake logic (curriculum-based enrollment).
+     */
+    public function syncStudentSubjectEnrollmentStatus(): void
+    {
+        $enrollment = \App\Models\StudentSubjectEnrollment::query()
+            ->byClassSubjectAndTerm(
+                $this->student_id,
+                $this->class_subject_id,
+                $this->academic_year_id,
+                $this->semester_id
+            )
+            ->first();
+
+        if (!$enrollment) {
+            return;
+        }
+
+        $status = match ($this->remarks) {
+            'Passed' => \App\Models\StudentSubjectEnrollment::STATUS_PASSED,
+            'Failed' => \App\Models\StudentSubjectEnrollment::STATUS_FAILED,
+            'Incomplete' => \App\Models\StudentSubjectEnrollment::STATUS_INCOMPLETE,
+            default => \App\Models\StudentSubjectEnrollment::STATUS_ENROLLED,
+        };
+
+        $enrollment->markCompleted($status, $this->remarks);
     }
 
     public function isComplete(): bool

@@ -161,3 +161,24 @@
         @apply cursor-pointer;
     }
 }
+
+/* Print: hide non-content UI and improve record printing */
+@media print {
+    .print\:hidden {
+        display: none !important;
+    }
+    /* Hide any element with data-no-print (e.g. action buttons, modals) */
+    [data-no-print] {
+        display: none !important;
+    }
+    body {
+        background: #fff;
+    }
+    /* Ensure tables and cards print with borders */
+    table {
+        border-collapse: collapse;
+    }
+    th, td {
+        border: 1px solid #e5e7eb;
+    }
+}

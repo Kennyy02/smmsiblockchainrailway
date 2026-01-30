@@ -284,6 +284,7 @@ function AppHeader() {
                 ...(userRole === 'super_admin' ? [{ title: 'Admin', href: '/admin/admins', icon: UserCheck }] : []),
                 { title: 'Teachers', href: '/admin/teachers', icon: UserCheck },
                 { title: 'Students', href: '/admin/students', icon: GraduationCap },
+                { title: 'Enrollment', href: '/admin/enrollments', icon: ClipboardCheck },
                 { title: 'Parents', href: '/admin/parents', icon: User },
                 { title: 'User Password Management', href: '/admin/users', icon: UserCheck },
             ]
